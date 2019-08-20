@@ -1,0 +1,105 @@
+/*
+ * This file is part of «Epigraphy of Medieval Rus'» database.
+ *
+ * Copyright (c) National Research University Higher School of Economics
+ *
+ * «Epigraphy of Medieval Rus'» database is free software:
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, version 3.
+ *
+ * «Epigraphy of Medieval Rus'» database is distributed
+ * in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code. If you have not received
+ * a copy of the GNU General Public License along with
+ * «Epigraphy of Medieval Rus'» database,
+ * see <http://www.gnu.org/licenses/>.
+ */
+
+@import '../base';
+
+@mixin sorted-column($isAsc){
+  &:after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    position: absolute;
+    top: 50%;
+    margin-top: -2.5px;
+    margin-left: 5px;
+
+    @if ($isAsc) {
+      border-bottom: 5px solid #2f2f2f;
+    } @else {
+      border-top: 5px solid #2f2f2f;
+    }
+  }
+}
+
+main.eomr-main {
+  table {
+    th[data-vyfony-filterable-table-sortable] {
+      cursor: pointer;
+      position: relative;
+
+      > a {
+        display: block;
+      }
+
+      &[data-vyfony-filterable-table-sort-order="asc"] > a {
+        @include sorted-column(true);
+      }
+
+      &[data-vyfony-filterable-table-sort-order="desc"] > a {
+        @include sorted-column(false);
+      }
+
+      &:not([data-vyfony-filterable-table-sort-order]) {
+        &:hover > a {
+          @include sorted-column(false);
+        }
+      }
+    }
+
+
+
+    th,
+    td {
+      &:nth-child(1),
+      &:nth-child(1) {
+        width: 44px;
+      }
+
+      &:nth-child(2),
+      &:nth-child(2) {
+        min-width: 50px;
+      }
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      min-width: 50px;
+    }
+  }
+
+  form {
+    .vyfony-filterable-table-bundle-form-group {
+      @extend .col-4;
+    }
+
+    .vyfony-filterable-table-bundle-button-form-group {
+      padding-right: 15px;
+      padding-left: 15px;
+    }
+  }
+
+  ul {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

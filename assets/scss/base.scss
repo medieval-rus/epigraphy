@@ -1,0 +1,103 @@
+/*
+ * This file is part of «Epigraphy of Medieval Rus'» database.
+ *
+ * Copyright (c) National Research University Higher School of Economics
+ *
+ * «Epigraphy of Medieval Rus'» database is free software:
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, version 3.
+ *
+ * «Epigraphy of Medieval Rus'» database is distributed
+ * in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code. If you have not received
+ * a copy of the GNU General Public License along with
+ * «Epigraphy of Medieval Rus'» database,
+ * see <http://www.gnu.org/licenses/>.
+ */
+
+@import '~bootstrap/scss/bootstrap';
+
+$headerHeight: 50px;
+$footerHeight: 60px;
+
+html {
+  position: relative;
+  min-height: 100%;
+
+  body {
+    margin-bottom: $footerHeight;
+  }
+
+  a {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .eomr-header {
+    height: $headerHeight;
+
+    .eomr-navbar-brand {
+      line-height: $headerHeight;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  .eomr-sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    min-height: calc(100vh - #{$headerHeight} - #{$footerHeight});
+    padding-top: 1.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .eomr-nav {
+      .eomr-nav-item {
+
+        .eomr-nav-link {
+          padding-left: 0;
+          padding-right: 0;
+          color: $body-color;
+        }
+
+        &.eomr-active {
+          .eomr-nav-link {
+            color: $blue;
+          }
+
+          &:hover {
+            .eomr-nav-link {
+              color: $blue;
+            }
+          }
+        }
+
+        &:hover {
+          .eomr-nav-link {
+            color: $gray-600;
+          }
+        }
+      }
+    }
+  }
+
+  .eomr-main {
+    padding-top: 1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .eomr-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: $footerHeight;
+    line-height: $footerHeight;
+    background-color: #f5f5f5;
+  }
+}

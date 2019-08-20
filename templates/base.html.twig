@@ -1,0 +1,75 @@
+{#
+ # This file is part of «Epigraphy of Medieval Rus'» database.
+ #
+ # Copyright (c) National Research University Higher School of Economics
+ #
+ # «Epigraphy of Medieval Rus'» database is free software:
+ # you can redistribute it and/or modify it under the terms of the
+ # GNU General Public License as published by the Free Software Foundation, version 3.
+ #
+ # «Epigraphy of Medieval Rus'» database is distributed
+ # in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+ # the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ # See the GNU General Public License for more details.
+ #
+ # For the full copyright and license information, please view the LICENSE
+ # file that was distributed with this source code. If you have not received
+ # a copy of the GNU General Public License along with
+ # «Epigraphy of Medieval Rus'» database,
+ # see <http://www.gnu.org/licenses/>.
+ #}
+
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}{{ ('controller.'~controller~'.'~method~'.title')|trans }}{% endblock %} – {{ 'page.label'|trans }}</title>
+
+        {% block stylesheets %}
+            <link href="{{ asset('build/css/'~controller~'/'~method~'.css') }}" rel="stylesheet">
+        {% endblock %}
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-dark bg-dark flex-nowrap p-0 eomr-header">
+            <a class="navbar-brand col-12 eomr-navbar-brand" href="{{ path('index') }}">{{ 'page.label'|trans }}</a>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-2 bg-light sidebar eomr-sidebar">
+                    {% block left_sidebar_content %}
+                        {{ knp_menu_render('main', {'currentClass': 'eomr-active'}) }}
+                    {% endblock %}
+                </div>
+
+                <main role="main" class="col-8 eomr-main">
+                    <h1 class="border-bottom">{% block page_title %}{{ block('title') }}{% endblock %}</h1>
+                    <div class="container pb-4">
+                        {% block page_content %}{% endblock %}
+                    </div>
+                </main>
+
+                <div class="col-2 bg-light sidebar eomr-sidebar">
+                    {% block right_sidebar_content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+
+        <footer class="eomr-footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-10">
+                        <span class="text-muted">
+                            &copy; {{ 'now'|date('Y') }} – {{ 'page.footer'|trans }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

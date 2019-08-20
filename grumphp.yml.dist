@@ -1,0 +1,87 @@
+# This file is part of «Epigraphy of Medieval Rus'» database.
+#
+# Copyright (c) National Research University Higher School of Economics
+#
+# «Epigraphy of Medieval Rus'» database is free software:
+# you can redistribute it and/or modify it under the terms of the
+# GNU General Public License as published by the Free Software Foundation, version 3.
+#
+# «Epigraphy of Medieval Rus'» database is distributed
+# in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code. If you have not received
+# a copy of the GNU General Public License along with
+# «Epigraphy of Medieval Rus'» database,
+# see <http://www.gnu.org/licenses/>.
+
+parameters:
+  hide_circumvention_tip: true
+  process_timeout: null
+  git_dir: .
+  bin_dir: vendor/bin
+  tasks:
+    phpversion:
+      project: '7.2'
+      metadata:
+        priority: 0
+    git_blacklist:
+      keywords:
+        - ' echo '
+      metadata:
+        priority: -10
+    composer:
+      metadata:
+        priority: -20
+    file_size:
+      max_size: 35M
+      metadata:
+        priority: -30
+    jsonlint:
+      metadata:
+        priority: -40
+    xmllint:
+      metadata:
+        priority: -50
+    yamllint:
+      metadata:
+        priority: -60
+    phplint:
+      triggered_by: ['php']
+      metadata:
+        priority: -70
+    phpmnd:
+      exclude_path:
+        - 'node_modules'
+        - 'var'
+        - 'vendor'
+      metadata:
+        priority: -80
+    phpcsfixer2:
+      config: .php_cs.dist
+      metadata:
+        priority: -90
+    phpcs:
+      standard: PSR2
+      ignore_patterns:
+        - '/node_modules/*'
+        - '/src/Persistence/DataFixtures/*'
+        - '/src/Persistence/Migrations/*'
+        - '/tests/*'
+        - '/var/*'
+        - '/vendor/*'
+      metadata:
+        priority: -100
+    phpunit:
+      always_execute: true
+      metadata:
+        priority: -110
+    securitychecker:
+      metadata:
+        priority: -120
+    phan:
+      config_file: .phan.dist
+      metadata:
+        priority: -130
