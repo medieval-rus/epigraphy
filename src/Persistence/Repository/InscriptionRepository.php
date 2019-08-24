@@ -31,6 +31,11 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method Inscription|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method Inscription|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Inscription[]    findAll()
+ * @method Inscription[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
 final class InscriptionRepository extends ServiceEntityRepository
 {

@@ -27,10 +27,16 @@ namespace App\Persistence\Repository\Carrier;
 
 use App\Persistence\Entity\Carrier\WallCarrier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method WallCarrier|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method WallCarrier|null findOneBy(array $criteria, array $orderBy = null)
+ * @method WallCarrier[]    findAll()
+ * @method WallCarrier[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
 final class WallCarrierRepository extends ServiceEntityRepository
 {
@@ -40,5 +46,42 @@ final class WallCarrierRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, WallCarrier::class);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @throws ORMException
+     *
+     * @return WallCarrier
+     */
+    public function findOneByNameOrCreate(string $name): WallCarrier
+    {
+        $carrier = $this->findOneBy(['name' => $name]);
+
+        if (null === $carrier) {
+            $carrier = $this->create($name);
+        }
+
+        return $carrier;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @throws ORMException
+     *
+     * @return WallCarrier
+     */
+    private function create(string $name): WallCarrier
+    {
+        $carrier = new WallCarrier();
+
+        $carrier->setName($name);
+        // todo specify building
+
+        $this->getEntityManager()->persist($carrier);
+
+        return $carrier;
     }
 }

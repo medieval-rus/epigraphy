@@ -47,32 +47,30 @@ class Inscription
     private $id;
 
     /**
-     * @var Carrier
+     * @var Carrier|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Carrier\Carrier")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Carrier\Carrier", cascade={"persist"})
      */
     private $carrier;
 
     /**
-     * @var bool
+     * @var bool|null
      *
-     * @ORM\Column(type="boolean", options={"default": 1})
+     * @ORM\Column(type="boolean", nullable=true)
      */
-    private $isInSitu = true;
+    private $isInSitu;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $placeOnCarrier;
 
     /**
-     * @var WritingType
+     * @var WritingType|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\WritingType")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\WritingType", cascade={"persist"})
      */
     private $writingType;
 
@@ -84,25 +82,23 @@ class Inscription
     private $materials;
 
     /**
-     * @var WritingMethod
+     * @var WritingMethod|null
      *
-     * @ORM\ManyToOne(targetEntity="WritingMethod")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="WritingMethod", cascade={"persist"})
      */
     private $writingMethod;
 
     /**
-     * @var PreservationState
+     * @var PreservationState|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\PreservationState")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\PreservationState", cascade={"persist"})
      */
     private $preservationState;
 
     /**
      * @var Alphabet|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Alphabet")
+     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Alphabet", cascade={"persist"})
      */
     private $alphabet;
 
@@ -137,7 +133,7 @@ class Inscription
     /**
      * @var ContentCategory|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\ContentCategory")
+     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\ContentCategory", cascade={"persist"})
      */
     private $contentCategory;
 
@@ -181,11 +177,11 @@ class Inscription
     }
 
     /**
-     * @param Carrier $carrier
+     * @param Carrier|null $carrier
      *
      * @return Inscription
      */
-    public function setCarrier(Carrier $carrier): self
+    public function setCarrier(?Carrier $carrier): self
     {
         $this->carrier = $carrier;
 
@@ -193,19 +189,19 @@ class Inscription
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function getIsInSitu(): bool
+    public function getIsInSitu(): ?bool
     {
         return $this->isInSitu;
     }
 
     /**
-     * @param bool $isInSitu
+     * @param bool|null $isInSitu
      *
      * @return Inscription
      */
-    public function setIsInSitu(bool $isInSitu): self
+    public function setIsInSitu(?bool $isInSitu): self
     {
         $this->isInSitu = $isInSitu;
 
@@ -241,11 +237,11 @@ class Inscription
     }
 
     /**
-     * @param WritingType $writingType
+     * @param WritingType|null $writingType
      *
      * @return Inscription
      */
-    public function setWritingType(WritingType $writingType): self
+    public function setWritingType(?WritingType $writingType): self
     {
         $this->writingType = $writingType;
 
@@ -297,11 +293,11 @@ class Inscription
     }
 
     /**
-     * @param WritingMethod $writingMethod
+     * @param WritingMethod|null $writingMethod
      *
      * @return Inscription
      */
-    public function setWritingMethod(WritingMethod $writingMethod): self
+    public function setWritingMethod(?WritingMethod $writingMethod): self
     {
         $this->writingMethod = $writingMethod;
 
@@ -317,11 +313,11 @@ class Inscription
     }
 
     /**
-     * @param PreservationState $preservationState
+     * @param PreservationState|null $preservationState
      *
      * @return Inscription
      */
-    public function setPreservationState(PreservationState $preservationState): self
+    public function setPreservationState(?PreservationState $preservationState): self
     {
         $this->preservationState = $preservationState;
 

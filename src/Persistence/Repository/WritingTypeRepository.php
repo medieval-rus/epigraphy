@@ -25,14 +25,21 @@ declare(strict_types=1);
 
 namespace App\Persistence\Repository;
 
+use App\Persistence\Entity\NamedEntityInterface;
 use App\Persistence\Entity\WritingType;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method WritingType|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method WritingType|null findOneBy(array $criteria, array $orderBy = null)
+ * @method WritingType[]    findAll()
+ * @method WritingType[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method WritingType|null findOneByName(string $name)
+ * @method WritingType      findOneByNameOrCreate(string $name)
  */
-final class WritingTypeRepository extends ServiceEntityRepository
+final class WritingTypeRepository extends NamedEntityRepository
 {
     /**
      * @param RegistryInterface $registry
@@ -40,5 +47,13 @@ final class WritingTypeRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, WritingType::class);
+    }
+
+    /**
+     * @return WritingType
+     */
+    protected function createEmpty(): NamedEntityInterface
+    {
+        return new WritingType();
     }
 }

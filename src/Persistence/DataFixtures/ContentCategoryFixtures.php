@@ -34,14 +34,14 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 final class ContentCategoryFixtures extends Fixture
 {
-    public const reference_prestavisya = 'преставися';
+    public const REFERENCE_PRESTAVISYA = self::class.'преставися';
 
     /**
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
     {
-        $this->loadObject($manager, 'преставися', self::reference_prestavisya);
+        $this->loadObject($manager, 'преставися', self::REFERENCE_PRESTAVISYA);
 
         $manager->flush();
     }

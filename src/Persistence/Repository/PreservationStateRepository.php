@@ -25,14 +25,21 @@ declare(strict_types=1);
 
 namespace App\Persistence\Repository;
 
+use App\Persistence\Entity\NamedEntityInterface;
 use App\Persistence\Entity\PreservationState;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method PreservationState|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method PreservationState|null findOneBy(array $criteria, array $orderBy = null)
+ * @method PreservationState[]    findAll()
+ * @method PreservationState[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method PreservationState|null findOneByName(string $name)
+ * @method PreservationState      findOneByNameOrCreate(string $name)
  */
-final class PreservationStateRepository extends ServiceEntityRepository
+final class PreservationStateRepository extends NamedEntityRepository
 {
     /**
      * @param RegistryInterface $registry
@@ -40,5 +47,13 @@ final class PreservationStateRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, PreservationState::class);
+    }
+
+    /**
+     * @return NamedEntityInterface
+     */
+    protected function createEmpty(): NamedEntityInterface
+    {
+        return new PreservationState();
     }
 }

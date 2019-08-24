@@ -68,14 +68,14 @@ final class InscriptionFixtures extends Fixture implements DependentFixtureInter
     private function createInscription1(): Inscription
     {
         return (new Inscription())
-            ->setCarrier($this->getReference(WallCarrierFixtures::reference_yugoVostochnyiStolb))
+            ->setCarrier($this->getReference(WallCarrierFixtures::REFERENCE_YUGO_VOSTOCHNYI_STOLB))
             ->setIsInSitu(true)
             ->setPlaceOnCarrier('южная грань столба')
-            ->setWritingType($this->getReference(WritingTypeFixtures::reference_vtoroy))
-            ->addMaterial($this->getReference(MaterialFixtures::reference_shtukaturka))
-            ->setWritingMethod($this->getReference(WritingMethodFixtures::reference_graffito))
-            ->setPreservationState($this->getReference(PreservationStateFixtures::reference_tselaya))
-            ->setAlphabet($this->getReference(AlphabetFixtures::reference_kirillitsa))
+            ->setWritingType($this->getReference(WritingTypeFixtures::REFERENCE_VTOROY))
+            ->addMaterial($this->getReference(MaterialFixtures::REFERENCE_SHTUKATURKA))
+            ->setWritingMethod($this->getReference(WritingMethodFixtures::REFERENCE_GRAFFITO))
+            ->setPreservationState($this->getReference(PreservationStateFixtures::REFERENCE_TSELAYA))
+            ->setAlphabet($this->getReference(AlphabetFixtures::REFERENCE_KIRILLITSA))
             ->setText(<<<EOT
 мцама8к
 ~
@@ -95,7 +95,7 @@ EOT
             ->setNewText(null)
             ->setTransliteration(null)
             ->setTranslation('М(есØца мая 22 (на) с(вØ)т(о)го м(у)ч(е)н(и)ка Василиска престависØ раб Божий архиеп(иско)п Климент')
-            ->setContentCategory($this->getReference(ContentCategoryFixtures::reference_prestavisya))
+            ->setContentCategory($this->getReference(ContentCategoryFixtures::REFERENCE_PRESTAVISYA))
             ->setDateInText('22 мая на святого мученика Василиска')
             ->setCommentOnDate(null)
             ->setCommentOnText(null)

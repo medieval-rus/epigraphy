@@ -175,12 +175,12 @@ return [
         'PhanParamTooManyInternal',
         'PhanParamTooManyCallable',
         'PhanParamTypeMismatch',
-        'PhanParamSignatureMismatch',
+//        'PhanParamSignatureMismatch', // commented out to allow type overloading in repositories
         'PhanParamSignatureMismatchInternal',
         'PhanParamRedefined',
         'PhanParamSignatureRealMismatchReturnType',
         'PhanParamSignatureRealMismatchReturnTypeInternal',
-        'PhanParamSignaturePHPDocMismatchReturnType',
+//        'PhanParamSignaturePHPDocMismatchReturnType', // commented out to allow type overloading in repositories
         'PhanParamSignatureRealMismatchTooManyRequiredParameters',
         'PhanParamSignatureRealMismatchTooManyRequiredParametersInternal',
         'PhanParamSignaturePHPDocMismatchTooManyRequiredParameters',
@@ -189,7 +189,7 @@ return [
         'PhanParamSignaturePHPDocMismatchTooFewParameters',
         'PhanParamSignatureRealMismatchHasParamType',
         'PhanParamSignatureRealMismatchHasParamTypeInternal',
-        'PhanParamSignaturePHPDocMismatchHasParamType',
+//        'PhanParamSignaturePHPDocMismatchHasParamType', // commented out to allow type overloading in repositories
         'PhanParamSignatureRealMismatchHasNoParamType',
         'PhanParamSignatureRealMismatchHasNoParamTypeInternal',
         'PhanParamSignaturePHPDocMismatchHasNoParamType',

@@ -26,13 +26,20 @@ declare(strict_types=1);
 namespace App\Persistence\Repository;
 
 use App\Persistence\Entity\ContentCategory;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Persistence\Entity\NamedEntityInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method ContentCategory|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method ContentCategory|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ContentCategory[]    findAll()
+ * @method ContentCategory[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method ContentCategory|null findOneByName(string $name)
+ * @method ContentCategory      findOneByNameOrCreate(string $name)
  */
-final class ContentCategoryRepository extends ServiceEntityRepository
+final class ContentCategoryRepository extends NamedEntityRepository
 {
     /**
      * @param RegistryInterface $registry
@@ -40,5 +47,13 @@ final class ContentCategoryRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, ContentCategory::class);
+    }
+
+    /**
+     * @return NamedEntityInterface
+     */
+    protected function createEmpty(): NamedEntityInterface
+    {
+        return new ContentCategory();
     }
 }

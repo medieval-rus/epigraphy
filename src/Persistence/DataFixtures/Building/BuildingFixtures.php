@@ -36,7 +36,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 final class BuildingFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const reference_tserkovNikolyNaLipne = 'церковь Николы на Липне';
+    public const REFERENCE_TSERKOV_NIKOLY_NA_LIPNE = self::class.'церковь Николы на Липне';
 
     /**
      * @return string[]
@@ -56,8 +56,8 @@ final class BuildingFixtures extends Fixture implements DependentFixtureInterfac
         $this->loadObject(
             $manager,
             'церковь Николы на Липне',
-            BuildingTypeFixtures::reference_tserkov,
-            self::reference_tserkovNikolyNaLipne
+            BuildingTypeFixtures::REFERENCE_TSERKOV,
+            self::REFERENCE_TSERKOV_NIKOLY_NA_LIPNE
         );
 
         $manager->flush();

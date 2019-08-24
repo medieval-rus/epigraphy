@@ -34,14 +34,14 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 final class WritingMethodFixtures extends Fixture
 {
-    public const reference_graffito = 'граффито';
+    public const REFERENCE_GRAFFITO = self::class.'граффито';
 
     /**
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
     {
-        $this->loadObject($manager, 'граффито', self::reference_graffito);
+        $this->loadObject($manager, 'граффито', self::REFERENCE_GRAFFITO);
 
         $manager->flush();
     }

@@ -34,14 +34,14 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 final class MaterialFixtures extends Fixture
 {
-    public const reference_shtukaturka = 'штукатурка';
+    public const REFERENCE_SHTUKATURKA = self::class.'штукатурка';
 
     /**
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
     {
-        $this->loadObject($manager, 'штукатурка', self::reference_shtukaturka);
+        $this->loadObject($manager, 'штукатурка', self::REFERENCE_SHTUKATURKA);
 
         $manager->flush();
     }

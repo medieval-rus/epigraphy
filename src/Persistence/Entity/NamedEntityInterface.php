@@ -23,22 +23,20 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Carrier;
-
-use App\Persistence\Entity\Carrier\Carrier;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+namespace App\Persistence\Entity;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-final class CarrierRepository extends ServiceEntityRepository
+interface NamedEntityInterface
 {
     /**
-     * @param RegistryInterface $registry
+     * @return string|null
      */
-    public function __construct(RegistryInterface $registry)
-    {
-        parent::__construct($registry, Carrier::class);
-    }
+    public function getName(): ?string;
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name);
 }

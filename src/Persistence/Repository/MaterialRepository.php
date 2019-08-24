@@ -26,13 +26,20 @@ declare(strict_types=1);
 namespace App\Persistence\Repository;
 
 use App\Persistence\Entity\Material;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Persistence\Entity\NamedEntityInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method Material|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method Material|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Material[]    findAll()
+ * @method Material[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method Material|null findOneByName(string $name)
+ * @method Material      findOneByNameOrCreate(string $name)
  */
-final class MaterialRepository extends ServiceEntityRepository
+final class MaterialRepository extends NamedEntityRepository
 {
     /**
      * @param RegistryInterface $registry
@@ -40,5 +47,13 @@ final class MaterialRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Material::class);
+    }
+
+    /**
+     * @return NamedEntityInterface
+     */
+    protected function createEmpty(): NamedEntityInterface
+    {
+        return new Material();
     }
 }
