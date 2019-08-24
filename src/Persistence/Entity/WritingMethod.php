@@ -32,7 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\WritingMethodRepository")
  */
-class WritingMethod
+class WritingMethod implements NamedEntityInterface
 {
     /**
      * @var int

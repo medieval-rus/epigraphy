@@ -34,14 +34,14 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 final class AlphabetFixtures extends Fixture
 {
-    public const reference_kirillitsa = 'кириллица';
+    public const REFERENCE_KIRILLITSA = self::class.'кириллица';
 
     /**
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
     {
-        $this->loadObject($manager, 'кириллица', self::reference_kirillitsa);
+        $this->loadObject($manager, 'кириллица', self::REFERENCE_KIRILLITSA);
 
         $manager->flush();
     }

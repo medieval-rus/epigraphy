@@ -32,7 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\ContentCategoryRepository")
  */
-class ContentCategory
+class ContentCategory implements NamedEntityInterface
 {
     /**
      * @var int

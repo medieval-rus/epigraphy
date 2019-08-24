@@ -36,7 +36,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 final class WallCarrierFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const reference_yugoVostochnyiStolb = 'юго-восточный столб';
+    public const REFERENCE_YUGO_VOSTOCHNYI_STOLB = self::class.'юго-восточный столб';
 
     /**
      * @return string[]
@@ -56,8 +56,8 @@ final class WallCarrierFixtures extends Fixture implements DependentFixtureInter
         $this->loadObject(
             $manager,
             'юго-восточный столб',
-            BuildingFixtures::reference_tserkovNikolyNaLipne,
-            self::reference_yugoVostochnyiStolb
+            BuildingFixtures::REFERENCE_TSERKOV_NIKOLY_NA_LIPNE,
+            self::REFERENCE_YUGO_VOSTOCHNYI_STOLB
         );
 
         $manager->flush();

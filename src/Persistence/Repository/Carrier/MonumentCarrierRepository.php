@@ -31,6 +31,11 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method MonumentCarrier|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method MonumentCarrier|null findOneBy(array $criteria, array $orderBy = null)
+ * @method MonumentCarrier[]    findAll()
+ * @method MonumentCarrier[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
 final class MonumentCarrierRepository extends ServiceEntityRepository
 {

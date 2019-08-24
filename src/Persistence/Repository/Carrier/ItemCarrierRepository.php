@@ -31,6 +31,11 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method ItemCarrier|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method ItemCarrier|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ItemCarrier[]    findAll()
+ * @method ItemCarrier[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
 final class ItemCarrierRepository extends ServiceEntityRepository
 {

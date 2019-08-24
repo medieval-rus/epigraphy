@@ -23,37 +23,27 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository;
+namespace App\Portation\Registry;
 
-use App\Persistence\Entity\Alphabet;
-use App\Persistence\Entity\NamedEntityInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use App\Portation\Exporter\ExporterInterface;
+use App\Portation\Importer\ImporterInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
- *
- * @method Alphabet|null find(int $id, int $lockMode = null, int $lockVersion = null)
- * @method Alphabet|null findOneBy(array $criteria, array $orderBy = null)
- * @method Alphabet[]    findAll()
- * @method Alphabet[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- * @method Alphabet|null findOneByName(string $name)
- * @method Alphabet      findOneByNameOrCreate(string $name)
  */
-final class AlphabetRepository extends NamedEntityRepository
+interface PortationRegistryInterface
 {
     /**
-     * @param RegistryInterface $registry
+     * @param string $format
+     *
+     * @return ExporterInterface
      */
-    public function __construct(RegistryInterface $registry)
-    {
-        parent::__construct($registry, Alphabet::class);
-    }
+    public function getExporter(string $format): ExporterInterface;
 
     /**
-     * @return NamedEntityInterface
+     * @param string $format
+     *
+     * @return ImporterInterface
      */
-    protected function createEmpty(): NamedEntityInterface
-    {
-        return new Alphabet();
-    }
+    public function getImporter(string $format): ImporterInterface;
 }

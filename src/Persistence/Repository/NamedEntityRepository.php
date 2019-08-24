@@ -25,35 +25,49 @@ declare(strict_types=1);
 
 namespace App\Persistence\Repository;
 
-use App\Persistence\Entity\Alphabet;
 use App\Persistence\Entity\NamedEntityInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
- *
- * @method Alphabet|null find(int $id, int $lockMode = null, int $lockVersion = null)
- * @method Alphabet|null findOneBy(array $criteria, array $orderBy = null)
- * @method Alphabet[]    findAll()
- * @method Alphabet[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- * @method Alphabet|null findOneByName(string $name)
- * @method Alphabet      findOneByNameOrCreate(string $name)
  */
-final class AlphabetRepository extends NamedEntityRepository
+abstract class NamedEntityRepository extends ServiceEntityRepository
 {
     /**
-     * @param RegistryInterface $registry
+     * @param string $name
+     *
+     * @return NamedEntityInterface|null
      */
-    public function __construct(RegistryInterface $registry)
+    public function findOneByName(string $name): ?NamedEntityInterface
     {
-        parent::__construct($registry, Alphabet::class);
+        return $this->findOneBy(['name' => $name]);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @throws ORMException
+     *
+     * @return NamedEntityInterface
+     */
+    public function findOneByNameOrCreate(string $name): NamedEntityInterface
+    {
+        $entity = $this->findOneByName($name);
+
+        if (null === $entity) {
+            $entity = $this->createEmpty();
+
+            $entity->setName($name);
+
+            $this->getEntityManager()->persist($entity);
+        }
+
+        return $entity;
     }
 
     /**
      * @return NamedEntityInterface
      */
-    protected function createEmpty(): NamedEntityInterface
-    {
-        return new Alphabet();
-    }
+    abstract protected function createEmpty(): NamedEntityInterface;
 }

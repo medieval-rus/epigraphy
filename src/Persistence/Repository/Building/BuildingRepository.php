@@ -31,6 +31,11 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method Building|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method Building|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Building[]    findAll()
+ * @method Building[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
 final class BuildingRepository extends ServiceEntityRepository
 {

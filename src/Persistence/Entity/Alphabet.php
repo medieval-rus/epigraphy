@@ -32,7 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\AlphabetRepository")
  */
-class Alphabet
+class Alphabet implements NamedEntityInterface
 {
     /**
      * @var int

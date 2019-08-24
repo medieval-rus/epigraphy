@@ -34,14 +34,14 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 final class PreservationStateFixtures extends Fixture
 {
-    public const reference_tselaya = 'целая';
+    public const REFERENCE_TSELAYA = self::class.'целая';
 
     /**
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
     {
-        $this->loadObject($manager, 'целая', self::reference_tselaya);
+        $this->loadObject($manager, 'целая', self::REFERENCE_TSELAYA);
 
         $manager->flush();
     }

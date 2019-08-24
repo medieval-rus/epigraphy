@@ -25,12 +25,13 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Carrier;
 
+use App\Persistence\Entity\NamedEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  *
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\Carrier\CarrierRepository")
+ * @ORM\Entity
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="carrier_type", type="string")
  * @ORM\DiscriminatorMap({
@@ -39,7 +40,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     "monument"="MonumentCarrier"
  * })
  */
-abstract class Carrier
+abstract class Carrier implements NamedEntityInterface
 {
     /**
      * @var int

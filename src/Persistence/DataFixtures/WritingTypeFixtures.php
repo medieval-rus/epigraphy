@@ -34,14 +34,14 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 final class WritingTypeFixtures extends Fixture
 {
-    public const reference_vtoroy = 'второй';
+    public const REFERENCE_VTOROY = self::class.'второй';
 
     /**
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
     {
-        $this->loadObject($manager, 'второй', self::reference_vtoroy);
+        $this->loadObject($manager, 'второй', self::REFERENCE_VTOROY);
 
         $manager->flush();
     }

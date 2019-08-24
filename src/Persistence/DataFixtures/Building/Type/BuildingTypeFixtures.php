@@ -34,14 +34,14 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 final class BuildingTypeFixtures extends Fixture
 {
-    public const reference_tserkov = 'церковь';
+    public const REFERENCE_TSERKOV = self::class.'церковь';
 
     /**
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
     {
-        $this->loadObject($manager, 'церковь', self::reference_tserkov);
+        $this->loadObject($manager, 'церковь', self::REFERENCE_TSERKOV);
 
         $manager->flush();
     }

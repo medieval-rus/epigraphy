@@ -165,6 +165,12 @@
     "knplabs/knp-menu-bundle": {
         "version": "2.2.2"
     },
+    "markbaker/complex": {
+        "version": "1.4.7"
+    },
+    "markbaker/matrix": {
+        "version": "1.1.4"
+    },
     "microsoft/tolerant-php-parser": {
         "version": "v0.0.18"
     },
@@ -194,6 +200,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
+    },
+    "phpoffice/phpspreadsheet": {
+        "version": "1.9.0"
     },
     "phpro/grumphp": {
         "version": "v0.15.2"
