@@ -25,6 +25,10 @@ declare(strict_types=1);
 
 namespace App\Portation\Exporter;
 
+use App\Persistence\Entity\Carrier\Carrier;
+use App\Persistence\Entity\Carrier\ItemCarrier;
+use App\Persistence\Entity\Carrier\MonumentCarrier;
+use App\Persistence\Entity\Carrier\WallCarrier;
 use App\Persistence\Entity\Inscription;
 use App\Persistence\Entity\Material;
 use App\Persistence\Entity\NamedEntityInterface;
@@ -33,12 +37,22 @@ use InvalidArgumentException;
 use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use ReflectionObject;
 
+// todo move all the formatting methods to FooFormatterInterfaces (as well as parsing methods in XlsxImporter)
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
 final class XlsxExporter implements ExporterInterface
 {
+    public const NO_CARRIER_NAME = '-';
+
+    public const WALL_CARRIER_DISCRIMINATOR = 'wall';
+
+    public const ITEM_CARRIER_DISCRIMINATOR = 'item';
+
+    public const MONUMENT_CARRIER_DISCRIMINATOR = 'monument';
+
     public const MATERIAL_SEPARATOR = ', ';
 
     public const IS_IN_SITU_YES = 'да';
@@ -144,26 +158,35 @@ final class XlsxExporter implements ExporterInterface
             return $this->formatNamedEntity($material);
         };
 
-        return [
+        $formatNullableString = function (?string $nullableString): string {
+            if (null === $nullableString) {
+                return '';
+            }
+
+            return $nullableString;
+        };
+
+        $nullableValues = [
             (string) $inscription->getId(),
-            // todo use different formatters on different carrier types
-            $this->formatNamedEntity($inscription->getCarrier()) ?? '',
+            $this->formatCarrier($inscription->getCarrier()),
             $inscription->getIsInSitu() ? self::IS_IN_SITU_YES : self::IS_IN_SITU_NO,
-            $inscription->getPlaceOnCarrier() ?? '',
-            $this->formatNamedEntity($inscription->getWritingType()) ?? '',
+            $inscription->getPlaceOnCarrier(),
+            $this->formatNamedEntity($inscription->getWritingType()),
             implode(self::MATERIAL_SEPARATOR, $inscription->getMaterials()->map($formatMaterial)->toArray()),
-            $this->formatNamedEntity($inscription->getWritingMethod()) ?? '',
-            $this->formatNamedEntity($inscription->getPreservationState()) ?? '',
-            $this->formatNamedEntity($inscription->getAlphabet()) ?? '',
-            $inscription->getText() ?? '',
-            $inscription->getNewText() ?? '',
-            $inscription->getTransliteration() ?? '',
-            $inscription->getTranslation() ?? '',
-            $this->formatNamedEntity($inscription->getContentCategory()) ?? '',
-            $inscription->getDateInText() ?? '',
-            $inscription->getCommentOnDate() ?? '',
-            $inscription->getCommentOnText() ?? '',
+            $this->formatNamedEntity($inscription->getWritingMethod()),
+            $this->formatNamedEntity($inscription->getPreservationState()),
+            $this->formatNamedEntity($inscription->getAlphabet()),
+            $inscription->getText(),
+            $inscription->getNewText(),
+            $inscription->getTransliteration(),
+            $inscription->getTranslation(),
+            $this->formatNamedEntity($inscription->getContentCategory()),
+            $inscription->getDateInText(),
+            $inscription->getCommentOnDate(),
+            $inscription->getCommentOnText(),
         ];
+
+        return array_map($formatNullableString, $nullableValues);
     }
 
     /**
@@ -173,10 +196,90 @@ final class XlsxExporter implements ExporterInterface
      */
     private function formatNamedEntity(NamedEntityInterface $namedEntity = null): ?string
     {
-        if (null === $namedEntity) {
+        return null === $namedEntity ? null : $namedEntity->getName();
+    }
+
+    /**
+     * @param Carrier|null $carrier
+     *
+     * @return string|null
+     */
+    private function formatCarrier(?Carrier $carrier): ?string
+    {
+        if (null === $carrier) {
             return null;
         }
 
-        return $namedEntity->getName();
+        switch (true) {
+            case $carrier instanceof WallCarrier:
+                return sprintf('%s: %s', self::WALL_CARRIER_DISCRIMINATOR, $this->formatWallCarrier($carrier));
+            case $carrier instanceof ItemCarrier:
+                return sprintf('%s: %s', self::ITEM_CARRIER_DISCRIMINATOR, $this->formatItemCarrier($carrier));
+            case $carrier instanceof MonumentCarrier:
+                return sprintf('%s: %s', self::MONUMENT_CARRIER_DISCRIMINATOR, $this->formatMonumentCarrier($carrier));
+            default:
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Unknown carrier type "%s"',
+                        (new ReflectionObject($carrier))->getName()
+                    )
+                );
+        }
+    }
+
+    /**
+     * @param WallCarrier $carrier
+     *
+     * @return string|null
+     */
+    private function formatWallCarrier(WallCarrier $carrier): string
+    {
+        $building = $carrier->getBuilding();
+
+        $carrierName = $this->formatCarrierName($carrier->getName());
+
+        if (null === $building) {
+            return sprintf('%s', $carrierName);
+        }
+
+        $buildingTypeName = $building->getBuildingType()->getName();
+
+        $buildingName = $building->getName();
+
+        if (null === $buildingName) {
+            return sprintf('%s; %s', $carrierName, $buildingTypeName);
+        }
+
+        return sprintf('%s; %s; %s', $carrierName, $buildingTypeName, $buildingName);
+    }
+
+    /**
+     * @param ItemCarrier $carrier
+     *
+     * @return string
+     */
+    private function formatItemCarrier(ItemCarrier $carrier): string
+    {
+        return sprintf('%s', $this->formatCarrierName($carrier->getName()));
+    }
+
+    /**
+     * @param MonumentCarrier $carrier
+     *
+     * @return string
+     */
+    private function formatMonumentCarrier(MonumentCarrier $carrier): string
+    {
+        return sprintf('%s', $this->formatCarrierName($carrier->getName()));
+    }
+
+    /**
+     * @param string|null $carrierName
+     *
+     * @return string
+     */
+    private function formatCarrierName(?string $carrierName): string
+    {
+        return $carrierName ?? self::NO_CARRIER_NAME;
     }
 }

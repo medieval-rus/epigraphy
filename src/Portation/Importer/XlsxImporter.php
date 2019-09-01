@@ -28,6 +28,8 @@ namespace App\Portation\Importer;
 use App\Persistence\Entity\Inscription;
 use App\Persistence\Entity\NamedEntityInterface;
 use App\Persistence\Repository\AlphabetRepository;
+use App\Persistence\Repository\Carrier\ItemCarrierRepository;
+use App\Persistence\Repository\Carrier\MonumentCarrierRepository;
 use App\Persistence\Repository\Carrier\WallCarrierRepository;
 use App\Persistence\Repository\ContentCategoryRepository;
 use App\Persistence\Repository\MaterialRepository;
@@ -59,6 +61,16 @@ final class XlsxImporter implements ImporterInterface
      * @var WallCarrierRepository
      */
     private $wallCarrierRepository;
+
+    /**
+     * @var ItemCarrierRepository
+     */
+    private $itemCarrierRepository;
+
+    /**
+     * @var MonumentCarrierRepository
+     */
+    private $monumentCarrierRepository;
 
     /**
      * @var WritingTypeRepository
@@ -93,6 +105,8 @@ final class XlsxImporter implements ImporterInterface
     /**
      * @param EntityManagerInterface      $entityManager
      * @param WallCarrierRepository       $wallCarrierRepository
+     * @param ItemCarrierRepository       $itemCarrierRepository
+     * @param MonumentCarrierRepository   $monumentCarrierRepository
      * @param WritingTypeRepository       $writingTypeRepository
      * @param MaterialRepository          $materialRepository
      * @param WritingMethodRepository     $writingMethodRepository
@@ -103,6 +117,8 @@ final class XlsxImporter implements ImporterInterface
     public function __construct(
         EntityManagerInterface $entityManager,
         WallCarrierRepository $wallCarrierRepository,
+        ItemCarrierRepository $itemCarrierRepository,
+        MonumentCarrierRepository $monumentCarrierRepository,
         WritingTypeRepository $writingTypeRepository,
         MaterialRepository $materialRepository,
         WritingMethodRepository $writingMethodRepository,
@@ -112,6 +128,8 @@ final class XlsxImporter implements ImporterInterface
     ) {
         $this->entityManager = $entityManager;
         $this->wallCarrierRepository = $wallCarrierRepository;
+        $this->itemCarrierRepository = $itemCarrierRepository;
+        $this->monumentCarrierRepository = $monumentCarrierRepository;
         $this->writingTypeRepository = $writingTypeRepository;
         $this->materialRepository = $materialRepository;
         $this->writingMethodRepository = $writingMethodRepository;
@@ -178,10 +196,60 @@ final class XlsxImporter implements ImporterInterface
             function (Inscription $inscription, string $id): void {
             },
             function (Inscription $inscription, string $formattedCarrier): void {
-                // todo parse $formattedCarrier in order to choose the correct repository
-                $inscription->setCarrier(
-                    $this->wallCarrierRepository->findOneByNameOrCreate($formattedCarrier)
-                );
+                $carrierDiscriminators = [
+                    XlsxExporter::WALL_CARRIER_DISCRIMINATOR,
+                    XlsxExporter::ITEM_CARRIER_DISCRIMINATOR,
+                    XlsxExporter::MONUMENT_CARRIER_DISCRIMINATOR,
+                ];
+
+                $regex = '/('.implode('|', $carrierDiscriminators).')\: ([^;]+)(?:; ([^;]+)(?:; ([^;]+))?)?/';
+
+                if (1 === preg_match($regex, $formattedCarrier, $matches)) {
+                    $carrierDiscriminator = $matches[1];
+                    $carrierName = $matches[2];
+
+                    $buildingTypeNameMatchIndex = 3;
+                    $buildingNameMatchIndex = 4;
+
+                    switch ($carrierDiscriminator) {
+                        case XlsxExporter::WALL_CARRIER_DISCRIMINATOR:
+                            if (\count($matches) <= $buildingTypeNameMatchIndex) {
+                                $carrier = $this->wallCarrierRepository->findOneByNameOrCreate($carrierName);
+                            } else {
+                                $buildingTypeName = $matches[$buildingTypeNameMatchIndex];
+                                $buildingName = \count($matches) <= $buildingNameMatchIndex
+                                    ? null
+                                    : $matches[$buildingNameMatchIndex];
+
+                                $carrier = $this->wallCarrierRepository->findOneOrCreate(
+                                    $carrierName,
+                                    $buildingTypeName,
+                                    $buildingName
+                                );
+                            }
+
+                            break;
+                        case XlsxExporter::ITEM_CARRIER_DISCRIMINATOR:
+                            $carrier = $this->itemCarrierRepository->findOneByNameOrCreate($carrierName);
+
+                            break;
+                        case XlsxExporter::MONUMENT_CARRIER_DISCRIMINATOR:
+                            $carrier = $this->monumentCarrierRepository->findOneByNameOrCreate($carrierName);
+
+                            break;
+                        default:
+                            throw new InvalidArgumentException(
+                                sprintf(
+                                    'Invalid carrier discriminator "%s"',
+                                    $carrierDiscriminator
+                                )
+                            );
+                    }
+
+                    $inscription->setCarrier($carrier);
+                } else {
+                    throw new InvalidArgumentException(sprintf('Invalid formatted carrier "%s"', $formattedCarrier));
+                }
             },
             function (Inscription $inscription, string $formattedIsInSitu): void {
                 if (!\in_array($formattedIsInSitu, [XlsxExporter::IS_IN_SITU_YES, XlsxExporter::IS_IN_SITU_NO], true)) {

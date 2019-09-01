@@ -26,7 +26,8 @@ declare(strict_types=1);
 namespace App\Persistence\Repository\Carrier;
 
 use App\Persistence\Entity\Carrier\ItemCarrier;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Persistence\Entity\NamedEntityInterface;
+use App\Persistence\Repository\NamedEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -36,8 +37,10 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method ItemCarrier|null findOneBy(array $criteria, array $orderBy = null)
  * @method ItemCarrier[]    findAll()
  * @method ItemCarrier[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method ItemCarrier|null findOneByName(string $name)
+ * @method ItemCarrier      findOneByNameOrCreate(string $name)
  */
-final class ItemCarrierRepository extends ServiceEntityRepository
+final class ItemCarrierRepository extends NamedEntityRepository
 {
     /**
      * @param RegistryInterface $registry
@@ -45,5 +48,13 @@ final class ItemCarrierRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, ItemCarrier::class);
+    }
+
+    /**
+     * @return NamedEntityInterface
+     */
+    protected function createEmpty(): NamedEntityInterface
+    {
+        return new ItemCarrier();
     }
 }

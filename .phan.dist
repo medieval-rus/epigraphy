@@ -102,7 +102,7 @@ return [
         'PhanTypeInvalidThrowsIsTrait',
 //        'PhanTypeInvalidThrowsIsInterface', // interfaces are thrown intentional
         'PhanTypeMagicVoidWithReturn',
-        'PhanTypeMismatchArgument',
+//        'PhanTypeMismatchArgument', // Phan does not work good with type inference
         'PhanTypeMismatchArgumentInternal',
         'PhanPartialTypeMismatchArgument',
         'PhanPartialTypeMismatchArgumentInternal',
