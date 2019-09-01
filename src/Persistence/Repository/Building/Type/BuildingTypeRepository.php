@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace App\Persistence\Repository\Building\Type;
 
+use App\Persistence\Entity\Building\Building;
 use App\Persistence\Entity\Building\Type\BuildingType;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Persistence\Entity\NamedEntityInterface;
+use App\Persistence\Repository\NamedEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -36,8 +38,10 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method BuildingType|null findOneBy(array $criteria, array $orderBy = null)
  * @method BuildingType[]    findAll()
  * @method BuildingType[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method BuildingType|null findOneByName(string $name)
+ * @method BuildingType      findOneByNameOrCreate(string $name)
  */
-final class BuildingTypeRepository extends ServiceEntityRepository
+final class BuildingTypeRepository extends NamedEntityRepository
 {
     /**
      * @param RegistryInterface $registry
@@ -45,5 +49,13 @@ final class BuildingTypeRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, BuildingType::class);
+    }
+
+    /**
+     * @return NamedEntityInterface
+     */
+    protected function createEmpty(): NamedEntityInterface
+    {
+        return new Building();
     }
 }

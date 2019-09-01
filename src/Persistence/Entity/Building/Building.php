@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace App\Persistence\Entity\Building;
 
 use App\Persistence\Entity\Building\Type\BuildingType;
+use App\Persistence\Entity\NamedEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,7 +34,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\Building\BuildingRepository")
  */
-class Building
+class Building implements NamedEntityInterface
 {
     /**
      * @var int

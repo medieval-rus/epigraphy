@@ -26,7 +26,8 @@ declare(strict_types=1);
 namespace App\Persistence\Repository\Carrier;
 
 use App\Persistence\Entity\Carrier\MonumentCarrier;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Persistence\Entity\NamedEntityInterface;
+use App\Persistence\Repository\NamedEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -36,8 +37,10 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method MonumentCarrier|null findOneBy(array $criteria, array $orderBy = null)
  * @method MonumentCarrier[]    findAll()
  * @method MonumentCarrier[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method MonumentCarrier|null findOneByName(string $name)
+ * @method MonumentCarrier      findOneByNameOrCreate(string $name)
  */
-final class MonumentCarrierRepository extends ServiceEntityRepository
+final class MonumentCarrierRepository extends NamedEntityRepository
 {
     /**
      * @param RegistryInterface $registry
@@ -45,5 +48,13 @@ final class MonumentCarrierRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, MonumentCarrier::class);
+    }
+
+    /**
+     * @return NamedEntityInterface
+     */
+    protected function createEmpty(): NamedEntityInterface
+    {
+        return new MonumentCarrier();
     }
 }

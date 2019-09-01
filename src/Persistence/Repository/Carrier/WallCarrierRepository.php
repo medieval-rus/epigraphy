@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace App\Persistence\Repository\Carrier;
 
 use App\Persistence\Entity\Carrier\WallCarrier;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Persistence\Entity\NamedEntityInterface;
+use App\Persistence\Repository\Building\BuildingRepository;
+use App\Persistence\Repository\NamedEntityRepository;
 use Doctrine\ORM\ORMException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -37,48 +39,69 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method WallCarrier|null findOneBy(array $criteria, array $orderBy = null)
  * @method WallCarrier[]    findAll()
  * @method WallCarrier[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method WallCarrier|null findOneByName(string $name)
+ * @method WallCarrier      findOneByNameOrCreate(string $name)
  */
-final class WallCarrierRepository extends ServiceEntityRepository
+final class WallCarrierRepository extends NamedEntityRepository
 {
     /**
-     * @param RegistryInterface $registry
+     * @var BuildingRepository
      */
-    public function __construct(RegistryInterface $registry)
+    private $buildingRepository;
+
+    /**
+     * @param RegistryInterface  $registry
+     * @param BuildingRepository $buildingRepository
+     */
+    public function __construct(RegistryInterface $registry, BuildingRepository $buildingRepository)
     {
         parent::__construct($registry, WallCarrier::class);
+        $this->buildingRepository = $buildingRepository;
     }
 
     /**
-     * @param string $name
+     * @param string      $name
+     * @param string      $buildingTypeName
+     * @param string|null $buildingName
      *
      * @throws ORMException
      *
      * @return WallCarrier
      */
-    public function findOneByNameOrCreate(string $name): WallCarrier
+    public function findOneOrCreate(string $name, string $buildingTypeName, ?string  $buildingName): WallCarrier
     {
         $carrier = $this->findOneBy(['name' => $name]);
 
         if (null === $carrier) {
-            $carrier = $this->create($name);
+            $carrier = $this->create($name, $buildingTypeName, $buildingName);
         }
 
         return $carrier;
     }
 
     /**
-     * @param string $name
+     * @return NamedEntityInterface
+     */
+    protected function createEmpty(): NamedEntityInterface
+    {
+        return new WallCarrier();
+    }
+
+    /**
+     * @param string      $name
+     * @param string      $buildingTypeName
+     * @param string|null $buildingName
      *
      * @throws ORMException
      *
      * @return WallCarrier
      */
-    private function create(string $name): WallCarrier
+    private function create(string $name, string $buildingTypeName, ?string $buildingName): WallCarrier
     {
         $carrier = new WallCarrier();
 
         $carrier->setName($name);
-        // todo specify building
+        $carrier->setBuilding($this->buildingRepository->findOneOrCreate($buildingTypeName, $buildingName));
 
         $this->getEntityManager()->persist($carrier);
 
