@@ -26,7 +26,8 @@ declare(strict_types=1);
 namespace App\Persistence\DataFixtures;
 
 use App\Persistence\DataFixtures\Carrier\WallCarrierFixtures;
-use App\Persistence\Entity\Inscription;
+use App\Persistence\Entity\Inscription\Inscription;
+use App\Persistence\Entity\Inscription\Interpretation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -76,7 +77,13 @@ final class InscriptionFixtures extends Fixture implements DependentFixtureInter
             ->setWritingMethod($this->getReference(WritingMethodFixtures::REFERENCE_GRAFFITO))
             ->setPreservationState($this->getReference(PreservationStateFixtures::REFERENCE_TSELAYA))
             ->setAlphabet($this->getReference(AlphabetFixtures::REFERENCE_KIRILLITSA))
-            ->setText(<<<EOT
+            ->setContentCategory($this->getReference(ContentCategoryFixtures::REFERENCE_PRESTAVISYA))
+            ->setDateInText('22 мая на святого мученика Василиска')
+            ->addInterpretation(
+                (new Interpretation())
+                    ->setSource('какой-то источник')
+                    ->setDoWeAgree(true)
+                    ->setText(<<<EOT
 мцама8к
 ~
 в
@@ -91,14 +98,18 @@ final class InscriptionFixtures extends Fixture implements DependentFixtureInter
 ~
 пъклиментъ
 EOT
+                    )
+                    ->setTextImageFileName('изображениеТекста.джипег')
+                    ->setTransliteration('это транслитерация')
+                    ->setTranslation(<<<EOT
+'М(есØца мая 22 (на) с(вØ)т(о)го м(у)ч(е)н(и)ка Василиска престависØ раб Божий архиеп(иско)п Климент'
+EOT
+                    )
+                    ->setPhotoFileName('фото.джипег')
+                    ->setSketchFileName('прорись.джипег')
+                    ->setDate('10 век')
+                    ->setCommentFileName('комментарий.пдф')
             )
-            ->setNewText(null)
-            ->setTransliteration(null)
-            ->setTranslation('М(есØца мая 22 (на) с(вØ)т(о)го м(у)ч(е)н(и)ка Василиска престависØ раб Божий архиеп(иско)п Климент')
-            ->setContentCategory($this->getReference(ContentCategoryFixtures::REFERENCE_PRESTAVISYA))
-            ->setDateInText('22 мая на святого мученика Василиска')
-            ->setCommentOnDate(null)
-            ->setCommentOnText(null)
         ;
     }
 }

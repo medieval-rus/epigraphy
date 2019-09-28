@@ -23,9 +23,15 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity;
+namespace App\Persistence\Entity\Inscription;
 
+use App\Persistence\Entity\Alphabet;
 use App\Persistence\Entity\Carrier\Carrier;
+use App\Persistence\Entity\ContentCategory;
+use App\Persistence\Entity\Material;
+use App\Persistence\Entity\PreservationState;
+use App\Persistence\Entity\WritingMethod;
+use App\Persistence\Entity\WritingType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -33,7 +39,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  *
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\InscriptionRepository")
+ * @ORM\Entity(repositoryClass="App\Persistence\Repository\Inscription\InscriptionRepository")
  */
 class Inscription
 {
@@ -84,7 +90,7 @@ class Inscription
     /**
      * @var WritingMethod|null
      *
-     * @ORM\ManyToOne(targetEntity="WritingMethod", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\WritingMethod", cascade={"persist"})
      */
     private $writingMethod;
 
@@ -103,34 +109,6 @@ class Inscription
     private $alphabet;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $text;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $newText;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $transliteration;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $translation;
-
-    /**
      * @var ContentCategory|null
      *
      * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\ContentCategory", cascade={"persist"})
@@ -145,22 +123,21 @@ class Inscription
     private $dateInText;
 
     /**
-     * @var string|null
+     * @var Collection|Interpretation[]
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\OneToMany(
+     *     targetEntity="App\Persistence\Entity\Inscription\Interpretation",
+     *     cascade={"persist"},
+     *     mappedBy="inscription",
+     *     orphanRemoval=true
+     * )
      */
-    private $commentOnDate;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $commentOnText;
+    private $interpretations;
 
     public function __construct()
     {
         $this->materials = new ArrayCollection();
+        $this->interpretations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -345,86 +322,6 @@ class Inscription
     }
 
     /**
-     * @return string|null
-     */
-    public function getText(): ?string
-    {
-        return $this->text;
-    }
-
-    /**
-     * @param string|null $text
-     *
-     * @return Inscription
-     */
-    public function setText(?string $text): self
-    {
-        $this->text = $text;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getNewText(): ?string
-    {
-        return $this->newText;
-    }
-
-    /**
-     * @param string|null $newText
-     *
-     * @return Inscription
-     */
-    public function setNewText(?string $newText): self
-    {
-        $this->newText = $newText;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTransliteration(): ?string
-    {
-        return $this->transliteration;
-    }
-
-    /**
-     * @param string|null $transliteration
-     *
-     * @return Inscription
-     */
-    public function setTransliteration(?string $transliteration): self
-    {
-        $this->transliteration = $transliteration;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTranslation(): ?string
-    {
-        return $this->translation;
-    }
-
-    /**
-     * @param string|null $translation
-     *
-     * @return Inscription
-     */
-    public function setTranslation(?string $translation): self
-    {
-        $this->translation = $translation;
-
-        return $this;
-    }
-
-    /**
      * @return ContentCategory|null
      */
     public function getContentCategory(): ?ContentCategory
@@ -465,41 +362,39 @@ class Inscription
     }
 
     /**
-     * @return string|null
+     * @return Collection|Interpretation[]
      */
-    public function getCommentOnDate(): ?string
+    public function getInterpretations(): Collection
     {
-        return $this->commentOnDate;
+        return $this->interpretations;
     }
 
     /**
-     * @param string|null $commentOnDate
+     * @param Collection|Interpretation[] $interpretations
      *
      * @return Inscription
      */
-    public function setCommentOnDate(?string $commentOnDate): self
+    public function setInterpretations(Collection $interpretations): self
     {
-        $this->commentOnDate = $commentOnDate;
+        $this->interpretations = new ArrayCollection();
+
+        foreach ($interpretations as $interpretation) {
+            $this->addInterpretation($interpretation);
+        }
 
         return $this;
     }
 
     /**
-     * @return string|null
-     */
-    public function getCommentOnText(): ?string
-    {
-        return $this->commentOnText;
-    }
-
-    /**
-     * @param string|null $commentOnText
+     * @param Interpretation $interpretation
      *
      * @return Inscription
      */
-    public function setCommentOnText(?string $commentOnText): self
+    public function addInterpretation(Interpretation $interpretation): self
     {
-        $this->commentOnText = $commentOnText;
+        $interpretation->setInscription($this);
+
+        $this->interpretations[] = $interpretation;
 
         return $this;
     }

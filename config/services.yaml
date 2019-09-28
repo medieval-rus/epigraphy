@@ -43,8 +43,8 @@ services:
       - method: addExporter
         arguments:
           - xlsx
-          - '@App\Portation\Exporter\XlsxExporter'
+          - '@App\Portation\Exporter\Xlsx\XlsxExporter'
       - method: addImporter
         arguments:
           - xlsx
-          - '@App\Portation\Importer\XlsxImporter'
+          - '@App\Portation\Importer\Xlsx\XlsxImporter'

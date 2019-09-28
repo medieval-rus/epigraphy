@@ -23,38 +23,26 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Carrier;
+namespace App\Portation\Formatter\Carrier;
 
-use Doctrine\ORM\Mapping as ORM;
+use App\Persistence\Entity\Carrier\Carrier;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
- *
- * @ORM\Entity
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="carrier_type", type="string")
- * @ORM\DiscriminatorMap({
- *     "wall"="WallCarrier",
- *     "item"="ItemCarrier",
- *     "monument"="MonumentCarrier"
- * })
  */
-abstract class Carrier
+interface CarrierFormatterInterface
 {
     /**
-     * @var int
+     * @param Carrier|null $carrier
      *
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @return string|null
      */
-    private $id;
+    public function format(?Carrier $carrier): ?string;
 
     /**
-     * @return int|null
+     * @param string $formattedCarrier
+     *
+     * @return Carrier|null
      */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function parse(string $formattedCarrier): ?Carrier;
 }

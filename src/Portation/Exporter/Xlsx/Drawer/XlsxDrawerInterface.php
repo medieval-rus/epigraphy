@@ -23,38 +23,28 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Carrier;
+namespace App\Portation\Exporter\Xlsx\Drawer;
 
-use Doctrine\ORM\Mapping as ORM;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
- *
- * @ORM\Entity
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="carrier_type", type="string")
- * @ORM\DiscriminatorMap({
- *     "wall"="WallCarrier",
- *     "item"="ItemCarrier",
- *     "monument"="MonumentCarrier"
- * })
  */
-abstract class Carrier
+interface XlsxDrawerInterface
 {
     /**
-     * @var int
-     *
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @param string    $cellValue
+     * @param int       $columnIndex
+     * @param int       $rowIndex
+     * @param Worksheet $sheet
      */
-    private $id;
+    public function drawCell(string $cellValue, int $columnIndex, int $rowIndex, Worksheet $sheet): void;
 
     /**
-     * @return int|null
+     * @param string[]  $cellValues
+     * @param int       $columnIndex
+     * @param int       $rowIndex
+     * @param Worksheet $sheet
      */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function drawRow(array $cellValues, int $columnIndex, int $rowIndex, Worksheet $sheet): void;
 }
