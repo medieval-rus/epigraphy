@@ -131,7 +131,7 @@ return [
         'PhanPossiblyFalseTypeReturn',
 //        'PhanTypeMismatchDeclaredReturn', // Phan does not work with collection content type annotations
         'PhanTypeMismatchDeclaredReturnNullable',
-        'PhanTypeMismatchDeclaredParam',
+//        'PhanTypeMismatchDeclaredParam', // Phan does not work with collection content type annotations
         'PhanTypeMismatchDeclaredParamNullable',
         'PhanTypeMissingReturn',
         'PhanTypeNonVarPassByRef',

@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\FilterableTable;
 
-use App\Persistence\Entity\Inscription;
+use App\Persistence\Entity\Inscription\Inscription;
 use InvalidArgumentException;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\AbstractFilterConfigurator;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;

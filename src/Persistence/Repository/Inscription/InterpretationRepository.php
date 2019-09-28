@@ -23,27 +23,27 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository;
+namespace App\Persistence\Repository\Inscription;
 
-use App\Persistence\Entity\Inscription;
+use App\Persistence\Entity\Inscription\Interpretation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  *
- * @method Inscription|null find(int $id, int $lockMode = null, int $lockVersion = null)
- * @method Inscription|null findOneBy(array $criteria, array $orderBy = null)
- * @method Inscription[]    findAll()
- * @method Inscription[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method Interpretation|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method Interpretation|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Interpretation[]    findAll()
+ * @method Interpretation[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
-final class InscriptionRepository extends ServiceEntityRepository
+final class InterpretationRepository extends ServiceEntityRepository
 {
     /**
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Inscription::class);
+        parent::__construct($registry, Interpretation::class);
     }
 }

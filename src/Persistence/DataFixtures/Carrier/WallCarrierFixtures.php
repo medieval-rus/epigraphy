@@ -55,7 +55,6 @@ final class WallCarrierFixtures extends Fixture implements DependentFixtureInter
     {
         $this->loadObject(
             $manager,
-            'юго-восточный столб',
             BuildingFixtures::REFERENCE_TSERKOV_NIKOLY_NA_LIPNE,
             self::REFERENCE_YUGO_VOSTOCHNYI_STOLB
         );
@@ -65,19 +64,16 @@ final class WallCarrierFixtures extends Fixture implements DependentFixtureInter
 
     /**
      * @param ObjectManager $manager
-     * @param string        $name
      * @param string        $buildingReference
      * @param string        $reference
      */
     private function loadObject(
         ObjectManager $manager,
-        string $name,
         string $buildingReference,
         string $reference
     ): void {
         $carrier = (new WallCarrier())
             ->setBuilding($this->getReference($buildingReference))
-            ->setName($name)
         ;
 
         $this->addReference($reference, $carrier);

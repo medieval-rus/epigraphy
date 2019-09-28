@@ -57,7 +57,7 @@ class Building implements NamedEntityInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Building\Type\BuildingType")
      */
-    private $buildingType;
+    private $type;
 
     /**
      * @return int|null
@@ -87,19 +87,19 @@ class Building implements NamedEntityInterface
     /**
      * @return BuildingType|null
      */
-    public function getBuildingType(): ?BuildingType
+    public function getType(): ?BuildingType
     {
-        return $this->buildingType;
+        return $this->type;
     }
 
     /**
-     * @param BuildingType|null $buildingType
+     * @param BuildingType|null $type
      *
      * @return Building
      */
-    public function setBuildingType(?BuildingType $buildingType): self
+    public function setType(?BuildingType $type): self
     {
-        $this->buildingType = $buildingType;
+        $this->type = $type;
 
         return $this;
     }

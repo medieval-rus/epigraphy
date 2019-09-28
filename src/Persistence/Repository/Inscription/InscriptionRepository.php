@@ -23,38 +23,27 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Carrier;
+namespace App\Persistence\Repository\Inscription;
 
-use Doctrine\ORM\Mapping as ORM;
+use App\Persistence\Entity\Inscription\Inscription;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  *
- * @ORM\Entity
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="carrier_type", type="string")
- * @ORM\DiscriminatorMap({
- *     "wall"="WallCarrier",
- *     "item"="ItemCarrier",
- *     "monument"="MonumentCarrier"
- * })
+ * @method Inscription|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method Inscription|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Inscription[]    findAll()
+ * @method Inscription[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
-abstract class Carrier
+final class InscriptionRepository extends ServiceEntityRepository
 {
     /**
-     * @var int
-     *
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @param RegistryInterface $registry
      */
-    private $id;
-
-    /**
-     * @return int|null
-     */
-    public function getId(): ?int
+    public function __construct(RegistryInterface $registry)
     {
-        return $this->id;
+        parent::__construct($registry, Inscription::class);
     }
 }

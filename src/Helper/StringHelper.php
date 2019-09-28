@@ -23,38 +23,38 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Carrier;
-
-use Doctrine\ORM\Mapping as ORM;
+namespace App\Helper;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
- *
- * @ORM\Entity
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="carrier_type", type="string")
- * @ORM\DiscriminatorMap({
- *     "wall"="WallCarrier",
- *     "item"="ItemCarrier",
- *     "monument"="MonumentCarrier"
- * })
  */
-abstract class Carrier
+abstract class StringHelper
 {
     /**
-     * @var int
+     * @param string|null $nullableString
      *
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @return string
      */
-    private $id;
+    public static function emptyIfNull(?string $nullableString): string
+    {
+        if (null === $nullableString) {
+            return '';
+        }
+
+        return $nullableString;
+    }
 
     /**
-     * @return int|null
+     * @param string $string
+     *
+     * @return string|null
      */
-    public function getId(): ?int
+    public static function nullIfEmpty(string $string): ?string
     {
-        return $this->id;
+        if ('' === $string) {
+            return null;
+        }
+
+        return $string;
     }
 }

@@ -23,38 +23,39 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Carrier;
+namespace App\Portation\Exporter\Xlsx\Drawer;
 
-use Doctrine\ORM\Mapping as ORM;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
- *
- * @ORM\Entity
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="carrier_type", type="string")
- * @ORM\DiscriminatorMap({
- *     "wall"="WallCarrier",
- *     "item"="ItemCarrier",
- *     "monument"="MonumentCarrier"
- * })
  */
-abstract class Carrier
+final class XlsxDrawer implements XlsxDrawerInterface
 {
     /**
-     * @var int
-     *
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @param string    $cellValue
+     * @param int       $columnIndex
+     * @param int       $rowIndex
+     * @param Worksheet $sheet
      */
-    private $id;
+    public function drawCell(string $cellValue, int $columnIndex, int $rowIndex, Worksheet $sheet): void
+    {
+        $sheet->getColumnDimensionByColumn($columnIndex)->setAutoSize(true);
+
+        $sheet->setCellValueExplicitByColumnAndRow($columnIndex, $rowIndex, $cellValue, DataType::TYPE_STRING);
+    }
 
     /**
-     * @return int|null
+     * @param array     $cellValues
+     * @param int       $columnIndex
+     * @param int       $rowIndex
+     * @param Worksheet $sheet
      */
-    public function getId(): ?int
+    public function drawRow(array $cellValues, int $columnIndex, int $rowIndex, Worksheet $sheet): void
     {
-        return $this->id;
+        foreach ($cellValues as $cellValue) {
+            $this->drawCell($cellValue, $columnIndex++, $rowIndex, $sheet);
+        }
     }
 }

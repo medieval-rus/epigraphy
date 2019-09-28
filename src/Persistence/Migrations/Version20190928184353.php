@@ -23,42 +23,46 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Carrier;
+namespace DoctrineMigrations;
 
-use App\Persistence\Entity\NamedEntityInterface;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
- *
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\Carrier\MonumentCarrierRepository")
  */
-class MonumentCarrier extends Carrier implements NamedEntityInterface
+final class Version20190928184353 extends AbstractMigration
 {
     /**
-     * @var string|null
-     *
-     * @ORM\Column(type="string", length=255)
+     * @return string
      */
-    private $name;
-
-    /**
-     * @return string|null
-     */
-    public function getName(): ?string
+    public function getDescription(): string
     {
-        return $this->name;
+        return 'Nullable "do we agree" field of Interpretation';
     }
 
     /**
-     * @param string|null $name
+     * @param Schema $schema
      *
-     * @return MonumentCarrier
+     * @throws DBALException
      */
-    public function setName(?string $name): self
+    public function up(Schema $schema): void
     {
-        $this->name = $name;
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
-        return $this;
+        $this->addSql('ALTER TABLE interpretation CHANGE do_we_agree do_we_agree TINYINT(1) DEFAULT NULL');
+    }
+
+    /**
+     * @param Schema $schema
+     *
+     * @throws DBALException
+     */
+    public function down(Schema $schema): void
+    {
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
+
+        $this->addSql('ALTER TABLE interpretation CHANGE do_we_agree do_we_agree TINYINT(1) DEFAULT \'0\' NOT NULL');
     }
 }

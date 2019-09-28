@@ -75,12 +75,12 @@ final class BuildingRepository extends ServiceEntityRepository
         $building = $this->findOneBy(['name' => $buildingName]);
 
         if (null !== $building) {
-            if ($building->getBuildingType()->getName() !== $buildingTypeName) {
+            if ($building->getType()->getName() !== $buildingTypeName) {
                 throw new InvalidArgumentException(
                     sprintf(
                         'Found building with name "%s" and type "%s", while looking for "%s" and "%s"',
                         $building->getName(),
-                        $building->getBuildingType()->getName(),
+                        $building->getType()->getName(),
                         $buildingName,
                         $buildingTypeName
                     )
@@ -106,7 +106,7 @@ final class BuildingRepository extends ServiceEntityRepository
         $building = new Building();
 
         $building->setName($buildingName);
-        $building->setBuildingType($this->buildingTypeRepository->findOneByNameOrCreate($buildingTypeName));
+        $building->setType($this->buildingTypeRepository->findOneByNameOrCreate($buildingTypeName));
 
         $this->getEntityManager()->persist($building);
 

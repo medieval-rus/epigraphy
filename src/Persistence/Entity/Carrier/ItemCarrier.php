@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Carrier;
 
+use App\Persistence\Entity\NamedEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,6 +33,32 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\Carrier\ItemCarrierRepository")
  */
-class ItemCarrier extends Carrier
+class ItemCarrier extends Carrier implements NamedEntityInterface
 {
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string|null $name
+     *
+     * @return ItemCarrier
+     */
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
 }

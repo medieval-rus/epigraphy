@@ -23,38 +23,24 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Carrier;
-
-use Doctrine\ORM\Mapping as ORM;
+namespace App\Portation\Formatter\Bool;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
- *
- * @ORM\Entity
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="carrier_type", type="string")
- * @ORM\DiscriminatorMap({
- *     "wall"="WallCarrier",
- *     "item"="ItemCarrier",
- *     "monument"="MonumentCarrier"
- * })
  */
-abstract class Carrier
+interface BoolFormatterInterface
 {
     /**
-     * @var int
+     * @param bool|null $bool
      *
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @return string|null
      */
-    private $id;
+    public function format(?bool $bool): ?string;
 
     /**
-     * @return int|null
+     * @param string|null $formattedBool
+     *
+     * @return bool|null
      */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function parse(?string $formattedBool): ?bool;
 }

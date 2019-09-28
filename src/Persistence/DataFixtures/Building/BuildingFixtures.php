@@ -77,7 +77,7 @@ final class BuildingFixtures extends Fixture implements DependentFixtureInterfac
     ): void {
         $building = (new Building())
             ->setName($name)
-            ->setBuildingType($this->getReference($buildingTypeReference))
+            ->setType($this->getReference($buildingTypeReference))
         ;
 
         $this->addReference($reference, $building);

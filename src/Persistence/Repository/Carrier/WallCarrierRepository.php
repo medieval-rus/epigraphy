@@ -26,10 +26,11 @@ declare(strict_types=1);
 namespace App\Persistence\Repository\Carrier;
 
 use App\Persistence\Entity\Carrier\WallCarrier;
-use App\Persistence\Entity\NamedEntityInterface;
 use App\Persistence\Repository\Building\BuildingRepository;
-use App\Persistence\Repository\NamedEntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use LogicException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -39,10 +40,8 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method WallCarrier|null findOneBy(array $criteria, array $orderBy = null)
  * @method WallCarrier[]    findAll()
  * @method WallCarrier[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- * @method WallCarrier|null findOneByName(string $name)
- * @method WallCarrier      findOneByNameOrCreate(string $name)
  */
-final class WallCarrierRepository extends NamedEntityRepository
+final class WallCarrierRepository extends ServiceEntityRepository
 {
     /**
      * @var BuildingRepository
@@ -60,7 +59,6 @@ final class WallCarrierRepository extends NamedEntityRepository
     }
 
     /**
-     * @param string      $name
      * @param string      $buildingTypeName
      * @param string|null $buildingName
      *
@@ -68,27 +66,51 @@ final class WallCarrierRepository extends NamedEntityRepository
      *
      * @return WallCarrier
      */
-    public function findOneOrCreate(string $name, string $buildingTypeName, ?string  $buildingName): WallCarrier
+    public function findOneOrCreate(string $buildingTypeName, ?string  $buildingName): WallCarrier
     {
-        $carrier = $this->findOneBy(['name' => $name]);
+        $carrier = $this->findOne($buildingTypeName, $buildingName);
 
-        if (null === $carrier) {
-            $carrier = $this->create($name, $buildingTypeName, $buildingName);
+        if (null !== $carrier) {
+            return $carrier;
         }
 
-        return $carrier;
+        return $this->create($buildingTypeName, $buildingName);
     }
 
     /**
-     * @return NamedEntityInterface
+     * @param string      $buildingTypeName
+     * @param string|null $buildingName
+     *
+     * @return WallCarrier
      */
-    protected function createEmpty(): NamedEntityInterface
+    private function findOne(string $buildingTypeName, ?string  $buildingName): WallCarrier
     {
-        return new WallCarrier();
+        $queryBuilder = $this->createQueryBuilder('wallCarrier');
+
+        $queryBuilder
+            ->innerJoin('wallCarrier.building', 'building')
+            ->innerJoin('building.type', 'buildingType')
+            ->setParameter('buildingTypeName', $buildingTypeName)
+            ->select('wallCarrier')
+            ->andWhere($queryBuilder->expr()->eq('buildingType.name', ':buildingTypeName'))
+        ;
+
+        if (null !== $buildingName) {
+            $queryBuilder
+                ->setParameter('buildingName', $buildingName)
+                ->andWhere($queryBuilder->expr()->eq('building.name', ':buildingName'));
+        }
+
+        $query = $queryBuilder->getQuery();
+
+        try {
+            return $query->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new LogicException(sprintf('The built query "%s" returns non-unique result', $query->getDQL()));
+        }
     }
 
     /**
-     * @param string      $name
      * @param string      $buildingTypeName
      * @param string|null $buildingName
      *
@@ -96,11 +118,10 @@ final class WallCarrierRepository extends NamedEntityRepository
      *
      * @return WallCarrier
      */
-    private function create(string $name, string $buildingTypeName, ?string $buildingName): WallCarrier
+    private function create(string $buildingTypeName, ?string $buildingName): WallCarrier
     {
         $carrier = new WallCarrier();
 
-        $carrier->setName($name);
         $carrier->setBuilding($this->buildingRepository->findOneOrCreate($buildingTypeName, $buildingName));
 
         $this->getEntityManager()->persist($carrier);
