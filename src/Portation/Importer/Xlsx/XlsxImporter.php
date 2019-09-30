@@ -34,14 +34,15 @@ use App\Persistence\Repository\MaterialRepository;
 use App\Persistence\Repository\PreservationStateRepository;
 use App\Persistence\Repository\WritingMethodRepository;
 use App\Persistence\Repository\WritingTypeRepository;
+use App\Portation\Exporter\Xlsx\Accessor\XlsxAccessorInterface;
 use App\Portation\Exporter\Xlsx\XlsxExporter;
+use App\Portation\Exporter\Xlsx\XlsxExporterInterface;
 use App\Portation\Formatter\Bool\BoolFormatterInterface;
 use App\Portation\Formatter\Carrier\CarrierFormatterInterface;
 use App\Portation\Importer\ImporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
@@ -98,6 +99,16 @@ final class XlsxImporter implements ImporterInterface
     private $contentCategoryRepository;
 
     /**
+     * @var XlsxExporterInterface
+     */
+    private $xlsxExporter;
+
+    /**
+     * @var XlsxAccessorInterface
+     */
+    private $xlsxAccessor;
+
+    /**
      * @param EntityManagerInterface      $entityManager
      * @param BoolFormatterInterface      $boolFormatter
      * @param CarrierFormatterInterface   $carrierFormatter
@@ -107,6 +118,8 @@ final class XlsxImporter implements ImporterInterface
      * @param PreservationStateRepository $preservationStateRepository
      * @param AlphabetRepository          $alphabetRepository
      * @param ContentCategoryRepository   $contentCategoryRepository
+     * @param XlsxExporterInterface       $xlsxExporter
+     * @param XlsxAccessorInterface       $xlsxAccessor
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -117,7 +130,9 @@ final class XlsxImporter implements ImporterInterface
         WritingMethodRepository $writingMethodRepository,
         PreservationStateRepository $preservationStateRepository,
         AlphabetRepository $alphabetRepository,
-        ContentCategoryRepository $contentCategoryRepository
+        ContentCategoryRepository $contentCategoryRepository,
+        XlsxExporterInterface $xlsxExporter,
+        XlsxAccessorInterface $xlsxAccessor
     ) {
         $this->entityManager = $entityManager;
         $this->boolFormatter = $boolFormatter;
@@ -128,6 +143,8 @@ final class XlsxImporter implements ImporterInterface
         $this->preservationStateRepository = $preservationStateRepository;
         $this->alphabetRepository = $alphabetRepository;
         $this->contentCategoryRepository = $contentCategoryRepository;
+        $this->xlsxExporter = $xlsxExporter;
+        $this->xlsxAccessor = $xlsxAccessor;
     }
 
     /**
@@ -137,6 +154,8 @@ final class XlsxImporter implements ImporterInterface
      */
     public function import(string $pathToFile): void
     {
+        $schema = $this->xlsxExporter->getSchema();
+
         $reader = new Xlsx();
 
         $spreadsheet = $reader->load($pathToFile);
@@ -146,52 +165,44 @@ final class XlsxImporter implements ImporterInterface
         $rowIndex = 1;
 
         while (true) {
-            $idCellInCurrentRowValue = $this->getIdCellValue($rowIndex, $sheet);
+            $mainRowValues = $this->xlsxAccessor->readRow($rowIndex, $schema, $sheet);
 
-            if ('' === $idCellInCurrentRowValue) {
+            $mainId = $mainRowValues['id'];
+
+            if ('' === $mainId) {
                 break;
             }
 
-            if (self::NEW_MAIN_ROW_ID === $idCellInCurrentRowValue) {
+            if (self::NEW_MAIN_ROW_ID === $mainId) {
                 $inscription = new Inscription();
 
-                $mainShift = XlsxExporter::NESTED_ENTITIES_GO_FIRST
-                    ? XlsxExporter::NESTED_ENTITY_COLUMNS_COUNT + 1
-                    : 1;
-
-                foreach ($this->getMainCellHandlers() as $rawMainColumnIndex => $mainCellValueHandler) {
+                foreach ($this->getMainCellHandlers() as $mainKey => $mainCellValueHandler) {
                     $mainCellValueHandler(
                         $inscription,
-                        $this->getFormattedCellValue($rowIndex, $rawMainColumnIndex + 1 + $mainShift, $sheet)
+                        $mainRowValues[$mainKey]
                     );
                 }
 
                 while (true) {
                     $nextRowIndex = $rowIndex + 1;
 
-                    $idCellInNextRowValue = $this->getIdCellValue($nextRowIndex, $sheet);
+                    $nestedRowValues = $this->xlsxAccessor->readRow($nextRowIndex, $schema, $sheet);
 
-                    if (\in_array($idCellInNextRowValue, ['', self::NEW_MAIN_ROW_ID], true)) {
+                    $nestedId = $nestedRowValues['id'];
+
+                    if (\in_array($nestedId, ['', self::NEW_MAIN_ROW_ID], true)) {
                         break;
                     }
 
-                    if (self::NEW_NESTED_ROW_ID === $idCellInNextRowValue) {
+                    if (self::NEW_NESTED_ROW_ID === $nestedId) {
                         $interpretation = new Interpretation();
 
                         $inscription->addInterpretation($interpretation);
 
-                        $nestedShift = XlsxExporter::NESTED_ENTITIES_GO_FIRST
-                            ? 1
-                            : XlsxExporter::MAIN_ENTITY_COLUMNS_COUNT + 1;
-
-                        foreach ($this->getNestedCellHandlers() as $rawNestedColumnIndex => $nestedCellValueHandler) {
+                        foreach ($this->getNestedCellHandlers() as $nestedKey => $nestedCellValueHandler) {
                             $nestedCellValueHandler(
                                 $interpretation,
-                                $this->getFormattedCellValue(
-                                    $nextRowIndex,
-                                    $rawNestedColumnIndex + 1 + $nestedShift,
-                                    $sheet
-                                )
+                                $nestedRowValues[$nestedKey]
                             );
                         }
                     }
@@ -214,16 +225,16 @@ final class XlsxImporter implements ImporterInterface
     private function getMainCellHandlers(): array
     {
         return [
-            function (Inscription $inscription, string $formattedCarrier): void {
+            'inscription.carrier' => function (Inscription $inscription, string $formattedCarrier): void {
                 $inscription->setCarrier($this->carrierFormatter->parse($formattedCarrier));
             },
-            function (Inscription $inscription, string $formattedIsInSitu): void {
+            'inscription.isInSitu' => function (Inscription $inscription, string $formattedIsInSitu): void {
                 $inscription->setIsInSitu($this->boolFormatter->parse(StringHelper::nullIfEmpty($formattedIsInSitu)));
             },
-            function (Inscription $inscription, string $formattedPlaceOnCarrier): void {
+            'inscription.placeOnCarrier' => function (Inscription $inscription, string $formattedPlaceOnCarrier): void {
                 $inscription->setPlaceOnCarrier(StringHelper::nullIfEmpty($formattedPlaceOnCarrier));
             },
-            function (Inscription $inscription, string $formattedWritingType): void {
+            'inscription.writingType' => function (Inscription $inscription, string $formattedWritingType): void {
                 $writingTypeName = StringHelper::nullIfEmpty($formattedWritingType);
 
                 $inscription->setWritingType(
@@ -232,14 +243,14 @@ final class XlsxImporter implements ImporterInterface
                         : $this->writingTypeRepository->findOneByNameOrCreate($writingTypeName)
                 );
             },
-            function (Inscription $inscription, string $formattedMaterials): void {
+            'inscription.materials' => function (Inscription $inscription, string $formattedMaterials): void {
                 $formattedMaterialsParts = explode(XlsxExporter::MATERIAL_SEPARATOR, $formattedMaterials);
 
                 foreach ($formattedMaterialsParts as $formattedMaterial) {
                     $inscription->addMaterial($this->materialRepository->findOneByNameOrCreate($formattedMaterial));
                 }
             },
-            function (Inscription $inscription, string $formattedWritingMethod): void {
+            'inscription.writingMethod' => function (Inscription $inscription, string $formattedWritingMethod): void {
                 $writingMethodName = StringHelper::nullIfEmpty($formattedWritingMethod);
 
                 $inscription->setWritingMethod(
@@ -248,7 +259,10 @@ final class XlsxImporter implements ImporterInterface
                         : $this->writingMethodRepository->findOneByNameOrCreate($writingMethodName)
                 );
             },
-            function (Inscription $inscription, string $formattedPreservationState): void {
+            'inscription.preservationState' => function (
+                Inscription $inscription,
+                string $formattedPreservationState
+            ): void {
                 $preservationStateName = StringHelper::nullIfEmpty($formattedPreservationState);
 
                 $inscription->setPreservationState(
@@ -257,7 +271,7 @@ final class XlsxImporter implements ImporterInterface
                         : $this->preservationStateRepository->findOneByNameOrCreate($preservationStateName)
                 );
             },
-            function (Inscription $inscription, string $formattedAlphabet): void {
+            'inscription.alphabet' => function (Inscription $inscription, string $formattedAlphabet): void {
                 $alphabetName = StringHelper::nullIfEmpty($formattedAlphabet);
 
                 $inscription->setAlphabet(
@@ -266,7 +280,10 @@ final class XlsxImporter implements ImporterInterface
                         : $this->alphabetRepository->findOneByNameOrCreate($alphabetName)
                 );
             },
-            function (Inscription $inscription, string $formattedContentCategory): void {
+            'inscription.contentCategory' => function (
+                Inscription $inscription,
+                string $formattedContentCategory
+            ): void {
                 $contentCategoryName = StringHelper::nullIfEmpty($formattedContentCategory);
 
                 $inscription->setContentCategory(
@@ -275,7 +292,7 @@ final class XlsxImporter implements ImporterInterface
                         : $this->contentCategoryRepository->findOneByNameOrCreate($contentCategoryName)
                 );
             },
-            function (Inscription $inscription, string $formattedDateInText): void {
+            'inscription.dateInText' => function (Inscription $inscription, string $formattedDateInText): void {
                 $inscription->setDateInText(StringHelper::nullIfEmpty($formattedDateInText));
             },
         ];
@@ -287,59 +304,54 @@ final class XlsxImporter implements ImporterInterface
     private function getNestedCellHandlers(): array
     {
         return [
-            function (Interpretation $interpretation, string $formattedSource): void {
+            'interpretation.source' => function (Interpretation $interpretation, string $formattedSource): void {
                 $interpretation->setSource(StringHelper::nullIfEmpty($formattedSource));
             },
-            function (Interpretation $interpretation, string $formattedDoWeAgree): void {
+            'interpretation.doWeAgree' => function (Interpretation $interpretation, string $formattedDoWeAgree): void {
                 $interpretation->setDoWeAgree($this->boolFormatter->parse($formattedDoWeAgree));
             },
-            function (Interpretation $interpretation, string $formattedText): void {
+            'interpretation.text' => function (Interpretation $interpretation, string $formattedText): void {
                 $interpretation->setText(StringHelper::nullIfEmpty($formattedText));
             },
-            function (Interpretation $interpretation, string $formattedTextImageFileName): void {
+            'interpretation.textImageFileName' => function (
+                Interpretation $interpretation,
+                string $formattedTextImageFileName
+            ): void {
                 $interpretation->setTextImageFileName(StringHelper::nullIfEmpty($formattedTextImageFileName));
             },
-            function (Interpretation $interpretation, string $formattedTransliteration): void {
+            'interpretation.transliteration' => function (
+                Interpretation $interpretation,
+                string $formattedTransliteration
+            ): void {
                 $interpretation->setTransliteration(StringHelper::nullIfEmpty($formattedTransliteration));
             },
-            function (Interpretation $interpretation, string $formattedTranslation): void {
+            'interpretation.translation' => function (
+                Interpretation $interpretation,
+                string $formattedTranslation
+            ): void {
                 $interpretation->setTranslation(StringHelper::nullIfEmpty($formattedTranslation));
             },
-            function (Interpretation $interpretation, string $formattedPhotoFileName): void {
+            'interpretation.photoFileName' => function (
+                Interpretation $interpretation,
+                string $formattedPhotoFileName
+            ): void {
                 $interpretation->setPhotoFileName(StringHelper::nullIfEmpty($formattedPhotoFileName));
             },
-            function (Interpretation $interpretation, string $formattedSketchFileName): void {
+            'interpretation.sketchFileName' => function (
+                Interpretation $interpretation,
+                string $formattedSketchFileName
+            ): void {
                 $interpretation->setSketchFileName(StringHelper::nullIfEmpty($formattedSketchFileName));
             },
-            function (Interpretation $interpretation, string $formattedDate): void {
+            'interpretation.date' => function (Interpretation $interpretation, string $formattedDate): void {
                 $interpretation->setDate(StringHelper::nullIfEmpty($formattedDate));
             },
-            function (Interpretation $interpretation, string $formattedCommentFileName): void {
+            'interpretation.commentFileName' => function (
+                Interpretation $interpretation,
+                string $formattedCommentFileName
+            ): void {
                 $interpretation->setCommentFileName(StringHelper::nullIfEmpty($formattedCommentFileName));
             },
         ];
-    }
-
-    /**
-     * @param int       $rowIndex
-     * @param Worksheet $sheet
-     *
-     * @return string
-     */
-    private function getIdCellValue(int $rowIndex, Worksheet $sheet): string
-    {
-        return $this->getFormattedCellValue($rowIndex, 1, $sheet);
-    }
-
-    /**
-     * @param int       $rowIndex
-     * @param           $columnIndex
-     * @param Worksheet $sheet
-     *
-     * @return string
-     */
-    private function getFormattedCellValue(int $rowIndex, $columnIndex, Worksheet $sheet): string
-    {
-        return $sheet->getCellByColumnAndRow($columnIndex, $rowIndex)->getFormattedValue();
     }
 }

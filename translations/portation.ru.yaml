@@ -1,0 +1,45 @@
+# This file is part of «Epigraphy of Medieval Rus'» database.
+#
+# Copyright (c) National Research University Higher School of Economics
+#
+# «Epigraphy of Medieval Rus'» database is free software:
+# you can redistribute it and/or modify it under the terms of the
+# GNU General Public License as published by the Free Software Foundation, version 3.
+#
+# «Epigraphy of Medieval Rus'» database is distributed
+# in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code. If you have not received
+# a copy of the GNU General Public License along with
+# «Epigraphy of Medieval Rus'» database,
+# see <http://www.gnu.org/licenses/>.
+
+portation:
+  xlsx:
+    header:
+      id: Id
+      inscription:
+        carrier: Надпись / Носитель
+        isInSitu: Надпись / In situ
+        placeOnCarrier: Надпись / Расположение на носителе
+        writingType: Надпись / Разряд по Франклину
+        materials: Надпись / Материалы
+        writingMethod: Надпись / Способ нанесения
+        preservationState: Надпись / Состояние сохранности
+        alphabet: Надпись / Алфавит
+        contentCategory: Надпись / Категория по содержанию
+        dateInText: Надпись / Дата в тексте
+      interpretation:
+        source: Интерпретация / Источник
+        doWeAgree: Интерпретация / Согласны ли мы с текстом
+        text: Интерпретация / Текст
+        textImageFileName: Интерпретация / Изображение текста (название файла)
+        transliteration: Интерпретация / Транслитерация
+        translation: Интерпретация / Перевод
+        photoFileName: Интерпретация / Фото (название файла)
+        sketchFileName: Интерпретация / Прорись (название файла)
+        date: Интерпретация / Дата
+        commentFileName: Интерпретация / Комментарий (название файла)
