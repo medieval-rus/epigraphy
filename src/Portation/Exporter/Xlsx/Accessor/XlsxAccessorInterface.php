@@ -23,28 +23,46 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Portation\Exporter\Xlsx\Drawer;
+namespace App\Portation\Exporter\Xlsx\Accessor;
 
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-interface XlsxDrawerInterface
+interface XlsxAccessorInterface
 {
+    /**
+     * @param int       $columnIndex
+     * @param int       $rowIndex
+     * @param Worksheet $sheet
+     *
+     * @return string
+     */
+    public function readCell(int $columnIndex, int $rowIndex, Worksheet $sheet): string;
+
+    /**
+     * @param int       $rowIndex
+     * @param array     $schema
+     * @param Worksheet $sheet
+     *
+     * @return string[]
+     */
+    public function readRow(int $rowIndex, array $schema, Worksheet $sheet): array;
+
     /**
      * @param string    $cellValue
      * @param int       $columnIndex
      * @param int       $rowIndex
      * @param Worksheet $sheet
      */
-    public function drawCell(string $cellValue, int $columnIndex, int $rowIndex, Worksheet $sheet): void;
+    public function writeCell(string $cellValue, int $columnIndex, int $rowIndex, Worksheet $sheet): void;
 
     /**
      * @param string[]  $cellValues
-     * @param int       $columnIndex
      * @param int       $rowIndex
+     * @param string[]  $schema
      * @param Worksheet $sheet
      */
-    public function drawRow(array $cellValues, int $columnIndex, int $rowIndex, Worksheet $sheet): void;
+    public function writeRow(array $cellValues, int $rowIndex, array $schema, Worksheet $sheet): void;
 }

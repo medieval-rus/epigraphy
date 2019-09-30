@@ -31,29 +31,22 @@ use App\Persistence\Entity\Inscription\Interpretation;
 use App\Persistence\Entity\NamedEntityInterface;
 use App\Persistence\Repository\Inscription\InscriptionRepository;
 use App\Portation\Exporter\ExporterInterface;
-use App\Portation\Exporter\Xlsx\Drawer\XlsxDrawerInterface;
+use App\Portation\Exporter\Xlsx\Accessor\XlsxAccessorInterface;
 use App\Portation\Formatter\Bool\BoolFormatterInterface;
 use App\Portation\Formatter\Carrier\CarrierFormatterInterface;
 use InvalidArgumentException;
 use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-// todo move all the formatting methods to FooFormatterInterfaces (as well as parsing methods in XlsxImporter)
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-final class XlsxExporter implements ExporterInterface
+final class XlsxExporter implements XlsxExporterInterface, ExporterInterface
 {
     public const MATERIAL_SEPARATOR = ', ';
-
-    public const ID_COLUMNS_COUNT = 1;
-
-    public const MAIN_ENTITY_COLUMNS_COUNT = 10;
-
-    public const NESTED_ENTITY_COLUMNS_COUNT = 10;
-
-    public const NESTED_ENTITIES_GO_FIRST = false;
 
     /**
      * @var InscriptionRepository
@@ -71,26 +64,34 @@ final class XlsxExporter implements ExporterInterface
     private $carrierFormatter;
 
     /**
-     * @var XlsxDrawerInterface
+     * @var XlsxAccessorInterface
      */
-    private $cellDrawer;
+    private $xlsxAccessor;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @param InscriptionRepository     $inscriptionRepository
      * @param BoolFormatterInterface    $boolFormatter
      * @param CarrierFormatterInterface $carrierFormatter
-     * @param XlsxDrawerInterface       $cellDrawer
+     * @param XlsxAccessorInterface     $xlsxAccessor
+     * @param TranslatorInterface       $translator
      */
     public function __construct(
         InscriptionRepository $inscriptionRepository,
         BoolFormatterInterface $boolFormatter,
         CarrierFormatterInterface $carrierFormatter,
-        XlsxDrawerInterface $cellDrawer
+        XlsxAccessorInterface $xlsxAccessor,
+        TranslatorInterface $translator
     ) {
         $this->inscriptionRepository = $inscriptionRepository;
         $this->boolFormatter = $boolFormatter;
         $this->carrierFormatter = $carrierFormatter;
-        $this->cellDrawer = $cellDrawer;
+        $this->xlsxAccessor = $xlsxAccessor;
+        $this->translator = $translator;
     }
 
     /**
@@ -118,6 +119,36 @@ final class XlsxExporter implements ExporterInterface
     }
 
     /**
+     * @return string[]
+     */
+    public function getSchema(): array
+    {
+        return [
+            'id',
+            'inscription.carrier',
+            'inscription.isInSitu',
+            'inscription.placeOnCarrier',
+            'inscription.writingType',
+            'inscription.materials',
+            'inscription.writingMethod',
+            'inscription.preservationState',
+            'inscription.alphabet',
+            'inscription.contentCategory',
+            'inscription.dateInText',
+            'interpretation.source',
+            'interpretation.doWeAgree',
+            'interpretation.text',
+            'interpretation.textImageFileName',
+            'interpretation.transliteration',
+            'interpretation.translation',
+            'interpretation.photoFileName',
+            'interpretation.sketchFileName',
+            'interpretation.date',
+            'interpretation.commentFileName',
+        ];
+    }
+
+    /**
      * @param Inscription[] $inscriptions
      * @param string        $pathToFile
      *
@@ -125,6 +156,8 @@ final class XlsxExporter implements ExporterInterface
      */
     private function exportInscriptions(array $inscriptions, string $pathToFile): void
     {
+        $schema = $this->getSchema();
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -132,37 +165,18 @@ final class XlsxExporter implements ExporterInterface
             return $this->getNestedEntityCellValues($interpretation);
         };
 
-        $rowIndex = 1;
+        $rowIndex = 0;
+
+        $this->drawHeader($schema, $rowIndex++, $sheet);
 
         foreach ($inscriptions as $entityIndex => $inscription) {
             $mainEntityCellValues = $this->getMainEntityCellValues($inscription);
             $nestedEntityCellValuesCollections = $inscription->getInterpretations()->map($getNestedCellValues);
 
-            $idColumnIndex = 1;
-
-            $inscriptionId = array_shift($mainEntityCellValues);
-
-            $this->cellDrawer->drawCell($inscriptionId, $idColumnIndex, $rowIndex, $sheet);
-
-            $mainEntityColumnIndex = $idColumnIndex + 1;
-            $nestedEntityColumnIndex = $idColumnIndex + 1;
-
-            if (self::NESTED_ENTITIES_GO_FIRST) {
-                $mainEntityColumnIndex += self::NESTED_ENTITY_COLUMNS_COUNT;
-            } else {
-                $nestedEntityColumnIndex += self::MAIN_ENTITY_COLUMNS_COUNT;
-            }
-
-            $this->cellDrawer->drawRow($mainEntityCellValues, $mainEntityColumnIndex, $rowIndex, $sheet);
-
-            ++$rowIndex;
+            $this->xlsxAccessor->writeRow($mainEntityCellValues, $rowIndex++, $schema, $sheet);
 
             foreach ($nestedEntityCellValuesCollections as $nestedEntityCellValues) {
-                $interpretationId = array_shift($nestedEntityCellValues);
-
-                $this->cellDrawer->drawCell($interpretationId, $idColumnIndex, $rowIndex, $sheet);
-
-                $this->cellDrawer->drawRow($nestedEntityCellValues, $nestedEntityColumnIndex, $rowIndex++, $sheet);
+                $this->xlsxAccessor->writeRow($nestedEntityCellValues, $rowIndex++, $schema, $sheet);
             }
         }
 
@@ -210,17 +224,20 @@ final class XlsxExporter implements ExporterInterface
                 return StringHelper::emptyIfNull($nullableString);
             },
             [
-                (string) $inscription->getId(),
-                $this->carrierFormatter->format($inscription->getCarrier()),
-                $this->boolFormatter->format($inscription->getIsInSitu()),
-                $inscription->getPlaceOnCarrier(),
-                $formatNamedEntity($inscription->getWritingType()),
-                implode(self::MATERIAL_SEPARATOR, $inscription->getMaterials()->map($formatNamedEntity)->toArray()),
-                $formatNamedEntity($inscription->getWritingMethod()),
-                $formatNamedEntity($inscription->getPreservationState()),
-                $formatNamedEntity($inscription->getAlphabet()),
-                $formatNamedEntity($inscription->getContentCategory()),
-                $inscription->getDateInText(),
+                'id' => (string) $inscription->getId(),
+                'inscription.carrier' => $this->carrierFormatter->format($inscription->getCarrier()),
+                'inscription.isInSitu' => $this->boolFormatter->format($inscription->getIsInSitu()),
+                'inscription.placeOnCarrier' => $inscription->getPlaceOnCarrier(),
+                'inscription.writingType' => $formatNamedEntity($inscription->getWritingType()),
+                'inscription.materials' => implode(
+                    self::MATERIAL_SEPARATOR,
+                    $inscription->getMaterials()->map($formatNamedEntity)->toArray()
+                ),
+                'inscription.writingMethod' => $formatNamedEntity($inscription->getWritingMethod()),
+                'inscription.preservationState' => $formatNamedEntity($inscription->getPreservationState()),
+                'inscription.alphabet' => $formatNamedEntity($inscription->getAlphabet()),
+                'inscription.contentCategory' => $formatNamedEntity($inscription->getContentCategory()),
+                'inscription.dateInText' => $inscription->getDateInText(),
             ]
         );
     }
@@ -237,18 +254,54 @@ final class XlsxExporter implements ExporterInterface
                 return StringHelper::emptyIfNull($nullableString);
             },
             [
-                sprintf('%d.%d', $interpretation->getInscription()->getId(), $interpretation->getId()),
-                $interpretation->getSource(),
-                $this->boolFormatter->format($interpretation->getDoWeAgree()),
-                $interpretation->getText(),
-                $interpretation->getTextImageFileName(),
-                $interpretation->getTransliteration(),
-                $interpretation->getTranslation(),
-                $interpretation->getPhotoFileName(),
-                $interpretation->getSketchFileName(),
-                $interpretation->getDate(),
-                $interpretation->getCommentFileName(),
+                'id' => sprintf(
+                    '%d.%d',
+                    $interpretation->getInscription()->getId(),
+                    $interpretation->getId()
+                ),
+                'interpretation.source' => $interpretation->getSource(),
+                'interpretation.doWeAgree' => $this->boolFormatter->format($interpretation->getDoWeAgree()),
+                'interpretation.text' => $interpretation->getText(),
+                'interpretation.textImageFileName' => $interpretation->getTextImageFileName(),
+                'interpretation.transliteration' => $interpretation->getTransliteration(),
+                'interpretation.translation' => $interpretation->getTranslation(),
+                'interpretation.photoFileName' => $interpretation->getPhotoFileName(),
+                'interpretation.sketchFileName' => $interpretation->getSketchFileName(),
+                'interpretation.date' => $interpretation->getDate(),
+                'interpretation.commentFileName' => $interpretation->getCommentFileName(),
             ]
+        );
+    }
+
+    /**
+     * @param array     $schema
+     * @param int       $rowIndex
+     * @param Worksheet $sheet
+     */
+    private function drawHeader(array $schema, int $rowIndex, Worksheet $sheet): void
+    {
+        $convertSchemaValueToTranslationKey = function (string $schemaValue): string {
+            return sprintf('portation.xlsx.header.%s', $schemaValue);
+        };
+
+        $translate = function (string $key): string {
+            return $this->translator->trans($key, [], 'portation');
+        };
+
+        $this->xlsxAccessor->writeRow(
+            array_combine(
+                $schema,
+                array_map(
+                    $translate,
+                    array_map(
+                        $convertSchemaValueToTranslationKey,
+                        $schema
+                    )
+                )
+            ),
+            $rowIndex,
+            $schema,
+            $sheet
         );
     }
 }
