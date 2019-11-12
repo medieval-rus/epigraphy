@@ -30,8 +30,5 @@ namespace App\Portation\Importer;
  */
 interface ImporterInterface
 {
-    /**
-     * @param string $pathToFile
-     */
     public function import(string $pathToFile): void;
 }

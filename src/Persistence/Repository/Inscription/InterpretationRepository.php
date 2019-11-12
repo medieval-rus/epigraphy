@@ -39,9 +39,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 final class InterpretationRepository extends ServiceEntityRepository
 {
-    /**
-     * @param ManagerRegistry $registry
-     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Interpretation::class);

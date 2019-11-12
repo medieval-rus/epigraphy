@@ -30,13 +30,7 @@ namespace App\Persistence\Entity;
  */
 interface NamedEntityInterface
 {
-    /**
-     * @return string|null
-     */
     public function getName(): ?string;
 
-    /**
-     * @param string $name
-     */
     public function setName(string $name);
 }

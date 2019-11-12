@@ -108,19 +108,6 @@ final class XlsxImporter implements ImporterInterface
      */
     private $xlsxAccessor;
 
-    /**
-     * @param EntityManagerInterface      $entityManager
-     * @param BoolFormatterInterface      $boolFormatter
-     * @param CarrierFormatterInterface   $carrierFormatter
-     * @param WritingTypeRepository       $writingTypeRepository
-     * @param MaterialRepository          $materialRepository
-     * @param WritingMethodRepository     $writingMethodRepository
-     * @param PreservationStateRepository $preservationStateRepository
-     * @param AlphabetRepository          $alphabetRepository
-     * @param ContentCategoryRepository   $contentCategoryRepository
-     * @param XlsxExporterInterface       $xlsxExporter
-     * @param XlsxAccessorInterface       $xlsxAccessor
-     */
     public function __construct(
         EntityManagerInterface $entityManager,
         BoolFormatterInterface $boolFormatter,
@@ -148,8 +135,6 @@ final class XlsxImporter implements ImporterInterface
     }
 
     /**
-     * @param string $pathToFile
-     *
      * @throws PhpSpreadsheetException
      */
     public function import(string $pathToFile): void

@@ -36,9 +36,6 @@ final class WritingTypeFixtures extends Fixture
 {
     public const REFERENCE_VTOROY = self::class.'второй';
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->loadObject($manager, 'второй', self::REFERENCE_VTOROY);
@@ -46,11 +43,6 @@ final class WritingTypeFixtures extends Fixture
         $manager->flush();
     }
 
-    /**
-     * @param ObjectManager $manager
-     * @param string        $name
-     * @param string        $reference
-     */
     private function loadObject(ObjectManager $manager, string $name, string $reference): void
     {
         $writingType = (new WritingType())

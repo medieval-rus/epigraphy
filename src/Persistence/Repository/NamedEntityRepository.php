@@ -34,22 +34,13 @@ use Doctrine\ORM\ORMException;
  */
 abstract class NamedEntityRepository extends ServiceEntityRepository
 {
-    /**
-     * @param string $name
-     *
-     * @return NamedEntityInterface|null
-     */
     public function findOneByName(string $name): ?NamedEntityInterface
     {
         return $this->findOneBy(['name' => $name]);
     }
 
     /**
-     * @param string $name
-     *
      * @throws ORMException
-     *
-     * @return NamedEntityInterface
      */
     public function findOneByNameOrCreate(string $name): NamedEntityInterface
     {
@@ -66,8 +57,5 @@ abstract class NamedEntityRepository extends ServiceEntityRepository
         return $entity;
     }
 
-    /**
-     * @return NamedEntityInterface
-     */
     abstract protected function createEmpty(): NamedEntityInterface;
 }

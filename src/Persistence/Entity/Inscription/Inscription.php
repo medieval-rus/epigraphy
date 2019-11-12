@@ -145,17 +145,12 @@ class Inscription
         return $this->id;
     }
 
-    /**
-     * @return Carrier|null
-     */
     public function getCarrier(): ?Carrier
     {
         return $this->carrier;
     }
 
     /**
-     * @param Carrier|null $carrier
-     *
      * @return Inscription
      */
     public function setCarrier(?Carrier $carrier): self
@@ -165,17 +160,12 @@ class Inscription
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
     public function getIsInSitu(): ?bool
     {
         return $this->isInSitu;
     }
 
     /**
-     * @param bool|null $isInSitu
-     *
      * @return Inscription
      */
     public function setIsInSitu(?bool $isInSitu): self
@@ -185,17 +175,12 @@ class Inscription
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPlaceOnCarrier(): ?string
     {
         return $this->placeOnCarrier;
     }
 
     /**
-     * @param string|null $placeOnCarrier
-     *
      * @return Inscription
      */
     public function setPlaceOnCarrier(?string $placeOnCarrier): self
@@ -205,17 +190,12 @@ class Inscription
         return $this;
     }
 
-    /**
-     * @return WritingType|null
-     */
     public function getWritingType(): ?WritingType
     {
         return $this->writingType;
     }
 
     /**
-     * @param WritingType|null $writingType
-     *
      * @return Inscription
      */
     public function setWritingType(?WritingType $writingType): self
@@ -234,8 +214,6 @@ class Inscription
     }
 
     /**
-     * @param Material $material
-     *
      * @return Inscription
      */
     public function addMaterial(Material $material): self
@@ -248,8 +226,6 @@ class Inscription
     }
 
     /**
-     * @param Material $material
-     *
      * @return Inscription
      */
     public function removeMaterial(Material $material): self
@@ -261,17 +237,12 @@ class Inscription
         return $this;
     }
 
-    /**
-     * @return WritingMethod|null
-     */
     public function getWritingMethod(): ?WritingMethod
     {
         return $this->writingMethod;
     }
 
     /**
-     * @param WritingMethod|null $writingMethod
-     *
      * @return Inscription
      */
     public function setWritingMethod(?WritingMethod $writingMethod): self
@@ -281,17 +252,12 @@ class Inscription
         return $this;
     }
 
-    /**
-     * @return PreservationState|null
-     */
     public function getPreservationState(): ?PreservationState
     {
         return $this->preservationState;
     }
 
     /**
-     * @param PreservationState|null $preservationState
-     *
      * @return Inscription
      */
     public function setPreservationState(?PreservationState $preservationState): self
@@ -301,17 +267,12 @@ class Inscription
         return $this;
     }
 
-    /**
-     * @return Alphabet|null
-     */
     public function getAlphabet(): ?Alphabet
     {
         return $this->alphabet;
     }
 
     /**
-     * @param Alphabet|null $alphabet
-     *
      * @return Inscription
      */
     public function setAlphabet(?Alphabet $alphabet): self
@@ -321,17 +282,12 @@ class Inscription
         return $this;
     }
 
-    /**
-     * @return ContentCategory|null
-     */
     public function getContentCategory(): ?ContentCategory
     {
         return $this->contentCategory;
     }
 
     /**
-     * @param ContentCategory|null $contentCategory
-     *
      * @return Inscription
      */
     public function setContentCategory(?ContentCategory $contentCategory): self
@@ -341,17 +297,12 @@ class Inscription
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getDateInText(): ?string
     {
         return $this->dateInText;
     }
 
     /**
-     * @param string|null $dateInText
-     *
      * @return Inscription
      */
     public function setDateInText(?string $dateInText): self
@@ -386,8 +337,6 @@ class Inscription
     }
 
     /**
-     * @param Interpretation $interpretation
-     *
      * @return Inscription
      */
     public function addInterpretation(Interpretation $interpretation): self

@@ -72,11 +72,6 @@ final class CarrierFormatter implements CarrierFormatterInterface
      */
     private $monumentCarrierRepository;
 
-    /**
-     * @param WallCarrierRepository     $wallCarrierRepository
-     * @param ItemCarrierRepository     $itemCarrierRepository
-     * @param MonumentCarrierRepository $monumentCarrierRepository
-     */
     public function __construct(
         WallCarrierRepository $wallCarrierRepository,
         ItemCarrierRepository $itemCarrierRepository,
@@ -87,11 +82,6 @@ final class CarrierFormatter implements CarrierFormatterInterface
         $this->monumentCarrierRepository = $monumentCarrierRepository;
     }
 
-    /**
-     * @param Carrier|null $carrier
-     *
-     * @return string|null
-     */
     public function format(?Carrier $carrier): ?string
     {
         if (null === $carrier) {
@@ -107,11 +97,7 @@ final class CarrierFormatter implements CarrierFormatterInterface
     }
 
     /**
-     * @param string $formattedCarrier
-     *
      * @throws ORMException
-     *
-     * @return Carrier|null
      */
     public function parse(string $formattedCarrier): ?Carrier
     {
@@ -168,23 +154,15 @@ final class CarrierFormatter implements CarrierFormatterInterface
 
                     return $this->monumentCarrierRepository->findOneByNameOrCreate($carrierName);
                 default:
-                    throw new InvalidArgumentException(
-                        sprintf(
-                            'Invalid carrier discriminator "%s"',
-                            $carrierDiscriminator
-                        )
-                    );
+                    $message = sprintf('Invalid carrier discriminator "%s"', $carrierDiscriminator);
+
+                    throw new InvalidArgumentException($message);
             }
         } else {
             throw new InvalidArgumentException(sprintf('Invalid formatted carrier "%s"', $formattedCarrier));
         }
     }
 
-    /**
-     * @param Carrier $carrier
-     *
-     * @return string
-     */
     private function getCarrierDiscriminator(Carrier $carrier): string
     {
         switch (true) {
@@ -195,20 +173,12 @@ final class CarrierFormatter implements CarrierFormatterInterface
             case $carrier instanceof MonumentCarrier:
                 return self::MONUMENT_CARRIER_DISCRIMINATOR;
             default:
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Unknown carrier type "%s"',
-                        (new ReflectionObject($carrier))->getName()
-                    )
-                );
+                $message = sprintf('Unknown carrier type "%s"', (new ReflectionObject($carrier))->getName());
+
+                throw new InvalidArgumentException($message);
         }
     }
 
-    /**
-     * @param Carrier $carrier
-     *
-     * @return string
-     */
     private function formatCarrierValue(Carrier $carrier): string
     {
         switch (true) {
@@ -219,18 +189,13 @@ final class CarrierFormatter implements CarrierFormatterInterface
             case $carrier instanceof MonumentCarrier:
                 return $this->formatMonumentCarrier($carrier);
             default:
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Unknown carrier type "%s"',
-                        (new ReflectionObject($carrier))->getName()
-                    )
-                );
+                $message = sprintf('Unknown carrier type "%s"', (new ReflectionObject($carrier))->getName());
+
+                throw new InvalidArgumentException($message);
         }
     }
 
     /**
-     * @param WallCarrier $carrier
-     *
      * @return string|null
      */
     private function formatWallCarrier(WallCarrier $carrier): string
@@ -252,21 +217,11 @@ final class CarrierFormatter implements CarrierFormatterInterface
         return sprintf('%s; %s', $buildingTypeName, $buildingName);
     }
 
-    /**
-     * @param ItemCarrier $carrier
-     *
-     * @return string
-     */
     private function formatItemCarrier(ItemCarrier $carrier): string
     {
         return sprintf('%s', $carrier->getName() ?? self::ITEM_CARRIER_NO_NAME);
     }
 
-    /**
-     * @param MonumentCarrier $carrier
-     *
-     * @return string
-     */
     private function formatMonumentCarrier(MonumentCarrier $carrier): string
     {
         return sprintf('%s', $carrier->getName() ?? self::MONUMENT_CARRIER_NO_NAME);

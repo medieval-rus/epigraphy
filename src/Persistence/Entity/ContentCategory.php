@@ -50,25 +50,17 @@ class ContentCategory implements NamedEntityInterface
      */
     private $name;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * @param string $name
-     *
      * @return ContentCategory
      */
     public function setName(string $name): self

@@ -34,11 +34,6 @@ final class BoolFormatter implements BoolFormatterInterface
 
     public const BOOL_FALSE = 'нет';
 
-    /**
-     * @param bool|null $bool
-     *
-     * @return string|null
-     */
     public function format(?bool $bool): ?string
     {
         if (null === $bool) {
@@ -48,11 +43,6 @@ final class BoolFormatter implements BoolFormatterInterface
         return $bool ? self::BOOL_TRUE : self::BOOL_FALSE;
     }
 
-    /**
-     * @param string|null $formattedBool
-     *
-     * @return bool|null
-     */
     public function parse(?string $formattedBool): ?bool
     {
         if (null === $formattedBool) {

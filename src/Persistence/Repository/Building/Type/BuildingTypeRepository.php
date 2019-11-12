@@ -43,17 +43,11 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 final class BuildingTypeRepository extends NamedEntityRepository
 {
-    /**
-     * @param RegistryInterface $registry
-     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, BuildingType::class);
     }
 
-    /**
-     * @return NamedEntityInterface
-     */
     protected function createEmpty(): NamedEntityInterface
     {
         return new Building();

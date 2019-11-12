@@ -44,10 +44,6 @@ final class PortationRegistry implements PortationRegistryInterface
      */
     private $importers = [];
 
-    /**
-     * @param string            $format
-     * @param ExporterInterface $exporter
-     */
     public function addExporter(string $format, ExporterInterface $exporter): void
     {
         if (\array_key_exists($format, $this->exporters)) {
@@ -57,10 +53,6 @@ final class PortationRegistry implements PortationRegistryInterface
         $this->exporters[$format] = $exporter;
     }
 
-    /**
-     * @param string            $format
-     * @param ImporterInterface $importer
-     */
     public function addImporter(string $format, ImporterInterface $importer): void
     {
         if (\array_key_exists($format, $this->importers)) {
@@ -70,11 +62,6 @@ final class PortationRegistry implements PortationRegistryInterface
         $this->importers[$format] = $importer;
     }
 
-    /**
-     * @param string $format
-     *
-     * @return ExporterInterface
-     */
     public function getExporter(string $format): ExporterInterface
     {
         if (!\array_key_exists($format, $this->exporters)) {
@@ -84,11 +71,6 @@ final class PortationRegistry implements PortationRegistryInterface
         return $this->exporters[$format];
     }
 
-    /**
-     * @param string $format
-     *
-     * @return ImporterInterface
-     */
     public function getImporter(string $format): ImporterInterface
     {
         if (!\array_key_exists($format, $this->importers)) {

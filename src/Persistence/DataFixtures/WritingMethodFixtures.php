@@ -36,9 +36,6 @@ final class WritingMethodFixtures extends Fixture
 {
     public const REFERENCE_GRAFFITO = self::class.'граффито';
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->loadObject($manager, 'граффито', self::REFERENCE_GRAFFITO);
@@ -46,11 +43,6 @@ final class WritingMethodFixtures extends Fixture
         $manager->flush();
     }
 
-    /**
-     * @param ObjectManager $manager
-     * @param string        $name
-     * @param string        $reference
-     */
     private function loadObject(ObjectManager $manager, string $name, string $reference): void
     {
         $writingMethod = (new WritingMethod())

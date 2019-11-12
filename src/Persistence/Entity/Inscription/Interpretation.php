@@ -130,17 +130,12 @@ class Interpretation
         return $this->id;
     }
 
-    /**
-     * @return Inscription
-     */
     public function getInscription(): Inscription
     {
         return $this->inscription;
     }
 
     /**
-     * @param Inscription $inscription
-     *
      * @return Interpretation
      */
     public function setInscription(Inscription $inscription): self
@@ -150,17 +145,12 @@ class Interpretation
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getSource(): string
     {
         return $this->source;
     }
 
     /**
-     * @param string $source
-     *
      * @return Interpretation
      */
     public function setSource(string $source): self
@@ -170,17 +160,12 @@ class Interpretation
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
     public function getDoWeAgree(): ?bool
     {
         return $this->doWeAgree;
     }
 
     /**
-     * @param bool|null $doWeAgree
-     *
      * @return Interpretation
      */
     public function setDoWeAgree(?bool $doWeAgree): self
@@ -190,17 +175,12 @@ class Interpretation
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getText(): ?string
     {
         return $this->text;
     }
 
     /**
-     * @param string|null $text
-     *
      * @return Interpretation
      */
     public function setText(?string $text): self
@@ -210,17 +190,12 @@ class Interpretation
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTextImageFileName(): ?string
     {
         return $this->textImageFileName;
     }
 
     /**
-     * @param string|null $textImageFileName
-     *
      * @return Interpretation
      */
     public function setTextImageFileName(?string $textImageFileName): self
@@ -230,17 +205,12 @@ class Interpretation
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTransliteration(): ?string
     {
         return $this->transliteration;
     }
 
     /**
-     * @param string|null $transliteration
-     *
      * @return Interpretation
      */
     public function setTransliteration(?string $transliteration): self
@@ -250,17 +220,12 @@ class Interpretation
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTranslation(): ?string
     {
         return $this->translation;
     }
 
     /**
-     * @param string|null $translation
-     *
      * @return Interpretation
      */
     public function setTranslation(?string $translation): self
@@ -270,17 +235,12 @@ class Interpretation
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPhotoFileName(): ?string
     {
         return $this->photoFileName;
     }
 
     /**
-     * @param string|null $photoFileName
-     *
      * @return Interpretation
      */
     public function setPhotoFileName(?string $photoFileName): self
@@ -290,17 +250,12 @@ class Interpretation
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getSketchFileName(): ?string
     {
         return $this->sketchFileName;
     }
 
     /**
-     * @param string|null $sketchFileName
-     *
      * @return Interpretation
      */
     public function setSketchFileName(?string $sketchFileName): self
@@ -310,17 +265,12 @@ class Interpretation
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getDate(): ?string
     {
         return $this->date;
     }
 
     /**
-     * @param string|null $date
-     *
      * @return Interpretation
      */
     public function setDate(?string $date): self
@@ -330,17 +280,12 @@ class Interpretation
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCommentFileName(): ?string
     {
         return $this->commentFileName;
     }
 
     /**
-     * @param string|null $commentFileName
-     *
      * @return Interpretation
      */
     public function setCommentFileName(?string $commentFileName): self

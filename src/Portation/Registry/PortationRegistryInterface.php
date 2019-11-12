@@ -33,17 +33,7 @@ use App\Portation\Importer\ImporterInterface;
  */
 interface PortationRegistryInterface
 {
-    /**
-     * @param string $format
-     *
-     * @return ExporterInterface
-     */
     public function getExporter(string $format): ExporterInterface;
 
-    /**
-     * @param string $format
-     *
-     * @return ImporterInterface
-     */
     public function getImporter(string $format): ImporterInterface;
 }

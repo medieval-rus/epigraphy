@@ -30,17 +30,7 @@ namespace App\Portation\Formatter\Bool;
  */
 interface BoolFormatterInterface
 {
-    /**
-     * @param bool|null $bool
-     *
-     * @return string|null
-     */
     public function format(?bool $bool): ?string;
 
-    /**
-     * @param string|null $formattedBool
-     *
-     * @return bool|null
-     */
     public function parse(?string $formattedBool): ?bool;
 }

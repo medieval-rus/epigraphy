@@ -35,9 +35,6 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadataInte
  */
 final class InscriptionsTableConfigurator extends AbstractTableConfigurator
 {
-    /**
-     * @return string
-     */
     protected function getResultsCountText(): string
     {
         return 'controller.inscription.list.table.resultsCount';

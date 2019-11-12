@@ -34,22 +34,13 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
  */
 final class XlsxAccessor implements XlsxAccessorInterface
 {
-    /**
-     * @param int       $columnIndex
-     * @param int       $rowIndex
-     * @param Worksheet $sheet
-     *
-     * @return string
-     */
     public function readCell(int $columnIndex, int $rowIndex, Worksheet $sheet): string
     {
         return $sheet->getCellByColumnAndRow($columnIndex + 1, $rowIndex + 1)->getFormattedValue();
     }
 
     /**
-     * @param int       $rowIndex
-     * @param string[]  $schema
-     * @param Worksheet $sheet
+     * @param string[] $schema
      *
      * @return string[]
      */
@@ -64,12 +55,6 @@ final class XlsxAccessor implements XlsxAccessorInterface
         return $array;
     }
 
-    /**
-     * @param string    $cellValue
-     * @param int       $columnIndex
-     * @param int       $rowIndex
-     * @param Worksheet $sheet
-     */
     public function writeCell(string $cellValue, int $columnIndex, int $rowIndex, Worksheet $sheet): void
     {
         $sheet->getColumnDimensionByColumn($columnIndex)->setAutoSize(true);
@@ -78,10 +63,8 @@ final class XlsxAccessor implements XlsxAccessorInterface
     }
 
     /**
-     * @param string[]  $cellValues
-     * @param int       $rowIndex
-     * @param string[]  $schema
-     * @param Worksheet $sheet
+     * @param string[] $cellValues
+     * @param string[] $schema
      */
     public function writeRow(array $cellValues, int $rowIndex, array $schema, Worksheet $sheet): void
     {
@@ -93,10 +76,7 @@ final class XlsxAccessor implements XlsxAccessorInterface
     }
 
     /**
-     * @param string   $key
      * @param string[] $schema
-     *
-     * @return int
      */
     private function getIndexInSchema(string $key, array $schema): int
     {

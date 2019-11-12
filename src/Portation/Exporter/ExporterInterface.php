@@ -30,9 +30,5 @@ namespace App\Portation\Exporter;
  */
 interface ExporterInterface
 {
-    /**
-     * @param string   $pathToFile
-     * @param int|null $bunchSize
-     */
     public function export(string $pathToFile, ?int $bunchSize): void;
 }

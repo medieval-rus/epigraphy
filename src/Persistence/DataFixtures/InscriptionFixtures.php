@@ -53,9 +53,6 @@ final class InscriptionFixtures extends Fixture implements DependentFixtureInter
         ];
     }
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $manager->persist($this->createInscription1());
@@ -63,9 +60,6 @@ final class InscriptionFixtures extends Fixture implements DependentFixtureInter
         $manager->flush();
     }
 
-    /**
-     * @return Inscription
-     */
     private function createInscription1(): Inscription
     {
         return (new Inscription())

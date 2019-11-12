@@ -36,9 +36,6 @@ final class MaterialFixtures extends Fixture
 {
     public const REFERENCE_SHTUKATURKA = self::class.'штукатурка';
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->loadObject($manager, 'штукатурка', self::REFERENCE_SHTUKATURKA);
@@ -46,11 +43,6 @@ final class MaterialFixtures extends Fixture
         $manager->flush();
     }
 
-    /**
-     * @param ObjectManager $manager
-     * @param string        $name
-     * @param string        $reference
-     */
     private function loadObject(ObjectManager $manager, string $name, string $reference): void
     {
         $material = (new Material())

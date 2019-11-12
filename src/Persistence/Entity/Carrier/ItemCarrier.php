@@ -42,17 +42,12 @@ class ItemCarrier extends Carrier implements NamedEntityInterface
      */
     private $name;
 
-    /**
-     * @return string|null
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * @param string|null $name
-     *
      * @return ItemCarrier
      */
     public function setName(?string $name): self

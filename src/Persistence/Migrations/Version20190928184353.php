@@ -34,17 +34,12 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20190928184353 extends AbstractMigration
 {
-    /**
-     * @return string
-     */
     public function getDescription(): string
     {
         return 'Nullable "do we agree" field of Interpretation';
     }
 
     /**
-     * @param Schema $schema
-     *
      * @throws DBALException
      */
     public function up(Schema $schema): void
@@ -55,8 +50,6 @@ final class Version20190928184353 extends AbstractMigration
     }
 
     /**
-     * @param Schema $schema
-     *
      * @throws DBALException
      */
     public function down(Schema $schema): void

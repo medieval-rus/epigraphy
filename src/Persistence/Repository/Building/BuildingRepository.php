@@ -49,9 +49,6 @@ final class BuildingRepository extends ServiceEntityRepository
      */
     private $buildingTypeRepository;
 
-    /**
-     * @param RegistryInterface $registry
-     */
     public function __construct(RegistryInterface $registry, BuildingTypeRepository $buildingTypeRepository)
     {
         parent::__construct($registry, Building::class);
@@ -59,12 +56,7 @@ final class BuildingRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string      $buildingTypeName
-     * @param string|null $buildingName
-     *
      * @throws ORMException
-     *
-     * @return Building
      */
     public function findOneOrCreate(string $buildingTypeName, ?string $buildingName): Building
     {
@@ -76,15 +68,15 @@ final class BuildingRepository extends ServiceEntityRepository
 
         if (null !== $building) {
             if ($building->getType()->getName() !== $buildingTypeName) {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Found building with name "%s" and type "%s", while looking for "%s" and "%s"',
-                        $building->getName(),
-                        $building->getType()->getName(),
-                        $buildingName,
-                        $buildingTypeName
-                    )
+                $message = sprintf(
+                    'Found building with name "%s" and type "%s", while looking for "%s" and "%s"',
+                    $building->getName(),
+                    $building->getType()->getName(),
+                    $buildingName,
+                    $buildingTypeName
                 );
+
+                throw new InvalidArgumentException($message);
             }
 
             return $building;
@@ -94,12 +86,7 @@ final class BuildingRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $buildingName
-     * @param string $buildingTypeName
-     *
      * @throws ORMException
-     *
-     * @return Building
      */
     private function create(string $buildingName, string $buildingTypeName): Building
     {

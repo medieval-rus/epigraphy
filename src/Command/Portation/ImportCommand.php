@@ -42,9 +42,6 @@ final class ImportCommand extends Command
      */
     private $portationRegistry;
 
-    /**
-     * @param PortationRegistryInterface $portationRegistry
-     */
     public function __construct(PortationRegistryInterface $portationRegistry)
     {
         parent::__construct();
@@ -61,12 +58,6 @@ final class ImportCommand extends Command
         ;
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this

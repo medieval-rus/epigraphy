@@ -73,13 +73,6 @@ final class XlsxExporter implements XlsxExporterInterface, ExporterInterface
      */
     private $translator;
 
-    /**
-     * @param InscriptionRepository     $inscriptionRepository
-     * @param BoolFormatterInterface    $boolFormatter
-     * @param CarrierFormatterInterface $carrierFormatter
-     * @param XlsxAccessorInterface     $xlsxAccessor
-     * @param TranslatorInterface       $translator
-     */
     public function __construct(
         InscriptionRepository $inscriptionRepository,
         BoolFormatterInterface $boolFormatter,
@@ -95,9 +88,6 @@ final class XlsxExporter implements XlsxExporterInterface, ExporterInterface
     }
 
     /**
-     * @param string   $pathToFile
-     * @param int|null $bunchSize
-     *
      * @throws InvalidArgumentException
      * @throws PhpSpreadsheetException
      */
@@ -150,7 +140,6 @@ final class XlsxExporter implements XlsxExporterInterface, ExporterInterface
 
     /**
      * @param Inscription[] $inscriptions
-     * @param string        $pathToFile
      *
      * @throws PhpSpreadsheetException
      */
@@ -184,12 +173,6 @@ final class XlsxExporter implements XlsxExporterInterface, ExporterInterface
         $writer->save($pathToFile);
     }
 
-    /**
-     * @param string $pathToFile
-     * @param int    $bunchIndex
-     *
-     * @return string
-     */
     private function getBunchPathToFile(string $pathToFile, int $bunchIndex): string
     {
         $pathToFileParts = explode('.', $pathToFile);
@@ -208,11 +191,6 @@ final class XlsxExporter implements XlsxExporterInterface, ExporterInterface
         return implode('.', $pathToFileParts);
     }
 
-    /**
-     * @param Inscription $inscription
-     *
-     * @return array
-     */
     private function getMainEntityCellValues(Inscription $inscription): array
     {
         $formatNamedEntity = function (NamedEntityInterface $namedEntity = null): ?string {
@@ -242,11 +220,6 @@ final class XlsxExporter implements XlsxExporterInterface, ExporterInterface
         );
     }
 
-    /**
-     * @param Interpretation $interpretation
-     *
-     * @return array
-     */
     private function getNestedEntityCellValues(Interpretation $interpretation): array
     {
         return array_map(
@@ -273,11 +246,6 @@ final class XlsxExporter implements XlsxExporterInterface, ExporterInterface
         );
     }
 
-    /**
-     * @param array     $schema
-     * @param int       $rowIndex
-     * @param Worksheet $sheet
-     */
     private function drawHeader(array $schema, int $rowIndex, Worksheet $sheet): void
     {
         $convertSchemaValueToTranslationKey = function (string $schemaValue): string {

@@ -48,9 +48,6 @@ final class BuildingFixtures extends Fixture implements DependentFixtureInterfac
         ];
     }
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->loadObject(
@@ -63,12 +60,6 @@ final class BuildingFixtures extends Fixture implements DependentFixtureInterfac
         $manager->flush();
     }
 
-    /**
-     * @param ObjectManager $manager
-     * @param string        $name
-     * @param string        $buildingTypeReference
-     * @param string        $reference
-     */
     private function loadObject(
         ObjectManager $manager,
         string $name,

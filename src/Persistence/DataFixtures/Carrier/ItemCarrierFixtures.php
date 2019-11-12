@@ -33,9 +33,6 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 final class ItemCarrierFixtures extends Fixture
 {
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $manager->flush();

@@ -32,17 +32,7 @@ use App\Persistence\Entity\Carrier\Carrier;
  */
 interface CarrierFormatterInterface
 {
-    /**
-     * @param Carrier|null $carrier
-     *
-     * @return string|null
-     */
     public function format(?Carrier $carrier): ?string;
 
-    /**
-     * @param string $formattedCarrier
-     *
-     * @return Carrier|null
-     */
     public function parse(string $formattedCarrier): ?Carrier;
 }

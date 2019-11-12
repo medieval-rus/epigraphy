@@ -36,9 +36,6 @@ final class AlphabetFixtures extends Fixture
 {
     public const REFERENCE_KIRILLITSA = self::class.'кириллица';
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->loadObject($manager, 'кириллица', self::REFERENCE_KIRILLITSA);
@@ -46,11 +43,6 @@ final class AlphabetFixtures extends Fixture
         $manager->flush();
     }
 
-    /**
-     * @param ObjectManager $manager
-     * @param string        $name
-     * @param string        $reference
-     */
     private function loadObject(ObjectManager $manager, string $name, string $reference): void
     {
         $alphabet = (new Alphabet())

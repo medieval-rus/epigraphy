@@ -39,10 +39,6 @@ use Vyfony\Bundle\FilterableTableBundle\Table\TableInterface;
 final class InscriptionController extends AbstractController
 {
     /**
-     * @param TableInterface $filterableTable
-     *
-     * @return array
-     *
      * @Route("/list", name="inscription__list", methods={"GET"})
      * @Template("inscription/list.html.twig")
      */
@@ -57,10 +53,6 @@ final class InscriptionController extends AbstractController
     }
 
     /**
-     * @param Inscription $inscription
-     *
-     * @return array
-     *
      * @Route("/show/{id}", name="inscription__show", methods={"GET"})
      * @Template("inscription/show.html.twig")
      */

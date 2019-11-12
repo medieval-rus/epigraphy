@@ -48,10 +48,6 @@ final class WallCarrierRepository extends ServiceEntityRepository
      */
     private $buildingRepository;
 
-    /**
-     * @param RegistryInterface  $registry
-     * @param BuildingRepository $buildingRepository
-     */
     public function __construct(RegistryInterface $registry, BuildingRepository $buildingRepository)
     {
         parent::__construct($registry, WallCarrier::class);
@@ -59,14 +55,9 @@ final class WallCarrierRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string      $buildingTypeName
-     * @param string|null $buildingName
-     *
      * @throws ORMException
-     *
-     * @return WallCarrier
      */
-    public function findOneOrCreate(string $buildingTypeName, ?string  $buildingName): WallCarrier
+    public function findOneOrCreate(string $buildingTypeName, ?string $buildingName): WallCarrier
     {
         $carrier = $this->findOne($buildingTypeName, $buildingName);
 
@@ -77,13 +68,7 @@ final class WallCarrierRepository extends ServiceEntityRepository
         return $this->create($buildingTypeName, $buildingName);
     }
 
-    /**
-     * @param string      $buildingTypeName
-     * @param string|null $buildingName
-     *
-     * @return WallCarrier
-     */
-    private function findOne(string $buildingTypeName, ?string  $buildingName): WallCarrier
+    private function findOne(string $buildingTypeName, ?string $buildingName): WallCarrier
     {
         $queryBuilder = $this->createQueryBuilder('wallCarrier');
 
@@ -111,12 +96,7 @@ final class WallCarrierRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string      $buildingTypeName
-     * @param string|null $buildingName
-     *
      * @throws ORMException
-     *
-     * @return WallCarrier
      */
     private function create(string $buildingTypeName, ?string $buildingName): WallCarrier
     {

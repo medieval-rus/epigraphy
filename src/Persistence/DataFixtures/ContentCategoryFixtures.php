@@ -36,9 +36,6 @@ final class ContentCategoryFixtures extends Fixture
 {
     public const REFERENCE_PRESTAVISYA = self::class.'преставися';
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->loadObject($manager, 'преставися', self::REFERENCE_PRESTAVISYA);
@@ -46,11 +43,6 @@ final class ContentCategoryFixtures extends Fixture
         $manager->flush();
     }
 
-    /**
-     * @param ObjectManager $manager
-     * @param string        $name
-     * @param string        $reference
-     */
     private function loadObject(ObjectManager $manager, string $name, string $reference): void
     {
         $contentCategory = (new ContentCategory())

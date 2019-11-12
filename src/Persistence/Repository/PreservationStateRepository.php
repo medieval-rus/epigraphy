@@ -41,17 +41,11 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 final class PreservationStateRepository extends NamedEntityRepository
 {
-    /**
-     * @param RegistryInterface $registry
-     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, PreservationState::class);
     }
 
-    /**
-     * @return NamedEntityInterface
-     */
     protected function createEmpty(): NamedEntityInterface
     {
         return new PreservationState();
