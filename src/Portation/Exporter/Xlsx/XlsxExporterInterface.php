@@ -25,6 +25,9 @@ declare(strict_types=1);
 
 namespace App\Portation\Exporter\Xlsx;
 
+/**
+ * @author Anton Dyshkant <vyshkant@gmail.com>
+ */
 interface XlsxExporterInterface
 {
     /**
