@@ -631,6 +631,9 @@
     "vyfony/filterable-table-bundle": {
         "version": "v0.1.17"
     },
+    "vyfony/portation-bundle": {
+        "version": "v0.0.4"
+    },
     "webmozart/assert": {
         "version": "1.4.0"
     },

@@ -68,7 +68,7 @@ final class WallCarrierRepository extends ServiceEntityRepository
         return $this->create($buildingTypeName, $buildingName);
     }
 
-    private function findOne(string $buildingTypeName, ?string $buildingName): WallCarrier
+    private function findOne(string $buildingTypeName, ?string $buildingName): ?WallCarrier
     {
         $queryBuilder = $this->createQueryBuilder('wallCarrier');
 

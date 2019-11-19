@@ -18,28 +18,33 @@
 # see <http://www.gnu.org/licenses/>.
 
 portation:
-  xlsx:
-    header:
-      id: Id
-      inscription:
-        carrier: Надпись / Носитель
-        isInSitu: Надпись / In situ
-        placeOnCarrier: Надпись / Расположение на носителе
-        writingType: Надпись / Разряд по Франклину
-        materials: Надпись / Материалы
-        writingMethod: Надпись / Способ нанесения
-        preservationState: Надпись / Состояние сохранности
-        alphabet: Надпись / Алфавит
-        contentCategory: Надпись / Категория по содержанию
-        dateInText: Надпись / Дата в тексте
-      interpretation:
-        source: Интерпретация / Источник
-        doWeAgree: Интерпретация / Согласны ли мы с текстом
-        text: Интерпретация / Текст
-        textImageFileName: Интерпретация / Изображение текста (название файла)
-        transliteration: Интерпретация / Транслитерация
-        translation: Интерпретация / Перевод
-        photoFileName: Интерпретация / Фото (название файла)
-        sketchFileName: Интерпретация / Прорись (название файла)
-        date: Интерпретация / Дата
-        commentFileName: Интерпретация / Комментарий (название файла)
+  format:
+    xlsx:
+      header:
+        id: Id
+        inscription:
+          carrier: Надпись / Носитель
+          isInSitu: Надпись / In situ
+          placeOnCarrier: Надпись / Расположение на носителе
+          writingType: Надпись / Разряд по Франклину
+          materials: Надпись / Материалы
+          writingMethod: Надпись / Способ нанесения
+          preservationState: Надпись / Состояние сохранности
+          alphabet: Надпись / Алфавит
+          contentCategory: Надпись / Категория по содержанию
+          dateInText: Надпись / Дата в тексте
+        interpretation:
+          source: Интерпретация / Источник
+          doWeAgree: Интерпретация / Согласны ли мы с текстом
+          text: Интерпретация / Текст
+          textImageFileName: Интерпретация / Изображение текста (название файла)
+          transliteration: Интерпретация / Транслитерация
+          translation: Интерпретация / Перевод
+          photoFileName: Интерпретация / Фото (название файла)
+          sketchFileName: Интерпретация / Прорись (название файла)
+          date: Интерпретация / Дата
+          commentFileName: Интерпретация / Комментарий (название файла)
+  formatter:
+    bool:
+      "true": да
+      "false": нет

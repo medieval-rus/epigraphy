@@ -37,14 +37,3 @@ services:
     arguments: ['@knp_menu.factory', '@request_stack']
     tags:
       - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
-
-  App\Portation\Registry\PortationRegistry:
-    calls:
-      - method: addExporter
-        arguments:
-          - xlsx
-          - '@App\Portation\Exporter\Xlsx\XlsxExporter'
-      - method: addImporter
-        arguments:
-          - xlsx
-          - '@App\Portation\Importer\Xlsx\XlsxImporter'

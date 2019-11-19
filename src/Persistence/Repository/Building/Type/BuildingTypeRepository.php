@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace App\Persistence\Repository\Building\Type;
 
-use App\Persistence\Entity\Building\Building;
 use App\Persistence\Entity\Building\Type\BuildingType;
 use App\Persistence\Entity\NamedEntityInterface;
 use App\Persistence\Repository\NamedEntityRepository;
@@ -50,6 +49,6 @@ final class BuildingTypeRepository extends NamedEntityRepository
 
     protected function createEmpty(): NamedEntityInterface
     {
-        return new Building();
+        return new BuildingType();
     }
 }
