@@ -36,9 +36,6 @@ final class BuildingTypeFixtures extends Fixture
 {
     public const REFERENCE_TSERKOV = self::class.'церковь';
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->loadObject($manager, 'церковь', self::REFERENCE_TSERKOV);
@@ -46,11 +43,6 @@ final class BuildingTypeFixtures extends Fixture
         $manager->flush();
     }
 
-    /**
-     * @param ObjectManager $manager
-     * @param string        $name
-     * @param string        $reference
-     */
     private function loadObject(ObjectManager $manager, string $name, string $reference): void
     {
         $buildingType = (new BuildingType())

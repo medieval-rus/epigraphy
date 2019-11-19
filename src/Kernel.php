@@ -43,9 +43,6 @@ final class Kernel extends BaseKernel
 
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
-    /**
-     * @return iterable
-     */
     public function registerBundles(): iterable
     {
         $contents = require $this->getProjectDir().'/config/bundles.php';
@@ -56,18 +53,12 @@ final class Kernel extends BaseKernel
         }
     }
 
-    /**
-     * @return string
-     */
     public function getProjectDir(): string
     {
         return \dirname(__DIR__);
     }
 
     /**
-     * @param ContainerBuilder $container
-     * @param LoaderInterface  $loader
-     *
      * @throws Exception
      */
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
@@ -83,8 +74,6 @@ final class Kernel extends BaseKernel
     }
 
     /**
-     * @param RouteCollectionBuilder $routes
-     *
      * @throws LoaderLoadException
      */
     protected function configureRoutes(RouteCollectionBuilder $routes): void

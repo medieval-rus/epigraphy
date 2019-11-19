@@ -41,9 +41,6 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 final class WritingTypeRepository extends NamedEntityRepository
 {
-    /**
-     * @param RegistryInterface $registry
-     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, WritingType::class);

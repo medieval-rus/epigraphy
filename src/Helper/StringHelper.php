@@ -30,11 +30,6 @@ namespace App\Helper;
  */
 abstract class StringHelper
 {
-    /**
-     * @param string|null $nullableString
-     *
-     * @return string
-     */
     public static function emptyIfNull(?string $nullableString): string
     {
         if (null === $nullableString) {
@@ -44,11 +39,6 @@ abstract class StringHelper
         return $nullableString;
     }
 
-    /**
-     * @param string $string
-     *
-     * @return string|null
-     */
     public static function nullIfEmpty(string $string): ?string
     {
         if ('' === $string) {

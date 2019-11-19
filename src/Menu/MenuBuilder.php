@@ -44,21 +44,12 @@ final class MenuBuilder
      */
     private $requestStack;
 
-    /**
-     * @param FactoryInterface $factory
-     * @param RequestStack     $requestStack
-     */
     public function __construct(FactoryInterface $factory, RequestStack $requestStack)
     {
         $this->factory = $factory;
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * @param array $options
-     *
-     * @return ItemInterface
-     */
     public function createMainMenu(array $options): ItemInterface
     {
         $currentRoute = $this->requestStack->getCurrentRequest()->get('_route');

@@ -37,9 +37,6 @@ use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Restriction\FilterRe
  */
 final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
 {
-    /**
-     * @return array
-     */
     public function createSubmitButtonOptions(): array
     {
         return [
@@ -48,9 +45,6 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         ];
     }
 
-    /**
-     * @return array
-     */
     public function createResetButtonOptions(): array
     {
         return [
@@ -59,9 +53,6 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         ];
     }
 
-    /**
-     * @return array
-     */
     public function createSearchInFoundButtonOptions(): array
     {
         return [
@@ -70,9 +61,6 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         ];
     }
 
-    /**
-     * @return array
-     */
     public function createDefaults(): array
     {
         return [
@@ -85,9 +73,6 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         ];
     }
 
-    /**
-     * @return string
-     */
     public function getDisablePaginationLabel(): string
     {
         return 'controller.inscription.list.filter.disablePaginator';
@@ -101,9 +86,9 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     public function getEntityId($entity)
     {
         if (!$entity instanceof Inscription) {
-            throw new InvalidArgumentException(
-                sprintf('Expected entity of type "%s", "%s" given', Inscription::class, $entity)
-            );
+            $message = sprintf('Expected entity of type "%s", "%s" given', Inscription::class, $entity);
+
+            throw new InvalidArgumentException($message);
         }
 
         return $entity->getId();

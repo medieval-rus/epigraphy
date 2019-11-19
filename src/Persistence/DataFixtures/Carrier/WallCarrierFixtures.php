@@ -48,9 +48,6 @@ final class WallCarrierFixtures extends Fixture implements DependentFixtureInter
         ];
     }
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->loadObject(
@@ -62,11 +59,6 @@ final class WallCarrierFixtures extends Fixture implements DependentFixtureInter
         $manager->flush();
     }
 
-    /**
-     * @param ObjectManager $manager
-     * @param string        $buildingReference
-     * @param string        $reference
-     */
     private function loadObject(
         ObjectManager $manager,
         string $buildingReference,

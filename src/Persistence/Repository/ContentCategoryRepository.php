@@ -41,17 +41,11 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 final class ContentCategoryRepository extends NamedEntityRepository
 {
-    /**
-     * @param RegistryInterface $registry
-     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, ContentCategory::class);
     }
 
-    /**
-     * @return NamedEntityInterface
-     */
     protected function createEmpty(): NamedEntityInterface
     {
         return new ContentCategory();

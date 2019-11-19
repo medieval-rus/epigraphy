@@ -39,9 +39,6 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 final class InscriptionRepository extends ServiceEntityRepository
 {
-    /**
-     * @param RegistryInterface $registry
-     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Inscription::class);

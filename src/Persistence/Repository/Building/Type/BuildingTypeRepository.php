@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace App\Persistence\Repository\Building\Type;
 
-use App\Persistence\Entity\Building\Building;
 use App\Persistence\Entity\Building\Type\BuildingType;
 use App\Persistence\Entity\NamedEntityInterface;
 use App\Persistence\Repository\NamedEntityRepository;
@@ -43,19 +42,13 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 final class BuildingTypeRepository extends NamedEntityRepository
 {
-    /**
-     * @param RegistryInterface $registry
-     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, BuildingType::class);
     }
 
-    /**
-     * @return NamedEntityInterface
-     */
     protected function createEmpty(): NamedEntityInterface
     {
-        return new Building();
+        return new BuildingType();
     }
 }

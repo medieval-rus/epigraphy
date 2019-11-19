@@ -36,9 +36,6 @@ final class PreservationStateFixtures extends Fixture
 {
     public const REFERENCE_TSELAYA = self::class.'целая';
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->loadObject($manager, 'целая', self::REFERENCE_TSELAYA);
@@ -46,11 +43,6 @@ final class PreservationStateFixtures extends Fixture
         $manager->flush();
     }
 
-    /**
-     * @param ObjectManager $manager
-     * @param string        $name
-     * @param string        $reference
-     */
     private function loadObject(ObjectManager $manager, string $name, string $reference): void
     {
         $preservationState = (new PreservationState())

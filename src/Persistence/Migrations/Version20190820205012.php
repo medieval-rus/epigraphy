@@ -34,17 +34,12 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20190820205012 extends AbstractMigration
 {
-    /**
-     * @return string
-     */
     public function getDescription(): string
     {
         return 'Initial database creation';
     }
 
     /**
-     * @param Schema $schema
-     *
      * @throws DBALException
      */
     public function up(Schema $schema): void
@@ -75,8 +70,6 @@ final class Version20190820205012 extends AbstractMigration
     }
 
     /**
-     * @param Schema $schema
-     *
      * @throws DBALException
      */
     public function down(Schema $schema): void

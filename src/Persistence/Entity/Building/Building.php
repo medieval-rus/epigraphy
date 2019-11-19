@@ -59,9 +59,6 @@ class Building implements NamedEntityInterface
      */
     private $type;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
@@ -73,8 +70,6 @@ class Building implements NamedEntityInterface
     }
 
     /**
-     * @param string $name
-     *
      * @return Building
      */
     public function setName(string $name): self
@@ -84,17 +79,12 @@ class Building implements NamedEntityInterface
         return $this;
     }
 
-    /**
-     * @return BuildingType|null
-     */
     public function getType(): ?BuildingType
     {
         return $this->type;
     }
 
     /**
-     * @param BuildingType|null $type
-     *
      * @return Building
      */
     public function setType(?BuildingType $type): self
