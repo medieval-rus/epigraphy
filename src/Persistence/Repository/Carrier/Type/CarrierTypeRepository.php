@@ -28,7 +28,7 @@ namespace App\Persistence\Repository\Carrier\Type;
 use App\Persistence\Entity\Carrier\Type\CarrierType;
 use App\Persistence\Entity\NamedEntityInterface;
 use App\Persistence\Repository\NamedEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
@@ -42,7 +42,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 final class CarrierTypeRepository extends NamedEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CarrierType::class);
     }

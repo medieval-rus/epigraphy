@@ -27,7 +27,7 @@ namespace App\Persistence\Repository\Inscription;
 
 use App\Persistence\Entity\Inscription\Inscription;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
@@ -39,7 +39,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 final class InscriptionRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Inscription::class);
     }
