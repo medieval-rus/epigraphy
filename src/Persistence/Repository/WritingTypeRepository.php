@@ -46,9 +46,6 @@ final class WritingTypeRepository extends NamedEntityRepository
         parent::__construct($registry, WritingType::class);
     }
 
-    /**
-     * @return WritingType
-     */
     protected function createEmpty(): NamedEntityInterface
     {
         return new WritingType();

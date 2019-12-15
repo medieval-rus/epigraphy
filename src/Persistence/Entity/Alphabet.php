@@ -60,9 +60,6 @@ class Alphabet implements NamedEntityInterface
         return $this->name;
     }
 
-    /**
-     * @return Alphabet
-     */
     public function setName(string $name): self
     {
         $this->name = $name;

@@ -23,39 +23,37 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace DoctrineMigrations;
+namespace App\Persistence\DataFixtures\Carrier\Type;
 
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Schema\Schema;
-use Doctrine\Migrations\AbstractMigration;
+use App\Persistence\Entity\Carrier\Type\CarrierType;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-final class Version20190928184353 extends AbstractMigration
+final class CarrierTypeFixtures extends Fixture
 {
-    public function getDescription(): string
+    public const PREDMETY_SVETSKOGO_NAZNACHENIYA = 'предметы светского назначения';
+
+    public function load(ObjectManager $manager): void
     {
-        return 'Nullable "do we agree" field of Interpretation';
+        $this->loadObject($manager, 'предметы светского назначения', self::PREDMETY_SVETSKOGO_NAZNACHENIYA);
+
+        $manager->flush();
     }
 
-    /**
-     * @throws DBALException
-     */
-    public function up(Schema $schema): void
-    {
-        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
+    private function loadObject(
+        ObjectManager $manager,
+        string $name,
+        string $reference
+    ): void {
+        $carrierType = (new CarrierType())
+            ->setName($name)
+        ;
 
-        $this->addSql('ALTER TABLE interpretation CHANGE do_we_agree do_we_agree TINYINT(1) DEFAULT NULL');
-    }
+        $this->addReference($reference, $carrierType);
 
-    /**
-     * @throws DBALException
-     */
-    public function down(Schema $schema): void
-    {
-        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
-
-        $this->addSql('ALTER TABLE interpretation CHANGE do_we_agree do_we_agree TINYINT(1) DEFAULT \'0\' NOT NULL');
+        $manager->persist($carrierType);
     }
 }

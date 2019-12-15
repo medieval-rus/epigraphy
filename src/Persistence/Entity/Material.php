@@ -60,9 +60,6 @@ class Material implements NamedEntityInterface
         return $this->name;
     }
 
-    /**
-     * @return Material
-     */
     public function setName(string $name): self
     {
         $this->name = $name;

@@ -60,9 +60,6 @@ class ContentCategory implements NamedEntityInterface
         return $this->name;
     }
 
-    /**
-     * @return ContentCategory
-     */
     public function setName(string $name): self
     {
         $this->name = $name;

@@ -27,7 +27,6 @@ namespace App\Persistence\Entity\Inscription;
 
 use App\Persistence\Entity\Alphabet;
 use App\Persistence\Entity\Carrier\Carrier;
-use App\Persistence\Entity\ContentCategory;
 use App\Persistence\Entity\Material;
 use App\Persistence\Entity\PreservationState;
 use App\Persistence\Entity\WritingMethod;
@@ -109,18 +108,11 @@ class Inscription
     private $alphabet;
 
     /**
-     * @var ContentCategory|null
-     *
-     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\ContentCategory", cascade={"persist"})
-     */
-    private $contentCategory;
-
-    /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $dateInText;
+    private $majorPublications;
 
     /**
      * @var Collection|Interpretation[]
@@ -150,9 +142,6 @@ class Inscription
         return $this->carrier;
     }
 
-    /**
-     * @return Inscription
-     */
     public function setCarrier(?Carrier $carrier): self
     {
         $this->carrier = $carrier;
@@ -165,9 +154,6 @@ class Inscription
         return $this->isInSitu;
     }
 
-    /**
-     * @return Inscription
-     */
     public function setIsInSitu(?bool $isInSitu): self
     {
         $this->isInSitu = $isInSitu;
@@ -180,9 +166,6 @@ class Inscription
         return $this->placeOnCarrier;
     }
 
-    /**
-     * @return Inscription
-     */
     public function setPlaceOnCarrier(?string $placeOnCarrier): self
     {
         $this->placeOnCarrier = $placeOnCarrier;
@@ -195,9 +178,6 @@ class Inscription
         return $this->writingType;
     }
 
-    /**
-     * @return Inscription
-     */
     public function setWritingType(?WritingType $writingType): self
     {
         $this->writingType = $writingType;
@@ -213,9 +193,6 @@ class Inscription
         return $this->materials;
     }
 
-    /**
-     * @return Inscription
-     */
     public function addMaterial(Material $material): self
     {
         if (!$this->materials->contains($material)) {
@@ -225,9 +202,6 @@ class Inscription
         return $this;
     }
 
-    /**
-     * @return Inscription
-     */
     public function removeMaterial(Material $material): self
     {
         if ($this->materials->contains($material)) {
@@ -242,9 +216,6 @@ class Inscription
         return $this->writingMethod;
     }
 
-    /**
-     * @return Inscription
-     */
     public function setWritingMethod(?WritingMethod $writingMethod): self
     {
         $this->writingMethod = $writingMethod;
@@ -257,9 +228,6 @@ class Inscription
         return $this->preservationState;
     }
 
-    /**
-     * @return Inscription
-     */
     public function setPreservationState(?PreservationState $preservationState): self
     {
         $this->preservationState = $preservationState;
@@ -272,9 +240,6 @@ class Inscription
         return $this->alphabet;
     }
 
-    /**
-     * @return Inscription
-     */
     public function setAlphabet(?Alphabet $alphabet): self
     {
         $this->alphabet = $alphabet;
@@ -282,32 +247,14 @@ class Inscription
         return $this;
     }
 
-    public function getContentCategory(): ?ContentCategory
+    public function getMajorPublications(): ?string
     {
-        return $this->contentCategory;
+        return $this->majorPublications;
     }
 
-    /**
-     * @return Inscription
-     */
-    public function setContentCategory(?ContentCategory $contentCategory): self
+    public function setMajorPublications(?string $majorPublications): self
     {
-        $this->contentCategory = $contentCategory;
-
-        return $this;
-    }
-
-    public function getDateInText(): ?string
-    {
-        return $this->dateInText;
-    }
-
-    /**
-     * @return Inscription
-     */
-    public function setDateInText(?string $dateInText): self
-    {
-        $this->dateInText = $dateInText;
+        $this->majorPublications = $majorPublications;
 
         return $this;
     }
@@ -322,8 +269,6 @@ class Inscription
 
     /**
      * @param Collection|Interpretation[] $interpretations
-     *
-     * @return Inscription
      */
     public function setInterpretations(Collection $interpretations): self
     {
@@ -336,9 +281,6 @@ class Inscription
         return $this;
     }
 
-    /**
-     * @return Inscription
-     */
     public function addInterpretation(Interpretation $interpretation): self
     {
         $interpretation->setInscription($this);

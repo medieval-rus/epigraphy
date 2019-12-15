@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Inscription;
 
+use App\Persistence\Entity\ContentCategory;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -63,6 +64,20 @@ class Interpretation
     private $source;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pageNumbersInSource;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $numberInSource;
+
+    /**
      * @var bool
      *
      * @ORM\Column(type="boolean", nullable=true)
@@ -79,7 +94,7 @@ class Interpretation
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $textImageFileName;
 
@@ -100,30 +115,73 @@ class Interpretation
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $photoFileName;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $sketchFileName;
 
     /**
-     * @var string|null
+     * @var ContentCategory
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\ContentCategory", cascade={"persist"})
      */
-    private $date;
+    private $contentCategory;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255)
+     */
+    private $content;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $commentFileName;
+    private $dateInText;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $stratigraphicalDate;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $nonStratigraphicalDate;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $historicalDate;
+
+    // todo rework as conventional dates cells
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $conventionalDate;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $comment;
 
     public function getId(): ?int
     {
@@ -135,9 +193,6 @@ class Interpretation
         return $this->inscription;
     }
 
-    /**
-     * @return Interpretation
-     */
     public function setInscription(Inscription $inscription): self
     {
         $this->inscription = $inscription;
@@ -150,12 +205,33 @@ class Interpretation
         return $this->source;
     }
 
-    /**
-     * @return Interpretation
-     */
     public function setSource(string $source): self
     {
         $this->source = $source;
+
+        return $this;
+    }
+
+    public function getPageNumbersInSource(): ?string
+    {
+        return $this->pageNumbersInSource;
+    }
+
+    public function setPageNumbersInSource(?string $pageNumbersInSource): self
+    {
+        $this->pageNumbersInSource = $pageNumbersInSource;
+
+        return $this;
+    }
+
+    public function getNumberInSource(): ?string
+    {
+        return $this->numberInSource;
+    }
+
+    public function setNumberInSource(?string $numberInSource): self
+    {
+        $this->numberInSource = $numberInSource;
 
         return $this;
     }
@@ -165,9 +241,6 @@ class Interpretation
         return $this->doWeAgree;
     }
 
-    /**
-     * @return Interpretation
-     */
     public function setDoWeAgree(?bool $doWeAgree): self
     {
         $this->doWeAgree = $doWeAgree;
@@ -180,9 +253,6 @@ class Interpretation
         return $this->text;
     }
 
-    /**
-     * @return Interpretation
-     */
     public function setText(?string $text): self
     {
         $this->text = $text;
@@ -195,9 +265,6 @@ class Interpretation
         return $this->textImageFileName;
     }
 
-    /**
-     * @return Interpretation
-     */
     public function setTextImageFileName(?string $textImageFileName): self
     {
         $this->textImageFileName = $textImageFileName;
@@ -210,9 +277,6 @@ class Interpretation
         return $this->transliteration;
     }
 
-    /**
-     * @return Interpretation
-     */
     public function setTransliteration(?string $transliteration): self
     {
         $this->transliteration = $transliteration;
@@ -225,9 +289,6 @@ class Interpretation
         return $this->translation;
     }
 
-    /**
-     * @return Interpretation
-     */
     public function setTranslation(?string $translation): self
     {
         $this->translation = $translation;
@@ -240,9 +301,6 @@ class Interpretation
         return $this->photoFileName;
     }
 
-    /**
-     * @return Interpretation
-     */
     public function setPhotoFileName(?string $photoFileName): self
     {
         $this->photoFileName = $photoFileName;
@@ -255,9 +313,6 @@ class Interpretation
         return $this->sketchFileName;
     }
 
-    /**
-     * @return Interpretation
-     */
     public function setSketchFileName(?string $sketchFileName): self
     {
         $this->sketchFileName = $sketchFileName;
@@ -265,32 +320,98 @@ class Interpretation
         return $this;
     }
 
-    public function getDate(): ?string
+    public function getContentCategory(): ContentCategory
     {
-        return $this->date;
+        return $this->contentCategory;
     }
 
-    /**
-     * @return Interpretation
-     */
-    public function setDate(?string $date): self
+    public function setContentCategory(ContentCategory $contentCategory): self
     {
-        $this->date = $date;
+        $this->contentCategory = $contentCategory;
 
         return $this;
     }
 
-    public function getCommentFileName(): ?string
+    public function getContent(): string
     {
-        return $this->commentFileName;
+        return $this->content;
     }
 
-    /**
-     * @return Interpretation
-     */
-    public function setCommentFileName(?string $commentFileName): self
+    public function setContent(string $content): self
     {
-        $this->commentFileName = $commentFileName;
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function getDateInText(): ?string
+    {
+        return $this->dateInText;
+    }
+
+    public function setDateInText(?string $dateInText): self
+    {
+        $this->dateInText = $dateInText;
+
+        return $this;
+    }
+
+    public function getStratigraphicalDate(): ?string
+    {
+        return $this->stratigraphicalDate;
+    }
+
+    public function setStratigraphicalDate(?string $stratigraphicalDate): self
+    {
+        $this->stratigraphicalDate = $stratigraphicalDate;
+
+        return $this;
+    }
+
+    public function getNonStratigraphicalDate(): ?string
+    {
+        return $this->nonStratigraphicalDate;
+    }
+
+    public function setNonStratigraphicalDate(?string $nonStratigraphicalDate): self
+    {
+        $this->nonStratigraphicalDate = $nonStratigraphicalDate;
+
+        return $this;
+    }
+
+    public function getHistoricalDate(): ?string
+    {
+        return $this->historicalDate;
+    }
+
+    public function setHistoricalDate(?string $historicalDate): self
+    {
+        $this->historicalDate = $historicalDate;
+
+        return $this;
+    }
+
+    public function getConventionalDate(): string
+    {
+        return $this->conventionalDate;
+    }
+
+    public function setConventionalDate(string $conventionalDate): self
+    {
+        $this->conventionalDate = $conventionalDate;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }

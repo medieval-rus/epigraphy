@@ -26,17 +26,19 @@ declare(strict_types=1);
 namespace App\Portation;
 
 use App\Helper\StringHelper;
+use App\Persistence\Entity\Carrier\Carrier;
 use App\Persistence\Entity\Inscription\Inscription;
 use App\Persistence\Entity\Inscription\Interpretation;
 use App\Persistence\Entity\NamedEntityInterface;
 use App\Persistence\Repository\AlphabetRepository;
+use App\Persistence\Repository\Carrier\Category\CarrierCategoryRepository;
+use App\Persistence\Repository\Carrier\Type\CarrierTypeRepository;
 use App\Persistence\Repository\ContentCategoryRepository;
 use App\Persistence\Repository\Inscription\InscriptionRepository;
 use App\Persistence\Repository\MaterialRepository;
 use App\Persistence\Repository\PreservationStateRepository;
 use App\Persistence\Repository\WritingMethodRepository;
 use App\Persistence\Repository\WritingTypeRepository;
-use App\Portation\Formatter\Carrier\CarrierFormatterInterface;
 use InvalidArgumentException;
 use LogicException;
 use Vyfony\Bundle\PortationBundle\Formatter\Bool\BoolFormatterInterface;
@@ -61,9 +63,14 @@ final class InscriptionPortationTarget implements PortationTargetInterface
     private $boolFormatter;
 
     /**
-     * @var CarrierFormatterInterface
+     * @var CarrierTypeRepository
      */
-    private $carrierFormatter;
+    private $carrierTypeRepository;
+
+    /**
+     * @var CarrierCategoryRepository
+     */
+    private $carrierCategoryRepository;
 
     /**
      * @var InscriptionRepository
@@ -102,7 +109,8 @@ final class InscriptionPortationTarget implements PortationTargetInterface
 
     public function __construct(
         BoolFormatterInterface $boolFormatter,
-        CarrierFormatterInterface $carrierFormatter,
+        CarrierTypeRepository $carrierTypeRepository,
+        CarrierCategoryRepository $carrierCategoryRepository,
         InscriptionRepository $inscriptionRepository,
         WritingTypeRepository $writingTypeRepository,
         MaterialRepository $materialRepository,
@@ -112,7 +120,8 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         ContentCategoryRepository $contentCategoryRepository
     ) {
         $this->boolFormatter = $boolFormatter;
-        $this->carrierFormatter = $carrierFormatter;
+        $this->carrierTypeRepository = $carrierTypeRepository;
+        $this->carrierCategoryRepository = $carrierCategoryRepository;
         $this->inscriptionRepository = $inscriptionRepository;
         $this->writingTypeRepository = $writingTypeRepository;
         $this->materialRepository = $materialRepository;
@@ -133,9 +142,17 @@ final class InscriptionPortationTarget implements PortationTargetInterface
 
         switch (true) {
             case $entity instanceof Inscription:
+                $carrier = $entity->getCarrier();
+
                 return [
                     'id' => (string) $entity->getId(),
-                    'inscription.carrier' => $this->carrierFormatter->format($entity->getCarrier()),
+                    'inscription.carrier.type' => $formatNamedEntity($carrier->getType()),
+                    'inscription.carrier.category' => $formatNamedEntity($carrier->getCategory()),
+                    'inscription.carrier.origin1' => $carrier->getOrigin1(),
+                    'inscription.carrier.origin2' => $carrier->getOrigin2(),
+                    'inscription.carrier.individualName' => $carrier->getIndividualName(),
+                    'inscription.carrier.storagePlace' => $carrier->getStoragePlace(),
+                    'inscription.carrier.inventoryNumber' => $carrier->getInventoryNumber(),
                     'inscription.isInSitu' => $this->boolFormatter->format($entity->getIsInSitu()),
                     'inscription.placeOnCarrier' => $entity->getPlaceOnCarrier(),
                     'inscription.writingType' => $formatNamedEntity($entity->getWritingType()),
@@ -146,8 +163,7 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                     'inscription.writingMethod' => $formatNamedEntity($entity->getWritingMethod()),
                     'inscription.preservationState' => $formatNamedEntity($entity->getPreservationState()),
                     'inscription.alphabet' => $formatNamedEntity($entity->getAlphabet()),
-                    'inscription.contentCategory' => $formatNamedEntity($entity->getContentCategory()),
-                    'inscription.dateInText' => $entity->getDateInText(),
+                    'inscription.majorPublications' => $entity->getMajorPublications(),
                 ];
             case $entity instanceof Interpretation:
                 return [
@@ -157,6 +173,8 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                         $entity->getId()
                     ),
                     'interpretation.source' => $entity->getSource(),
+                    'interpretation.pageNumbersInSource' => $entity->getPageNumbersInSource(),
+                    'interpretation.numberInSource' => $entity->getNumberInSource(),
                     'interpretation.doWeAgree' => $this->boolFormatter->format($entity->getDoWeAgree()),
                     'interpretation.text' => $entity->getText(),
                     'interpretation.textImageFileName' => $entity->getTextImageFileName(),
@@ -164,8 +182,14 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                     'interpretation.translation' => $entity->getTranslation(),
                     'interpretation.photoFileName' => $entity->getPhotoFileName(),
                     'interpretation.sketchFileName' => $entity->getSketchFileName(),
-                    'interpretation.date' => $entity->getDate(),
-                    'interpretation.commentFileName' => $entity->getCommentFileName(),
+                    'interpretation.contentCategory' => $formatNamedEntity($entity->getContentCategory()),
+                    'interpretation.content' => $entity->getContent(),
+                    'interpretation.dateInText' => $entity->getDateInText(),
+                    'interpretation.stratigraphicalDate' => $entity->getStratigraphicalDate(),
+                    'interpretation.nonStratigraphicalDate' => $entity->getNonStratigraphicalDate(),
+                    'interpretation.historicalDate' => $entity->getHistoricalDate(),
+                    'interpretation.conventionalDate' => $entity->getConventionalDate(),
+                    'interpretation.comment' => $entity->getComment(),
                 ];
             default:
                 throw $this->createInvalidEntityTypeException($entity);
@@ -175,17 +199,77 @@ final class InscriptionPortationTarget implements PortationTargetInterface
     /**
      * @return callable[]
      */
-    public function getCellValueHandlers(string $newRowKey): array
+    public function getCellValueHandlers(RowTypeInterface $rowType): array
     {
-        switch ($newRowKey) {
+        $getOrCreateCarrier = function (Inscription $inscription): Carrier {
+            $carrier = $inscription->getCarrier();
+
+            if (null === $carrier) {
+                $carrier = new Carrier();
+
+                $inscription->setCarrier($carrier);
+            }
+
+            return $inscription->getCarrier();
+        };
+
+        switch ($rowType->getNewRowKey()) {
             case self::NEW_INSCRIPTION_ROW_KEY:
                 return [
-                    'inscription.carrier' => function (
+                    'inscription.carrier.type' => function (
                         Inscription $inscription,
-                        string $formattedCarrier
-                    ): void {
-                        $inscription->setCarrier(
-                            $this->carrierFormatter->parse($formattedCarrier)
+                        string $formattedCarrierType
+                    ) use ($getOrCreateCarrier): void {
+                        $getOrCreateCarrier($inscription)->setType(
+                            $this->carrierTypeRepository->findOneByNameOrCreate($formattedCarrierType)
+                        );
+                    },
+                    'inscription.carrier.category' => function (
+                        Inscription $inscription,
+                        string $formattedCarrierCategory
+                    ) use ($getOrCreateCarrier): void {
+                        $getOrCreateCarrier($inscription)->setCategory(
+                            $this->carrierCategoryRepository->findOneByNameOrCreate($formattedCarrierCategory)
+                        );
+                    },
+                    'inscription.carrier.origin1' => function (
+                        Inscription $inscription,
+                        string $formattedOrigin1
+                    ) use ($getOrCreateCarrier): void {
+                        $getOrCreateCarrier($inscription)->setOrigin1(
+                            StringHelper::nullIfEmpty($formattedOrigin1)
+                        );
+                    },
+                    'inscription.carrier.origin2' => function (
+                        Inscription $inscription,
+                        string $formattedOrigin2
+                    ) use ($getOrCreateCarrier): void {
+                        $getOrCreateCarrier($inscription)->setOrigin2(
+                            StringHelper::nullIfEmpty($formattedOrigin2)
+                        );
+                    },
+                    'inscription.carrier.individualName' => function (
+                        Inscription $inscription,
+                        string $formattedIndividualName
+                    ) use ($getOrCreateCarrier): void {
+                        $getOrCreateCarrier($inscription)->setIndividualName(
+                            StringHelper::nullIfEmpty($formattedIndividualName)
+                        );
+                    },
+                    'inscription.carrier.storagePlace' => function (
+                        Inscription $inscription,
+                        string $formattedStoragePlace
+                    ) use ($getOrCreateCarrier): void {
+                        $getOrCreateCarrier($inscription)->setStoragePlace(
+                            StringHelper::nullIfEmpty($formattedStoragePlace)
+                        );
+                    },
+                    'inscription.carrier.inventoryNumber' => function (
+                        Inscription $inscription,
+                        string $formattedInventoryNumber
+                    ) use ($getOrCreateCarrier): void {
+                        $getOrCreateCarrier($inscription)->setInventoryNumber(
+                            StringHelper::nullIfEmpty($formattedInventoryNumber)
                         );
                     },
                     'inscription.isInSitu' => function (
@@ -264,24 +348,12 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                                 : $this->alphabetRepository->findOneByNameOrCreate($alphabetName)
                         );
                     },
-                    'inscription.contentCategory' => function (
+                    'inscription.majorPublications' => function (
                         Inscription $inscription,
-                        string $formattedContentCategory
+                        string $formattedMajorPublications
                     ): void {
-                        $contentCategoryName = StringHelper::nullIfEmpty($formattedContentCategory);
-
-                        $inscription->setContentCategory(
-                            null === $contentCategoryName
-                                ? null
-                                : $this->contentCategoryRepository->findOneByNameOrCreate($contentCategoryName)
-                        );
-                    },
-                    'inscription.dateInText' => function (
-                        Inscription $inscription,
-                        string $formattedDateInText
-                    ): void {
-                        $inscription->setDateInText(
-                            StringHelper::nullIfEmpty($formattedDateInText)
+                        $inscription->setMajorPublications(
+                            StringHelper::nullIfEmpty($formattedMajorPublications)
                         );
                     },
                 ];
@@ -291,8 +363,22 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                         Interpretation $interpretation,
                         string $formattedSource
                     ): void {
-                        $interpretation->setSource(
-                            StringHelper::nullIfEmpty($formattedSource)
+                        $interpretation->setSource($formattedSource);
+                    },
+                    'interpretation.pageNumbersInSource' => function (
+                        Interpretation $interpretation,
+                        string $formattedPageNumbersInSource
+                    ): void {
+                        $interpretation->setPageNumbersInSource(
+                            StringHelper::nullIfEmpty($formattedPageNumbersInSource)
+                        );
+                    },
+                    'interpretation.numberInSource' => function (
+                        Interpretation $interpretation,
+                        string $formattedNumberInSource
+                    ): void {
+                        $interpretation->setNumberInSource(
+                            StringHelper::nullIfEmpty($formattedNumberInSource)
                         );
                     },
                     'interpretation.doWeAgree' => function (
@@ -351,55 +437,97 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                             StringHelper::nullIfEmpty($formattedSketchFileName)
                         );
                     },
-                    'interpretation.date' => function (
+                    'interpretation.contentCategory' => function (
                         Interpretation $interpretation,
-                        string $formattedDate
+                        string $formattedContentCategory
                     ): void {
-                        $interpretation->setDate(
-                            StringHelper::nullIfEmpty($formattedDate)
+                        $interpretation->setContentCategory(
+                            $this->contentCategoryRepository->findOneByNameOrCreate($formattedContentCategory)
                         );
                     },
-                    'interpretation.commentFileName' => function (
+                    'interpretation.content' => function (
                         Interpretation $interpretation,
-                        string $formattedCommentFileName
+                        string $formattedContent
                     ): void {
-                        $interpretation->setCommentFileName(
-                            StringHelper::nullIfEmpty($formattedCommentFileName)
+                        $interpretation->setContent(
+                            StringHelper::nullIfEmpty($formattedContent)
+                        );
+                    },
+                    'interpretation.dateInText' => function (
+                        Interpretation $interpretation,
+                        string $formattedDateInText
+                    ): void {
+                        $interpretation->setDateInText(
+                            StringHelper::nullIfEmpty($formattedDateInText)
+                        );
+                    },
+                    'interpretation.stratigraphicalDate' => function (
+                        Interpretation $interpretation,
+                        string $formattedStratigraphicalDate
+                    ): void {
+                        $interpretation->setStratigraphicalDate(
+                            StringHelper::nullIfEmpty($formattedStratigraphicalDate)
+                        );
+                    },
+                    'interpretation.nonStratigraphicalDate' => function (
+                        Interpretation $interpretation,
+                        string $formattedNonStratigraphicalDate
+                    ): void {
+                        $interpretation->setNonStratigraphicalDate(
+                            StringHelper::nullIfEmpty($formattedNonStratigraphicalDate)
+                        );
+                    },
+                    'interpretation.historicalDate' => function (
+                        Interpretation $interpretation,
+                        string $formattedHistoricalDate
+                    ): void {
+                        $interpretation->setHistoricalDate(
+                            StringHelper::nullIfEmpty($formattedHistoricalDate)
+                        );
+                    },
+                    'interpretation.conventionalDate' => function (
+                        Interpretation $interpretation,
+                        string $formattedConventionalDate
+                    ): void {
+                        $interpretation->setConventionalDate($formattedConventionalDate);
+                    },
+                    'interpretation.comment' => function (
+                        Interpretation $interpretation,
+                        string $formattedComment
+                    ): void {
+                        $interpretation->setComment(
+                            StringHelper::nullIfEmpty($formattedComment)
                         );
                     },
                 ];
             default:
-                throw $this->createInvalidNewRowKeyException($newRowKey);
+                throw $this->createInvalidNewRowKeyException($rowType->getNewRowKey());
         }
     }
 
-    public function createEntity(string $newRowKey): object
+    public function createEntity(RowTypeInterface $rowType): object
     {
-        switch ($newRowKey) {
+        switch ($rowType->getNewRowKey()) {
             case self::NEW_INSCRIPTION_ROW_KEY:
                 return new Inscription();
             case self::NEW_INTERPRETATION_ROW_KEY:
                 return new Interpretation();
             default:
-                throw $this->createInvalidNewRowKeyException($newRowKey);
+                throw $this->createInvalidNewRowKeyException($rowType->getNewRowKey());
         }
     }
 
     public function setNestedEntity(string $entityRowKey, object $entity, object $nestedEntity): void
     {
-        $entityRowKeyIsForInscription = self::NEW_INSCRIPTION_ROW_KEY === $entityRowKey;
-
         $entityIsInscription = $entity instanceof Inscription;
 
         $nestedEntityIsInterpretation = $nestedEntity instanceof Interpretation;
 
         switch (true) {
-            case $entityRowKeyIsForInscription && $entityIsInscription && $nestedEntityIsInterpretation:
+            case $entityIsInscription && $nestedEntityIsInterpretation:
                 $entity->addInterpretation($nestedEntity);
 
                 break;
-            case self::NEW_INTERPRETATION_ROW_KEY:
-                throw $this->createUnexpectedRowKeyException($entityRowKey, __METHOD__);
             default:
                 throw $this->createInvalidNewRowKeyException($entityRowKey);
         }
@@ -446,7 +574,13 @@ final class InscriptionPortationTarget implements PortationTargetInterface
     {
         return [
             'id',
-            'inscription.carrier',
+            'inscription.carrier.type',
+            'inscription.carrier.category',
+            'inscription.carrier.origin1',
+            'inscription.carrier.origin2',
+            'inscription.carrier.individualName',
+            'inscription.carrier.storagePlace',
+            'inscription.carrier.inventoryNumber',
             'inscription.isInSitu',
             'inscription.placeOnCarrier',
             'inscription.writingType',
@@ -454,9 +588,10 @@ final class InscriptionPortationTarget implements PortationTargetInterface
             'inscription.writingMethod',
             'inscription.preservationState',
             'inscription.alphabet',
-            'inscription.contentCategory',
-            'inscription.dateInText',
+            'inscription.majorPublications',
             'interpretation.source',
+            'interpretation.pageNumbersInSource',
+            'interpretation.numberInSource',
             'interpretation.doWeAgree',
             'interpretation.text',
             'interpretation.textImageFileName',
@@ -464,8 +599,14 @@ final class InscriptionPortationTarget implements PortationTargetInterface
             'interpretation.translation',
             'interpretation.photoFileName',
             'interpretation.sketchFileName',
-            'interpretation.date',
-            'interpretation.commentFileName',
+            'interpretation.contentCategory',
+            'interpretation.content',
+            'interpretation.dateInText',
+            'interpretation.stratigraphicalDate',
+            'interpretation.nonStratigraphicalDate',
+            'interpretation.historicalDate',
+            'interpretation.conventionalDate',
+            'interpretation.comment',
         ];
     }
 
@@ -490,11 +631,6 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                 self::NEW_INTERPRETATION_ROW_KEY
             )
         );
-    }
-
-    private function createUnexpectedRowKeyException(string $rowKey, string $methodName): LogicException
-    {
-        return new LogicException(sprintf('Unexpected row key "%s" in "%s" method', $rowKey, $methodName));
     }
 
     private function createUnexpectedEntityTypeException(object $entity, string $methodName): LogicException

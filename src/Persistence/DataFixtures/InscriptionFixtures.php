@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\Persistence\DataFixtures;
 
-use App\Persistence\DataFixtures\Carrier\WallCarrierFixtures;
+use App\Persistence\DataFixtures\Carrier\CarrierFixtures;
 use App\Persistence\Entity\Inscription\Inscription;
 use App\Persistence\Entity\Inscription\Interpretation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -43,7 +43,7 @@ final class InscriptionFixtures extends Fixture implements DependentFixtureInter
     public function getDependencies(): array
     {
         return [
-            WallCarrierFixtures::class,
+            CarrierFixtures::class,
             WritingTypeFixtures::class,
             MaterialFixtures::class,
             WritingMethodFixtures::class,
@@ -63,7 +63,7 @@ final class InscriptionFixtures extends Fixture implements DependentFixtureInter
     private function createInscription1(): Inscription
     {
         return (new Inscription())
-            ->setCarrier($this->getReference(WallCarrierFixtures::REFERENCE_YUGO_VOSTOCHNYI_STOLB))
+            ->setCarrier($this->getReference(CarrierFixtures::CARRIER_1))
             ->setIsInSitu(true)
             ->setPlaceOnCarrier('южная грань столба')
             ->setWritingType($this->getReference(WritingTypeFixtures::REFERENCE_VTOROY))
@@ -71,12 +71,13 @@ final class InscriptionFixtures extends Fixture implements DependentFixtureInter
             ->setWritingMethod($this->getReference(WritingMethodFixtures::REFERENCE_GRAFFITO))
             ->setPreservationState($this->getReference(PreservationStateFixtures::REFERENCE_TSELAYA))
             ->setAlphabet($this->getReference(AlphabetFixtures::REFERENCE_KIRILLITSA))
-            ->setContentCategory($this->getReference(ContentCategoryFixtures::REFERENCE_PRESTAVISYA))
-            ->setDateInText('22 мая на святого мученика Василиска')
+            ->setMajorPublications('Кондаков 1896; Миятев 1929; Рыбаков 1946; Медынцева 2000')
             ->addInterpretation(
                 (new Interpretation())
                     ->setSource('какой-то источник')
-                    ->setDoWeAgree(true)
+                    ->setPageNumbersInSource('10-20')
+                    ->setNumberInSource('300')
+                    ->setDoWeAgree(false)
                     ->setText(<<<EOT
 мцама8к
 ~
@@ -101,8 +102,14 @@ EOT
                     )
                     ->setPhotoFileName('фото.джипег')
                     ->setSketchFileName('прорись.джипег')
-                    ->setDate('10 век')
-                    ->setCommentFileName('комментарий.пдф')
+                    ->setContentCategory($this->getReference(ContentCategoryFixtures::REFERENCE_PRESTAVISYA))
+                    ->setContent('какое-то содержание')
+                    ->setDateInText('22 мая на святого мученика Василиска')
+                    ->setStratigraphicalDate(null)
+                    ->setNonStratigraphicalDate(null)
+                    ->setHistoricalDate(null)
+                    ->setConventionalDate('1100—1120')
+                    ->setComment('разночтения с источником')
             )
         ;
     }

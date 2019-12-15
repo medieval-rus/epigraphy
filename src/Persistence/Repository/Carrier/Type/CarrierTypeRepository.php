@@ -23,18 +23,32 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\DataFixtures\Carrier;
+namespace App\Persistence\Repository\Carrier\Type;
 
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use App\Persistence\Entity\Carrier\Type\CarrierType;
+use App\Persistence\Entity\NamedEntityInterface;
+use App\Persistence\Repository\NamedEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method CarrierType|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method CarrierType|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CarrierType[]    findAll()
+ * @method CarrierType[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method CarrierType|null findOneByName(string $name)
+ * @method CarrierType      findOneByNameOrCreate(string $name)
  */
-final class ItemCarrierFixtures extends Fixture
+final class CarrierTypeRepository extends NamedEntityRepository
 {
-    public function load(ObjectManager $manager): void
+    public function __construct(RegistryInterface $registry)
     {
-        $manager->flush();
+        parent::__construct($registry, CarrierType::class);
+    }
+
+    protected function createEmpty(): NamedEntityInterface
+    {
+        return new CarrierType();
     }
 }

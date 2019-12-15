@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "99faacffa3e23799754e6f3b8d85ea08",
+    "content-hash": "86d8eaf778ebb996c38e439d82d5112b",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -5850,16 +5850,16 @@
         },
         {
             "name": "vyfony/portation-bundle",
-            "version": "v0.0.6",
+            "version": "v0.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vyfony/portation-bundle.git",
-                "reference": "fddd5cefdb0938392dfb7c5611f12a153003ba76"
+                "reference": "5fdc4f7191d4d57d38d4b9abb3b2f8e838e4b390"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vyfony/portation-bundle/zipball/fddd5cefdb0938392dfb7c5611f12a153003ba76",
-                "reference": "fddd5cefdb0938392dfb7c5611f12a153003ba76",
+                "url": "https://api.github.com/repos/vyfony/portation-bundle/zipball/5fdc4f7191d4d57d38d4b9abb3b2f8e838e4b390",
+                "reference": "5fdc4f7191d4d57d38d4b9abb3b2f8e838e4b390",
                 "shasum": ""
             },
             "require": {
@@ -5915,7 +5915,7 @@
                 "portation",
                 "symfony-bundle"
             ],
-            "time": "2019-11-19T21:16:27+00:00"
+            "time": "2019-12-15T20:42:53+00:00"
         },
         {
             "name": "webmozart/assert",
