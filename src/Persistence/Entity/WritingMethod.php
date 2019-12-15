@@ -60,9 +60,6 @@ class WritingMethod implements NamedEntityInterface
         return $this->name;
     }
 
-    /**
-     * @return WritingMethod
-     */
     public function setName(string $name): self
     {
         $this->name = $name;

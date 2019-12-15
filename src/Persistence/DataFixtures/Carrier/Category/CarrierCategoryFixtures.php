@@ -23,32 +23,37 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Carrier;
+namespace App\Persistence\DataFixtures\Carrier\Category;
 
-use App\Persistence\Entity\Carrier\ItemCarrier;
-use App\Persistence\Entity\NamedEntityInterface;
-use App\Persistence\Repository\NamedEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use App\Persistence\Entity\Carrier\Category\CarrierCategory;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
- *
- * @method ItemCarrier|null find(int $id, int $lockMode = null, int $lockVersion = null)
- * @method ItemCarrier|null findOneBy(array $criteria, array $orderBy = null)
- * @method ItemCarrier[]    findAll()
- * @method ItemCarrier[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- * @method ItemCarrier|null findOneByName(string $name)
- * @method ItemCarrier      findOneByNameOrCreate(string $name)
  */
-final class ItemCarrierRepository extends NamedEntityRepository
+final class CarrierCategoryFixtures extends Fixture
 {
-    public function __construct(RegistryInterface $registry)
+    public const PRYASLITSE = 'пряслице';
+
+    public function load(ObjectManager $manager): void
     {
-        parent::__construct($registry, ItemCarrier::class);
+        $this->loadObject($manager, 'пряслице', self::PRYASLITSE);
+
+        $manager->flush();
     }
 
-    protected function createEmpty(): NamedEntityInterface
-    {
-        return new ItemCarrier();
+    private function loadObject(
+        ObjectManager $manager,
+        string $name,
+        string $reference
+    ): void {
+        $carrierCategory = (new CarrierCategory())
+            ->setName($name)
+        ;
+
+        $this->addReference($reference, $carrierCategory);
+
+        $manager->persist($carrierCategory);
     }
 }

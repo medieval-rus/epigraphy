@@ -23,37 +23,26 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Carrier;
+namespace App\Persistence\Repository\Carrier;
 
-use App\Persistence\Entity\NamedEntityInterface;
-use Doctrine\ORM\Mapping as ORM;
+use App\Persistence\Entity\Carrier\Carrier;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  *
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\Carrier\MonumentCarrierRepository")
+ * @method Carrier|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method Carrier|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Carrier[]    findAll()
+ * @method Carrier[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method Carrier|null findOneByName(string $name)
+ * @method Carrier      findOneByNameOrCreate(string $name)
  */
-class MonumentCarrier extends Carrier implements NamedEntityInterface
+final class CarrierRepository extends ServiceEntityRepository
 {
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
-
-    public function getName(): ?string
+    public function __construct(RegistryInterface $registry)
     {
-        return $this->name;
-    }
-
-    /**
-     * @return MonumentCarrier
-     */
-    public function setName(?string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
+        parent::__construct($registry, Carrier::class);
     }
 }

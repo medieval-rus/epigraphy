@@ -23,34 +23,48 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\DataFixtures\Building\Type;
+namespace App\Persistence\Entity\Carrier\Category;
 
-use App\Persistence\Entity\Building\Type\BuildingType;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use App\Persistence\Entity\NamedEntityInterface;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @ORM\Entity(repositoryClass="App\Persistence\Repository\Carrier\Category\CarrierCategoryRepository")
  */
-final class BuildingTypeFixtures extends Fixture
+class CarrierCategory implements NamedEntityInterface
 {
-    public const REFERENCE_TSERKOV = self::class.'церковь';
+    /**
+     * @var int
+     *
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
 
-    public function load(ObjectManager $manager): void
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    public function getId(): int
     {
-        $this->loadObject($manager, 'церковь', self::REFERENCE_TSERKOV);
-
-        $manager->flush();
+        return $this->id;
     }
 
-    private function loadObject(ObjectManager $manager, string $name, string $reference): void
+    public function getName(): ?string
     {
-        $buildingType = (new BuildingType())
-            ->setName($name)
-        ;
+        return $this->name;
+    }
 
-        $this->addReference($reference, $buildingType);
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
-        $manager->persist($buildingType);
+        return $this;
     }
 }

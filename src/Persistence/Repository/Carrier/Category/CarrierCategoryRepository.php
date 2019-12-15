@@ -23,51 +23,32 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Building\Type;
+namespace App\Persistence\Repository\Carrier\Category;
 
+use App\Persistence\Entity\Carrier\Category\CarrierCategory;
 use App\Persistence\Entity\NamedEntityInterface;
-use Doctrine\ORM\Mapping as ORM;
+use App\Persistence\Repository\NamedEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  *
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\Building\Type\BuildingTypeRepository")
+ * @method CarrierCategory|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method CarrierCategory|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CarrierCategory[]    findAll()
+ * @method CarrierCategory[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method CarrierCategory|null findOneByName(string $name)
+ * @method CarrierCategory      findOneByNameOrCreate(string $name)
  */
-class BuildingType implements NamedEntityInterface
+final class CarrierCategoryRepository extends NamedEntityRepository
 {
-    /**
-     * @var int
-     *
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
-
-    public function getId(): ?int
+    public function __construct(RegistryInterface $registry)
     {
-        return $this->id;
+        parent::__construct($registry, CarrierCategory::class);
     }
 
-    public function getName(): ?string
+    protected function createEmpty(): NamedEntityInterface
     {
-        return $this->name;
-    }
-
-    /**
-     * @return BuildingType
-     */
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
+        return new CarrierCategory();
     }
 }

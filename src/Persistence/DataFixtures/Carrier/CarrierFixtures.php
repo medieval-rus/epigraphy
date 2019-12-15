@@ -25,8 +25,9 @@ declare(strict_types=1);
 
 namespace App\Persistence\DataFixtures\Carrier;
 
-use App\Persistence\DataFixtures\Building\BuildingFixtures;
-use App\Persistence\Entity\Carrier\WallCarrier;
+use App\Persistence\DataFixtures\Carrier\Category\CarrierCategoryFixtures;
+use App\Persistence\DataFixtures\Carrier\Type\CarrierTypeFixtures;
+use App\Persistence\Entity\Carrier\Carrier;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -34,9 +35,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-final class WallCarrierFixtures extends Fixture implements DependentFixtureInterface
+final class CarrierFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const REFERENCE_YUGO_VOSTOCHNYI_STOLB = self::class.'юго-восточный столб';
+    public const CARRIER_1 = 'carrier 1';
 
     /**
      * @return string[]
@@ -44,32 +45,32 @@ final class WallCarrierFixtures extends Fixture implements DependentFixtureInter
     public function getDependencies(): array
     {
         return [
-            BuildingFixtures::class,
+            CarrierTypeFixtures::class,
+            CarrierCategoryFixtures::class,
         ];
     }
 
     public function load(ObjectManager $manager): void
     {
-        $this->loadObject(
-            $manager,
-            BuildingFixtures::REFERENCE_TSERKOV_NIKOLY_NA_LIPNE,
-            self::REFERENCE_YUGO_VOSTOCHNYI_STOLB
-        );
+        $manager->persist($this->createCarrier1());
 
         $manager->flush();
     }
 
-    private function loadObject(
-        ObjectManager $manager,
-        string $buildingReference,
-        string $reference
-    ): void {
-        $carrier = (new WallCarrier())
-            ->setBuilding($this->getReference($buildingReference))
+    private function createCarrier1(): Carrier
+    {
+        $carrier = (new Carrier())
+            ->setType($this->getReference(CarrierTypeFixtures::PREDMETY_SVETSKOGO_NAZNACHENIYA))
+            ->setCategory($this->getReference(CarrierCategoryFixtures::PRYASLITSE))
+            ->setOrigin1('Любеч')
+            ->setOrigin2('раскопки феодального замка под руководством Б.А. Рыбакова, перекоп у западного угла замка')
+            ->setIndividualName(null)
+            ->setStoragePlace(null)
+            ->setInventoryNumber(null)
         ;
 
-        $this->addReference($reference, $carrier);
+        $this->addReference(self::CARRIER_1, $carrier);
 
-        $manager->persist($carrier);
+        return $carrier;
     }
 }

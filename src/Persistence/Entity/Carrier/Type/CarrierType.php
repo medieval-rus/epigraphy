@@ -23,18 +23,17 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Building;
+namespace App\Persistence\Entity\Carrier\Type;
 
-use App\Persistence\Entity\Building\Type\BuildingType;
 use App\Persistence\Entity\NamedEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  *
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\Building\BuildingRepository")
+ * @ORM\Entity(repositoryClass="App\Persistence\Repository\Carrier\Type\CarrierTypeRepository")
  */
-class Building implements NamedEntityInterface
+class CarrierType implements NamedEntityInterface
 {
     /**
      * @var int
@@ -52,14 +51,7 @@ class Building implements NamedEntityInterface
      */
     private $name;
 
-    /**
-     * @var BuildingType|null
-     *
-     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Building\Type\BuildingType")
-     */
-    private $type;
-
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -69,27 +61,9 @@ class Building implements NamedEntityInterface
         return $this->name;
     }
 
-    /**
-     * @return Building
-     */
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getType(): ?BuildingType
-    {
-        return $this->type;
-    }
-
-    /**
-     * @return Building
-     */
-    public function setType(?BuildingType $type): self
-    {
-        $this->type = $type;
 
         return $this;
     }

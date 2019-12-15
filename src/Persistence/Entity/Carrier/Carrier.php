@@ -25,21 +25,16 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Carrier;
 
+use App\Persistence\Entity\Carrier\Category\CarrierCategory;
+use App\Persistence\Entity\Carrier\Type\CarrierType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  *
- * @ORM\Entity
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="carrier_type", type="string")
- * @ORM\DiscriminatorMap({
- *     "wall"="WallCarrier",
- *     "item"="ItemCarrier",
- *     "monument"="MonumentCarrier"
- * })
+ * @ORM\Entity(repositoryClass="App\Persistence\Repository\Carrier\CarrierRepository")
  */
-abstract class Carrier
+class Carrier
 {
     /**
      * @var int
@@ -50,8 +45,141 @@ abstract class Carrier
      */
     private $id;
 
+    /**
+     * @var CarrierType
+     *
+     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Carrier\Type\CarrierType", cascade={"persist"})
+     */
+    private $type;
+
+    /**
+     * @var CarrierCategory
+     *
+     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Carrier\Category\CarrierCategory", cascade={"persist"})
+     */
+    private $category;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $origin1;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $origin2;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $individualName;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $storagePlace;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $inventoryNumber;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getType(): CarrierType
+    {
+        return $this->type;
+    }
+
+    public function setType(CarrierType $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getCategory(): CarrierCategory
+    {
+        return $this->category;
+    }
+
+    public function setCategory(CarrierCategory $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getOrigin1(): ?string
+    {
+        return $this->origin1;
+    }
+
+    public function setOrigin1(?string $origin1): self
+    {
+        $this->origin1 = $origin1;
+
+        return $this;
+    }
+
+    public function getOrigin2(): ?string
+    {
+        return $this->origin2;
+    }
+
+    public function setOrigin2(?string $origin2): self
+    {
+        $this->origin2 = $origin2;
+
+        return $this;
+    }
+
+    public function getIndividualName(): ?string
+    {
+        return $this->individualName;
+    }
+
+    public function setIndividualName(?string $individualName): self
+    {
+        $this->individualName = $individualName;
+
+        return $this;
+    }
+
+    public function getStoragePlace(): ?string
+    {
+        return $this->storagePlace;
+    }
+
+    public function setStoragePlace(?string $storagePlace): self
+    {
+        $this->storagePlace = $storagePlace;
+
+        return $this;
+    }
+
+    public function getInventoryNumber(): ?string
+    {
+        return $this->inventoryNumber;
+    }
+
+    public function setInventoryNumber(?string $inventoryNumber): self
+    {
+        $this->inventoryNumber = $inventoryNumber;
+
+        return $this;
     }
 }
