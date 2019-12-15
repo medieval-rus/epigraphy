@@ -199,7 +199,7 @@ final class InscriptionPortationTarget implements PortationTargetInterface
     /**
      * @return callable[]
      */
-    public function getCellValueHandlers(string $newRowKey): array
+    public function getCellValueHandlers(RowTypeInterface $rowType): array
     {
         $getOrCreateCarrier = function (Inscription $inscription): Carrier {
             $carrier = $inscription->getCarrier();
@@ -213,7 +213,7 @@ final class InscriptionPortationTarget implements PortationTargetInterface
             return $inscription->getCarrier();
         };
 
-        switch ($newRowKey) {
+        switch ($rowType->getNewRowKey()) {
             case self::NEW_INSCRIPTION_ROW_KEY:
                 return [
                     'inscription.carrier.type' => function (
@@ -501,37 +501,33 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                     },
                 ];
             default:
-                throw $this->createInvalidNewRowKeyException($newRowKey);
+                throw $this->createInvalidNewRowKeyException($rowType->getNewRowKey());
         }
     }
 
-    public function createEntity(string $newRowKey): object
+    public function createEntity(RowTypeInterface $rowType): object
     {
-        switch ($newRowKey) {
+        switch ($rowType->getNewRowKey()) {
             case self::NEW_INSCRIPTION_ROW_KEY:
                 return new Inscription();
             case self::NEW_INTERPRETATION_ROW_KEY:
                 return new Interpretation();
             default:
-                throw $this->createInvalidNewRowKeyException($newRowKey);
+                throw $this->createInvalidNewRowKeyException($rowType->getNewRowKey());
         }
     }
 
     public function setNestedEntity(string $entityRowKey, object $entity, object $nestedEntity): void
     {
-        $entityRowKeyIsForInscription = self::NEW_INSCRIPTION_ROW_KEY === $entityRowKey;
-
         $entityIsInscription = $entity instanceof Inscription;
 
         $nestedEntityIsInterpretation = $nestedEntity instanceof Interpretation;
 
         switch (true) {
-            case $entityRowKeyIsForInscription && $entityIsInscription && $nestedEntityIsInterpretation:
+            case $entityIsInscription && $nestedEntityIsInterpretation:
                 $entity->addInterpretation($nestedEntity);
 
                 break;
-            case self::NEW_INTERPRETATION_ROW_KEY:
-                throw $this->createUnexpectedRowKeyException($entityRowKey, __METHOD__);
             default:
                 throw $this->createInvalidNewRowKeyException($entityRowKey);
         }
@@ -635,11 +631,6 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                 self::NEW_INTERPRETATION_ROW_KEY
             )
         );
-    }
-
-    private function createUnexpectedRowKeyException(string $rowKey, string $methodName): LogicException
-    {
-        return new LogicException(sprintf('Unexpected row key "%s" in "%s" method', $rowKey, $methodName));
     }
 
     private function createUnexpectedEntityTypeException(object $entity, string $methodName): LogicException

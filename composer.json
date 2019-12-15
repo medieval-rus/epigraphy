@@ -40,7 +40,7 @@
         "symfony/webpack-encore-bundle": "^1.6",
         "symfony/yaml": "4.2.*",
         "vyfony/filterable-table-bundle": "^0.1.17",
-        "vyfony/portation-bundle": "^0.0.6"
+        "vyfony/portation-bundle": "^0.0.7"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.2",

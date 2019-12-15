@@ -18,3 +18,6 @@
 
 vyfony_portation:
   portation_target: App\Portation\InscriptionPortationTarget
+  formats:
+    xlsx:
+      use_entity_row_for_first_nested_entity: true
