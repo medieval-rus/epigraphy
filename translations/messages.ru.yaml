@@ -24,7 +24,6 @@ controller:
       table:
         column:
           id: Id
-          text: Текст
         resultsCount: "Найдено надписей: count"
       filter:
         disablePaginator: показать на одной странице
@@ -35,8 +34,41 @@ controller:
       title: Надпись
       inscription:
         label:
-          id: Индентификатор надписи
-          text: Текст надписи
+          carrier:
+            type: Тип носителя
+            category: Категория носителя
+            origin1: Происхождение 1 (город, местность)
+            origin2: Происхождение 2 (здание, раскоп)
+            individualName: Индивидуальное название носителя
+            storagePlace: Место хранения
+            inventoryNumber: Инвентарный номер
+          isInSitu: In situ
+          placeOnCarrier: Расположение на носителе
+          writingType: Разряд по Франклину
+          materials: Материалы
+          writingMethod: Способ нанесения
+          preservationState: Состояние сохранности
+          alphabet: Алфавит
+          majorPublications: Основные публикации
+          interpretation:
+            label: Интерпретация (source)
+            pageNumbersInSource: Номера страниц в публикации
+            numberInSource: Номер в источнике
+            doWeAgree: Согласны ли мы с интерпретацией
+            text: Текст
+            textImageFileName: Изображение текста (название файла)
+            transliteration: Транслитерация
+            translation: Перевод
+            photoFileName: Фото (название файла)
+            sketchFileName: Прорись (название файла)
+            contentCategory: Категория по содержанию
+            content: Содержание
+            dateInText: Дата в тексте
+            stratigraphicalDate: Стратиграфическая дата
+            nonStratigraphicalDate: Внестраиграфическая дата
+            historicalDate: «Историческая» дата
+            conventionalDate: Условная дата
+            comment: Комментарий (разночтения с источником)
 
 page:
   label: Древнерусская эпиграфика
@@ -44,3 +76,8 @@ page:
     index: Главная
     dataBase: База данных
   footer: Национальный исследовательский университет «Высшая школа экономики» и Институт славяноведения Российской академии наук
+
+type:
+  bool:
+    "true": да
+    "false": нет

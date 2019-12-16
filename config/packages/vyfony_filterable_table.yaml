@@ -20,7 +20,7 @@
 vyfony_filterable_table:
   table_configurator: App\FilterableTable\InscriptionsTableConfigurator
   filter_configurator: App\FilterableTable\InscriptionsFilterConfigurator
-  entity_class: App\Persistence\Entity\Inscription
+  entity_class: App\Persistence\Entity\Inscription\Inscription
   default_sort_by: id
   default_sort_order: asc
   list_route: inscription__list
