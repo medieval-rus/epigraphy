@@ -56,7 +56,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     public function createSearchInFoundButtonOptions(): array
     {
         return [
-            'attr' => ['class' => 'btn btn-secondary'],
+            'attr' => ['class' => 'btn btn-warning'],
             'label' => 'controller.inscription.list.filter.searchInFoundButton',
         ];
     }

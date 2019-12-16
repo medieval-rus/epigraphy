@@ -25,21 +25,78 @@
     {{ parent() }} {{ inscription.id }}
 {%- endblock %}
 
+{%- macro translation_prefix() -%}
+    {{ 'controller.inscription.show.inscription.label.' }}
+{%- endmacro -%}
+
 {% block page_content %}
+
     {% import _self as self %}
 
     <table class="table table-bordered">
         <tbody>
-            {{ self.format_text_row('id', inscription.id) }}
-            {{ self.format_text_row('text', inscription.text) }}
+            {{ self.format_text_row('carrier.type', inscription.carrier.type.name) }}
+            {{ self.format_text_row('carrier.category', inscription.carrier.category.name) }}
+            {{ self.format_text_row('carrier.origin1', inscription.carrier.origin1) }}
+            {{ self.format_text_row('carrier.origin2', inscription.carrier.origin2) }}
+            {{ self.format_text_row('carrier.individualName', inscription.carrier.individualName) }}
+            {{ self.format_text_row('carrier.storagePlace', inscription.carrier.storagePlace) }}
+            {{ self.format_text_row('carrier.inventoryNumber', inscription.carrier.inventoryNumber) }}
+            {{ self.format_text_row('isInSitu', inscription.isInSitu) }}
+            {{ self.format_text_row('placeOnCarrier', inscription.placeOnCarrier) }}
+            {{ self.format_text_row('writingType', inscription.writingType.name) }}
+            {{ self.format_text_row('materials', inscription.materials|map(material => material.name)) }}
+            {{ self.format_text_row('writingMethod', inscription.writingMethod.name) }}
+            {{ self.format_text_row('preservationState', inscription.preservationState.name) }}
+            {{ self.format_text_row('alphabet', inscription.alphabet.name) }}
+            {{ self.format_text_row('majorPublications', inscription.majorPublications) }}
+            {% for interpretation in inscription.interpretations %}
+                {{ self.format_label_row('interpretation.label', interpretation.source) }}
+                {{ self.format_text_row('interpretation.pageNumbersInSource', interpretation.pageNumbersInSource) }}
+                {{ self.format_text_row('interpretation.numberInSource', interpretation.numberInSource) }}
+                {{ self.format_text_row('interpretation.doWeAgree', interpretation.doWeAgree) }}
+                {{ self.format_text_row('interpretation.text', interpretation.text) }}
+                {{ self.format_text_row('interpretation.textImageFileName', interpretation.textImageFileName) }}
+                {{ self.format_text_row('interpretation.transliteration', interpretation.transliteration) }}
+                {{ self.format_text_row('interpretation.translation', interpretation.translation) }}
+                {{ self.format_text_row('interpretation.photoFileName', interpretation.photoFileName) }}
+                {{ self.format_text_row('interpretation.sketchFileName', interpretation.sketchFileName) }}
+                {{ self.format_text_row('interpretation.contentCategory', interpretation.contentCategory.name) }}
+                {{ self.format_text_row('interpretation.content', interpretation.content) }}
+                {{ self.format_text_row('interpretation.dateInText', interpretation.dateInText) }}
+                {{ self.format_text_row('interpretation.stratigraphicalDate', interpretation.stratigraphicalDate) }}
+                {{ self.format_text_row('interpretation.nonStratigraphicalDate', interpretation.nonStratigraphicalDate) }}
+                {{ self.format_text_row('interpretation.historicalDate', interpretation.historicalDate) }}
+                {{ self.format_text_row('interpretation.conventionalDate', interpretation.conventionalDate) }}
+                {{ self.format_text_row('interpretation.comment', interpretation.comment) }}
+            {% endfor %}
         </tbody>
     </table>
 {% endblock %}
 
+{%- macro format_label_row(labelTranslationKey, source) -%}
+
+    {% import _self as self %}
+
+    <tr>
+        <th scope="row" colspan="2" class="eomr-interpretation-label">{{(self.translation_prefix ~ labelTranslationKey)|trans({'source': source}) }}</th>
+    </tr>
+{%- endmacro -%}
+
 {%- macro format_text_row(labelTranslationKey, content) -%}
     {% import _self as self %}
 
-    {{ self.fill_row(('controller.inscription.show.inscription.label.' ~ labelTranslationKey)|trans, content|default('-')) }}
+    {% if content is iterable %}
+        {% set content = content|join(', ') %}
+    {% endif %}
+
+    {% if content is same as (true) %}
+        {% set content = 'type.bool.true'|trans %}
+    {% elseif content is same as (false) %}
+        {% set content = 'type.bool.false'|trans %}
+    {% endif %}
+
+    {{ self.fill_row((self.translation_prefix ~ labelTranslationKey)|trans, content|default('-')) }}
 {%- endmacro -%}
 
 {%- macro fill_row(thContent, tdContend) -%}

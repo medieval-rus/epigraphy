@@ -51,9 +51,6 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                 ->setIsIdentifier(true)
                 ->setIsSortable(true)
                 ->setLabel('controller.inscription.list.table.column.id'),
-            (new ColumnMetadata())
-                ->setName('text')
-                ->setLabel('controller.inscription.list.table.column.text'),
         ];
     }
 
