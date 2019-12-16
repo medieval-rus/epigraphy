@@ -33,9 +33,9 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
     .enableSassLoader()
-    .configureBabel(() => {}, {
-        useBuiltIns: 'usage',
-        corejs: 3
+    .configureBabelPresetEnv((config) => {
+        config.useBuiltIns = 'usage';
+        config.corejs = 3;
     })
     .addStyleEntry('css/inscription/list', './assets/scss/inscription/list.scss')
     .addStyleEntry('css/inscription/show', './assets/scss/inscription/show.scss')

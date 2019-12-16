@@ -17,6 +17,6 @@
 # «Epigraphy of Medieval Rus'» database,
 # see <http://www.gnu.org/licenses/>.
 
-framework:
-  validation:
-    not_compromised_password: false
+_errors:
+  resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
+  prefix: /_error
