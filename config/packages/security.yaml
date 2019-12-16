@@ -19,11 +19,11 @@
 
 security:
   providers:
-    in_memory: { memory: ~ }
+    in_memory: { memory: null }
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
     main:
-      anonymous: true
+      anonymous: lazy
   access_control:

@@ -17,6 +17,4 @@
 # «Epigraphy of Medieval Rus'» database,
 # see <http://www.gnu.org/licenses/>.
 
-framework:
-  validation:
-    not_compromised_password: false
+webpack_encore:
