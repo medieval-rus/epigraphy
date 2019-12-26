@@ -25,6 +25,12 @@ declare(strict_types=1);
 
 namespace App\FilterableTable;
 
+use App\FilterableTable\Filter\Parameter\AlphabetFilterParameter;
+use App\FilterableTable\Filter\Parameter\CarrierCategoryFilterParameter;
+use App\FilterableTable\Filter\Parameter\CarrierTypeFilterParameter;
+use App\FilterableTable\Filter\Parameter\PreservationStateFilterParameter;
+use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
+use App\FilterableTable\Filter\Parameter\WritingTypeFilterParameter;
 use App\Persistence\Entity\Inscription\Inscription;
 use InvalidArgumentException;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\AbstractFilterConfigurator;
@@ -37,6 +43,52 @@ use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Restriction\FilterRe
  */
 final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
 {
+    /**
+     * @var CarrierTypeFilterParameter
+     */
+    private $carrierTypeFilterParameter;
+
+    /**
+     * @var CarrierCategoryFilterParameter
+     */
+    private $carrierCategoryFilterParameter;
+
+    /**
+     * @var WritingTypeFilterParameter
+     */
+    private $writingTypeFilterParameter;
+
+    /**
+     * @var WritingMethodFilterParameter
+     */
+    private $writingMethodFilterParameter;
+
+    /**
+     * @var PreservationStateFilterParameter
+     */
+    private $preservationStateFilterParameter;
+
+    /**
+     * @var AlphabetFilterParameter
+     */
+    private $alphabetFilterParameter;
+
+    public function __construct(
+        CarrierTypeFilterParameter $carrierTypeFilterParameter,
+        CarrierCategoryFilterParameter $carrierCategoryFilterParameter,
+        WritingTypeFilterParameter $writingTypeFilterParameter,
+        WritingMethodFilterParameter $writingMethodFilterParameter,
+        PreservationStateFilterParameter $preservationStateFilterParameter,
+        AlphabetFilterParameter $alphabetFilterParameter
+    ) {
+        $this->carrierTypeFilterParameter = $carrierTypeFilterParameter;
+        $this->carrierCategoryFilterParameter = $carrierCategoryFilterParameter;
+        $this->writingTypeFilterParameter = $writingTypeFilterParameter;
+        $this->writingMethodFilterParameter = $writingMethodFilterParameter;
+        $this->preservationStateFilterParameter = $preservationStateFilterParameter;
+        $this->alphabetFilterParameter = $alphabetFilterParameter;
+    }
+
     public function createSubmitButtonOptions(): array
     {
         return [
@@ -107,7 +159,14 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
      */
     protected function createFilterParameters(): array
     {
-        return [];
+        return [
+            $this->carrierTypeFilterParameter,
+            $this->carrierCategoryFilterParameter,
+            $this->writingTypeFilterParameter,
+            $this->writingMethodFilterParameter,
+            $this->preservationStateFilterParameter,
+            $this->alphabetFilterParameter,
+        ];
     }
 
     /**

@@ -40,7 +40,7 @@
         "symfony/web-link": "4.4.*",
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "4.4.*",
-        "vyfony/filterable-table-bundle": "^0.2.0",
+        "vyfony/filterable-table-bundle": "^0.2.2",
         "vyfony/portation-bundle": "^0.0.7"
     },
     "require-dev": {
