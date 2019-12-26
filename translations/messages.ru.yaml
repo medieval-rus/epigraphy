@@ -26,6 +26,13 @@ controller:
           id: Id
         resultsCount: "Найдено надписей: count"
       filter:
+        carrier:
+          type: Тип носителя
+          category: Категория носителя
+        writingType: Разряд по Франклину
+        writingMethod: Способ нанесения
+        preservationState: Состояние сохранности
+        alphabet: Алфавит
         disablePaginator: показать на одной странице
         resetButton: Сбросить фильтры
         submitButton: Искать
