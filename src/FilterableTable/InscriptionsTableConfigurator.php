@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\FilterableTable;
 
+use App\Persistence\Entity\Inscription\Inscription;
 use Vyfony\Bundle\FilterableTableBundle\Table\Checkbox\CheckboxHandlerInterface;
 use Vyfony\Bundle\FilterableTableBundle\Table\Configurator\AbstractTableConfigurator;
 use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
@@ -51,6 +52,30 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                 ->setIsIdentifier(true)
                 ->setIsSortable(true)
                 ->setLabel('controller.inscription.list.table.column.id'),
+            (new ColumnMetadata())
+                ->setName('carrier-category')
+                ->setValueExtractor(function (Inscription $inscription): string {
+                    return $inscription->getCarrier()->getCategory()->getName();
+                })
+                ->setIsIdentifier(false)
+                ->setIsSortable(false)
+                ->setLabel('controller.inscription.list.table.column.carrier.category'),
+            (new ColumnMetadata())
+                ->setName('carrier-origin1')
+                ->setValueExtractor(function (Inscription $inscription): string {
+                    return $inscription->getCarrier()->getOrigin1();
+                })
+                ->setIsIdentifier(false)
+                ->setIsSortable(false)
+                ->setLabel('controller.inscription.list.table.column.carrier.origin1'),
+            (new ColumnMetadata())
+                ->setName('interpretation-contentCategory')
+                ->setValueExtractor(function (Inscription $inscription): string {
+                    return $inscription->getInterpretations()[0]->getContentCategory()->getName();
+                })
+                ->setIsIdentifier(false)
+                ->setIsSortable(false)
+                ->setLabel('controller.inscription.list.table.column.interpretation.contentCategory'),
         ];
     }
 
