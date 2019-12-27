@@ -42,7 +42,7 @@ controller:
         carrier:
           type: Тип носителя
           category: Категория носителя
-        writingType: Разряд по Франклину
+        writingType: Разряд
         writingMethod: Способ нанесения
         preservationState: Состояние сохранности
         alphabet: Алфавит
@@ -64,7 +64,7 @@ controller:
             inventoryNumber: Инвентарный номер
           isInSitu: In situ
           placeOnCarrier: Расположение на носителе
-          writingType: Разряд по Франклину
+          writingType: Разряд (по Франклину)
           materials: Материалы
           writingMethod: Способ нанесения
           preservationState: Состояние сохранности
