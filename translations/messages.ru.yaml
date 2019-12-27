@@ -17,6 +17,7 @@
 # «Epigraphy of Medieval Rus'» database,
 # see <http://www.gnu.org/licenses/>.
 
+
 controller:
   inscription:
     list:
@@ -24,8 +25,20 @@ controller:
       table:
         column:
           id: Id
+          carrier:
+            category: Категория носителя
+            origin1: Происхождение (город, местность)
+          interpretation:
+            text: Текст
+            content: Содержание
+            contentCategory: Категория по содержанию
         resultsCount: "Найдено надписей: count"
       filter:
+        dataColumn:
+          label: Колонка с данными
+          option:
+            text: Текст
+            content: Содержание
         carrier:
           type: Тип носителя
           category: Категория носителя

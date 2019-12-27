@@ -35,8 +35,11 @@ use App\Persistence\Entity\Inscription\Inscription;
 use InvalidArgumentException;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\AbstractFilterConfigurator;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
+use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Table\RadioColumnChoiceTableParameter;
+use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Table\RadioOption\RadioOption;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Table\TableParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Restriction\FilterRestrictionInterface;
+use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
@@ -174,6 +177,36 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
      */
     protected function createTableParameters(): array
     {
-        return [];
+        return [
+            (new RadioColumnChoiceTableParameter())
+                ->addRadioOption(
+                    (new RadioOption())
+                        ->setName('content')
+                        ->setLabel('controller.inscription.list.filter.dataColumn.option.content')
+                        ->setColumnMetadata(
+                            (new ColumnMetadata())
+                                ->setName('interpretation-content')
+                                ->setValueExtractor(function (Inscription $inscription): string {
+                                    return $inscription->getInterpretations()[0]->getContent();
+                                })
+                                ->setLabel('controller.inscription.list.table.column.interpretation.content')
+                        )
+                )
+                ->addRadioOption(
+                    (new RadioOption())
+                        ->setName('text')
+                        ->setLabel('controller.inscription.list.filter.dataColumn.option.text')
+                        ->setColumnMetadata(
+                            (new ColumnMetadata())
+                                ->setName('interpretation-text')
+                                ->setValueExtractor(function (Inscription $inscription): string {
+                                    return $inscription->getInterpretations()[0]->getText();
+                                })
+                                ->setLabel('controller.inscription.list.table.column.interpretation.text')
+                        )
+                )
+                ->setQueryParameterName('dataColumn')
+                ->setLabel('controller.inscription.list.filter.dataColumn.label'),
+        ];
     }
 }
