@@ -48,7 +48,20 @@ html {
     }
   }
 
+  .eomr-middle-line {
+    @extend .bg-info;
+    @extend .text-white;
+
+    $verticalPadding: 6px;
+    text-align: center;
+    padding-top: $verticalPadding;
+    padding-bottom: $verticalPadding;
+    font-weight: 500;
+  }
+
   .eomr-sidebar {
+    @extend .bg-light;
+
     position: -webkit-sticky;
     position: sticky;
     min-height: calc(100vh - #{$headerHeight} - #{$footerHeight});
@@ -96,8 +109,16 @@ html {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: $footerHeight;
-    line-height: $footerHeight;
+    min-height: $footerHeight;
     background-color: #f5f5f5;
+
+    .eomr-footer-content {
+      @extend .text-muted;
+
+      $footerContentVerticalPadding: 10px;
+      line-height: 1.5;
+      padding-top: $footerContentVerticalPadding;
+      padding-bottom: $footerContentVerticalPadding;
+    }
   }
 }
