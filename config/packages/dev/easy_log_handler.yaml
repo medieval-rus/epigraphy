@@ -20,4 +20,4 @@
 services:
   EasyCorp\EasyLog\EasyLogHandler:
     public: false
-    arguments: ['%kernel.logs_dir%/%kernel.environment%.log']
+    arguments: ['%env(resolve:LOGS_DIR)%/%kernel.environment%.log']

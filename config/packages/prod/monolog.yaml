@@ -26,7 +26,7 @@ monolog:
       excluded_http_codes: [404, 405]
     nested:
       type: stream
-      path: "%kernel.logs_dir%/%kernel.environment%.log"
+      path: '%env(resolve:LOGS_DIR)%/%kernel.environment%.log'
       level: debug
     console:
       type: console
@@ -34,7 +34,7 @@ monolog:
       channels: ["!event", "!doctrine"]
     deprecation:
       type: stream
-      path: "%kernel.logs_dir%/%kernel.environment%.deprecations.log"
+      path: "%env(resolve:LOGS_DIR)%/%kernel.environment%.deprecations.log"
     deprecation_filter:
       type: filter
       handler: deprecation
