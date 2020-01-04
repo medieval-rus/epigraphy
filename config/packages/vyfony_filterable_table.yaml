@@ -26,5 +26,5 @@ vyfony_filterable_table:
   list_route: inscription__list
   show_route: inscription__show
   show_route_parameters: {id: id}
-  page_size: 10
+  page_size: 25
   paginator_tail_length: 3
