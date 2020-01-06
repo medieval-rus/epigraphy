@@ -85,7 +85,7 @@ controller:
             content: Содержание
             dateInText: Дата в тексте
             stratigraphicalDate: Стратиграфическая дата
-            nonStratigraphicalDate: Внестраиграфическая дата
+            nonStratigraphicalDate: Внестратиграфическая дата
             historicalDate: «Историческая» дата
             conventionalDate: Условная дата
             comment: Комментарий (разночтения с источником)
