@@ -17,8 +17,12 @@
 # «Epigraphy of Medieval Rus'» database,
 # see <http://www.gnu.org/licenses/>.
 
-vyfony_portation:
-  portation_target: App\Portation\InscriptionPortationTarget
-  formats:
-    xlsx:
-      use_entity_row_for_first_nested_entity: true
+doctrine:
+  orm:
+    mappings:
+      VyfonyBibliographyBundle:
+        is_bundle: false
+        type: annotation
+        dir: '%kernel.project_dir%/vendor/vyfony/bibliography-bundle/src/Persistence/Entity'
+        prefix: 'Vyfony\Bundle\BibliographyBundle\Persistence\Entity'
+        alias: Vyfony\Bundle\BibliographyBundle

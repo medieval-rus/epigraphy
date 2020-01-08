@@ -63,6 +63,10 @@ final class MenuBuilder
         ;
 
         $menu
+            ->addChild('page.menu.bibliography', ['route' => 'bibiliograpic_record__list'])
+        ;
+
+        $menu
             ->addChild('page.menu.dataBase', ['route' => 'inscription__list'])
             ->setCurrent(\in_array($currentRoute, ['inscription__list', 'inscription__show'], true))
         ;

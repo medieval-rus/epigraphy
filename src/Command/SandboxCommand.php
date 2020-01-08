@@ -1,3 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
 /*
  * This file is part of «Epigraphy of Medieval Rus'» database.
  *
@@ -19,27 +23,28 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-var Encore = require('@symfony/webpack-encore');
+namespace App\Command;
 
-if (!Encore.isRuntimeEnvironmentConfigured()) {
-    Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+/**
+ * @author Anton Dyshkant <vyshkant@gmail.com>
+ */
+final class SandboxCommand extends Command
+{
+    protected static $defaultName = 'app:sandbox';
+
+    protected function configure(): void
+    {
+        $this
+            ->setDescription('A sandbox')
+        ;
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        return 0;
+    }
 }
-
-Encore
-    .setOutputPath('public/build/')
-    .setPublicPath('/build')
-    .cleanupOutputBeforeBuild()
-    .disableSingleRuntimeChunk()
-    .enableSourceMaps(!Encore.isProduction())
-    .enableVersioning(Encore.isProduction())
-    .enableSassLoader()
-    .configureBabelPresetEnv((config) => {
-        config.useBuiltIns = 'usage';
-        config.corejs = 3;
-    })
-    .addStyleEntry('css/inscription/list', './assets/scss/inscription/list.scss')
-    .addStyleEntry('css/inscription/show', './assets/scss/inscription/show.scss')
-    .addStyleEntry('css/bibliographic-record/list', './assets/scss/bibliographic-record/list.scss')
-;
-
-module.exports = Encore.getWebpackConfig();

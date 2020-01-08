@@ -42,4 +42,5 @@ return [
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
     Vyfony\Bundle\PortationBundle\VyfonyPortationBundle::class => ['all' => true],
     Vyfony\Bundle\MysqldumpBundle\VyfonyMysqldumpBundle::class => ['all' => true],
+    Vyfony\Bundle\BibliographyBundle\VyfonyBibliographyBundle::class => ['all' => true],
 ];

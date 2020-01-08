@@ -19,27 +19,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-var Encore = require('@symfony/webpack-encore');
+@import '../base';
 
-if (!Encore.isRuntimeEnvironmentConfigured()) {
-    Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
+.vyfony-bibliography-bibliographic-record-short-name {
+  font-weight: bold;
 }
-
-Encore
-    .setOutputPath('public/build/')
-    .setPublicPath('/build')
-    .cleanupOutputBeforeBuild()
-    .disableSingleRuntimeChunk()
-    .enableSourceMaps(!Encore.isProduction())
-    .enableVersioning(Encore.isProduction())
-    .enableSassLoader()
-    .configureBabelPresetEnv((config) => {
-        config.useBuiltIns = 'usage';
-        config.corejs = 3;
-    })
-    .addStyleEntry('css/inscription/list', './assets/scss/inscription/list.scss')
-    .addStyleEntry('css/inscription/show', './assets/scss/inscription/show.scss')
-    .addStyleEntry('css/bibliographic-record/list', './assets/scss/bibliographic-record/list.scss')
-;
-
-module.exports = Encore.getWebpackConfig();
