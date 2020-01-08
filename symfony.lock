@@ -632,6 +632,9 @@
     "twig/twig": {
         "version": "v3.0.0"
     },
+    "vyfony/bibliography-bundle": {
+        "version": "v0.0.1"
+    },
     "vyfony/filterable-table-bundle": {
         "version": "v0.2.0"
     },

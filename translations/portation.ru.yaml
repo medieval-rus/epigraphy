@@ -54,7 +54,7 @@ portation:
           content: Интерпретация / Содержание
           dateInText: Интерпретация / Дата в тексте
           stratigraphicalDate: Интерпретация / Стратиграфическая дата
-          nonStratigraphicalDate: Интерпретация / Внестраиграфическая дата
+          nonStratigraphicalDate: Интерпретация / Внестратиграфическая дата
           historicalDate: Интерпретация / "Историческая" дата
           conventionalDate: Интерпретация / Условная дата
           comment: Интерпретация / Комментарий (разночтения с источником)

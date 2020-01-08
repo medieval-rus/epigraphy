@@ -23,19 +23,11 @@
 
 {%- block page_content -%}
 
-    {% import '@VyfonyFilterableTable/filterable_table.html.twig' as filterable_table %}
+    <p class="eomr-subtitle">{{ 'controller.bibliographic-record.list.description'|trans }}</p>
 
-    {{ filterable_table.render_filter(filterForm) }}
+    {% import '@VyfonyBibliography/bibliographic_record.html.twig' as bibgliographic_record %}
 
-    <div class="row">
-        {{ filterable_table.render_table(table) }}
-    </div>
-
-    <div class="row">
-        {{ filterable_table.render_paginator(table) }}
-    </div>
-
-    <div class="row">
-        {{ filterable_table.render_checkbox_handlers(table) }}
-    </div>
+    {% for record in records %}
+        <p>{{ bibliographic_record.render_record(record) }}</p>
+    {% endfor %}
 {%- endblock -%}
