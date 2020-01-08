@@ -25,7 +25,7 @@
 
     <p class="eomr-subtitle">{{ 'controller.bibliographic-record.list.description'|trans }}</p>
 
-    {% import '@VyfonyBibliography/bibliographic_record.html.twig' as bibgliographic_record %}
+    {% import '@VyfonyBibliography/bibliographic_record.html.twig' as bibliographic_record %}
 
     {% for record in records %}
         <p>{{ bibliographic_record.render_record(record) }}</p>
