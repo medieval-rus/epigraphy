@@ -18,5 +18,5 @@
 # see <http://www.gnu.org/licenses/>.
 
 doctrine_migrations:
-  dir_name: '%kernel.project_dir%/src/Persistence/Migrations'
-  namespace: DoctrineMigrations
+  migrations_paths:
+    DoctrineMigrations: '%kernel.project_dir%/src/Persistence/Migrations'

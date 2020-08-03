@@ -22,3 +22,5 @@ twig:
   debug: '%kernel.debug%'
   strict_variables: '%kernel.debug%'
   exception_controller: null
+  globals:
+    zeroRowFormatter: '@App\Formatter\ZeroRow\ZeroRowFormatterInterface'

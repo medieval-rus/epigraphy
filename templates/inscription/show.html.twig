@@ -35,6 +35,7 @@
 
     <table class="table table-bordered">
         <tbody>
+            {{ self.format_text_row('conventionalDate', inscription.conventionalDate) }}
             {{ self.format_text_row('carrier.type', inscription.carrier.type.name) }}
             {{ self.format_text_row('carrier.category', inscription.carrier.category.name) }}
             {{ self.format_text_row('carrier.origin1', inscription.carrier.origin1) }}
@@ -42,48 +43,38 @@
             {{ self.format_text_row('carrier.individualName', inscription.carrier.individualName) }}
             {{ self.format_text_row('carrier.storagePlace', inscription.carrier.storagePlace) }}
             {{ self.format_text_row('carrier.inventoryNumber', inscription.carrier.inventoryNumber) }}
-            {{ self.format_text_row('isInSitu', inscription.isInSitu) }}
-            {{ self.format_text_row('placeOnCarrier', inscription.placeOnCarrier) }}
-            {{ self.format_text_row('writingType', inscription.writingType.name) }}
-            {{ self.format_text_row('materials', inscription.materials|map(material => material.name)) }}
-            {{ self.format_text_row('writingMethod', inscription.writingMethod.name) }}
-            {{ self.format_text_row('preservationState', inscription.preservationState.name) }}
-            {{ self.format_text_row('alphabet', inscription.alphabet.name) }}
-            {{ self.format_text_row('majorPublications', inscription.majorPublications) }}
-            {% for interpretation in inscription.interpretations %}
-                {{ self.format_label_row('interpretation.label', interpretation.source) }}
-                {{ self.format_text_row('interpretation.pageNumbersInSource', interpretation.pageNumbersInSource) }}
-                {{ self.format_text_row('interpretation.numberInSource', interpretation.numberInSource) }}
-                {{ self.format_text_row('interpretation.doWeAgree', interpretation.doWeAgree) }}
-                {{ self.format_text_row('interpretation.text', interpretation.text) }}
-                {{ self.format_text_row('interpretation.textImageFileName', interpretation.textImageFileName) }}
-                {{ self.format_text_row('interpretation.transliteration', interpretation.transliteration) }}
-                {{ self.format_text_row('interpretation.translation', interpretation.translation) }}
-                {{ self.format_text_row('interpretation.photoFileName', interpretation.photoFileName) }}
-                {{ self.format_text_row('interpretation.sketchFileName', interpretation.sketchFileName) }}
-                {{ self.format_text_row('interpretation.contentCategory', interpretation.contentCategory.name) }}
-                {{ self.format_text_row('interpretation.content', interpretation.content) }}
-                {{ self.format_text_row('interpretation.dateInText', interpretation.dateInText) }}
-                {{ self.format_text_row('interpretation.stratigraphicalDate', interpretation.stratigraphicalDate) }}
-                {{ self.format_text_row('interpretation.nonStratigraphicalDate', interpretation.nonStratigraphicalDate) }}
-                {{ self.format_text_row('interpretation.historicalDate', interpretation.historicalDate) }}
-                {{ self.format_text_row('interpretation.conventionalDate', interpretation.conventionalDate) }}
-                {{ self.format_text_row('interpretation.comment', interpretation.comment) }}
-            {% endfor %}
+            {{ self.format_text_row('carrier.isInSitu', inscription.carrier.isInSitu) }}
+            {{ self.format_text_row('zeroRow.placeOnCarrier', self.format_zero_row(inscription, 'placeOnCarrier')) }}
+            {{ self.format_text_row('zeroRow.writingType', self.format_zero_row(inscription, 'writingType')) }}
+            {{ self.format_text_row('zeroRow.writingMethod', self.format_zero_row(inscription, 'writingMethod')) }}
+            {{ self.format_text_row('zeroRow.preservationState', self.format_zero_row(inscription, 'preservationState')) }}
+            {{ self.format_text_row('zeroRow.alphabet', self.format_zero_row(inscription, 'alphabet')) }}
+            {{ self.format_text_row('zeroRow.text', self.format_zero_row(inscription, 'text')) }}
+            {{ self.format_text_row('zeroRow.textImageFileNames', self.format_zero_row(inscription, 'textImageFileNames')) }}
+            {{ self.format_text_row('zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
+            {{ self.format_text_row('zeroRow.translation', self.format_zero_row(inscription, 'translation')) }}
+            {{ self.format_text_row('zeroRow.photoFileNames', self.format_zero_row(inscription, 'photoFileNames')) }}
+            {{ self.format_text_row('zeroRow.sketchFileNames', self.format_zero_row(inscription, 'sketchFileNames')) }}
+            {{ self.format_text_row('zeroRow.contentCategory', self.format_zero_row(inscription, 'contentCategory')) }}
+            {{ self.format_text_row('zeroRow.content', self.format_zero_row(inscription, 'content')) }}
+            {{ self.format_text_row('zeroRow.dateInText', self.format_zero_row(inscription, 'dateInText')) }}
+            {{ self.format_text_row('zeroRow.stratigraphicalDate', self.format_zero_row(inscription, 'stratigraphicalDate')) }}
+            {{ self.format_text_row('zeroRow.nonStratigraphicalDate', self.format_zero_row(inscription, 'nonStratigraphicalDate')) }}
+            {{ self.format_text_row('zeroRow.historicalDate', self.format_zero_row(inscription, 'historicalDate')) }}
+            {{ self.format_text_row('zeroRow.materials', self.format_zero_row(inscription, 'materials')) }}
         </tbody>
     </table>
 {% endblock %}
 
-{%- macro format_label_row(labelTranslationKey, source) -%}
+{%- macro format_zero_row(inscription, propertyName) -%}
 
     {% import _self as self %}
 
-    <tr>
-        <th scope="row" colspan="2" class="eomr-interpretation-label">{{(self.translation_prefix ~ labelTranslationKey)|trans({'source': source}) }}</th>
-    </tr>
+    {{ zeroRowFormatter.format(inscription, propertyName)|nl2br }}
 {%- endmacro -%}
 
 {%- macro format_text_row(labelTranslationKey, content) -%}
+
     {% import _self as self %}
 
     {% if content is iterable %}
