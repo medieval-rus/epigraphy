@@ -28,6 +28,7 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 Encore
     .setOutputPath('public/build/')
     .setPublicPath('/build')
+    // .autoProvidejQuery()
     .cleanupOutputBeforeBuild()
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
@@ -37,9 +38,12 @@ Encore
         config.useBuiltIns = 'usage';
         config.corejs = 3;
     })
-    .addStyleEntry('css/inscription/list', './assets/scss/inscription/list.scss')
-    .addStyleEntry('css/inscription/show', './assets/scss/inscription/show.scss')
-    .addStyleEntry('css/bibliographic-record/list', './assets/scss/bibliographic-record/list.scss')
+    .addStyleEntry('css/site/security/login', './assets/scss/site/security/login.scss')
+    .addStyleEntry('css/site/inscription/list', './assets/scss/site/inscription/list.scss')
+    .addStyleEntry('css/site/inscription/show', './assets/scss/site/inscription/show.scss')
+    .addStyleEntry('css/site/bibliographic-record/list', './assets/scss/site/bibliographic-record/list.scss')
+    .addEntry('js/admin/common', './assets/js/admin/common.js')
+    .addStyleEntry('css/admin/common', './assets/scss/admin/common.scss')
 ;
 
 module.exports = Encore.getWebpackConfig();

@@ -1,0 +1,81 @@
+# This file is part of «Epigraphy of Medieval Rus'» database.
+#
+# Copyright (c) National Research University Higher School of Economics
+#
+# «Epigraphy of Medieval Rus'» database is free software:
+# you can redistribute it and/or modify it under the terms of the
+# GNU General Public License as published by the Free Software Foundation, version 3.
+#
+# «Epigraphy of Medieval Rus'» database is distributed
+# in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code. If you have not received
+# a copy of the GNU General Public License along with
+# «Epigraphy of Medieval Rus'» database,
+# see <http://www.gnu.org/licenses/>.
+
+action:
+  new: Создать объект "%entity_label%"
+  search: Поиск
+  list: Вернуться к списку объектов "%entity_label%"
+  delete: Удалить
+  save: Сохранить изменения
+  edit: Перейти к редактированию
+  cancel: Отменить
+
+page:
+  list:
+    title: Список объектов "%entity_label%"
+  new:
+    title: Создать новый объект "%entity_label%"
+  edit:
+    title: Редактирование объекта "%entity_label%" (ID %entity_id%)
+  show:
+    title: Просмотр объекта "%entity_label%" (ID %entity_id%)
+
+entity:
+  inscription: Надпись
+  interpretation: Интерпретация
+  zeroRow: Нулевая строка
+  carrier: Носитель
+  carrierType: Тип носителя
+  carrierCategory: Категория носителя
+  alphabet: Алфавит
+  contentCategory: Категория по содержанию
+  material: Материал
+  preservationState: Состояние сохранности
+  writingMethod: Способ нанесения
+  writingType: Разряд
+  user: Пользователь
+
+menu:
+  inscriptions: Надписи
+  carriers: Носители
+  entities: Именованные сущности
+  users: Пользователи
+
+label:
+  form:
+    empty_value: Значение не выбрано
+
+form:
+  inscription:
+    section:
+      commonData: Common data
+      actualResearchInformation: Actual research information
+      interpretations: Interpretations
+    group:
+      bibliographicAspect: Bibliographic aspect
+      materialAspect: Material aspect
+      linguisticAspect: Linguistic aspect
+      historicalAspect: Historical aspect
+      multimedia: Multimedia
+  user:
+    roles:
+      user: Обычный пользователь (без доступа к админке)
+      editor: Редактор
+      admin: Администратор
+      superAdmin: Администратор с полным доступом

@@ -1,0 +1,66 @@
+{#
+# This file is part of «Epigraphy of Medieval Rus'» database.
+#
+# Copyright (c) National Research University Higher School of Economics
+#
+# «Epigraphy of Medieval Rus'» database is free software:
+# you can redistribute it and/or modify it under the terms of the
+# GNU General Public License as published by the Free Software Foundation, version 3.
+#
+# «Epigraphy of Medieval Rus'» database is distributed
+# in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code. If you have not received
+# a copy of the GNU General Public License along with
+# «Epigraphy of Medieval Rus'» database,
+# see <http://www.gnu.org/licenses/>.
+#}
+
+{% extends 'base.html.twig' %}
+
+{% block page_content %}
+    <form method="post">
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        <label for="inputUsername">{{ ('controller.'~controller~'.'~method~'.form.username')|trans }}</label>
+        <input
+                type="text"
+                value="{{ last_username }}"
+                name="username"
+                id="inputUsername"
+                class="form-control"
+                required
+                autofocus
+        >
+
+        <label for="inputPassword">{{ ('controller.'~controller~'.'~method~'.form.password')|trans }}</label>
+        <input
+                type="password"
+                name="password"
+                id="inputPassword"
+                class="form-control"
+                required
+        >
+
+        <input type="hidden"
+               name="_csrf_token"
+               value="{{ csrf_token('authenticate') }}"
+        >
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="_remember_me">
+                {{ ('controller.'~controller~'.'~method~'.form.rememberMe')|trans }}
+            </label>
+        </div>
+
+        <button class="btn btn-lg btn-primary" type="submit">
+            {{ ('controller.'~controller~'.'~method~'.form.signIn')|trans }}
+        </button>
+    </form>
+{% endblock %}

@@ -26,7 +26,7 @@
         <title>{% block title %}{{ ('controller.'~controller~'.'~method~'.title')|trans }}{% endblock %} – {{ 'page.label'|trans }}</title>
 
         {% block stylesheets %}
-            <link href="{{ asset('build/css/'~controller~'/'~method~'.css') }}" rel="stylesheet">
+            <link href="{{ asset('build/css/site/'~controller~'/'~method~'.css') }}" rel="stylesheet">
         {% endblock %}
     </head>
 

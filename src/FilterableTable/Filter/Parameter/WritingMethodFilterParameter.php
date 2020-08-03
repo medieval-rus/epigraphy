@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace App\FilterableTable\Filter\Parameter;
 
-use App\Persistence\Entity\WritingMethod;
-use App\Persistence\Repository\WritingMethodRepository;
+use App\Persistence\Entity\Epigraphy\WritingMethod;
+use App\Persistence\Repository\Epigraphy\WritingMethodRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

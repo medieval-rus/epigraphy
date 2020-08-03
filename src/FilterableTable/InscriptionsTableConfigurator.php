@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\FilterableTable;
 
-use App\Persistence\Entity\Inscription\Inscription;
+use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
 use Vyfony\Bundle\FilterableTableBundle\Table\Checkbox\CheckboxHandlerInterface;
 use Vyfony\Bundle\FilterableTableBundle\Table\Configurator\AbstractTableConfigurator;
 use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
@@ -71,7 +71,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setName('interpretation-contentCategory')
                 ->setValueExtractor(function (Inscription $inscription): string {
-                    return $inscription->getInterpretations()[0]->getContentCategory()->getName();
+                    return $inscription->getZeroRow()->getContentCategory()->getName();
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)

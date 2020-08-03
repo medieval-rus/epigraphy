@@ -18,12 +18,25 @@
 # see <http://www.gnu.org/licenses/>.
 
 security:
+  encoders:
+    App\Persistence\Entity\Security\User:
+      algorithm: auto
   providers:
-    in_memory: { memory: null }
+    app_user_provider:
+      entity:
+        class: App\Persistence\Entity\Security\User
+        property: username
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
     main:
       anonymous: lazy
+      guard:
+        authenticators:
+          - App\Security\AppAuthenticator
+      logout:
+        path: app_logout
+        target: index
   access_control:
+    - { path: ^/admin, roles: [ROLE_ADMIN] }

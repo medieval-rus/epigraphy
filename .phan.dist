@@ -87,7 +87,7 @@ return [
         'PhanTypeArraySuspiciousNullable',
         'PhanTypeSuspiciousIndirectVariable',
         'PhanTypeComparisonFromArray',
-        'PhanTypeComparisonToArray',
+//        'PhanTypeComparisonToArray', // Phan does not understand preg_split return options
         'PhanTypeConversionFromArray',
         'PhanTypeInstantiateAbstract',
         'PhanTypeInstantiateInterface',

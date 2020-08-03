@@ -31,7 +31,8 @@ use App\FilterableTable\Filter\Parameter\CarrierTypeFilterParameter;
 use App\FilterableTable\Filter\Parameter\PreservationStateFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingTypeFilterParameter;
-use App\Persistence\Entity\Inscription\Inscription;
+use App\Formatter\ZeroRow\ZeroRowFormatterInterface;
+use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
 use InvalidArgumentException;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\AbstractFilterConfigurator;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
@@ -46,6 +47,11 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
  */
 final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
 {
+    /**
+     * @var ZeroRowFormatterInterface
+     */
+    private $zeroRowFormatter;
+
     /**
      * @var CarrierTypeFilterParameter
      */
@@ -77,6 +83,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     private $alphabetFilterParameter;
 
     public function __construct(
+        ZeroRowFormatterInterface $zeroRowFormatter,
         CarrierTypeFilterParameter $carrierTypeFilterParameter,
         CarrierCategoryFilterParameter $carrierCategoryFilterParameter,
         WritingTypeFilterParameter $writingTypeFilterParameter,
@@ -84,6 +91,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         PreservationStateFilterParameter $preservationStateFilterParameter,
         AlphabetFilterParameter $alphabetFilterParameter
     ) {
+        $this->zeroRowFormatter = $zeroRowFormatter;
         $this->carrierTypeFilterParameter = $carrierTypeFilterParameter;
         $this->carrierCategoryFilterParameter = $carrierCategoryFilterParameter;
         $this->writingTypeFilterParameter = $writingTypeFilterParameter;
@@ -187,7 +195,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
                             (new ColumnMetadata())
                                 ->setName('interpretation-content')
                                 ->setValueExtractor(function (Inscription $inscription): string {
-                                    return $inscription->getInterpretations()[0]->getContent();
+                                    return $this->zeroRowFormatter->format($inscription, 'content');
                                 })
                                 ->setLabel('controller.inscription.list.table.column.interpretation.content')
                         )
@@ -200,7 +208,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
                             (new ColumnMetadata())
                                 ->setName('interpretation-text')
                                 ->setValueExtractor(function (Inscription $inscription): string {
-                                    return $inscription->getInterpretations()[0]->getText();
+                                    return $this->zeroRowFormatter->format($inscription, 'text');
                                 })
                                 ->setLabel('controller.inscription.list.table.column.interpretation.text')
                         )

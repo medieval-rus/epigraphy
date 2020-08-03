@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace App\FilterableTable\Filter\Parameter;
 
-use App\Persistence\Entity\PreservationState;
-use App\Persistence\Repository\PreservationStateRepository;
+use App\Persistence\Entity\Epigraphy\PreservationState;
+use App\Persistence\Repository\Epigraphy\PreservationStateRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
