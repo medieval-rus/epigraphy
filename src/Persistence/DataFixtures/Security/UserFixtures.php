@@ -34,7 +34,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-class UserFixtures extends Fixture implements FixtureGroupInterface
+final class UserFixtures extends Fixture implements FixtureGroupInterface
 {
     /**
      * @var UserPasswordEncoderInterface

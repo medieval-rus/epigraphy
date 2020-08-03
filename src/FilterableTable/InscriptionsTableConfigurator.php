@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\FilterableTable;
 
+use App\Formatter\ZeroRow\ZeroRowFormatterInterface;
 use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
 use Vyfony\Bundle\FilterableTableBundle\Table\Checkbox\CheckboxHandlerInterface;
 use Vyfony\Bundle\FilterableTableBundle\Table\Configurator\AbstractTableConfigurator;
@@ -36,6 +37,16 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadataInte
  */
 final class InscriptionsTableConfigurator extends AbstractTableConfigurator
 {
+    /**
+     * @var ZeroRowFormatterInterface
+     */
+    private $zeroRowFormatter;
+
+    public function __construct(ZeroRowFormatterInterface $zeroRowFormatter)
+    {
+        $this->zeroRowFormatter = $zeroRowFormatter;
+    }
+
     protected function getResultsCountText(): string
     {
         return 'controller.inscription.list.table.resultsCount';
@@ -71,7 +82,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setName('interpretation-contentCategory')
                 ->setValueExtractor(function (Inscription $inscription): string {
-                    return $inscription->getZeroRow()->getContentCategory()->getName();
+                    return $this->zeroRowFormatter->format($inscription, 'contentCategory');
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)

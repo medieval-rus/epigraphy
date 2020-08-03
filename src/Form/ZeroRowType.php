@@ -31,6 +31,9 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @author Anton Dyshkant <vyshkant@gmail.com>
+ */
 final class ZeroRowType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

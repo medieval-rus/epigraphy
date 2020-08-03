@@ -31,7 +31,10 @@ use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
-class ZeroRowFormatter implements ZeroRowFormatterInterface
+/**
+ * @author Anton Dyshkant <vyshkant@gmail.com>
+ */
+final class ZeroRowFormatter implements ZeroRowFormatterInterface
 {
     /**
      * @var PropertyAccessorInterface

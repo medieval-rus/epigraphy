@@ -27,6 +27,9 @@ namespace App\Formatter\ZeroRow;
 
 use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
 
+/**
+ * @author Anton Dyshkant <vyshkant@gmail.com>
+ */
 interface ZeroRowFormatterInterface
 {
     public function format(Inscription $inscription, string $propertyName): string;
