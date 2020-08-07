@@ -94,12 +94,27 @@ class PreservationStateFilterParameter implements FilterParameterInterface, Expr
 
         $queryBuilder
             ->innerJoin(
-                $entityAlias.'.preservationState',
-                $preservationStateAlias = $this->createAlias()
+                $entityAlias.'.zeroRow',
+                $zeroRowAlias = $this->aliasFactory->createAlias(static::class, 'zero_row')
+            )
+            ->leftJoin(
+                $zeroRowAlias.'.preservationStateReferences',
+                $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'references')
+            )
+            ->leftJoin(
+                $zeroRowAlias.'.preservationState',
+                $preservationStateOfZeroRowAlias = $this->createAlias()
+            )
+            ->leftJoin(
+                $interpretationsAlias.'.preservationState',
+                $preservationStateOfInterpretationAlias = $this->createAlias()
             )
         ;
 
-        return (string) $queryBuilder->expr()->in($preservationStateAlias.'.id', $ids);
+        return (string) $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->in($preservationStateOfZeroRowAlias.'.id', $ids),
+            $queryBuilder->expr()->in($preservationStateOfInterpretationAlias.'.id', $ids)
+        );
     }
 
     private function createQueryBuilder(): callable

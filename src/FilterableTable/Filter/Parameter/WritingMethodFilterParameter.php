@@ -94,12 +94,27 @@ class WritingMethodFilterParameter implements FilterParameterInterface, Expressi
 
         $queryBuilder
             ->innerJoin(
-                $entityAlias.'.writingMethod',
-                $writingMethodAlias = $this->createAlias()
+                $entityAlias.'.zeroRow',
+                $zeroRowAlias = $this->aliasFactory->createAlias(static::class, 'zero_row')
+            )
+            ->leftJoin(
+                $zeroRowAlias.'.writingMethodReferences',
+                $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'references')
+            )
+            ->leftJoin(
+                $zeroRowAlias.'.writingMethod',
+                $writingMethodOfZeroRowAlias = $this->createAlias()
+            )
+            ->leftJoin(
+                $interpretationsAlias.'.writingMethod',
+                $writingMethodOfInterpretationAlias = $this->createAlias()
             )
         ;
 
-        return (string) $queryBuilder->expr()->in($writingMethodAlias.'.id', $ids);
+        return (string) $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->in($writingMethodOfZeroRowAlias.'.id', $ids),
+            $queryBuilder->expr()->in($writingMethodOfInterpretationAlias.'.id', $ids)
+        );
     }
 
     private function createQueryBuilder(): callable

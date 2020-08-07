@@ -94,12 +94,27 @@ class AlphabetFilterParameter implements FilterParameterInterface, ExpressionBui
 
         $queryBuilder
             ->innerJoin(
-                $entityAlias.'.alphabet',
-                $alphabetAlias = $this->createAlias()
+                $entityAlias.'.zeroRow',
+                $zeroRowAlias = $this->aliasFactory->createAlias(static::class, 'zero_row')
+            )
+            ->leftJoin(
+                $zeroRowAlias.'.alphabetReferences',
+                $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'references')
+            )
+            ->leftJoin(
+                $zeroRowAlias.'.alphabet',
+                $alphabetOfZeroRowAlias = $this->createAlias()
+            )
+            ->leftJoin(
+                $interpretationsAlias.'.alphabet',
+                $alphabetOfInterpretationAlias = $this->createAlias()
             )
         ;
 
-        return (string) $queryBuilder->expr()->in($alphabetAlias.'.id', $ids);
+        return (string) $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->in($alphabetOfZeroRowAlias.'.id', $ids),
+            $queryBuilder->expr()->in($alphabetOfInterpretationAlias.'.id', $ids)
+        );
     }
 
     private function createQueryBuilder(): callable

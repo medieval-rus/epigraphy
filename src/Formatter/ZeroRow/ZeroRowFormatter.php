@@ -51,9 +51,13 @@ final class ZeroRowFormatter implements ZeroRowFormatterInterface
         $referenceValueFormatter = function (Interpretation $interpretation) use ($propertyName) {
             return sprintf(
                 '%s (%s)',
-                $this->propertyAccessor->getValue($interpretation, $propertyName),
+                $this->formatValue($this->propertyAccessor->getValue($interpretation, $propertyName)),
                 $interpretation->getSource()
             );
+        };
+
+        $nonEmptyValueFilter = function (?string $formattedValue): bool {
+            return null !== $formattedValue;
         };
 
         $zeroRow = $inscription->getZeroRow();
@@ -64,17 +68,19 @@ final class ZeroRowFormatter implements ZeroRowFormatterInterface
 
         $allValues = array_map($referenceValueFormatter, $references);
 
-        if (null !== $value) {
-            array_unshift($allValues, $value);
-        }
+        array_unshift($allValues, $value);
 
         $formattedValues = array_map([$this, 'formatValue'], $allValues);
 
-        return implode(PHP_EOL, $formattedValues);
+        return implode(PHP_EOL, array_filter($formattedValues, $nonEmptyValueFilter));
     }
 
-    private function formatValue($value): string
+    private function formatValue($value): ?string
     {
+        if (null === $value) {
+            return null;
+        }
+
         if (\is_string($value)) {
             return $value;
         }
@@ -84,6 +90,10 @@ final class ZeroRowFormatter implements ZeroRowFormatterInterface
         }
 
         if ($value instanceof Collection) {
+            if (0 === $value->count()) {
+                return null;
+            }
+
             return implode(', ', array_map([$this, 'formatValue'], $value->toArray()));
         }
 

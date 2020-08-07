@@ -91,15 +91,29 @@ class WritingTypeFilterParameter implements FilterParameterInterface, Expression
         foreach ($writingTypes as $writingType) {
             $ids[] = $writingType->getId();
         }
-
         $queryBuilder
             ->innerJoin(
-                $entityAlias.'.writingType',
-                $writingTypeAlias = $this->createAlias()
+                $entityAlias.'.zeroRow',
+                $zeroRowAlias = $this->aliasFactory->createAlias(static::class, 'zero_row')
+            )
+            ->leftJoin(
+                $zeroRowAlias.'.writingTypeReferences',
+                $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'references')
+            )
+            ->leftJoin(
+                $zeroRowAlias.'.writingType',
+                $writingTypeOfZeroRowAlias = $this->createAlias()
+            )
+            ->leftJoin(
+                $interpretationsAlias.'.writingType',
+                $writingTypeOfInterpretationAlias = $this->createAlias()
             )
         ;
 
-        return (string) $queryBuilder->expr()->in($writingTypeAlias.'.id', $ids);
+        return (string) $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->in($writingTypeOfZeroRowAlias.'.id', $ids),
+            $queryBuilder->expr()->in($writingTypeOfInterpretationAlias.'.id', $ids)
+        );
     }
 
     private function createQueryBuilder(): callable
