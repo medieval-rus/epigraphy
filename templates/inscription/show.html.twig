@@ -49,7 +49,7 @@
             {{ self.format_text_row('zeroRow.writingMethod', self.format_zero_row(inscription, 'writingMethod')) }}
             {{ self.format_text_row('zeroRow.preservationState', self.format_zero_row(inscription, 'preservationState')) }}
             {{ self.format_text_row('zeroRow.alphabet', self.format_zero_row(inscription, 'alphabet')) }}
-            {{ self.format_text_row('zeroRow.text', self.format_zero_row(inscription, 'text')) }}
+            {{ self.format_text_row('zeroRow.text', self.format_text(inscription, 'text')) }}
             {{ self.format_text_row('zeroRow.textImageFileNames', self.format_zero_row(inscription, 'textImageFileNames')) }}
             {{ self.format_text_row('zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
             {{ self.format_text_row('zeroRow.translation', self.format_zero_row(inscription, 'translation')) }}

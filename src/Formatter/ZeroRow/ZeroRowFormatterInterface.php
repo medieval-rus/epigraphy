@@ -32,5 +32,8 @@ use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
  */
 interface ZeroRowFormatterInterface
 {
-    public function format(Inscription $inscription, string $propertyName): string;
+    /**
+     * @return FormattedZeroRowValue[]
+     */
+    public function format(Inscription $inscription, string $propertyName): array;
 }

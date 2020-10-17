@@ -46,12 +46,21 @@ final class ZeroRowFormatter implements ZeroRowFormatterInterface
         $this->propertyAccessor = $propertyAccessor;
     }
 
-    public function format(Inscription $inscription, string $propertyName): string
+    /**
+     * @return FormattedZeroRowValue[]
+     */
+    public function format(Inscription $inscription, string $propertyName): array
     {
-        $referenceValueFormatter = function (Interpretation $interpretation) use ($propertyName) {
-            return sprintf(
-                '%s (%s)',
-                $this->formatValue($this->propertyAccessor->getValue($interpretation, $propertyName)),
+        $referenceValueFormatter = function (Interpretation $interpretation) use ($propertyName): ?FormattedZeroRowValue {
+
+            $value = $this->formatValue($this->propertyAccessor->getValue($interpretation, $propertyName));
+
+            if (null === $value) {
+                return null;
+            }
+
+            return new FormattedZeroRowValue(
+                $value,
                 $interpretation->getSource()
             );
         };
@@ -62,17 +71,17 @@ final class ZeroRowFormatter implements ZeroRowFormatterInterface
 
         $zeroRow = $inscription->getZeroRow();
 
-        $value = $this->propertyAccessor->getValue($zeroRow, $propertyName);
+        $zeroRowValue = new FormattedZeroRowValue($this->propertyAccessor->getValue($zeroRow, $propertyName), null);
 
         $references = $this->propertyAccessor->getValue($zeroRow, $propertyName.'References')->toArray();
 
-        $allValues = array_map($referenceValueFormatter, $references);
+        $referenceValues = array_map($referenceValueFormatter, $references);
 
-        array_unshift($allValues, $value);
+        $allValues = [$zeroRowValue, ...$referenceValues];
 
-        $formattedValues = array_map([$this, 'formatValue'], $allValues);
+//        $formattedValues = array_map([$this, 'formatValue'], $allValues);
 
-        return implode(PHP_EOL, array_filter($formattedValues, $nonEmptyValueFilter));
+        return array_filter($allValues, $nonEmptyValueFilter);
     }
 
     private function formatValue($value): ?string
