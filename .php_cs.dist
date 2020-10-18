@@ -83,7 +83,9 @@ return PhpCsFixer\Config::create()
                     'bin/phpunit',
                     'config/bootstrap.php',
                     'config/bundles.php',
+                    'config/preload.php',
                     'public/index.php',
+                    'tests/bootstrap.php',
                 ]
             )
     )

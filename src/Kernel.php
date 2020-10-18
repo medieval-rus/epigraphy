@@ -59,7 +59,7 @@ final class Kernel extends BaseKernel
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $container->addResource(new FileResource($this->getProjectDir().'/config/bundles.php'));
-        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400);
+        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
         $container->setParameter('container.dumper.inline_factories', true);
         $confDir = $this->getProjectDir().'/config';
 

@@ -26,11 +26,14 @@ services:
     autoconfigure: true
 
   App\:
-    resource: '../src/*'
-    exclude: '../src/{DependencyInjection,Persistence/Entity,Persistence/Migrations,Kernel.php}'
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/Persistence/Entity/'
+      - '../src/Kernel.php'
 
   App\Controller\:
-    resource: '../src/Controller'
+    resource: '../src/Controller/'
     tags: ['controller.service_arguments']
 
   App\Menu\MenuBuilder:

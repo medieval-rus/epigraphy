@@ -51,8 +51,9 @@ final class ZeroRowFormatter implements ZeroRowFormatterInterface
      */
     public function format(Inscription $inscription, string $propertyName): array
     {
-        $referenceValueFormatter = function (Interpretation $interpretation) use ($propertyName): ?FormattedZeroRowValue {
-
+        $referenceValueFormatter = function (
+            Interpretation $interpretation
+        ) use ($propertyName): ?FormattedZeroRowValue {
             $value = $this->formatValue($this->propertyAccessor->getValue($interpretation, $propertyName));
 
             if (null === $value) {
@@ -63,10 +64,6 @@ final class ZeroRowFormatter implements ZeroRowFormatterInterface
                 $value,
                 $interpretation->getSource()
             );
-        };
-
-        $nonEmptyValueFilter = function (?string $formattedValue): bool {
-            return null !== $formattedValue;
         };
 
         $zeroRow = $inscription->getZeroRow();
@@ -81,16 +78,12 @@ final class ZeroRowFormatter implements ZeroRowFormatterInterface
 
 //        $formattedValues = array_map([$this, 'formatValue'], $allValues);
 
-        return array_filter($allValues, $nonEmptyValueFilter);
+        return array_filter($allValues, [$this, 'isNotNull']);
     }
 
     private function formatValue($value): ?string
     {
-        if (null === $value) {
-            return null;
-        }
-
-        if (\is_string($value)) {
+        if (\is_string($value) || null === $value) {
             return $value;
         }
 
@@ -103,9 +96,25 @@ final class ZeroRowFormatter implements ZeroRowFormatterInterface
                 return null;
             }
 
-            return implode(', ', array_map([$this, 'formatValue'], $value->toArray()));
+            return implode(
+                ', ',
+                array_map(
+                    static function ($value): string {
+                        return (string) $value;
+                    },
+                    array_filter(
+                        array_map([$this, 'formatValue'], $value->toArray()),
+                        [$this, 'isNotNull']
+                    )
+                )
+            );
         }
 
         return (string) $value;
+    }
+
+    private function isNotNull(?string $formattedValue): bool
+    {
+        return null !== $formattedValue;
     }
 }

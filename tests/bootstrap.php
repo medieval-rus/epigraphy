@@ -23,33 +23,12 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Formatter\ZeroRow;
+use Symfony\Component\Dotenv\Dotenv;
 
-class FormattedZeroRowValue
-{
-    /**
-     * @var string
-     */
-    private $value;
+require dirname(__DIR__).'/vendor/autoload.php';
 
-    /**
-     * @var string|null
-     */
-    private $source;
-
-    public function __construct(string $value, ?string $source)
-    {
-        $this->value = $value;
-        $this->source = $source;
-    }
-
-    public function getValue(): string
-    {
-        return $this->value;
-    }
-
-    public function getSource(): ?string
-    {
-        return $this->source;
-    }
+if (file_exists(dirname(__DIR__).'/config/bootstrap.php')) {
+    require dirname(__DIR__).'/config/bootstrap.php';
+} elseif (method_exists(Dotenv::class, 'bootEnv')) {
+    (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
 }

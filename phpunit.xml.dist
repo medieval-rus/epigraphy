@@ -27,7 +27,7 @@ see <http://www.gnu.org/licenses/>.
          xsi:noNamespaceSchemaLocation="bin/.phpunit/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="config/bootstrap.php"
+         bootstrap="tests/bootstrap.php"
 >
     <php>
         <ini name="error_reporting" value="-1" />
@@ -44,8 +44,8 @@ see <http://www.gnu.org/licenses/>.
     </testsuites>
 
     <filter>
-        <whitelist>
-            <directory>src</directory>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
 

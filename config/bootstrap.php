@@ -27,18 +27,18 @@ use Symfony\Component\Dotenv\Dotenv;
 
 require dirname(__DIR__).'/vendor/autoload.php';
 
+if (!class_exists(Dotenv::class)) {
+    $message = 'Please run "composer require symfony/dotenv" to load the ".env" files configuring the application.';
+
+    throw new LogicException($message);
+}
+
 // Load cached env vars if the .env.local.php file exists
 // Run "composer dump-env prod" to create it (requires symfony/flex >=1.2)
 if (is_array($env = @include dirname(__DIR__).'/.env.local.php') &&
-    ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? $env['APP_ENV']) === $env['APP_ENV']
+    (!isset($env['APP_ENV']) || ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? $env['APP_ENV']) === $env['APP_ENV'])
 ) {
-    foreach ($env as $k => $v) {
-        $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
-    }
-} elseif (!class_exists(Dotenv::class)) {
-    $message = 'Please run "composer require symfony/dotenv" to load the ".env" files configuring the application.';
-
-    throw new RuntimeException($message);
+    (new Dotenv(false))->populate($env);
 } else {
     // load all the .env files
     (new Dotenv(false))->loadEnv(dirname(__DIR__).'/.env');
