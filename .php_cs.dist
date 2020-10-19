@@ -74,7 +74,13 @@ return PhpCsFixer\Config::create()
     ->setUsingCache(false)
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->in(['src', 'tests'])
+            ->in(
+                [
+                    'migrations',
+                    'src',
+                    'tests',
+                ]
+            )
             ->append(
                 [
                     __FILE__,
@@ -83,7 +89,9 @@ return PhpCsFixer\Config::create()
                     'bin/phpunit',
                     'config/bootstrap.php',
                     'config/bundles.php',
+                    'config/preload.php',
                     'public/index.php',
+                    'tests/bootstrap.php',
                 ]
             )
     )

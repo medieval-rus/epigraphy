@@ -17,11 +17,9 @@
 # «Epigraphy of Medieval Rus'» database,
 # see <http://www.gnu.org/licenses/>.
 
-parameters:
+grumphp:
   hide_circumvention_tip: true
   process_timeout: null
-  git_dir: .
-  bin_dir: vendor/bin
   tasks:
     phpversion:
       project: '7.2'
@@ -66,9 +64,9 @@ parameters:
     phpcs:
       standard: PSR2
       ignore_patterns:
+        - '/migrations/*'
         - '/node_modules/*'
         - '/src/Persistence/DataFixtures/*'
-        - '/src/Persistence/Migrations/*'
         - '/tests/*'
         - '/var/*'
         - '/vendor/*'

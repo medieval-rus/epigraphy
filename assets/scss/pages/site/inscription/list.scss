@@ -20,6 +20,7 @@
  */
 
 @import '../base';
+@import '../../../src/original-text/original-text';
 
 @mixin sorted-column($isAsc){
   &:after {

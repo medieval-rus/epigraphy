@@ -37,7 +37,7 @@ use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFact
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-class WritingTypeFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
+final class WritingTypeFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
     /**
      * @var AliasFactoryInterface

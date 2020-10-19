@@ -23,8 +23,9 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Formatter\ZeroRow;
+namespace App\Services\ActualValue\Extractor;
 
+use App\Models\ActualValue;
 use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
 use App\Persistence\Entity\Epigraphy\Inscription\Interpretation;
 use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
@@ -34,7 +35,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-final class ZeroRowFormatter implements ZeroRowFormatterInterface
+final class ActualValueExtractor implements ActualValueExtractorInterface
 {
     /**
      * @var PropertyAccessorInterface
@@ -46,42 +47,49 @@ final class ZeroRowFormatter implements ZeroRowFormatterInterface
         $this->propertyAccessor = $propertyAccessor;
     }
 
-    public function format(Inscription $inscription, string $propertyName): string
+    /**
+     * @return ActualValue[]
+     */
+    public function extract(Inscription $inscription, string $propertyName): array
     {
-        $referenceValueFormatter = function (Interpretation $interpretation) use ($propertyName) {
-            return sprintf(
-                '%s (%s)',
-                $this->formatValue($this->propertyAccessor->getValue($interpretation, $propertyName)),
+        $referenceValueFormatter = function (
+            Interpretation $interpretation
+        ) use ($propertyName): ?ActualValue {
+            $value = $this->formatValue($this->propertyAccessor->getValue($interpretation, $propertyName));
+
+            if (null === $value) {
+                return null;
+            }
+
+            return new ActualValue(
+                $value,
                 $interpretation->getSource()
             );
         };
 
-        $nonEmptyValueFilter = function (?string $formattedValue): bool {
-            return null !== $formattedValue;
-        };
-
         $zeroRow = $inscription->getZeroRow();
-
-        $value = $this->propertyAccessor->getValue($zeroRow, $propertyName);
 
         $references = $this->propertyAccessor->getValue($zeroRow, $propertyName.'References')->toArray();
 
-        $allValues = array_map($referenceValueFormatter, $references);
+        $referenceValues = array_map($referenceValueFormatter, $references);
 
-        array_unshift($allValues, $value);
+        $zeroRowValue = $this->formatValue($this->propertyAccessor->getValue($zeroRow, $propertyName));
 
-        $formattedValues = array_map([$this, 'formatValue'], $allValues);
+        if (null !== $zeroRowValue) {
+            $allValues = [
+                new ActualValue($zeroRowValue, null),
+                ...$referenceValues,
+            ];
+        } else {
+            $allValues = $referenceValues;
+        }
 
-        return implode(PHP_EOL, array_filter($formattedValues, $nonEmptyValueFilter));
+        return array_filter($allValues, [$this, 'isNotNull']);
     }
 
     private function formatValue($value): ?string
     {
-        if (null === $value) {
-            return null;
-        }
-
-        if (\is_string($value)) {
+        if (\is_string($value) || null === $value) {
             return $value;
         }
 
@@ -94,9 +102,25 @@ final class ZeroRowFormatter implements ZeroRowFormatterInterface
                 return null;
             }
 
-            return implode(', ', array_map([$this, 'formatValue'], $value->toArray()));
+            return implode(
+                ', ',
+                array_map(
+                    static function ($value): string {
+                        return (string) $value;
+                    },
+                    array_filter(
+                        array_map([$this, 'formatValue'], $value->toArray()),
+                        [$this, 'isNotNull']
+                    )
+                )
+            );
         }
 
         return (string) $value;
+    }
+
+    private function isNotNull($formattedValue): bool
+    {
+        return null !== $formattedValue;
     }
 }

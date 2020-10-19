@@ -19,4 +19,4 @@
 
 doctrine_migrations:
   migrations_paths:
-    DoctrineMigrations: '%kernel.project_dir%/src/Persistence/Migrations'
+    'DoctrineMigrations': '%kernel.project_dir%/migrations'

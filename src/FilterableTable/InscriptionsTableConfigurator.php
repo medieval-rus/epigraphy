@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace App\FilterableTable;
 
-use App\Formatter\ZeroRow\ZeroRowFormatterInterface;
 use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
+use App\Services\Value\ValueStringifierInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\FilterConfiguratorInterface;
 use Vyfony\Bundle\FilterableTableBundle\Table\Checkbox\CheckboxHandlerInterface;
@@ -40,9 +40,9 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadataInte
 final class InscriptionsTableConfigurator extends AbstractTableConfigurator
 {
     /**
-     * @var ZeroRowFormatterInterface
+     * @var ValueStringifierInterface
      */
-    private $zeroRowFormatter;
+    private $valueStringifier;
 
     public function __construct(
         RouterInterface $router,
@@ -54,7 +54,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
         array $showRouteParameters,
         int $pageSize,
         int $paginatorTailLength,
-        ZeroRowFormatterInterface $zeroRowFormatter
+        ValueStringifierInterface $valueStringifier
     ) {
         parent::__construct(
             $router,
@@ -68,7 +68,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             $paginatorTailLength
         );
 
-        $this->zeroRowFormatter = $zeroRowFormatter;
+        $this->valueStringifier = $valueStringifier;
     }
 
     protected function getResultsCountText(): string
@@ -106,7 +106,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setName('interpretation-contentCategory')
                 ->setValueExtractor(function (Inscription $inscription): string {
-                    return $this->zeroRowFormatter->format($inscription, 'contentCategory');
+                    return $this->valueStringifier->stringify($inscription, 'contentCategory');
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)

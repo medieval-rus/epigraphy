@@ -1,3 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
 /*
  * This file is part of «Epigraphy of Medieval Rus'» database.
  *
@@ -19,9 +23,25 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-@import '../base';
+namespace App\Form;
 
-.eomr-interpretation-label {
-  text-align: center;
-  background-color: $gray-300;
+use EasyCorp\Bundle\EasyAdminBundle\Form\Type\Configurator\TypeConfiguratorInterface;
+use Symfony\Component\Form\FormConfigInterface;
+
+/**
+ * @author Anton Dyshkant <vyshkant@gmail.com>
+ */
+final class ZeroRowTypeConfigurator implements TypeConfiguratorInterface
+{
+    public function configure($name, array $options, array $metadata, FormConfigInterface $parentConfig)
+    {
+        $options['parent_data'] = $parentConfig->getOption('data');
+
+        return $options;
+    }
+
+    public function supports($type, array $options, array $metadata): bool
+    {
+        return ZeroRowType::class === $type;
+    }
 }
