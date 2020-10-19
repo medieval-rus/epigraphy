@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
 use App\Persistence\Entity\Epigraphy\Inscription\ZeroRow;
+use App\Persistence\Repository\Epigraphy\Inscription\InterpretationRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -49,6 +51,21 @@ final class ZeroRowType extends AbstractType
             ],
         ];
 
+        $parentInscription = $options['parent_data'];
+
+        if (!$parentInscription instanceof Inscription) {
+            throw new \RuntimeException('Zero row cannot be created without having parent inscription.');
+        }
+
+        $referencesOptions = [
+            'query_builder' => function (InterpretationRepository $entityRepository) use ($parentInscription) {
+                return $entityRepository
+                    ->createQueryBuilder('interpretation')
+                    ->where('interpretation.inscription = :inscriptionId')
+                    ->setParameter(':inscriptionId', $parentInscription->getId());
+            },
+        ];
+
         $builder
             ->add(
                 $builder
@@ -58,15 +75,15 @@ final class ZeroRowType extends AbstractType
                         array_merge($groupOptions, ['label' => 'form.inscription.group.materialAspect'])
                     )
                     ->add('placeOnCarrier')
-                    ->add('placeOnCarrierReferences')
+                    ->add('placeOnCarrierReferences', null, $referencesOptions)
                     ->add('writingType')
-                    ->add('writingTypeReferences')
+                    ->add('writingTypeReferences', null, $referencesOptions)
                     ->add('writingMethod')
-                    ->add('writingMethodReferences')
+                    ->add('writingMethodReferences', null, $referencesOptions)
                     ->add('preservationState')
-                    ->add('preservationStateReferences')
+                    ->add('preservationStateReferences', null, $referencesOptions)
                     ->add('materials')
-                    ->add('materialsReferences')
+                    ->add('materialsReferences', null, $referencesOptions)
             )
             ->add(
                 $builder
@@ -76,19 +93,19 @@ final class ZeroRowType extends AbstractType
                         array_merge($groupOptions, ['label' => 'form.inscription.group.linguisticAspect'])
                     )
                     ->add('alphabet')
-                    ->add('alphabetReferences')
+                    ->add('alphabetReferences', null, $referencesOptions)
                     ->add('text')
-                    ->add('textReferences')
+                    ->add('textReferences', null, $referencesOptions)
                     ->add('textImageFileNames')
-                    ->add('textImageFileNamesReferences')
+                    ->add('textImageFileNamesReferences', null, $referencesOptions)
                     ->add('transliteration')
-                    ->add('transliterationReferences')
+                    ->add('transliterationReferences', null, $referencesOptions)
                     ->add('translation')
-                    ->add('translationReferences')
+                    ->add('translationReferences', null, $referencesOptions)
                     ->add('contentCategory')
-                    ->add('contentCategoryReferences')
+                    ->add('contentCategoryReferences', null, $referencesOptions)
                     ->add('content')
-                    ->add('contentReferences')
+                    ->add('contentReferences', null, $referencesOptions)
             )
             ->add(
                 $builder
@@ -98,13 +115,13 @@ final class ZeroRowType extends AbstractType
                         array_merge($groupOptions, ['label' => 'form.inscription.group.historicalAspect'])
                     )
                     ->add('dateInText')
-                    ->add('dateInTextReferences')
+                    ->add('dateInTextReferences', null, $referencesOptions)
                     ->add('stratigraphicalDate')
-                    ->add('stratigraphicalDateReferences')
+                    ->add('stratigraphicalDateReferences', null, $referencesOptions)
                     ->add('nonStratigraphicalDate')
-                    ->add('nonStratigraphicalDateReferences')
+                    ->add('nonStratigraphicalDateReferences', null, $referencesOptions)
                     ->add('historicalDate')
-                    ->add('historicalDateReferences')
+                    ->add('historicalDateReferences', null, $referencesOptions)
             )
             ->add(
                 $builder
@@ -114,9 +131,9 @@ final class ZeroRowType extends AbstractType
                         array_merge($groupOptions, ['label' => 'form.inscription.group.multimedia'])
                     )
                     ->add('photoFileNames')
-                    ->add('photoFileNamesReferences')
+                    ->add('photoFileNamesReferences', null, $referencesOptions)
                     ->add('sketchFileNames')
-                    ->add('sketchFileNamesReferences')
+                    ->add('sketchFileNamesReferences', null, $referencesOptions)
             );
     }
 
@@ -130,6 +147,7 @@ final class ZeroRowType extends AbstractType
             'label_attr' => [
                 'class' => 'eomr-embedded-form-label',
             ],
+            'parent_data' => null,
         ]);
     }
 }

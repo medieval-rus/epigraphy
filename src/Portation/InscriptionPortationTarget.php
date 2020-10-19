@@ -1273,7 +1273,9 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                 }
 
                 if (1 === $matchResult) {
-                    for ($matchIndex = 1; $matchIndex < \count($matches); ++$matchIndex) {
+                    $matchesCount = \count($matches);
+
+                    for ($matchIndex = 1; $matchIndex < $matchesCount; ++$matchIndex) {
                         $referenceSource = $matches[$matchIndex];
 
                         $reference = $this->interpretationRepository->findOneBySource($inscription, $referenceSource);

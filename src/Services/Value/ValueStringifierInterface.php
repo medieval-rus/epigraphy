@@ -23,17 +23,19 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Formatter\ZeroRow;
+namespace App\Services\Value;
 
 use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
+use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-interface ZeroRowFormatterInterface
+interface ValueStringifierInterface
 {
-    /**
-     * @return FormattedZeroRowValue[]
-     */
-    public function format(Inscription $inscription, string $propertyName): array;
+    public function stringify(
+        Inscription $inscription,
+        string $propertyName,
+        string $formatType = ActualValueFormatterInterface::FORMAT_TYPE_DEFAULT
+    ): string;
 }

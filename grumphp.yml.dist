@@ -64,9 +64,9 @@ grumphp:
     phpcs:
       standard: PSR2
       ignore_patterns:
+        - '/migrations/*'
         - '/node_modules/*'
         - '/src/Persistence/DataFixtures/*'
-        - '/src/Persistence/Migrations/*'
         - '/tests/*'
         - '/var/*'
         - '/vendor/*'

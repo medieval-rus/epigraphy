@@ -31,8 +31,9 @@ use App\FilterableTable\Filter\Parameter\CarrierTypeFilterParameter;
 use App\FilterableTable\Filter\Parameter\PreservationStateFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingTypeFilterParameter;
-use App\Formatter\ZeroRow\ZeroRowFormatterInterface;
 use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
+use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
+use App\Services\Value\ValueStringifierInterface;
 use InvalidArgumentException;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\AbstractFilterConfigurator;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
@@ -48,9 +49,9 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
 final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
 {
     /**
-     * @var ZeroRowFormatterInterface
+     * @var ValueStringifierInterface
      */
-    private $zeroRowFormatter;
+    private $valueStringifier;
 
     /**
      * @var CarrierTypeFilterParameter
@@ -83,7 +84,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     private $alphabetFilterParameter;
 
     public function __construct(
-        ZeroRowFormatterInterface $zeroRowFormatter,
+        ValueStringifierInterface $valueStringifier,
         CarrierTypeFilterParameter $carrierTypeFilterParameter,
         CarrierCategoryFilterParameter $carrierCategoryFilterParameter,
         WritingTypeFilterParameter $writingTypeFilterParameter,
@@ -91,7 +92,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         PreservationStateFilterParameter $preservationStateFilterParameter,
         AlphabetFilterParameter $alphabetFilterParameter
     ) {
-        $this->zeroRowFormatter = $zeroRowFormatter;
+        $this->valueStringifier = $valueStringifier;
         $this->carrierTypeFilterParameter = $carrierTypeFilterParameter;
         $this->carrierCategoryFilterParameter = $carrierCategoryFilterParameter;
         $this->writingTypeFilterParameter = $writingTypeFilterParameter;
@@ -195,7 +196,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
                             (new ColumnMetadata())
                                 ->setName('interpretation-content')
                                 ->setValueExtractor(function (Inscription $inscription): string {
-                                    return $this->zeroRowFormatter->format($inscription, 'content');
+                                    return $this->valueStringifier->stringify($inscription, 'content');
                                 })
                                 ->setLabel('controller.inscription.list.table.column.interpretation.content')
                         )
@@ -206,9 +207,14 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
                         ->setLabel('controller.inscription.list.filter.dataColumn.option.text')
                         ->setColumnMetadata(
                             (new ColumnMetadata())
+                                ->setIsRaw(true)
                                 ->setName('interpretation-text')
                                 ->setValueExtractor(function (Inscription $inscription): string {
-                                    return $this->zeroRowFormatter->format($inscription, 'text');
+                                    return $this->valueStringifier->stringify(
+                                        $inscription,
+                                        'text',
+                                        ActualValueFormatterInterface::FORMAT_TYPE_ORIGINAL_TEXT
+                                    );
                                 })
                                 ->setLabel('controller.inscription.list.table.column.interpretation.text')
                         )

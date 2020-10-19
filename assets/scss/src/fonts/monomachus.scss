@@ -1,7 +1,3 @@
-<?php
-
-declare(strict_types=1);
-
 /*
  * This file is part of «Epigraphy of Medieval Rus'» database.
  *
@@ -23,33 +19,9 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Formatter\ZeroRow;
-
-class FormattedZeroRowValue
-{
-    /**
-     * @var string
-     */
-    private $value;
-
-    /**
-     * @var string|null
-     */
-    private $source;
-
-    public function __construct(string $value, ?string $source)
-    {
-        $this->value = $value;
-        $this->source = $source;
-    }
-
-    public function getValue(): string
-    {
-        return $this->value;
-    }
-
-    public function getSource(): ?string
-    {
-        return $this->source;
-    }
+@font-face {
+  font-family: 'Monomachus';
+  src: url('/build/fonts/monomachus/Monomachus.woff') format('woff'),
+       url('/build/fonts/monomachus/Monomachus.ttf') format('truetype'),
+       url('/build/fonts/monomachus/Monomachus.otf') format('opentype');
 }

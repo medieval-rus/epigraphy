@@ -74,7 +74,13 @@ return PhpCsFixer\Config::create()
     ->setUsingCache(false)
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->in(['src', 'tests'])
+            ->in(
+                [
+                    'migrations',
+                    'src',
+                    'tests',
+                ]
+            )
             ->append(
                 [
                     __FILE__,

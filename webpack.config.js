@@ -21,6 +21,8 @@
 
 var Encore = require('@symfony/webpack-encore');
 
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
@@ -38,12 +40,18 @@ Encore
         config.useBuiltIns = 'usage';
         config.corejs = 3;
     })
-    .addStyleEntry('css/site/security/login', './assets/scss/site/security/login.scss')
-    .addStyleEntry('css/site/inscription/list', './assets/scss/site/inscription/list.scss')
-    .addStyleEntry('css/site/inscription/show', './assets/scss/site/inscription/show.scss')
-    .addStyleEntry('css/site/bibliographic-record/list', './assets/scss/site/bibliographic-record/list.scss')
-    .addEntry('js/admin/common', './assets/js/admin/common.js')
-    .addStyleEntry('css/admin/common', './assets/scss/admin/common.scss')
+    .addStyleEntry('css/site/security/login', './assets/scss/pages/site/security/login.scss')
+    .addStyleEntry('css/site/inscription/list', './assets/scss/pages/site/inscription/list.scss')
+    .addStyleEntry('css/site/inscription/show', './assets/scss/pages/site/inscription/show.scss')
+    .addStyleEntry('css/site/bibliographic-record/list', './assets/scss/pages/site/bibliographic-record/list.scss')
+    .addEntry('js/admin/common', './assets/js/pages/admin/common.js')
+    .addStyleEntry('css/admin/common', './assets/scss/pages/admin/common.scss')
+    .addPlugin(new CopyWebpackPlugin([
+        {
+            from: './assets/fonts',
+            to: 'fonts'
+        }
+    ]))
 ;
 
 module.exports = Encore.getWebpackConfig();
