@@ -47,4 +47,32 @@ abstract class StringHelper
 
         return $string;
     }
+
+    public static function removeFromStart(string $haystack, string $needle): string
+    {
+        if (self::startsWith($haystack, $needle)) {
+            return substr($haystack, \strlen($needle));
+        }
+
+        return $haystack;
+    }
+
+    public static function removeFromEnd(string $haystack, string $needle): string
+    {
+        if (self::endsWith($haystack, $needle)) {
+            return substr($haystack, 0, \strlen($haystack) - \strlen($needle));
+        }
+
+        return $haystack;
+    }
+
+    public static function startsWith(string $haystack, string $needle): bool
+    {
+        return 0 === strpos($haystack, $needle);
+    }
+
+    public static function endsWith(string $haystack, string $needle): bool
+    {
+        return strpos($haystack, $needle) === \strlen($haystack) - \strlen($needle);
+    }
 }

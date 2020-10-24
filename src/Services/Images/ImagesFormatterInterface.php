@@ -1,3 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
 /*
  * This file is part of «Epigraphy of Medieval Rus'» database.
  *
@@ -19,16 +23,14 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-@import '../base';
-@import '../../../src/original-text/original-text';
+namespace App\Services\Images;
 
-.eomr-interpretation-label {
-  text-align: center;
-  background-color: $gray-300;
-}
+use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
 
-.eomr-image-link {
-  .eomr-image {
-    max-width: 100%;
-  }
+/**
+ * @author Anton Dyshkant <vyshkant@gmail.com>
+ */
+interface ImagesFormatterInterface
+{
+    public function format(Inscription $inscription, string $propertyName): string;
 }

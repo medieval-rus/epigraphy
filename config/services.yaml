@@ -24,6 +24,9 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
+    bind:
+      $googleDriveRootFolder: '%env(resolve:GOOGLE_DRIVE_ROOT_FOLDER)%'
+      $googleDriveApiKey: '%env(resolve:GOOGLE_DRIVE_API_KEY)%'
 
   App\:
     resource: '../src/'

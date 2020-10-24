@@ -89,11 +89,11 @@ controller:
             preservationState: Состояние сохранности
             alphabet: Алфавит
             text: Текст
-            textImageFileNames: Изображение текста (название файла)
+            textImageFileNames: Изображениеz текста
             transliteration: Транслитерация
             translation: Перевод
-            photoFileNames: Фото (название файла)
-            sketchFileNames: Прорись (название файла)
+            photoFileNames: Фотографи
+            sketchFileNames: Прориси
             contentCategory: Категория по содержанию
             content: Содержание
             dateInText: Дата в тексте

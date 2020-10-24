@@ -1,3 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
 /*
  * This file is part of «Epigraphy of Medieval Rus'» database.
  *
@@ -19,16 +23,27 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-@import '../base';
-@import '../../../src/original-text/original-text';
+namespace App\Helper;
 
-.eomr-interpretation-label {
-  text-align: center;
-  background-color: $gray-300;
-}
+/**
+ * @author Anton Dyshkant <vyshkant@gmail.com>
+ */
+abstract class UrlHelper
+{
+    public static function formatQueryParameters(array $queryParameters): string
+    {
+        if (0 === \count($queryParameters)) {
+            return '';
+        }
 
-.eomr-image-link {
-  .eomr-image {
-    max-width: 100%;
-  }
+        $formattedParameters = array_map(
+            static function ($key, $value): string {
+                return implode('=', [$key, $value]);
+            },
+            array_keys($queryParameters),
+            $queryParameters
+        );
+
+        return '?'.implode('&', $formattedParameters);
+    }
 }
