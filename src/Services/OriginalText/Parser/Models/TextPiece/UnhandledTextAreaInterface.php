@@ -1,3 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
 /*
  * This file is part of «Epigraphy of Medieval Rus'» database.
  *
@@ -19,29 +23,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-@import '../fonts/monomachus';
+namespace App\Services\OriginalText\Parser\Models\TextPiece;
 
-.eomr-text-wrapper {
-
-  .eomr-text-piece-comment {
-    font-family: monospace;
-  }
-
-  .eomr-text-piece-original {
-    font-family: 'Monomachus';
-  }
-
-  .eomr-text-piece-superscripted {
-    @extend .eomr-text-piece-original;
-    font-size: 75%;
-    display: inline-block;
-    top: -.75em;
-    position: relative;
-    line-height: 0;
-    vertical-align: baseline;
-  }
-
-  .eomr-text-piece-text-break {
-    font-family: monospace;
-  }
+/**
+ * @author Anton Dyshkant <vyshkant@gmail.com>
+ */
+interface UnhandledTextAreaInterface extends TextPieceInterface
+{
 }

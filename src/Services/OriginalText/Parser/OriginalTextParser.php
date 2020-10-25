@@ -25,15 +25,72 @@ declare(strict_types=1);
 
 namespace App\Services\OriginalText\Parser;
 
-use App\Models\OriginalText\OriginalText;
+use App\Services\OriginalText\Parser\Models\OriginalText;
+use App\Services\OriginalText\Parser\Models\TextPiece\OriginalTextPiece;
+use App\Services\OriginalText\Parser\Models\TextPiece\TextPieceInterface;
+use App\Services\OriginalText\Parser\Models\TextPiece\UnhandledTextAreaInterface;
+use App\Services\OriginalText\Parser\RuleParser\RuleParserInterface;
+use App\Services\OriginalText\Parser\Rules\RuleDefinitionInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
 final class OriginalTextParser implements OriginalTextParserInterface
 {
+    /**
+     * @var RuleParserInterface
+     */
+    private $ruleParser;
+
+    /**
+     * @var RuleDefinitionInterface[]
+     */
+    private $rules;
+
+    /**
+     * @param RuleDefinitionInterface[] $rules
+     */
+    public function __construct(RuleParserInterface $ruleParser, array $rules)
+    {
+        $this->ruleParser = $ruleParser;
+        $this->rules = $rules;
+    }
+
     public function parse(string $originalText): OriginalText
     {
-        return new OriginalText($originalText);
+        return new OriginalText($this->applyRuleParsers($originalText));
+    }
+
+    /**
+     * @return TextPieceInterface[]
+     */
+    private function applyRuleParsers(string $text, int $initialRuleParserIndex = 0): array
+    {
+        $rule = $this->getRule($initialRuleParserIndex);
+
+        if (null === $rule) {
+            return [new OriginalTextPiece($text)];
+        }
+
+        $parseResults = $this->ruleParser->parse($rule, $text);
+
+        $finalResult = [];
+
+        foreach ($parseResults as $parseResult) {
+            if ($parseResult instanceof UnhandledTextAreaInterface) {
+                foreach ($this->applyRuleParsers($parseResult->getText(), $initialRuleParserIndex + 1) as $textPiece) {
+                    $finalResult[] = $textPiece;
+                }
+            } else {
+                $finalResult[] = $parseResult;
+            }
+        }
+
+        return $finalResult;
+    }
+
+    private function getRule(int $index): ?RuleDefinitionInterface
+    {
+        return $this->rules[$index] ?? null;
     }
 }

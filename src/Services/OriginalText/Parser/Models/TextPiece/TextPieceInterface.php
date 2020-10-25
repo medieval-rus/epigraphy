@@ -23,22 +23,12 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Models\OriginalText;
+namespace App\Services\OriginalText\Parser\Models\TextPiece;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-final class OriginalText
+interface TextPieceInterface
 {
-    private string $value;
-
-    public function __construct(string $value)
-    {
-        $this->value = $value;
-    }
-
-    public function getValue(): string
-    {
-        return $this->value;
-    }
+    public function getText(): string;
 }

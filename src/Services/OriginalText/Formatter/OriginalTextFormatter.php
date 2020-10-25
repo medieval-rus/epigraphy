@@ -25,7 +25,14 @@ declare(strict_types=1);
 
 namespace App\Services\OriginalText\Formatter;
 
-use App\Models\OriginalText\OriginalText;
+use App\Helper\TypeHelper;
+use App\Services\OriginalText\Parser\Models\OriginalText;
+use App\Services\OriginalText\Parser\Models\TextPiece\CommentTextPiece;
+use App\Services\OriginalText\Parser\Models\TextPiece\OriginalTextPiece;
+use App\Services\OriginalText\Parser\Models\TextPiece\SuperscriptedTextPiece;
+use App\Services\OriginalText\Parser\Models\TextPiece\TextBreakTextPiece;
+use App\Services\OriginalText\Parser\Models\TextPiece\TextPieceInterface;
+use InvalidArgumentException;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
@@ -34,6 +41,54 @@ final class OriginalTextFormatter implements OriginalTextFormatterInterface
 {
     public function format(OriginalText $originalText): string
     {
-        return '<div class="original-text-wrapper">'.nl2br(htmlspecialchars($originalText->getValue())).'</div>';
+        return '<div class="eomr-text-wrapper">'.
+            implode('', array_map([$this, 'formatTextPieceAndAddBrs'], $originalText->getPieces())).
+            '</div>';
+    }
+
+    private function formatTextPieceAndAddBrs(TextPieceInterface $textPiece): string
+    {
+        return nl2br($this->formatTextPiece($textPiece));
+    }
+
+    private function formatTextPiece(TextPieceInterface $textPiece): string
+    {
+        switch (true) {
+            case $textPiece instanceof CommentTextPiece:
+                return $this->formatCommentTextPiece($textPiece);
+
+            case $textPiece instanceof OriginalTextPiece:
+                return $this->formatOriginalTextPiece($textPiece);
+
+            case $textPiece instanceof TextBreakTextPiece:
+                return $this->formatTextBreakTextPiece($textPiece);
+
+            case $textPiece instanceof SuperscriptedTextPiece:
+                return $this->formatSuperscriptedTextPiece($textPiece);
+
+            default:
+                $message = sprintf('Unknown text piece type "%s".', TypeHelper::getTypeName($textPiece));
+                throw new InvalidArgumentException($message);
+        }
+    }
+
+    private function formatCommentTextPiece(CommentTextPiece $textPiece): string
+    {
+        return '<span class="eomr-text-piece-comment">'.$textPiece->getText().'</span>';
+    }
+
+    private function formatOriginalTextPiece(OriginalTextPiece $textPiece): string
+    {
+        return '<span class="eomr-text-piece-original">'.$textPiece->getText().'</span>';
+    }
+
+    private function formatTextBreakTextPiece(TextPieceInterface $textPiece): string
+    {
+        return '<span class="eomr-text-piece-text-break">'.$textPiece->getText().'</span>';
+    }
+
+    private function formatSuperscriptedTextPiece(SuperscriptedTextPiece $textPiece)
+    {
+        return '<span class="eomr-text-piece-superscripted">'.$textPiece->getText().'</span>';
     }
 }
