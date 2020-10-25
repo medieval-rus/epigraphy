@@ -89,7 +89,7 @@ controller:
             preservationState: Состояние сохранности
             alphabet: Алфавит
             text: Текст
-            textImageFileNames: Изображениеz текста
+            textImageFileNames: Изображения текста
             transliteration: Транслитерация
             translation: Перевод
             photoFileNames: Фотографи
