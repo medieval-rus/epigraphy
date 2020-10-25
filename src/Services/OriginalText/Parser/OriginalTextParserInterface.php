@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\Services\OriginalText\Parser;
 
-use App\Models\OriginalText\OriginalText;
+use App\Services\OriginalText\Parser\Models\OriginalText;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>

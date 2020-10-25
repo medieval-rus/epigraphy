@@ -1,3 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
 /*
  * This file is part of «Epigraphy of Medieval Rus'» database.
  *
@@ -19,29 +23,28 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-@import '../fonts/monomachus';
+namespace App\Helper;
 
-.eomr-text-wrapper {
+/**
+ * @author Anton Dyshkant <vyshkant@gmail.com>
+ */
+abstract class ArrayHelper
+{
+    public static function group(array $array, callable $keyExtractor): array
+    {
+        $grouped = [];
 
-  .eomr-text-piece-comment {
-    font-family: monospace;
-  }
+        foreach ($array as $item) {
+            $grouped[$keyExtractor($item)][] = $item;
+        }
 
-  .eomr-text-piece-original {
-    font-family: 'Monomachus';
-  }
+        return $grouped;
+    }
 
-  .eomr-text-piece-superscripted {
-    @extend .eomr-text-piece-original;
-    font-size: 75%;
-    display: inline-block;
-    top: -.75em;
-    position: relative;
-    line-height: 0;
-    vertical-align: baseline;
-  }
-
-  .eomr-text-piece-text-break {
-    font-family: monospace;
-  }
+    public static function mapKeys(array $array, callable $projection): iterable
+    {
+        foreach ($array as $key => $value) {
+            yield $projection($key) => $value;
+        }
+    }
 }

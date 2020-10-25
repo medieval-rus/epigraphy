@@ -17,6 +17,7 @@
         "php": "^7.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-json": "*",
         "easycorp/easyadmin-bundle": "^2.3",
         "knplabs/knp-menu-bundle": "^2.3",
         "phpoffice/phpspreadsheet": "^1.14",

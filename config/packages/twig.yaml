@@ -24,3 +24,4 @@ twig:
   exception_controller: null
   globals:
     valueStringifier: '@App\Services\Value\ValueStringifierInterface'
+    imagesFormatter: '@App\Services\Images\ImagesFormatterInterface'
