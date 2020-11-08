@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\FilterableTable;
 
-use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
+use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\Value\ValueStringifierInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\FilterConfiguratorInterface;

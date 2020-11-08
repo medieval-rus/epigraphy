@@ -17,14 +17,11 @@
 # «Epigraphy of Medieval Rus'» database,
 # see <http://www.gnu.org/licenses/>.
 
-vyfony_filterable_table:
-  table_configurator: App\FilterableTable\InscriptionsTableConfigurator
-  filter_configurator: App\FilterableTable\InscriptionsFilterConfigurator
-  entity_class: App\Persistence\Entity\Epigraphy\Inscription
-  default_sort_by: id
-  default_sort_order: asc
-  list_route: inscription__list
-  show_route: inscription__show
-  show_route_parameters: {id: id}
-  page_size: 200
-  paginator_tail_length: 3
+admin_area:
+  resource: "@SonataAdminBundle/Resources/config/routing/sonata_admin.xml"
+  prefix: /admin2
+
+_sonata_admin:
+  resource: .
+  type: sonata_admin
+  prefix: /admin2

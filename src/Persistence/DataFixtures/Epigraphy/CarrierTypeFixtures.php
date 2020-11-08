@@ -23,18 +23,37 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\ActualValue\Extractor;
+namespace App\Persistence\DataFixtures\Epigraphy;
 
-use App\Models\ActualValue;
-use App\Persistence\Entity\Epigraphy\Inscription;
+use App\Persistence\Entity\Epigraphy\CarrierType;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-interface ActualValueExtractorInterface
+final class CarrierTypeFixtures extends Fixture
 {
-    /**
-     * @return ActualValue[]
-     */
-    public function extract(Inscription $inscription, string $propertyName): array;
+    public const PREDMETY_SVETSKOGO_NAZNACHENIYA = 'предметы светского назначения';
+
+    public function load(ObjectManager $manager): void
+    {
+        $this->loadObject($manager, 'предметы светского назначения', self::PREDMETY_SVETSKOGO_NAZNACHENIYA);
+
+        $manager->flush();
+    }
+
+    private function loadObject(
+        ObjectManager $manager,
+        string $name,
+        string $reference
+    ): void {
+        $carrierType = (new CarrierType())
+            ->setName($name)
+        ;
+
+        $this->addReference($reference, $carrierType);
+
+        $manager->persist($carrierType);
+    }
 }

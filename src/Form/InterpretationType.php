@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Persistence\Entity\Epigraphy\Inscription\Interpretation;
+use App\Persistence\Entity\Epigraphy\Interpretation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;

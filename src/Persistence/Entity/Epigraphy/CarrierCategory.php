@@ -23,18 +23,52 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\ActualValue\Extractor;
+namespace App\Persistence\Entity\Epigraphy;
 
-use App\Models\ActualValue;
-use App\Persistence\Entity\Epigraphy\Inscription;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\CarrierCategoryRepository")
  */
-interface ActualValueExtractorInterface
+class CarrierCategory implements NamedEntityInterface
 {
     /**
-     * @return ActualValue[]
+     * @var int
+     *
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
-    public function extract(Inscription $inscription, string $propertyName): array;
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    private $name;
+
+    public function __toString(): string
+    {
+        return (string) $this->getName();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
 }

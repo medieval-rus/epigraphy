@@ -77,7 +77,7 @@ easy_admin:
     actions: [-delete]
   entities:
     Inscription:
-      class: App\Persistence\Entity\Epigraphy\Inscription\Inscription
+      class: App\Persistence\Entity\Epigraphy\Inscription
       label: entity.inscription
       list:
         fields:

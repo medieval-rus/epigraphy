@@ -23,18 +23,33 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\ActualValue\Extractor;
+namespace App\Persistence\Repository\Epigraphy;
 
-use App\Models\ActualValue;
 use App\Persistence\Entity\Epigraphy\Inscription;
+use App\Persistence\Entity\Epigraphy\Interpretation;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method Interpretation|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method Interpretation|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Interpretation[]    findAll()
+ * @method Interpretation[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
-interface ActualValueExtractorInterface
+final class InterpretationRepository extends ServiceEntityRepository
 {
-    /**
-     * @return ActualValue[]
-     */
-    public function extract(Inscription $inscription, string $propertyName): array;
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Interpretation::class);
+    }
+
+    public function findOneBySource(Inscription $inscription, string $referenceSource): ?Interpretation
+    {
+        return $this->findOneBy([
+            'inscription' => $inscription,
+            'source' => $referenceSource,
+        ]);
+    }
 }

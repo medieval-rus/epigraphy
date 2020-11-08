@@ -31,7 +31,7 @@ use App\FilterableTable\Filter\Parameter\CarrierTypeFilterParameter;
 use App\FilterableTable\Filter\Parameter\PreservationStateFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingTypeFilterParameter;
-use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
+use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
 use App\Services\Value\ValueStringifierInterface;
 use InvalidArgumentException;

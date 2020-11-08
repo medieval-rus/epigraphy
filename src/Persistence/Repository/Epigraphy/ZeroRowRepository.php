@@ -23,18 +23,24 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\ActualValue\Extractor;
+namespace App\Persistence\Repository\Epigraphy;
 
-use App\Models\ActualValue;
-use App\Persistence\Entity\Epigraphy\Inscription;
+use App\Persistence\Entity\Epigraphy\ZeroRow;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method ZeroRow|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method ZeroRow|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ZeroRow[]    findAll()
+ * @method ZeroRow[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
-interface ActualValueExtractorInterface
+class ZeroRowRepository extends ServiceEntityRepository
 {
-    /**
-     * @return ActualValue[]
-     */
-    public function extract(Inscription $inscription, string $propertyName): array;
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, ZeroRow::class);
+    }
 }

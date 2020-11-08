@@ -23,18 +23,13 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\ActualValue\Extractor;
+namespace App\Admin;
 
-use App\Models\ActualValue;
-use App\Persistence\Entity\Epigraphy\Inscription;
+use App\Admin\Abstraction\AbstractNamedEntityAdmin;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-interface ActualValueExtractorInterface
+final class AlphabetAdmin extends AbstractNamedEntityAdmin
 {
-    /**
-     * @return ActualValue[]
-     */
-    public function extract(Inscription $inscription, string $propertyName): array;
 }

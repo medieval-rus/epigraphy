@@ -23,18 +23,24 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\ActualValue\Extractor;
+namespace App\Persistence\Repository\Epigraphy;
 
-use App\Models\ActualValue;
 use App\Persistence\Entity\Epigraphy\Inscription;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method Inscription|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method Inscription|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Inscription[]    findAll()
+ * @method Inscription[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
-interface ActualValueExtractorInterface
+final class InscriptionRepository extends ServiceEntityRepository
 {
-    /**
-     * @return ActualValue[]
-     */
-    public function extract(Inscription $inscription, string $propertyName): array;
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Inscription::class);
+    }
 }
