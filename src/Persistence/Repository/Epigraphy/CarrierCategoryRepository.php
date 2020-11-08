@@ -23,18 +23,31 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\ActualValue\Extractor;
+namespace App\Persistence\Repository\Epigraphy;
 
-use App\Models\ActualValue;
-use App\Persistence\Entity\Epigraphy\Inscription;
+use App\Persistence\Entity\Epigraphy\CarrierCategory;
+use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method CarrierCategory|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method CarrierCategory|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CarrierCategory[]    findAll()
+ * @method CarrierCategory[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
+ * @method CarrierCategory|null findOneByName(string $name)
+ * @method CarrierCategory      findOneByNameOrCreate(string $name)
  */
-interface ActualValueExtractorInterface
+final class CarrierCategoryRepository extends NamedEntityRepository
 {
-    /**
-     * @return ActualValue[]
-     */
-    public function extract(Inscription $inscription, string $propertyName): array;
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, CarrierCategory::class);
+    }
+
+    protected function createEmpty(): NamedEntityInterface
+    {
+        return new CarrierCategory();
+    }
 }

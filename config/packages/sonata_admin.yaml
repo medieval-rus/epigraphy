@@ -1,0 +1,88 @@
+# This file is part of «Epigraphy of Medieval Rus'» database.
+#
+# Copyright (c) National Research University Higher School of Economics
+#
+# «Epigraphy of Medieval Rus'» database is free software:
+# you can redistribute it and/or modify it under the terms of the
+# GNU General Public License as published by the Free Software Foundation, version 3.
+#
+# «Epigraphy of Medieval Rus'» database is distributed
+# in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code. If you have not received
+# a copy of the GNU General Public License along with
+# «Epigraphy of Medieval Rus'» database,
+# see <http://www.gnu.org/licenses/>.
+
+sonata_admin:
+  title: Epigraphy of Medieval Rus'
+  dashboard:
+    blocks:
+      - { type: sonata.admin.block.admin_list, position: left }
+  options:
+    legacy_twig_text_extension: false
+
+sonata_block:
+  blocks:
+    sonata.admin.block.admin_list:
+      contexts: [admin2]
+
+services:
+  admin.carrier:
+    class: App\Admin\CarrierAdmin
+    arguments: [ null, App\Persistence\Entity\Epigraphy\Carrier, null ]
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.inscriptions.label, label_catalogue: admin2 }
+  admin.carrier_type:
+    class: App\Admin\CarrierTypeAdmin
+    arguments: [ null, App\Persistence\Entity\Epigraphy\CarrierType, null ]
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+  admin.carrier_category:
+    class: App\Admin\CarrierCategoryAdmin
+    arguments: [ null, App\Persistence\Entity\Epigraphy\CarrierCategory, null ]
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+  admin.alphabet:
+    class: App\Admin\AlphabetAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\Alphabet, null]
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+  admin.content_category:
+    class: App\Admin\ContentCategoryAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\ContentCategory, null]
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+  admin.material:
+    class: App\Admin\MaterialAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\Material, null]
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+  admin.preservation_state:
+    class: App\Admin\PreservationStateAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\PreservationState, null]
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+  admin.writing_type:
+    class: App\Admin\WritingTypeAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\WritingType, null]
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+  admin.writing_method:
+    class: App\Admin\WritingMethodAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\WritingMethod, null]
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+  admin.inscription:
+    class: App\Admin\InscriptionAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\Inscription, null]
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.inscriptions.label, label_catalogue: admin2 }
+  admin.interpretation:
+    class: App\Admin\InterpretationAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\Interpretation, null]
+    tags:
+      - { name: sonata.admin, manager_type: orm, show_in_dashboard: false }

@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace App\FilterableTable\Filter\Parameter;
 
-use App\Persistence\Entity\Epigraphy\Carrier\Category\CarrierCategory;
-use App\Persistence\Repository\Epigraphy\Carrier\Category\CarrierCategoryRepository;
+use App\Persistence\Entity\Epigraphy\CarrierCategory;
+use App\Persistence\Repository\Epigraphy\CarrierCategoryRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

@@ -23,18 +23,24 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\ActualValue\Extractor;
+namespace App\Persistence\Repository\Epigraphy;
 
-use App\Models\ActualValue;
-use App\Persistence\Entity\Epigraphy\Inscription;
+use App\Persistence\Entity\Epigraphy\Carrier;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method Carrier|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method Carrier|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Carrier[]    findAll()
+ * @method Carrier[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
-interface ActualValueExtractorInterface
+final class CarrierRepository extends ServiceEntityRepository
 {
-    /**
-     * @return ActualValue[]
-     */
-    public function extract(Inscription $inscription, string $propertyName): array;
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Carrier::class);
+    }
 }

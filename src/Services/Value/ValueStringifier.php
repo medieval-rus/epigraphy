@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace App\Services\Value;
 
 use App\Models\ActualValue;
-use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
+use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\ActualValue\Extractor\ActualValueExtractorInterface;
 use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
 

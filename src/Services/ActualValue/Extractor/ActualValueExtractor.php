@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace App\Services\ActualValue\Extractor;
 
 use App\Models\ActualValue;
-use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
-use App\Persistence\Entity\Epigraphy\Inscription\Interpretation;
+use App\Persistence\Entity\Epigraphy\Inscription;
+use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;

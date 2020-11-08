@@ -82,6 +82,8 @@ controller:
             storagePlace: Место хранения
             inventoryNumber: Инвентарный номер
             isInSitu: In situ
+            findCircumstances: todo
+            characteristics: todo
           zeroRow:
             placeOnCarrier: Расположение на носителе
             writingType: Разряд (по Франклину)

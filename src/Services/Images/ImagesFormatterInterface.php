@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\Services\Images;
 
-use App\Persistence\Entity\Epigraphy\Inscription\Inscription;
+use App\Persistence\Entity\Epigraphy\Inscription;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
