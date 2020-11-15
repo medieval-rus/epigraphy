@@ -25,21 +25,21 @@ declare(strict_types=1);
 
 namespace App\Services\OriginalText\Parser\Rules;
 
-use App\Services\OriginalText\Parser\Models\TextPiece\TextBreakTextPiece;
+use App\Services\OriginalText\Parser\Models\TextPiece\LigatureTextPiece;
 use App\Services\OriginalText\Parser\Models\TextPiece\TextPieceInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-final class TextBreakRuleDefinition implements RuleDefinitionInterface
+final class LigatureRuleDefinition implements RuleDefinitionInterface
 {
     public function createTextPiece(string $text): TextPieceInterface
     {
-        return new TextBreakTextPiece(sprintf('|%s|', $text));
+        return new LigatureTextPiece($text);
     }
 
     public function getRegex(): string
     {
-        return '/\|(im.|vac.|br.)\|/us';
+        return '/\*([^ \*]{2,})\*/us';
     }
 }
