@@ -39,6 +39,7 @@ use App\Persistence\Repository\Epigraphy\ContentCategoryRepository;
 use App\Persistence\Repository\Epigraphy\InscriptionRepository;
 use App\Persistence\Repository\Epigraphy\InterpretationRepository;
 use App\Persistence\Repository\Epigraphy\MaterialRepository;
+use App\Persistence\Repository\Epigraphy\NamedEntityRepository;
 use App\Persistence\Repository\Epigraphy\PreservationStateRepository;
 use App\Persistence\Repository\Epigraphy\WritingMethodRepository;
 use App\Persistence\Repository\Epigraphy\WritingTypeRepository;
@@ -63,7 +64,7 @@ final class InscriptionPortationTarget implements PortationTargetInterface
 
     private const NEW_INTERPRETATION_ROW_KEY = '++';
 
-    private const MATERIAL_SEPARATOR = ', ';
+    private const MANY_TO_MANY_SEPARATOR = ', ';
 
     /**
      * @var EntityManagerInterface
@@ -190,8 +191,18 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                 return [
                     'id' => (string) $entity->getId(),
                     'inscription.conventionalDate' => $entity->getConventionalDate(),
-                    'inscription.carrier.type' => $formatNamedEntity($carrier->getType()),
-                    'inscription.carrier.category' => $formatNamedEntity($carrier->getCategory()),
+                    'inscription.carrier.types' => StringHelper::nullIfEmpty(
+                        implode(
+                            self::MANY_TO_MANY_SEPARATOR,
+                            $carrier->getTypes()->map($formatNamedEntity)->toArray()
+                        )
+                    ),
+                    'inscription.carrier.categories' => StringHelper::nullIfEmpty(
+                        implode(
+                            self::MANY_TO_MANY_SEPARATOR,
+                            $carrier->getCategories()->map($formatNamedEntity)->toArray()
+                        )
+                    ),
                     'inscription.carrier.origin1' => $carrier->getOrigin1(),
                     'inscription.carrier.origin2' => $carrier->getOrigin2(),
                     'inscription.carrier.findCircumstances' => $carrier->getFindCircumstances(),
@@ -216,30 +227,50 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                         $entity->getPlaceOnCarrier(),
                         $entity->getPlaceOnCarrierReferences()
                     ),
-                    'interpretation.writingType' => $combineValueWithReferences(
-                        $formatNamedEntity($entity->getWritingType()),
-                        $entity->getWritingTypeReferences()
+                    'interpretation.writingTypes' => $combineValueWithReferences(
+                        StringHelper::nullIfEmpty(
+                            implode(
+                                self::MANY_TO_MANY_SEPARATOR,
+                                $entity->getWritingTypes()->map($formatNamedEntity)->toArray()
+                            )
+                        ),
+                        $entity->getWritingTypesReferences()
                     ),
-                    'interpretation.writingMethod' => $combineValueWithReferences(
-                        $formatNamedEntity($entity->getWritingMethod()),
-                        $entity->getWritingMethodReferences()
+                    'interpretation.writingMethods' => $combineValueWithReferences(
+                        StringHelper::nullIfEmpty(
+                            implode(
+                                self::MANY_TO_MANY_SEPARATOR,
+                                $entity->getWritingMethods()->map($formatNamedEntity)->toArray()
+                            )
+                        ),
+                        $entity->getWritingMethodsReferences()
                     ),
                     'interpretation.preservationState' => $combineValueWithReferences(
-                        $formatNamedEntity($entity->getPreservationState()),
-                        $entity->getPreservationStateReferences()
+                        StringHelper::nullIfEmpty(
+                            implode(
+                                self::MANY_TO_MANY_SEPARATOR,
+                                $entity->getPreservationStates()->map($formatNamedEntity)->toArray()
+                            )
+                        ),
+                        $entity->getPreservationStatesReferences()
                     ),
                     'interpretation.materials' => $combineValueWithReferences(
                         StringHelper::nullIfEmpty(
                             implode(
-                                self::MATERIAL_SEPARATOR,
+                                self::MANY_TO_MANY_SEPARATOR,
                                 $entity->getMaterials()->map($formatNamedEntity)->toArray()
                             )
                         ),
                         $entity->getMaterialsReferences()
                     ),
-                    'interpretation.alphabet' => $combineValueWithReferences(
-                        $formatNamedEntity($entity->getAlphabet()),
-                        $entity->getAlphabetReferences()
+                    'interpretation.alphabets' => $combineValueWithReferences(
+                        StringHelper::nullIfEmpty(
+                            implode(
+                                self::MANY_TO_MANY_SEPARATOR,
+                                $entity->getAlphabets()->map($formatNamedEntity)->toArray()
+                            )
+                        ),
+                        $entity->getAlphabetsReferences()
                     ),
                     'interpretation.text' => $combineValueWithReferences(
                         $entity->getText(),
@@ -257,9 +288,14 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                         $entity->getTranslation(),
                         $entity->getTranslationReferences()
                     ),
-                    'interpretation.contentCategory' => $combineValueWithReferences(
-                        $formatNamedEntity($entity->getContentCategory()),
-                        $entity->getContentCategoryReferences()
+                    'interpretation.contentCategories' => $combineValueWithReferences(
+                        StringHelper::nullIfEmpty(
+                            implode(
+                                self::MANY_TO_MANY_SEPARATOR,
+                                $entity->getContentCategories()->map($formatNamedEntity)->toArray()
+                            )
+                        ),
+                        $entity->getContentCategoriesReferences()
                     ),
                     'interpretation.content' => $combineValueWithReferences(
                         $entity->getContent(),
@@ -302,19 +338,34 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                     'interpretation.pageNumbersInSource' => $entity->getPageNumbersInSource(),
                     'interpretation.numberInSource' => $entity->getNumberInSource(),
                     'interpretation.placeOnCarrier' => $entity->getPlaceOnCarrier(),
-                    'interpretation.writingType' => $formatNamedEntity($entity->getWritingType()),
-                    'interpretation.writingMethod' => $formatNamedEntity($entity->getWritingMethod()),
-                    'interpretation.preservationState' => $formatNamedEntity($entity->getPreservationState()),
+                    'interpretation.writingTypes' => implode(
+                        self::MANY_TO_MANY_SEPARATOR,
+                        $entity->getWritingTypes()->map($formatNamedEntity)->toArray()
+                    ),
+                    'interpretation.writingMethods' => implode(
+                        self::MANY_TO_MANY_SEPARATOR,
+                        $entity->getWritingMethods()->map($formatNamedEntity)->toArray()
+                    ),
+                    'interpretation.preservationStates' => implode(
+                        self::MANY_TO_MANY_SEPARATOR,
+                        $entity->getPreservationStates()->map($formatNamedEntity)->toArray()
+                    ),
                     'interpretation.materials' => implode(
-                        self::MATERIAL_SEPARATOR,
+                        self::MANY_TO_MANY_SEPARATOR,
                         $entity->getMaterials()->map($formatNamedEntity)->toArray()
                     ),
-                    'interpretation.alphabet' => $formatNamedEntity($entity->getAlphabet()),
+                    'interpretation.alphabets' => implode(
+                        self::MANY_TO_MANY_SEPARATOR,
+                        $entity->getAlphabets()->map($formatNamedEntity)->toArray()
+                    ),
                     'interpretation.text' => $entity->getText(),
                     'interpretation.textImageFileNames' => $entity->getTextImageFileNames(),
                     'interpretation.transliteration' => $entity->getTransliteration(),
                     'interpretation.translation' => $entity->getTranslation(),
-                    'interpretation.contentCategory' => $formatNamedEntity($entity->getContentCategory()),
+                    'interpretation.contentCategories' => implode(
+                        self::MANY_TO_MANY_SEPARATOR,
+                        $entity->getContentCategories()->map($formatNamedEntity)->toArray()
+                    ),
                     'interpretation.content' => $entity->getContent(),
                     'interpretation.dateInText' => $entity->getDateInText(),
                     'interpretation.stratigraphicalDate' => $entity->getStratigraphicalDate(),
@@ -354,19 +405,19 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                     ): void {
                         $inscription->setConventionalDate($formattedConventionalDate);
                     },
-                    'inscription.carrier.type' => function (
+                    'inscription.carrier.types' => function (
                         Inscription $inscription,
                         string $formattedCarrierType
                     ) use ($getOrCreateCarrier): void {
-                        $getOrCreateCarrier($inscription)->setType(
+                        $getOrCreateCarrier($inscription)->setTypes(
                             $this->carrierTypeRepository->findOneByNameOrCreate($formattedCarrierType)
                         );
                     },
-                    'inscription.carrier.category' => function (
+                    'inscription.carrier.categories' => function (
                         Inscription $inscription,
                         string $formattedCarrierCategory
                     ) use ($getOrCreateCarrier): void {
-                        $getOrCreateCarrier($inscription)->setCategory(
+                        $getOrCreateCarrier($inscription)->setCategories(
                             $this->carrierCategoryRepository->findOneByNameOrCreate($formattedCarrierCategory)
                         );
                     },
@@ -465,78 +516,59 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                             StringHelper::nullIfEmpty($formattedPlaceOnCarrier)
                         );
                     },
-                    'interpretation.writingType' => function (
+                    'interpretation.writingTypes' => function (
                         ZeroRow $zeroRow,
-                        string $formattedWritingType
+                        string $formattedWritingTypes
                     ): void {
-                        $writingTypeName = StringHelper::nullIfEmpty($formattedWritingType);
-
-                        $zeroRow->setWritingType(
-                            null === $writingTypeName
-                                ? null
-                                : $this->writingTypeRepository->findOneByNameOrCreate($writingTypeName)
+                        $zeroRow->setWritingTypes(
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->writingTypeRepository,
+                                $formattedWritingTypes
+                            )
                         );
                     },
-                    'interpretation.writingMethod' => function (
+                    'interpretation.writingMethods' => function (
                         ZeroRow $zeroRow,
-                        string $formattedWritingMethod
+                        string $formattedWritingMethods
                     ): void {
-                        $writingMethodName = StringHelper::nullIfEmpty($formattedWritingMethod);
-
-                        $zeroRow->setWritingMethod(
-                            null === $writingMethodName
-                                ? null
-                                : $this->writingMethodRepository->findOneByNameOrCreate($writingMethodName)
+                        $zeroRow->setWritingMethods(
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->writingMethodRepository,
+                                $formattedWritingMethods
+                            )
                         );
                     },
                     'interpretation.preservationState' => function (
                         ZeroRow $zeroRow,
-                        string $formattedPreservationState
+                        string $formattedPreservationStates
                     ): void {
-                        $preservationStateName = StringHelper::nullIfEmpty($formattedPreservationState);
-
-                        $zeroRow->setPreservationState(
-                            null === $preservationStateName
-                                ? null
-                                : $this->preservationStateRepository->findOneByNameOrCreate($preservationStateName)
+                        $zeroRow->setPreservationStates(
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->preservationStateRepository,
+                                $formattedPreservationStates
+                            )
                         );
                     },
                     'interpretation.materials' => function (
                         ZeroRow $zeroRow,
                         string $formattedMaterials
                     ): void {
-                        $splitResult = preg_split('/('.self::MATERIAL_SEPARATOR.')+(?![^\[]*\])/', $formattedMaterials);
-
-                        if (false === $splitResult) {
-                            throw new InvalidArgumentException('Splitting by reference pattern error');
-                        }
-
-                        $formattedMaterialsArray = array_filter(
-                            $splitResult,
-                            function (string $formattedMaterial): bool {
-                                return '' !== $formattedMaterial;
-                            }
-                        );
-
                         $zeroRow->setMaterials(
-                            new ArrayCollection(
-                                array_map(
-                                    [$this->materialRepository, 'findOneByNameOrCreate'],
-                                    $formattedMaterialsArray
-                                )
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->materialRepository,
+                                $formattedMaterials
                             )
                         );
                     },
-                    'interpretation.alphabet' => function (
+                    'interpretation.alphabets' => function (
                         ZeroRow $zeroRow,
-                        string $formattedAlphabet
+                        string $formattedAlphabets
                     ): void {
-                        $alphabetName = StringHelper::nullIfEmpty($formattedAlphabet);
-
-                        $zeroRow->setAlphabet(
-                            null === $alphabetName
-                                ? null
-                                : $this->alphabetRepository->findOneByNameOrCreate($alphabetName)
+                        $zeroRow->setAlphabets(
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->alphabetRepository,
+                                $formattedAlphabets
+                            )
                         );
                     },
                     'interpretation.text' => function (
@@ -571,12 +603,15 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                             StringHelper::nullIfEmpty($formattedTranslation)
                         );
                     },
-                    'interpretation.contentCategory' => function (
+                    'interpretation.contentCategories' => function (
                         ZeroRow $zeroRow,
-                        string $formattedContentCategory
+                        string $formattedContentCategories
                     ): void {
-                        $zeroRow->setContentCategory(
-                            $this->contentCategoryRepository->findOneByNameOrCreate($formattedContentCategory)
+                        $zeroRow->setContentCategories(
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->contentCategoryRepository,
+                                $formattedContentCategories
+                            )
                         );
                     },
                     'interpretation.content' => function (
@@ -676,72 +711,59 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                             StringHelper::nullIfEmpty($formattedPlaceOnCarrier)
                         );
                     },
-                    'interpretation.writingType' => function (
+                    'interpretation.writingTypes' => function (
                         Interpretation $interpretation,
-                        string $formattedWritingType
+                        string $formattedWritingTypes
                     ): void {
-                        $writingTypeName = StringHelper::nullIfEmpty($formattedWritingType);
-
-                        $interpretation->setWritingType(
-                            null === $writingTypeName
-                                ? null
-                                : $this->writingTypeRepository->findOneByNameOrCreate($writingTypeName)
+                        $interpretation->setWritingTypes(
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->writingTypeRepository,
+                                $formattedWritingTypes
+                            )
                         );
                     },
-                    'interpretation.writingMethod' => function (
+                    'interpretation.writingMethods' => function (
                         Interpretation $interpretation,
-                        string $formattedWritingMethod
+                        string $formattedWritingMethods
                     ): void {
-                        $writingMethodName = StringHelper::nullIfEmpty($formattedWritingMethod);
-
-                        $interpretation->setWritingMethod(
-                            null === $writingMethodName
-                                ? null
-                                : $this->writingMethodRepository->findOneByNameOrCreate($writingMethodName)
+                        $interpretation->setWritingMethods(
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->writingMethodRepository,
+                                $formattedWritingMethods
+                            )
                         );
                     },
-                    'interpretation.preservationState' => function (
+                    'interpretation.preservationStates' => function (
                         Interpretation $interpretation,
-                        string $formattedPreservationState
+                        string $formattedPreservationStates
                     ): void {
-                        $preservationStateName = StringHelper::nullIfEmpty($formattedPreservationState);
-
-                        $interpretation->setPreservationState(
-                            null === $preservationStateName
-                                ? null
-                                : $this->preservationStateRepository->findOneByNameOrCreate($preservationStateName)
+                        $interpretation->setPreservationStates(
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->preservationStateRepository,
+                                $formattedPreservationStates
+                            )
                         );
                     },
                     'interpretation.materials' => function (
                         Interpretation $interpretation,
                         string $formattedMaterials
                     ): void {
-                        $formattedMaterialsArray = array_filter(
-                            explode(self::MATERIAL_SEPARATOR, $formattedMaterials),
-                            function (string $formattedMaterial): bool {
-                                return '' !== $formattedMaterial;
-                            }
-                        );
-
                         $interpretation->setMaterials(
-                            new ArrayCollection(
-                                array_map(
-                                    [$this->materialRepository, 'findOneByNameOrCreate'],
-                                    $formattedMaterialsArray
-                                )
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->materialRepository,
+                                $formattedMaterials
                             )
                         );
                     },
-                    'interpretation.alphabet' => function (
+                    'interpretation.alphabets' => function (
                         Interpretation $interpretation,
-                        string $formattedAlphabet
+                        string $formattedAlphabets
                     ): void {
-                        $alphabetName = StringHelper::nullIfEmpty($formattedAlphabet);
-
-                        $interpretation->setAlphabet(
-                            null === $alphabetName
-                                ? null
-                                : $this->alphabetRepository->findOneByNameOrCreate($alphabetName)
+                        $interpretation->setAlphabets(
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->alphabetRepository,
+                                $formattedAlphabets
+                            )
                         );
                     },
                     'interpretation.text' => function (
@@ -776,16 +798,15 @@ final class InscriptionPortationTarget implements PortationTargetInterface
                             StringHelper::nullIfEmpty($formattedTranslation)
                         );
                     },
-                    'interpretation.contentCategory' => function (
+                    'interpretation.contentCategories' => function (
                         Interpretation $interpretation,
-                        string $formattedContentCategory
+                        string $formattedContentCategories
                     ): void {
-                        $contentCategoryName = StringHelper::nullIfEmpty($formattedContentCategory);
-
-                        $interpretation->setContentCategory(
-                            null === $contentCategoryName
-                                ? null
-                                : $this->contentCategoryRepository->findOneByNameOrCreate($contentCategoryName)
+                        $interpretation->setContentCategories(
+                            $this->parseAsCollectionOfNamedEntities(
+                                $this->contentCategoryRepository,
+                                $formattedContentCategories
+                            )
                         );
                     },
                     'interpretation.content' => function (
@@ -942,8 +963,8 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         return [
             'id',
             'inscription.conventionalDate',
-            'inscription.carrier.type',
-            'inscription.carrier.category',
+            'inscription.carrier.types',
+            'inscription.carrier.categories',
             'inscription.carrier.origin1',
             'inscription.carrier.origin2',
             'inscription.carrier.findCircumstances',
@@ -957,16 +978,16 @@ final class InscriptionPortationTarget implements PortationTargetInterface
             'interpretation.pageNumbersInSource',
             'interpretation.numberInSource',
             'interpretation.placeOnCarrier',
-            'interpretation.writingType',
-            'interpretation.writingMethod',
-            'interpretation.preservationState',
+            'interpretation.writingTypes',
+            'interpretation.writingMethods',
+            'interpretation.preservationStates',
             'interpretation.materials',
-            'interpretation.alphabet',
+            'interpretation.alphabets',
             'interpretation.text',
             'interpretation.textImageFileNames',
             'interpretation.transliteration',
             'interpretation.translation',
-            'interpretation.contentCategory',
+            'interpretation.contentCategories',
             'interpretation.content',
             'interpretation.dateInText',
             'interpretation.stratigraphicalDate',
@@ -1005,8 +1026,6 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         $carrier = $inscription->getCarrier();
 
         $existingCarrier = $this->carrierRepository->findOneBy([
-            'type' => $carrier->getType(),
-            'category' => $carrier->getCategory(),
             'origin1' => $carrier->getOrigin1(),
             'origin2' => $carrier->getOrigin2(),
             'findCircumstances' => $carrier->getFindCircumstances(),
@@ -1027,78 +1046,86 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getPlaceOnCarrier(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setPlaceOnCarrier(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getPlaceOnCarrierReferences()->add($reference);
             }
         );
 
-        $this->tryUseNamedEntityAsReference(
-            $inscription,
-            $zeroRow->getWritingType(),
-            function () use ($zeroRow): void {
-                $zeroRow->setWritingType(null);
-            },
-            function (Interpretation $reference) use ($zeroRow): void {
-                $zeroRow->getWritingTypeReferences()->add($reference);
-            }
-        );
+        foreach ($zeroRow->getWritingTypes() as $key => $writingType) {
+            $this->tryUseNamedEntityAsReference(
+                $inscription,
+                $writingType,
+                static function () use ($zeroRow, $key): void {
+                    $zeroRow->getWritingTypes()->remove($key);
+                },
+                static function (Interpretation $reference) use ($zeroRow): void {
+                    $zeroRow->getWritingTypes()->add($reference);
+                }
+            );
+        }
 
-        $this->tryUseNamedEntityAsReference(
-            $inscription,
-            $zeroRow->getWritingMethod(),
-            function () use ($zeroRow): void {
-                $zeroRow->setWritingMethod(null);
-            },
-            function (Interpretation $reference) use ($zeroRow): void {
-                $zeroRow->getWritingMethodReferences()->add($reference);
-            }
-        );
+        foreach ($zeroRow->getWritingMethods() as $key => $writingMethod) {
+            $this->tryUseNamedEntityAsReference(
+                $inscription,
+                $writingMethod,
+                static function () use ($zeroRow, $key): void {
+                    $zeroRow->getWritingMethods()->remove($key);
+                },
+                static function (Interpretation $reference) use ($zeroRow): void {
+                    $zeroRow->getWritingMethods()->add($reference);
+                }
+            );
+        }
 
-        $this->tryUseNamedEntityAsReference(
-            $inscription,
-            $zeroRow->getPreservationState(),
-            function () use ($zeroRow): void {
-                $zeroRow->setPreservationState(null);
-            },
-            function (Interpretation $reference) use ($zeroRow): void {
-                $zeroRow->getPreservationStateReferences()->add($reference);
-            }
-        );
+        foreach ($zeroRow->getPreservationStates() as $key => $preservationState) {
+            $this->tryUseNamedEntityAsReference(
+                $inscription,
+                $preservationState,
+                static function () use ($zeroRow, $key): void {
+                    $zeroRow->getPreservationStates()->remove($key);
+                },
+                static function (Interpretation $reference) use ($zeroRow): void {
+                    $zeroRow->getPreservationStatesReferences()->add($reference);
+                }
+            );
+        }
 
         foreach ($zeroRow->getMaterials() as $key => $material) {
             $this->tryUseNamedEntityAsReference(
                 $inscription,
                 $material,
-                function () use ($zeroRow, $key): void {
+                static function () use ($zeroRow, $key): void {
                     $zeroRow->getMaterials()->remove($key);
                 },
-                function (Interpretation $reference) use ($zeroRow): void {
+                static function (Interpretation $reference) use ($zeroRow): void {
                     $zeroRow->getMaterialsReferences()->add($reference);
                 }
             );
         }
 
-        $this->tryUseNamedEntityAsReference(
-            $inscription,
-            $zeroRow->getAlphabet(),
-            function () use ($zeroRow): void {
-                $zeroRow->setAlphabet(null);
-            },
-            function (Interpretation $reference) use ($zeroRow): void {
-                $zeroRow->getAlphabetReferences()->add($reference);
-            }
-        );
+        foreach ($zeroRow->getAlphabets() as $key => $alphabet) {
+            $this->tryUseNamedEntityAsReference(
+                $inscription,
+                $alphabet,
+                static function () use ($zeroRow, $key): void {
+                    $zeroRow->getAlphabets()->remove($key);
+                },
+                static function (Interpretation $reference) use ($zeroRow): void {
+                    $zeroRow->getAlphabets()->add($reference);
+                }
+            );
+        }
 
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getText(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setText(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getTextReferences()->add($reference);
             }
         );
@@ -1106,10 +1133,10 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getTextImageFileNames(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setTextImageFileNames(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getTextImageFileNamesReferences()->add($reference);
             }
         );
@@ -1117,10 +1144,10 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getTransliteration(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setTransliteration(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getTransliterationReferences()->add($reference);
             }
         );
@@ -1128,32 +1155,34 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getTranslation(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setTranslation(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getTranslationReferences()->add($reference);
             }
         );
 
-        $this->tryUseNamedEntityAsReference(
-            $inscription,
-            $zeroRow->getContentCategory(),
-            function () use ($zeroRow): void {
-                $zeroRow->setContentCategory(null);
-            },
-            function (Interpretation $reference) use ($zeroRow): void {
-                $zeroRow->getContentCategoryReferences()->add($reference);
-            }
-        );
+        foreach ($zeroRow->getContentCategories() as $key => $contentCategory) {
+            $this->tryUseNamedEntityAsReference(
+                $inscription,
+                $contentCategory,
+                static function () use ($zeroRow, $key): void {
+                    $zeroRow->getContentCategories()->remove($key);
+                },
+                static function (Interpretation $reference) use ($zeroRow): void {
+                    $zeroRow->getContentCategories()->add($reference);
+                }
+            );
+        }
 
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getContent(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setContent(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getContentReferences()->add($reference);
             }
         );
@@ -1161,10 +1190,10 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getDateInText(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setDateInText(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getDateInTextReferences()->add($reference);
             }
         );
@@ -1172,10 +1201,10 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getStratigraphicalDate(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setStratigraphicalDate(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getStratigraphicalDateReferences()->add($reference);
             }
         );
@@ -1183,10 +1212,10 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getNonStratigraphicalDate(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setNonStratigraphicalDate(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getNonStratigraphicalDateReferences()->add($reference);
             }
         );
@@ -1194,10 +1223,10 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getHistoricalDate(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setHistoricalDate(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getHistoricalDateReferences()->add($reference);
             }
         );
@@ -1205,10 +1234,10 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getPhotoFileNames(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setPhotoFileNames(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getPhotoFileNamesReferences()->add($reference);
             }
         );
@@ -1216,15 +1245,40 @@ final class InscriptionPortationTarget implements PortationTargetInterface
         $this->tryUseStringValueAsReference(
             $inscription,
             $zeroRow->getSketchFileNames(),
-            function () use ($zeroRow): void {
+            static function () use ($zeroRow): void {
                 $zeroRow->setSketchFileNames(null);
             },
-            function (Interpretation $reference) use ($zeroRow): void {
+            static function (Interpretation $reference) use ($zeroRow): void {
                 $zeroRow->getSketchFileNamesReferences()->add($reference);
             }
         );
 
         return $zeroRow;
+    }
+
+    private function parseAsCollectionOfNamedEntities(
+        NamedEntityRepository $repository,
+        string $formattedPieces
+    ): Collection {
+        $splitResult = preg_split('/('.self::MANY_TO_MANY_SEPARATOR.')+(?![^\[]*\])/', $formattedPieces);
+
+        if (false === $splitResult) {
+            throw new InvalidArgumentException('Splitting by reference pattern error');
+        }
+
+        $formattedPiecesArray = array_filter(
+            $splitResult,
+            static function (string $formattedPiece): bool {
+                return '' !== $formattedPiece;
+            }
+        );
+
+        return new ArrayCollection(
+            array_map(
+                [$repository, 'findOneByNameOrCreate'],
+                $formattedPiecesArray
+            )
+        );
     }
 
     private function createInvalidEntityTypeException(object $entity): InvalidArgumentException

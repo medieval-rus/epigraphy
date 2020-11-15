@@ -34,8 +34,17 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\InterpretationRepository")
  */
-class Interpretation extends InscriptionData implements StringifiableEntityInterface
+class Interpretation implements StringifiableEntityInterface
 {
+    /**
+     * @var int
+     *
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
     /**
      * @var Inscription|null
      *
@@ -77,15 +86,139 @@ class Interpretation extends InscriptionData implements StringifiableEntityInter
     private $numberInSource;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $placeOnCarrier;
+
+    /**
+     * @var Collection|WritingType[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\WritingType", cascade={"persist"})
+     */
+    private $writingTypes;
+
+    /**
+     * @var Collection|WritingMethod[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\WritingMethod", cascade={"persist"})
+     */
+    private $writingMethods;
+
+    /**
+     * @var Collection|PreservationState[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\PreservationState", cascade={"persist"})
+     */
+    private $preservationStates;
+
+    /**
      * @var Collection|Material[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Material", cascade={"persist"})
      */
     private $materials;
 
+    /**
+     * @var Collection|Alphabet[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Alphabet", cascade={"persist"})
+     */
+    private $alphabets;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $text;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $textImageFileNames;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transliteration;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $translation;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $photoFileNames;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $sketchFileNames;
+
+    /**
+     * @var Collection|ContentCategory[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\ContentCategory", cascade={"persist"})
+     */
+    private $contentCategories;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $content;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $dateInText;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $stratigraphicalDate;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $nonStratigraphicalDate;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $historicalDate;
+
     public function __construct()
     {
+        $this->writingTypes = new ArrayCollection();
+        $this->writingMethods = new ArrayCollection();
+        $this->preservationStates = new ArrayCollection();
         $this->materials = new ArrayCollection();
+        $this->alphabets = new ArrayCollection();
+        $this->contentCategories = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -153,6 +286,72 @@ class Interpretation extends InscriptionData implements StringifiableEntityInter
         return $this;
     }
 
+    public function getPlaceOnCarrier(): ?string
+    {
+        return $this->placeOnCarrier;
+    }
+
+    public function setPlaceOnCarrier(?string $placeOnCarrier): self
+    {
+        $this->placeOnCarrier = $placeOnCarrier;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|WritingType[]
+     */
+    public function getWritingTypes(): Collection
+    {
+        return $this->writingTypes;
+    }
+
+    /**
+     * @param Collection|WritingType[] $writingTypes
+     */
+    public function setWritingTypes(Collection $writingTypes): self
+    {
+        $this->writingTypes = $writingTypes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|WritingMethod[]
+     */
+    public function getWritingMethods(): Collection
+    {
+        return $this->writingMethods;
+    }
+
+    /**
+     * @param Collection|WritingMethod[] $writingMethods
+     */
+    public function setWritingMethods(Collection $writingMethods): self
+    {
+        $this->writingMethods = $writingMethods;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PreservationState[]
+     */
+    public function getPreservationStates(): Collection
+    {
+        return $this->preservationStates;
+    }
+
+    /**
+     * @param Collection|PreservationState[] $preservationStates
+     */
+    public function setPreservationStates(Collection $preservationStates): self
+    {
+        $this->preservationStates = $preservationStates;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Material[]
      */
@@ -167,6 +366,168 @@ class Interpretation extends InscriptionData implements StringifiableEntityInter
     public function setMaterials(Collection $materials): self
     {
         $this->materials = $materials;
+
+        return $this;
+    }
+
+    public function getAlphabets(): Collection
+    {
+        return $this->alphabets;
+    }
+
+    public function setAlphabets(Collection $alphabets): self
+    {
+        $this->alphabets = $alphabets;
+
+        return $this;
+    }
+
+    public function getText(): ?string
+    {
+        return $this->text;
+    }
+
+    public function setText(?string $text): self
+    {
+        $this->text = $text;
+
+        return $this;
+    }
+
+    public function getTextImageFileNames(): ?string
+    {
+        return $this->textImageFileNames;
+    }
+
+    public function setTextImageFileNames(?string $textImageFileNames): self
+    {
+        $this->textImageFileNames = $textImageFileNames;
+
+        return $this;
+    }
+
+    public function getTransliteration(): ?string
+    {
+        return $this->transliteration;
+    }
+
+    public function setTransliteration(?string $transliteration): self
+    {
+        $this->transliteration = $transliteration;
+
+        return $this;
+    }
+
+    public function getTranslation(): ?string
+    {
+        return $this->translation;
+    }
+
+    public function setTranslation(?string $translation): self
+    {
+        $this->translation = $translation;
+
+        return $this;
+    }
+
+    public function getPhotoFileNames(): ?string
+    {
+        return $this->photoFileNames;
+    }
+
+    public function setPhotoFileNames(?string $photoFileNames): self
+    {
+        $this->photoFileNames = $photoFileNames;
+
+        return $this;
+    }
+
+    public function getSketchFileNames(): ?string
+    {
+        return $this->sketchFileNames;
+    }
+
+    public function setSketchFileNames(?string $sketchFileNames): self
+    {
+        $this->sketchFileNames = $sketchFileNames;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ContentCategory[]
+     */
+    public function getContentCategories(): Collection
+    {
+        return $this->contentCategories;
+    }
+
+    /**
+     * @return Collection|ContentCategory[]
+     */
+    public function setContentCategories(Collection $contentCategories): self
+    {
+        $this->contentCategories = $contentCategories;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(?string $content): self
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function getDateInText(): ?string
+    {
+        return $this->dateInText;
+    }
+
+    public function setDateInText(?string $dateInText): self
+    {
+        $this->dateInText = $dateInText;
+
+        return $this;
+    }
+
+    public function getStratigraphicalDate(): ?string
+    {
+        return $this->stratigraphicalDate;
+    }
+
+    public function setStratigraphicalDate(?string $stratigraphicalDate): self
+    {
+        $this->stratigraphicalDate = $stratigraphicalDate;
+
+        return $this;
+    }
+
+    public function getNonStratigraphicalDate(): ?string
+    {
+        return $this->nonStratigraphicalDate;
+    }
+
+    public function setNonStratigraphicalDate(?string $nonStratigraphicalDate): self
+    {
+        $this->nonStratigraphicalDate = $nonStratigraphicalDate;
+
+        return $this;
+    }
+
+    public function getHistoricalDate(): ?string
+    {
+        return $this->historicalDate;
+    }
+
+    public function setHistoricalDate(?string $historicalDate): self
+    {
+        $this->historicalDate = $historicalDate;
 
         return $this;
     }

@@ -40,8 +40,8 @@ final class InterpretationAdmin extends AbstractEntityAdmin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('id', null, $this->createListLabeledOptions('id'))
-            ->add('source', null, $this->createListLabeledOptions('source'))
+            ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
+            ->add('source', null, $this->createLabeledListOptions('source'))
         ;
     }
 
@@ -53,12 +53,12 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                     ->add(
                         'source',
                         TextType::class,
-                        $this->createFormLabeledOptions('source', ['required' => true])
+                        $this->createLabeledFormOptions('source', ['required' => true])
                     )
                     ->add(
                         'comment',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('comment', ['required' => false])
+                        $this->createLabeledFormOptions('comment', ['required' => false])
                     )
                 ->end()
             ->end()
@@ -67,12 +67,12 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                     ->add(
                         'pageNumbersInSource',
                         TextType::class,
-                        $this->createFormLabeledOptions('pageNumbersInSource', ['required' => false])
+                        $this->createLabeledFormOptions('pageNumbersInSource', ['required' => false])
                     )
                     ->add(
                         'numberInSource',
                         TextType::class,
-                        $this->createFormLabeledOptions('numberInSource', ['required' => false])
+                        $this->createLabeledFormOptions('numberInSource', ['required' => false])
                     )
                 ->end()
             ->end()
@@ -81,66 +81,66 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                 ->add(
                     'placeOnCarrier',
                     TextType::class,
-                    $this->createFormLabeledOptions('placeOnCarrier', ['required' => false])
+                    $this->createLabeledFormOptions('placeOnCarrier', ['required' => false])
                 )
                 ->add(
-                    'writingType',
+                    'writingTypes',
                     ModelType::class,
-                    $this->createFormLabeledOptions('writingType', ['required' => false])
+                    $this->createLabeledManyToManyFormOptions('writingTypes')
                 )
                 ->add(
-                    'writingMethod',
+                    'writingMethods',
                     ModelType::class,
-                    $this->createFormLabeledOptions('writingMethod', ['required' => false])
+                    $this->createLabeledManyToManyFormOptions('writingMethods')
                 )
                 ->add(
-                    'preservationState',
+                    'preservationStates',
                     ModelType::class,
-                    $this->createFormLabeledOptions('preservationState', ['required' => false])
+                    $this->createLabeledManyToManyFormOptions('preservationStates')
                 )
                 ->add(
                     'materials',
                     ModelType::class,
-                    $this->createFormLabeledOptions('materials', ['required' => false, 'multiple' => true])
+                    $this->createLabeledManyToManyFormOptions('materials')
                 )
                 ->end()
             ->end()
             ->tab('form.interpretation.tab.linguisticAspect.label')
                 ->with('form.interpretation.section.linguisticAspect.label')
                     ->add(
-                        'alphabet',
+                        'alphabets',
                         ModelType::class,
-                        $this->createFormLabeledOptions('alphabet', ['required' => false])
+                        $this->createLabeledManyToManyFormOptions('alphabets')
                     )
                     ->add(
                         'text',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('text', ['required' => false])
+                        $this->createLabeledFormOptions('text', ['required' => false])
                     )
                     ->add(
                         'textImageFileNames',
                         TextType::class,
-                        $this->createFormLabeledOptions('textImageFileNames', ['required' => false])
+                        $this->createLabeledFormOptions('textImageFileNames', ['required' => false])
                     )
                     ->add(
                         'transliteration',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('transliteration', ['required' => false])
+                        $this->createLabeledFormOptions('transliteration', ['required' => false])
                     )
                     ->add(
                         'translation',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('translation', ['required' => false])
+                        $this->createLabeledFormOptions('translation', ['required' => false])
                     )
                     ->add(
-                        'contentCategory',
+                        'contentCategories',
                         ModelType::class,
-                        $this->createFormLabeledOptions('contentCategory', ['required' => false])
+                        $this->createLabeledManyToManyFormOptions('contentCategories')
                     )
                     ->add(
                         'content',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('content', ['required' => false])
+                        $this->createLabeledFormOptions('content', ['required' => false])
                     )
                 ->end()
             ->end()
@@ -149,22 +149,22 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                     ->add(
                         'dateInText',
                         TextType::class,
-                        $this->createFormLabeledOptions('dateInText', ['required' => false])
+                        $this->createLabeledFormOptions('dateInText', ['required' => false])
                     )
                     ->add(
                         'stratigraphicalDate',
                         TextType::class,
-                        $this->createFormLabeledOptions('stratigraphicalDate', ['required' => false])
+                        $this->createLabeledFormOptions('stratigraphicalDate', ['required' => false])
                     )
                     ->add(
                         'nonStratigraphicalDate',
                         TextType::class,
-                        $this->createFormLabeledOptions('nonStratigraphicalDate', ['required' => false])
+                        $this->createLabeledFormOptions('nonStratigraphicalDate', ['required' => false])
                     )
                     ->add(
                         'historicalDate',
                         TextType::class,
-                        $this->createFormLabeledOptions('historicalDate', ['required' => false])
+                        $this->createLabeledFormOptions('historicalDate', ['required' => false])
                     )
                 ->end()
             ->end()
@@ -173,12 +173,12 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                     ->add(
                         'photoFileNames',
                         TextType::class,
-                        $this->createFormLabeledOptions('photoFileNames', ['required' => false])
+                        $this->createLabeledFormOptions('photoFileNames', ['required' => false])
                     )
                     ->add(
                         'sketchFileNames',
                         TextType::class,
-                        $this->createFormLabeledOptions('sketchFileNames', ['required' => false])
+                        $this->createLabeledFormOptions('sketchFileNames', ['required' => false])
                     )
                 ->end()
             ->end()

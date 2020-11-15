@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Epigraphy;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -44,18 +45,18 @@ class Carrier implements StringifiableEntityInterface
     private $id;
 
     /**
-     * @var CarrierType
+     * @var Collection|CarrierType[]
      *
-     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Epigraphy\CarrierType", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\CarrierType", cascade={"persist"})
      */
-    private $type;
+    private $types;
 
     /**
-     * @var CarrierCategory
+     * @var Collection|CarrierCategory[]
      *
-     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Epigraphy\CarrierCategory", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\CarrierCategory", cascade={"persist"})
      */
-    private $category;
+    private $categories;
 
     /**
      * @var string|null
@@ -130,26 +131,35 @@ class Carrier implements StringifiableEntityInterface
         return $this->id;
     }
 
-    public function getType(): ?CarrierType
+    /**
+     * @return Collection|CarrierType[]
+     */
+    public function getTypes(): Collection
     {
-        return $this->type;
+        return $this->types;
     }
 
-    public function setType(CarrierType $type): self
+    public function setTypes(Collection $types): self
     {
-        $this->type = $type;
+        $this->types = $types;
 
         return $this;
     }
 
-    public function getCategory(): ?CarrierCategory
+    /**
+     * @return Collection|CarrierCategory[]
+     */
+    public function getCategories(): Collection
     {
-        return $this->category;
+        return $this->categories;
     }
 
-    public function setCategory(CarrierCategory $category): self
+    /**
+     * @param Collection|CarrierCategory[] $categories
+     */
+    public function setCategories(Collection $categories): self
     {
-        $this->category = $category;
+        $this->categories = $categories;
 
         return $this;
     }

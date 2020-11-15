@@ -98,15 +98,15 @@ final class PreservationStateFilterParameter implements FilterParameterInterface
                 $zeroRowAlias = $this->aliasFactory->createAlias(static::class, 'zero_row')
             )
             ->leftJoin(
-                $zeroRowAlias.'.preservationStateReferences',
+                $zeroRowAlias.'.preservationStatesReferences',
                 $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'references')
             )
             ->leftJoin(
-                $zeroRowAlias.'.preservationState',
+                $zeroRowAlias.'.preservationStates',
                 $preservationStateOfZeroRowAlias = $this->createAlias()
             )
             ->leftJoin(
-                $interpretationsAlias.'.preservationState',
+                $interpretationsAlias.'.preservationStates',
                 $preservationStateOfInterpretationAlias = $this->createAlias()
             )
         ;
@@ -130,6 +130,6 @@ final class PreservationStateFilterParameter implements FilterParameterInterface
 
     private function createAlias(): string
     {
-        return $this->aliasFactory->createAlias(static::class, 'preservation_state');
+        return $this->aliasFactory->createAlias(static::class, 'preservation_states');
     }
 }

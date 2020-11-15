@@ -41,11 +41,11 @@ final class CarrierAdmin extends AbstractEntityAdmin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('id', null, $this->createListLabeledOptions('id'))
-            ->add('origin1', null, $this->createListLabeledOptions('origin1'))
-            ->add('origin2', null, $this->createListLabeledOptions('origin2'))
-            ->add('individualName', null, $this->createListLabeledOptions('individualName'))
-            ->add('storagePlace', null, $this->createListLabeledOptions('storagePlace'))
+            ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
+            ->add('origin1', null, $this->createLabeledListOptions('origin1'))
+            ->add('origin2', null, $this->createLabeledListOptions('origin2'))
+            ->add('individualName', null, $this->createLabeledListOptions('individualName'))
+            ->add('storagePlace', null, $this->createLabeledListOptions('storagePlace'))
         ;
     }
 
@@ -57,21 +57,21 @@ final class CarrierAdmin extends AbstractEntityAdmin
                     ->add(
                         'individualName',
                         TextType::class,
-                        $this->createFormLabeledOptions('individualName', ['required' => false])
+                        $this->createLabeledFormOptions('individualName', ['required' => false])
                     )
                 ->end()
             ->end()
             ->tab('form.carrier.tab.classification.label')
                 ->with('form.carrier.section.classification.label')
                     ->add(
-                        'type',
+                        'types',
                         ModelType::class,
-                        $this->createFormLabeledOptions('type', ['required' => true])
+                        $this->createLabeledFormOptions('types', ['required' => false, 'multiple' => true])
                     )
                     ->add(
-                        'category',
+                        'categories',
                         ModelType::class,
-                        $this->createFormLabeledOptions('category', ['required' => true])
+                        $this->createLabeledFormOptions('categories', ['required' => false, 'multiple' => true])
                     )
                 ->end()
             ->end()
@@ -80,22 +80,22 @@ final class CarrierAdmin extends AbstractEntityAdmin
                     ->add(
                         'origin1',
                         TextType::class,
-                        $this->createFormLabeledOptions('origin1', ['required' => false])
+                        $this->createLabeledFormOptions('origin1', ['required' => false])
                     )
                     ->add(
                         'origin2',
                         TextType::class,
-                        $this->createFormLabeledOptions('origin2', ['required' => false])
+                        $this->createLabeledFormOptions('origin2', ['required' => false])
                     )
                     ->add(
                         'findCircumstances',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('findCircumstances', ['required' => false])
+                        $this->createLabeledFormOptions('findCircumstances', ['required' => false])
                     )
                     ->add(
                         'characteristics',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('characteristics', ['required' => false])
+                        $this->createLabeledFormOptions('characteristics', ['required' => false])
                     )
                 ->end()
             ->end()
@@ -104,17 +104,17 @@ final class CarrierAdmin extends AbstractEntityAdmin
                     ->add(
                         'storagePlace',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('storagePlace', ['required' => false])
+                        $this->createLabeledFormOptions('storagePlace', ['required' => false])
                     )
                     ->add(
                         'inventoryNumber',
                         TextType::class,
-                        $this->createFormLabeledOptions('inventoryNumber', ['required' => false])
+                        $this->createLabeledFormOptions('inventoryNumber', ['required' => false])
                     )
                     ->add(
                         'isInSitu',
                         CheckboxType::class,
-                        $this->createFormLabeledOptions('isInSitu', ['required' => false])
+                        $this->createLabeledFormOptions('isInSitu', ['required' => false])
                     )
                 ->end()
             ->end()

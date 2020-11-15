@@ -46,9 +46,9 @@ final class InscriptionAdmin extends AbstractEntityAdmin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('id', null, $this->createListLabeledOptions('id'))
-            ->add('carrier', null, $this->createListLabeledOptions('carrier'))
-            ->add('interpretations', null, $this->createListLabeledOptions('interpretations'))
+            ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
+            ->add('carrier', null, $this->createLabeledListOptions('carrier'))
+            ->add('interpretations', null, $this->createLabeledListOptions('interpretations'))
         ;
     }
 
@@ -56,9 +56,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
     {
         $parentInscriptionId = $formMapper->getAdmin()->getSubject()->getId();
 
-        $referenceOptions = [
-            'required' => false,
-            'multiple' => true,
+        $referencesOptions = [
             'class' => Interpretation::class,
             'query_builder' => static function (InterpretationRepository $entityRepository) use ($parentInscriptionId) {
                 return $entityRepository
@@ -74,7 +72,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'carrier',
                         ModelType::class,
-                        $this->createFormLabeledOptions('carrier', ['required' => true])
+                        $this->createLabeledFormOptions('carrier', ['required' => true])
                     )
                 ->end()
             ->end()
@@ -83,188 +81,221 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.placeOnCarrier',
                         TextType::class,
-                        $this->createFormLabeledOptions('zeroRow.placeOnCarrier', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.placeOnCarrier', ['required' => false])
                     )
                     ->add(
                         'zeroRow.placeOnCarrierReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.placeOnCarrierReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.placeOnCarrierReferences',
+                            $referencesOptions
+                        )
                     )
                     ->add(
-                        'zeroRow.writingType',
+                        'zeroRow.writingTypes',
                         ModelType::class,
-                        $this->createFormLabeledOptions('zeroRow.writingType', ['required' => false])
+                        $this->createLabeledManyToManyFormOptions('zeroRow.writingTypes')
                     )
                     ->add(
-                        'zeroRow.writingTypeReferences',
+                        'zeroRow.writingTypesReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.writingTypeReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions('zeroRow.writingTypesReferences', $referencesOptions)
                     )
                     ->add(
-                        'zeroRow.writingMethod',
+                        'zeroRow.writingMethods',
                         ModelType::class,
-                        $this->createFormLabeledOptions('zeroRow.writingMethod', ['required' => false])
+                        $this->createLabeledManyToManyFormOptions('zeroRow.writingMethods')
                     )
                     ->add(
-                        'zeroRow.writingMethodReferences',
+                        'zeroRow.writingMethodsReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.writingMethodReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.writingMethodsReferences',
+                            $referencesOptions
+                        )
                     )
                     ->add(
-                        'zeroRow.preservationState',
+                        'zeroRow.preservationStates',
                         ModelType::class,
-                        $this->createFormLabeledOptions('zeroRow.preservationState', ['required' => false])
+                        $this->createLabeledManyToManyFormOptions('zeroRow.preservationStates')
                     )
                     ->add(
-                        'zeroRow.preservationStateReferences',
+                        'zeroRow.preservationStatesReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.preservationStateReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.preservationStatesReferences',
+                            $referencesOptions
+                        )
                     )
                     ->add(
                         'zeroRow.materials',
                         ModelType::class,
-                        $this->createFormLabeledOptions('zeroRow.materials', ['required' => false, 'multiple' => true])
+                        $this->createLabeledManyToManyFormOptions('zeroRow.materials')
                     )
                     ->add(
                         'zeroRow.materialsReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.materialsReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions('zeroRow.materialsReferences', $referencesOptions)
                     )
                 ->end()
                 ->with('form.inscription.section.zeroRowLinguisticAspect.label', ['class' => 'col-md-6'])
                     ->add(
-                        'zeroRow.alphabet',
+                        'zeroRow.alphabets',
                         ModelType::class,
-                        $this->createFormLabeledOptions('zeroRow.alphabet', ['required' => false])
+                        $this->createLabeledManyToManyFormOptions('zeroRow.alphabets')
                     )
                     ->add(
-                        'zeroRow.alphabetReferences',
+                        'zeroRow.alphabetsReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.alphabetReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions('zeroRow.alphabetsReferences', $referencesOptions)
                     )
                     ->add(
                         'zeroRow.text',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('zeroRow.text', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.text', ['required' => false])
                     )
                     ->add(
                         'zeroRow.textReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.textReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions('zeroRow.textReferences', $referencesOptions)
                     )
                     ->add(
                         'zeroRow.textImageFileNames',
                         TextType::class,
-                        $this->createFormLabeledOptions('zeroRow.textImageFileNames', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.textImageFileNames', ['required' => false])
                     )
                     ->add(
                         'zeroRow.textImageFileNamesReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.textImageFileNamesReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.textImageFileNamesReferences',
+                            $referencesOptions
+                        )
                     )
                     ->add(
                         'zeroRow.transliteration',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('zeroRow.transliteration', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.transliteration', ['required' => false])
                     )
                     ->add(
                         'zeroRow.transliterationReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.transliterationReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.transliterationReferences',
+                            $referencesOptions
+                        )
                     )
                     ->add(
                         'zeroRow.translation',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('zeroRow.translation', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.translation', ['required' => false])
                     )
                     ->add(
                         'zeroRow.translationReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.translationReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions('zeroRow.translationReferences', $referencesOptions)
                     )
                     ->add(
-                        'zeroRow.contentCategory',
+                        'zeroRow.contentCategories',
                         ModelType::class,
-                        $this->createFormLabeledOptions('zeroRow.contentCategory', ['required' => false])
+                        $this->createLabeledManyToManyFormOptions('zeroRow.contentCategories')
                     )
                     ->add(
-                        'zeroRow.contentCategoryReferences',
+                        'zeroRow.contentCategoriesReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.contentCategoryReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.contentCategoriesReferences',
+                            $referencesOptions
+                        )
                     )
                     ->add(
                         'zeroRow.content',
                         TextareaType::class,
-                        $this->createFormLabeledOptions('zeroRow.content', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.content', ['required' => false])
                     )
                     ->add(
                         'zeroRow.contentReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.contentReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions('zeroRow.contentReferences', $referencesOptions)
                     )
                 ->end()
                 ->with('form.inscription.section.zeroRowHistoricalAspect.label', ['class' => 'col-md-6'])
                     ->add(
                         'zeroRow.dateInText',
                         TextType::class,
-                        $this->createFormLabeledOptions('zeroRow.dateInText', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.dateInText', ['required' => false])
                     )
                     ->add(
                         'zeroRow.dateInTextReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.dateInTextReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions('zeroRow.dateInTextReferences', $referencesOptions)
                     )
                     ->add(
                         'zeroRow.stratigraphicalDate',
                         TextType::class,
-                        $this->createFormLabeledOptions('zeroRow.stratigraphicalDate', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.stratigraphicalDate', ['required' => false])
                     )
                     ->add(
                         'zeroRow.stratigraphicalDateReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.stratigraphicalDateReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.stratigraphicalDateReferences',
+                            $referencesOptions
+                        )
                     )
                     ->add(
                         'zeroRow.nonStratigraphicalDate',
                         TextType::class,
-                        $this->createFormLabeledOptions('zeroRow.nonStratigraphicalDate', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.nonStratigraphicalDate', ['required' => false])
                     )
                     ->add(
                         'zeroRow.nonStratigraphicalDateReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.nonStratigraphicalDateReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.nonStratigraphicalDateReferences',
+                            $referencesOptions
+                        )
                     )
                     ->add(
                         'zeroRow.historicalDate',
                         TextType::class,
-                        $this->createFormLabeledOptions('zeroRow.historicalDate', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.historicalDate', ['required' => false])
                     )
                     ->add(
                         'zeroRow.historicalDateReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.historicalDateReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.historicalDateReferences',
+                            $referencesOptions
+                        )
                     )
                 ->end()
                 ->with('form.inscription.section.zeroRowMultimedia.label', ['class' => 'col-md-6'])
                     ->add(
                         'zeroRow.photoFileNames',
                         TextType::class,
-                        $this->createFormLabeledOptions('zeroRow.photoFileNames', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.photoFileNames', ['required' => false])
                     )
                     ->add(
                         'zeroRow.photoFileNamesReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.photoFileNamesReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.photoFileNamesReferences',
+                            $referencesOptions
+                        )
                     )
                     ->add(
                         'zeroRow.sketchFileNames',
                         TextType::class,
-                        $this->createFormLabeledOptions('zeroRow.sketchFileNames', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.sketchFileNames', ['required' => false])
                     )
                     ->add(
                         'zeroRow.sketchFileNamesReferences',
                         EntityType::class,
-                        $this->createFormLabeledOptions('zeroRow.sketchFileNamesReferences', $referenceOptions)
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.sketchFileNamesReferences',
+                            $referencesOptions
+                        )
                     )
                 ->end()
             ->end()
@@ -273,7 +304,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'interpretations',
                         CollectionType::class,
-                        $this->createFormLabeledOptions(
+                        $this->createLabeledFormOptions(
                             'interpretations',
                             ['required' => true, 'by_reference' => false]
                         ),

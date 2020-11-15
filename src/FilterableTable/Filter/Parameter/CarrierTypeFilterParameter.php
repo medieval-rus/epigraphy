@@ -62,7 +62,7 @@ final class CarrierTypeFilterParameter implements FilterParameterInterface, Expr
     public function getOptions(EntityManager $entityManager): array
     {
         return [
-            'label' => 'controller.inscription.list.filter.carrier.type',
+            'label' => 'controller.inscription.list.filter.carrierType',
             'attr' => [
                 'class' => '',
                 'data-vyfony-filterable-table-filter-parameter' => true,
@@ -98,7 +98,7 @@ final class CarrierTypeFilterParameter implements FilterParameterInterface, Expr
                 $carrierAlias = $this->aliasFactory->createAlias(static::class, 'carrier')
             )
             ->innerJoin(
-                $carrierAlias.'.type',
+                $carrierAlias.'.types',
                 $carrierTypeAlias = $this->createAlias()
             )
         ;
@@ -119,6 +119,6 @@ final class CarrierTypeFilterParameter implements FilterParameterInterface, Expr
 
     private function createAlias(): string
     {
-        return $this->aliasFactory->createAlias(static::class, 'carrier_type');
+        return $this->aliasFactory->createAlias(static::class, 'carrier_types');
     }
 }

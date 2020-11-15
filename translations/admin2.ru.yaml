@@ -52,8 +52,8 @@ list:
   carrier:
     fields:
       id: Id
-      type: Тип
-      category: Категория
+      types: Тип
+      categories: Категория
       origin1: Происхождение 1
       origin2: Происхождение 2
       findCircumstances: Обстоятельства находки
@@ -121,8 +121,8 @@ form:
         label: Данные о хранении
     fields:
       id: Внутренний идентификатор
-      type: Тип носителя
-      category: Категория носителя
+      types: Тип носителя
+      categories: Категория носителя
       origin1: Происхождение 1 (город, местность)
       origin2: Происхождение 2 (здание, раскоп)
       findCircumstances: Обстоятельства находки
@@ -207,16 +207,16 @@ form:
       zeroRow:
         placeOnCarrier: Расположение на носителе
         placeOnCarrierReferences: Расположение на носителе (ссылки)
-        writingType: Разряд по Франклину
-        writingTypeReferences: Разряд по Франклину (ссылки)
-        writingMethod: Способ нанесения
-        writingMethodReferences: Способ нанесения (ссылки)
-        preservationState: Состояние сохранности
-        preservationStateReferences: Состояние сохранности (ссылки)
+        writingTypes: Разряд по Франклину
+        writingTypesReferences: Разряд по Франклину (ссылки)
+        writingMethods: Способ нанесения
+        writingMethodsReferences: Способ нанесения (ссылки)
+        preservationStates: Состояние сохранности
+        preservationStatesReferences: Состояние сохранности (ссылки)
         materials: Материалы
         materialsReferences: Материалы (ссылки)
-        alphabet: Алфавит
-        alphabetReferences: Алфавит (ссылки)
+        alphabets: Алфавит
+        alphabetsReferences: Алфавит (ссылки)
         text: Текст
         textReferences: Текст (ссылки)
         textImageFileNames: Изображения текста (названия файлов)
@@ -225,8 +225,8 @@ form:
         transliterationReferences: Транслитерация (ссылки)
         translation: Перевод
         translationReferences: Перевод (ссылки)
-        contentCategory: Категория по содержанию
-        contentCategoryReferences: Категория по содержанию (ссылки)
+        contentCategories: Категория по содержанию
+        contentCategoriesReferences: Категория по содержанию (ссылки)
         content: Содержание
         contentReferences: Содержание (ссылки)
         dateInText: Дата в тексте
@@ -275,16 +275,16 @@ form:
       pageNumbersInSource: Номера страниц в публикации
       numberInSource: Номер в источнике
       placeOnCarrier: Расположение на носителе
-      writingType: Разряд по Франклину
-      writingMethod: Способ нанесения
-      preservationState: Состояние сохранности
+      writingTypes: Разряд по Франклину
+      writingMethods: Способ нанесения
+      preservationStates: Состояние сохранности
       materials: Материалы
-      alphabet: Алфавит
+      alphabets: Алфавит
       text: Текст
       textImageFileNames: Изображения текста (названия файлов)
       transliteration: Транслитерация
       translation: Перевод
-      contentCategory: Категория по содержанию
+      contentCategories: Категория по содержанию
       content: Содержание
       dateInText: Дата в тексте
       stratigraphicalDate: Стратиграфическая дата
