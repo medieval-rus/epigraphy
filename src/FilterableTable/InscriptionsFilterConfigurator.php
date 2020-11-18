@@ -194,6 +194,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
                         ->setLabel('controller.inscription.list.filter.dataColumn.option.content')
                         ->setColumnMetadata(
                             (new ColumnMetadata())
+                                ->setIsRaw(true)
                                 ->setName('interpretation-content')
                                 ->setValueExtractor(function (Inscription $inscription): string {
                                     return $this->valueStringifier->stringify($inscription, 'content');

@@ -62,7 +62,7 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
     public function getOptions(EntityManager $entityManager): array
     {
         return [
-            'label' => 'controller.inscription.list.filter.carrier.category',
+            'label' => 'controller.inscription.list.filter.carrierCategory',
             'attr' => [
                 'class' => '',
                 'data-vyfony-filterable-table-filter-parameter' => true,
@@ -80,15 +80,15 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
      */
     public function buildWhereExpression(QueryBuilder $queryBuilder, $formData, string $entityAlias): ?string
     {
-        $carrierCategorys = $formData;
+        $carrierCategories = $formData;
 
-        if (0 === \count($carrierCategorys)) {
+        if (0 === \count($carrierCategories)) {
             return null;
         }
 
         $ids = [];
 
-        foreach ($carrierCategorys as $carrierCategory) {
+        foreach ($carrierCategories as $carrierCategory) {
             $ids[] = $carrierCategory->getId();
         }
 
@@ -98,7 +98,7 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
                 $carrierAlias = $this->aliasFactory->createAlias(static::class, 'carrier')
             )
             ->innerJoin(
-                $carrierAlias.'.category',
+                $carrierAlias.'.categories',
                 $carrierCategoryAlias = $this->createAlias()
             )
         ;
@@ -119,6 +119,6 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
 
     private function createAlias(): string
     {
-        return $this->aliasFactory->createAlias(static::class, 'carrier_category');
+        return $this->aliasFactory->createAlias(static::class, 'carrier_categories');
     }
 }

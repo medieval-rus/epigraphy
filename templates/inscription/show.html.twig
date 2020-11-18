@@ -36,8 +36,8 @@
     <table class="table table-bordered">
         <tbody>
             {{ self.format_text_row('conventionalDate', inscription.conventionalDate) }}
-            {{ self.format_text_row('carrier.type', inscription.carrier.type.name) }}
-            {{ self.format_text_row('carrier.category', inscription.carrier.category.name) }}
+            {{ self.format_text_row('carrier.types', inscription.carrier.types|map(namedEntity => namedEntity.name)) }}
+            {{ self.format_text_row('carrier.categories', inscription.carrier.categories|map(namedEntity => namedEntity.name)) }}
             {{ self.format_text_row('carrier.origin1', inscription.carrier.origin1) }}
             {{ self.format_text_row('carrier.origin2', inscription.carrier.origin2) }}
             {{ self.format_text_row('carrier.individualName', inscription.carrier.individualName) }}
@@ -45,23 +45,23 @@
             {{ self.format_text_row('carrier.inventoryNumber', inscription.carrier.inventoryNumber) }}
             {{ self.format_text_row('carrier.isInSitu', inscription.carrier.isInSitu) }}
             {{ self.format_text_row('zeroRow.placeOnCarrier', self.format_zero_row(inscription, 'placeOnCarrier')) }}
-            {{ self.format_text_row('zeroRow.writingType', self.format_zero_row(inscription, 'writingType')) }}
-            {{ self.format_text_row('zeroRow.writingMethod', self.format_zero_row(inscription, 'writingMethod')) }}
-            {{ self.format_text_row('zeroRow.preservationState', self.format_zero_row(inscription, 'preservationState')) }}
-            {{ self.format_text_row('zeroRow.alphabet', self.format_zero_row(inscription, 'alphabet')) }}
+            {{ self.format_text_row('zeroRow.writingTypes', self.format_zero_row(inscription, 'writingTypes')) }}
+            {{ self.format_text_row('zeroRow.writingMethods', self.format_zero_row(inscription, 'writingMethods')) }}
+            {{ self.format_text_row('zeroRow.preservationStates', self.format_zero_row(inscription, 'preservationStates')) }}
+            {{ self.format_text_row('zeroRow.materials', self.format_zero_row(inscription, 'materials')) }}
+            {{ self.format_text_row('zeroRow.alphabets', self.format_zero_row(inscription, 'alphabets')) }}
             {{ self.format_text_row('zeroRow.text', self.format_zero_row(inscription, 'text', 'original-text')) }}
             {{ self.format_text_row('zeroRow.textImageFileNames', self.format_images(inscription, 'textImageFileNames')) }}
             {{ self.format_text_row('zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
             {{ self.format_text_row('zeroRow.translation', self.format_zero_row(inscription, 'translation')) }}
             {{ self.format_text_row('zeroRow.photoFileNames', self.format_images(inscription, 'photoFileNames')) }}
             {{ self.format_text_row('zeroRow.sketchFileNames', self.format_images(inscription, 'sketchFileNames')) }}
-            {{ self.format_text_row('zeroRow.contentCategory', self.format_zero_row(inscription, 'contentCategory')) }}
+            {{ self.format_text_row('zeroRow.contentCategories', self.format_zero_row(inscription, 'contentCategories')) }}
             {{ self.format_text_row('zeroRow.content', self.format_zero_row(inscription, 'content')) }}
             {{ self.format_text_row('zeroRow.dateInText', self.format_zero_row(inscription, 'dateInText')) }}
             {{ self.format_text_row('zeroRow.stratigraphicalDate', self.format_zero_row(inscription, 'stratigraphicalDate')) }}
             {{ self.format_text_row('zeroRow.nonStratigraphicalDate', self.format_zero_row(inscription, 'nonStratigraphicalDate')) }}
             {{ self.format_text_row('zeroRow.historicalDate', self.format_zero_row(inscription, 'historicalDate')) }}
-            {{ self.format_text_row('zeroRow.materials', self.format_zero_row(inscription, 'materials')) }}
         </tbody>
     </table>
 {% endblock %}

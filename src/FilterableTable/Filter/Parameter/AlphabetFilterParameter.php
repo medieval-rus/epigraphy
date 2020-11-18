@@ -98,15 +98,15 @@ final class AlphabetFilterParameter implements FilterParameterInterface, Express
                 $zeroRowAlias = $this->aliasFactory->createAlias(static::class, 'zero_row')
             )
             ->leftJoin(
-                $zeroRowAlias.'.alphabetReferences',
+                $zeroRowAlias.'.alphabetsReferences',
                 $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'references')
             )
             ->leftJoin(
-                $zeroRowAlias.'.alphabet',
+                $zeroRowAlias.'.alphabets',
                 $alphabetOfZeroRowAlias = $this->createAlias()
             )
             ->leftJoin(
-                $interpretationsAlias.'.alphabet',
+                $interpretationsAlias.'.alphabets',
                 $alphabetOfInterpretationAlias = $this->createAlias()
             )
         ;
@@ -130,6 +130,6 @@ final class AlphabetFilterParameter implements FilterParameterInterface, Express
 
     private function createAlias(): string
     {
-        return $this->aliasFactory->createAlias(static::class, 'alphabet');
+        return $this->aliasFactory->createAlias(static::class, 'alphabets');
     }
 }

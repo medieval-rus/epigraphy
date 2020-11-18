@@ -57,9 +57,8 @@ controller:
           option:
             text: Текст
             content: Содержание
-        carrier:
-          type: Тип носителя
-          category: Категория носителя
+        carrierType: Тип носителя
+        carrierCategory: Категория носителя
         writingType: Разряд
         writingMethod: Способ нанесения
         preservationState: Состояние сохранности
@@ -74,8 +73,8 @@ controller:
         label:
           conventionalDate: Условная дата
           carrier:
-            type: Тип носителя
-            category: Категория носителя
+            types: Тип носителя
+            categories: Категория носителя
             origin1: Происхождение 1 (город, местность)
             origin2: Происхождение 2 (здание, раскоп)
             individualName: Индивидуальное название носителя
@@ -86,17 +85,17 @@ controller:
             characteristics: todo
           zeroRow:
             placeOnCarrier: Расположение на носителе
-            writingType: Разряд (по Франклину)
-            writingMethod: Способ нанесения
-            preservationState: Состояние сохранности
-            alphabet: Алфавит
+            writingTypes: Разряд (по Франклину)
+            writingMethods: Способ нанесения
+            preservationStates: Состояние сохранности
+            alphabets: Алфавит
             text: Текст
             textImageFileNames: Изображения текста
             transliteration: Транслитерация
             translation: Перевод
             photoFileNames: Фотографи
             sketchFileNames: Прориси
-            contentCategory: Категория по содержанию
+            contentCategories: Категория по содержанию
             content: Содержание
             dateInText: Дата в тексте
             stratigraphicalDate: Стратиграфическая дата

@@ -98,15 +98,15 @@ final class WritingMethodFilterParameter implements FilterParameterInterface, Ex
                 $zeroRowAlias = $this->aliasFactory->createAlias(static::class, 'zero_row')
             )
             ->leftJoin(
-                $zeroRowAlias.'.writingMethodReferences',
+                $zeroRowAlias.'.writingMethodsReferences',
                 $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'references')
             )
             ->leftJoin(
-                $zeroRowAlias.'.writingMethod',
+                $zeroRowAlias.'.writingMethods',
                 $writingMethodOfZeroRowAlias = $this->createAlias()
             )
             ->leftJoin(
-                $interpretationsAlias.'.writingMethod',
+                $interpretationsAlias.'.writingMethods',
                 $writingMethodOfInterpretationAlias = $this->createAlias()
             )
         ;
@@ -130,6 +130,6 @@ final class WritingMethodFilterParameter implements FilterParameterInterface, Ex
 
     private function createAlias(): string
     {
-        return $this->aliasFactory->createAlias(static::class, 'writing_method');
+        return $this->aliasFactory->createAlias(static::class, 'writing_methods');
     }
 }

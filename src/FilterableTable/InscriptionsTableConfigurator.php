@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\FilterableTable;
 
+use App\Persistence\Entity\Epigraphy\CarrierCategory;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\Value\ValueStringifierInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -89,8 +90,19 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                 ->setLabel('controller.inscription.list.table.column.id'),
             (new ColumnMetadata())
                 ->setName('carrier-category')
-                ->setValueExtractor(function (Inscription $inscription): string {
-                    return $inscription->getCarrier()->getCategory()->getName();
+                ->setValueExtractor(static function (Inscription $inscription): string {
+                    return implode(
+                        ', ',
+                        $inscription
+                            ->getCarrier()
+                            ->getCategories()
+                            ->map(
+                                static function (CarrierCategory $carrierCategory): string {
+                                    return $carrierCategory->getName();
+                                }
+                            )
+                            ->toArray()
+                    );
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)
@@ -104,9 +116,9 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                 ->setIsSortable(false)
                 ->setLabel('controller.inscription.list.table.column.carrier.origin1'),
             (new ColumnMetadata())
-                ->setName('interpretation-contentCategory')
+                ->setName('interpretation-contentCategories')
                 ->setValueExtractor(function (Inscription $inscription): string {
-                    return $this->valueStringifier->stringify($inscription, 'contentCategory');
+                    return $this->valueStringifier->stringify($inscription, 'contentCategories');
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)

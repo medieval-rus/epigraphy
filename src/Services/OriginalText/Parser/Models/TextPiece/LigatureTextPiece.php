@@ -23,23 +23,22 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\OriginalText\Parser\Rules;
-
-use App\Services\OriginalText\Parser\Models\TextPiece\TextBreakTextPiece;
-use App\Services\OriginalText\Parser\Models\TextPiece\TextPieceInterface;
+namespace App\Services\OriginalText\Parser\Models\TextPiece;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-final class TextBreakRuleDefinition implements RuleDefinitionInterface
+final class LigatureTextPiece implements TextPieceInterface
 {
-    public function createTextPiece(string $text): TextPieceInterface
+    private string $text;
+
+    public function __construct(string $text)
     {
-        return new TextBreakTextPiece(sprintf('|%s|', $text));
+        $this->text = $text;
     }
 
-    public function getRegex(): string
+    public function getText(): string
     {
-        return '/\|(im.|vac.|br.)\|/us';
+        return $this->text;
     }
 }

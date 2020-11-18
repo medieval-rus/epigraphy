@@ -28,6 +28,7 @@ namespace App\Services\OriginalText\Formatter;
 use App\Helper\TypeHelper;
 use App\Services\OriginalText\Parser\Models\OriginalText;
 use App\Services\OriginalText\Parser\Models\TextPiece\CommentTextPiece;
+use App\Services\OriginalText\Parser\Models\TextPiece\LigatureTextPiece;
 use App\Services\OriginalText\Parser\Models\TextPiece\OriginalTextPiece;
 use App\Services\OriginalText\Parser\Models\TextPiece\SuperscriptedTextPiece;
 use App\Services\OriginalText\Parser\Models\TextPiece\TextBreakTextPiece;
@@ -54,6 +55,8 @@ final class OriginalTextFormatter implements OriginalTextFormatterInterface
     private function formatTextPiece(TextPieceInterface $textPiece): string
     {
         switch (true) {
+            case $textPiece instanceof LigatureTextPiece:
+                return $this->formatLigatureTextPiece($textPiece);
             case $textPiece instanceof CommentTextPiece:
                 return $this->formatCommentTextPiece($textPiece);
 
@@ -70,6 +73,11 @@ final class OriginalTextFormatter implements OriginalTextFormatterInterface
                 $message = sprintf('Unknown text piece type "%s".', TypeHelper::getTypeName($textPiece));
                 throw new InvalidArgumentException($message);
         }
+    }
+
+    private function formatLigatureTextPiece(LigatureTextPiece $textPiece)
+    {
+        return '<span class="eomr-text-piece-ligature">'.$textPiece->getText().'</span>';
     }
 
     private function formatCommentTextPiece(CommentTextPiece $textPiece): string

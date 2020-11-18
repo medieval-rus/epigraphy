@@ -55,20 +55,31 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
         return 'list.'.$this->getEntityKey().'.fields.'.$fieldName;
     }
 
-    protected function createListLabeledOptions(string $fieldName): array
+    protected function createLabeledListOptions(string $fieldName): array
     {
         return [
             'label' => $this->getListKeyForFieldName($fieldName),
         ];
     }
 
-    protected function createFormLabeledOptions(string $fieldName, array $options = []): array
+    protected function createLabeledFormOptions(string $fieldName, array $options = []): array
     {
         return array_merge(
             $options,
             [
                 'label' => $this->getFormKeyForFieldName($fieldName),
             ]
+        );
+    }
+
+    protected function createLabeledManyToManyFormOptions(string $fieldName, array $options = [])
+    {
+        return $this->createLabeledFormOptions(
+            $fieldName,
+            array_merge(
+                $options,
+                ['required' => false, 'multiple' => true]
+            )
         );
     }
 }

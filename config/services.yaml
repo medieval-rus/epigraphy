@@ -50,6 +50,7 @@ services:
   App\Services\OriginalText\Parser\OriginalTextParser:
     arguments:
       $rules:
+        - '@App\Services\OriginalText\Parser\Rules\LigatureRuleDefinition'
         - '@App\Services\OriginalText\Parser\Rules\CommentRuleDefinition'
         - '@App\Services\OriginalText\Parser\Rules\TextBreakRuleDefinition'
         - '@App\Services\OriginalText\Parser\Rules\SuperscriptRuleDefinition'

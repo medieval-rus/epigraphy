@@ -58,8 +58,8 @@ final class CarrierFixtures extends Fixture implements DependentFixtureInterface
     private function createCarrier1(): Carrier
     {
         $carrier = (new Carrier())
-            ->setType($this->getReference(CarrierTypeFixtures::PREDMETY_SVETSKOGO_NAZNACHENIYA))
-            ->setCategory($this->getReference(CarrierCategoryFixtures::PRYASLITSE))
+            ->setTypes($this->getReference(CarrierTypeFixtures::PREDMETY_SVETSKOGO_NAZNACHENIYA))
+            ->setCategories($this->getReference(CarrierCategoryFixtures::PRYASLITSE))
             ->setOrigin1('Любеч')
             ->setOrigin2('раскопки феодального замка под руководством Б.А. Рыбакова, перекоп у западного угла замка')
             ->setFindCircumstances(null)
