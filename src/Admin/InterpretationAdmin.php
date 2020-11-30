@@ -26,17 +26,31 @@ declare(strict_types=1);
 namespace App\Admin;
 
 use App\Admin\Abstraction\AbstractEntityAdmin;
+use App\Persistence\Entity\Epigraphy\Interpretation;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
+use Symfony\Component\Form\Event\PreSetDataEvent;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormEvents;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
 final class InterpretationAdmin extends AbstractEntityAdmin
 {
+    public function wrapInterpretation(PreSetDataEvent $event): void
+    {
+        if (($interpretation = $event->getData()) instanceof Interpretation &&
+            !$interpretation instanceof AdminInterpretationWrapper
+        ) {
+            $event->setData(new AdminInterpretationWrapper($interpretation));
+        }
+    }
+
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
@@ -48,8 +62,24 @@ final class InterpretationAdmin extends AbstractEntityAdmin
     protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
+            ->getFormBuilder()
+            ->getEventDispatcher()
+            ->addListener(FormEvents::PRE_SET_DATA, [$this, 'wrapInterpretation']);
+
+        $subject = $this->getSubject();
+
+        if ($subject instanceof AdminInterpretationWrapper) {
+            $this->setSubject($subject->toInterpretation());
+        }
+
+        $formMapper
             ->tab('form.interpretation.tab.identification.label')
                 ->with('form.interpretation.section.identification.label')
+                    ->add(
+                        'id',
+                        HiddenType::class,
+                        ['attr' => ['data-interpretation-id' => $this->getSubject()->getId()]]
+                    )
                     ->add(
                         'source',
                         TextType::class,
@@ -78,31 +108,56 @@ final class InterpretationAdmin extends AbstractEntityAdmin
             ->end()
             ->tab('form.interpretation.tab.materialAspect.label')
                 ->with('form.interpretation.section.materialAspect.label')
-                ->add(
-                    'placeOnCarrier',
-                    TextType::class,
-                    $this->createLabeledFormOptions('placeOnCarrier', ['required' => false])
-                )
-                ->add(
-                    'writingTypes',
-                    ModelType::class,
-                    $this->createLabeledManyToManyFormOptions('writingTypes')
-                )
-                ->add(
-                    'writingMethods',
-                    ModelType::class,
-                    $this->createLabeledManyToManyFormOptions('writingMethods')
-                )
-                ->add(
-                    'preservationStates',
-                    ModelType::class,
-                    $this->createLabeledManyToManyFormOptions('preservationStates')
-                )
-                ->add(
-                    'materials',
-                    ModelType::class,
-                    $this->createLabeledManyToManyFormOptions('materials')
-                )
+                    ->add(
+                        'placeOnCarrier',
+                        TextType::class,
+                        $this->createLabeledFormOptions('placeOnCarrier', ['required' => false])
+                    )
+                    ->add(
+                        'isPlaceOnCarrierPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('placeOnCarrier')
+                    )
+                    ->add(
+                        'writingTypes',
+                        ModelType::class,
+                        $this->createLabeledManyToManyFormOptions('writingTypes')
+                    )
+                    ->add(
+                        'isWritingTypesPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('writingTypes')
+                    )
+                    ->add(
+                        'writingMethods',
+                        ModelType::class,
+                        $this->createLabeledManyToManyFormOptions('writingMethods')
+                    )
+                    ->add(
+                        'isWritingMethodsPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('writingMethods')
+                    )
+                    ->add(
+                        'preservationStates',
+                        ModelType::class,
+                        $this->createLabeledManyToManyFormOptions('preservationStates')
+                    )
+                    ->add(
+                        'isPreservationStatesPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('preservationStates')
+                    )
+                    ->add(
+                        'materials',
+                        ModelType::class,
+                        $this->createLabeledManyToManyFormOptions('materials')
+                    )
+                    ->add(
+                        'isMaterialsPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('materials')
+                    )
                 ->end()
             ->end()
             ->tab('form.interpretation.tab.linguisticAspect.label')
@@ -113,9 +168,19 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         $this->createLabeledManyToManyFormOptions('alphabets')
                     )
                     ->add(
+                        'isAlphabetsPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('alphabets')
+                    )
+                    ->add(
                         'text',
                         TextareaType::class,
                         $this->createLabeledFormOptions('text', ['required' => false])
+                    )
+                    ->add(
+                        'isTextPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('text')
                     )
                     ->add(
                         'textImageFileNames',
@@ -123,9 +188,19 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         $this->createLabeledFormOptions('textImageFileNames', ['required' => false])
                     )
                     ->add(
+                        'isTextImageFileNamesPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('textImageFileNames')
+                    )
+                    ->add(
                         'transliteration',
                         TextareaType::class,
                         $this->createLabeledFormOptions('transliteration', ['required' => false])
+                    )
+                    ->add(
+                        'isTransliterationPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('transliteration')
                     )
                     ->add(
                         'translation',
@@ -133,14 +208,29 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         $this->createLabeledFormOptions('translation', ['required' => false])
                     )
                     ->add(
+                        'isTranslationPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('translation')
+                    )
+                    ->add(
                         'contentCategories',
                         ModelType::class,
                         $this->createLabeledManyToManyFormOptions('contentCategories')
                     )
                     ->add(
+                        'isContentCategoriesPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('contentCategories')
+                    )
+                    ->add(
                         'content',
                         TextareaType::class,
                         $this->createLabeledFormOptions('content', ['required' => false])
+                    )
+                    ->add(
+                        'isContentPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('content')
                     )
                 ->end()
             ->end()
@@ -152,9 +242,19 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         $this->createLabeledFormOptions('dateInText', ['required' => false])
                     )
                     ->add(
+                        'isDateInTextPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('dateInText')
+                    )
+                    ->add(
                         'stratigraphicalDate',
                         TextType::class,
                         $this->createLabeledFormOptions('stratigraphicalDate', ['required' => false])
+                    )
+                    ->add(
+                        'isStratigraphicalDatePartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('stratigraphicalDate')
                     )
                     ->add(
                         'nonStratigraphicalDate',
@@ -162,9 +262,19 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         $this->createLabeledFormOptions('nonStratigraphicalDate', ['required' => false])
                     )
                     ->add(
+                        'isNonStratigraphicalDatePartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('nonStratigraphicalDate')
+                    )
+                    ->add(
                         'historicalDate',
                         TextType::class,
                         $this->createLabeledFormOptions('historicalDate', ['required' => false])
+                    )
+                    ->add(
+                        'isHistoricalDatePartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('historicalDate')
                     )
                 ->end()
             ->end()
@@ -176,12 +286,44 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         $this->createLabeledFormOptions('photoFileNames', ['required' => false])
                     )
                     ->add(
+                        'isPhotoFileNamesPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('photoFileNames')
+                    )
+                    ->add(
                         'sketchFileNames',
                         TextType::class,
                         $this->createLabeledFormOptions('sketchFileNames', ['required' => false])
                     )
+                    ->add(
+                        'isSketchFileNamesPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('sketchFileNames')
+                    )
                 ->end()
             ->end()
         ;
+
+        if ($subject instanceof AdminInterpretationWrapper) {
+            $this->setSubject($subject);
+        }
+    }
+
+    private function createLabeledZeroRowPartFormOptions(
+        string $zeroRowField,
+        array $options = []
+    ): array {
+        return $this->createLabeledFormOptions(
+            'isPartOfZeroRow.'.$zeroRowField,
+            array_merge(
+                $options,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-zero-row-part' => $zeroRowField.'References',
+                    ],
+                ]
+            )
+        );
     }
 }

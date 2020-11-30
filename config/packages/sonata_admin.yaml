@@ -24,6 +24,10 @@ sonata_admin:
       - { type: sonata.admin.block.admin_list, position: left }
   options:
     legacy_twig_text_extension: false
+    use_icheck: false
+  assets:
+    extra_javascripts:
+      - 'build/js/admin/edit-inscription.js'
 
 sonata_block:
   blocks:

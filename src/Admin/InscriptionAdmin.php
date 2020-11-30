@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace App\Admin;
 
 use App\Admin\Abstraction\AbstractEntityAdmin;
+use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Repository\Epigraphy\InterpretationRepository;
 use Knp\Menu\ItemInterface;
@@ -43,6 +44,34 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class InscriptionAdmin extends AbstractEntityAdmin
 {
+    public function preUpdate($object): void
+    {
+        if ($object instanceof Inscription) {
+            $inscription = $object;
+            $zeroRow = $inscription->getZeroRow();
+            $interpretations = $inscription->getInterpretations();
+
+            $unwrappedInterpretations = [];
+
+            foreach ($interpretations as $index => $element) {
+                if ($element instanceof AdminInterpretationWrapper) {
+                    $wrapper = $element;
+                    $interpretation = $wrapper->toInterpretation();
+
+                    $unwrappedInterpretations[$index] = $interpretation;
+
+                    if (null === $interpretation->getId()) {
+                        $wrapper->updateZeroRow($zeroRow);
+                    }
+                }
+            }
+
+            foreach ($unwrappedInterpretations as $index => $interpretation) {
+                $interpretations->set($index, $interpretation);
+            }
+        }
+    }
+
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
@@ -54,18 +83,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
 
     protected function configureFormFields(FormMapper $formMapper): void
     {
-        $parentInscriptionId = $formMapper->getAdmin()->getSubject()->getId();
-
-        $referencesOptions = [
-            'class' => Interpretation::class,
-            'query_builder' => static function (InterpretationRepository $entityRepository) use ($parentInscriptionId) {
-                return $entityRepository
-                    ->createQueryBuilder('interpretation')
-                    ->where('interpretation.inscription = :inscriptionId')
-                    ->setParameter(':inscriptionId', $parentInscriptionId);
-            },
-        ];
-
         $formMapper
             ->tab('form.inscription.tab.carrier.label')
                 ->with('form.inscription.section.carrier.label')
@@ -86,10 +103,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.placeOnCarrierReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.placeOnCarrierReferences',
-                            $referencesOptions
-                        )
+                        $this->createLabeledReferencesFormOptions('placeOnCarrierReferences')
                     )
                     ->add(
                         'zeroRow.writingTypes',
@@ -99,7 +113,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.writingTypesReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.writingTypesReferences', $referencesOptions)
+                        $this->createLabeledReferencesFormOptions('writingTypesReferences')
                     )
                     ->add(
                         'zeroRow.writingMethods',
@@ -109,10 +123,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.writingMethodsReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.writingMethodsReferences',
-                            $referencesOptions
-                        )
+                        $this->createLabeledReferencesFormOptions('writingMethodsReferences')
                     )
                     ->add(
                         'zeroRow.preservationStates',
@@ -122,10 +133,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.preservationStatesReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.preservationStatesReferences',
-                            $referencesOptions
-                        )
+                        $this->createLabeledReferencesFormOptions('preservationStatesReferences')
                     )
                     ->add(
                         'zeroRow.materials',
@@ -135,7 +143,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.materialsReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.materialsReferences', $referencesOptions)
+                        $this->createLabeledReferencesFormOptions('materialsReferences')
                     )
                 ->end()
                 ->with('form.inscription.section.zeroRowLinguisticAspect.label', ['class' => 'col-md-6'])
@@ -147,7 +155,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.alphabetsReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.alphabetsReferences', $referencesOptions)
+                        $this->createLabeledReferencesFormOptions('alphabetsReferences')
                     )
                     ->add(
                         'zeroRow.text',
@@ -157,7 +165,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.textReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.textReferences', $referencesOptions)
+                        $this->createLabeledReferencesFormOptions('textReferences')
                     )
                     ->add(
                         'zeroRow.textImageFileNames',
@@ -167,10 +175,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.textImageFileNamesReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.textImageFileNamesReferences',
-                            $referencesOptions
-                        )
+                        $this->createLabeledReferencesFormOptions('textImageFileNamesReferences')
                     )
                     ->add(
                         'zeroRow.transliteration',
@@ -180,10 +185,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.transliterationReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.transliterationReferences',
-                            $referencesOptions
-                        )
+                        $this->createLabeledReferencesFormOptions('transliterationReferences')
                     )
                     ->add(
                         'zeroRow.translation',
@@ -193,7 +195,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.translationReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.translationReferences', $referencesOptions)
+                        $this->createLabeledReferencesFormOptions('translationReferences')
                     )
                     ->add(
                         'zeroRow.contentCategories',
@@ -203,10 +205,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.contentCategoriesReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.contentCategoriesReferences',
-                            $referencesOptions
-                        )
+                        $this->createLabeledReferencesFormOptions('contentCategoriesReferences')
                     )
                     ->add(
                         'zeroRow.content',
@@ -216,7 +215,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.contentReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.contentReferences', $referencesOptions)
+                        $this->createLabeledReferencesFormOptions('contentReferences')
                     )
                 ->end()
                 ->with('form.inscription.section.zeroRowHistoricalAspect.label', ['class' => 'col-md-6'])
@@ -228,7 +227,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.dateInTextReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.dateInTextReferences', $referencesOptions)
+                        $this->createLabeledReferencesFormOptions('dateInTextReferences')
                     )
                     ->add(
                         'zeroRow.stratigraphicalDate',
@@ -238,10 +237,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.stratigraphicalDateReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.stratigraphicalDateReferences',
-                            $referencesOptions
-                        )
+                        $this->createLabeledReferencesFormOptions('stratigraphicalDateReferences')
                     )
                     ->add(
                         'zeroRow.nonStratigraphicalDate',
@@ -251,10 +247,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.nonStratigraphicalDateReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.nonStratigraphicalDateReferences',
-                            $referencesOptions
-                        )
+                        $this->createLabeledReferencesFormOptions('nonStratigraphicalDateReferences')
                     )
                     ->add(
                         'zeroRow.historicalDate',
@@ -264,10 +257,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.historicalDateReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.historicalDateReferences',
-                            $referencesOptions
-                        )
+                        $this->createLabeledReferencesFormOptions('historicalDateReferences')
                     )
                 ->end()
                 ->with('form.inscription.section.zeroRowMultimedia.label', ['class' => 'col-md-6'])
@@ -279,10 +269,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.photoFileNamesReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.photoFileNamesReferences',
-                            $referencesOptions
-                        )
+                        $this->createLabeledReferencesFormOptions('photoFileNamesReferences')
                     )
                     ->add(
                         'zeroRow.sketchFileNames',
@@ -292,10 +279,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.sketchFileNamesReferences',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.sketchFileNamesReferences',
-                            $referencesOptions
-                        )
+                        $this->createLabeledReferencesFormOptions('sketchFileNamesReferences')
                     )
                 ->end()
             ->end()
@@ -306,7 +290,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         CollectionType::class,
                         $this->createLabeledFormOptions(
                             'interpretations',
-                            ['required' => true, 'by_reference' => false]
+                            ['required' => false]
                         ),
                         ['edit' => 'inline']
                     )
@@ -331,5 +315,32 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                 ]);
             }
         }
+    }
+
+    private function createLabeledReferencesFormOptions(string $fieldName, array $options = []): array
+    {
+        $parentInscriptionId = $this->getSubject()->getId();
+
+        return $this->createLabeledManyToManyFormOptions(
+            'zeroRow.'.$fieldName,
+            array_merge(
+                $options,
+                [
+                    'class' => Interpretation::class,
+                    'query_builder' => static function (
+                        InterpretationRepository $entityRepository
+                    ) use ($parentInscriptionId) {
+                        return $entityRepository
+                            ->createQueryBuilder('interpretation')
+                            ->where('interpretation.inscription = :inscriptionId')
+                            ->setParameter(':inscriptionId', $parentInscriptionId);
+                    },
+                    'attr' => [
+                        'data-zero-row-references' => $fieldName,
+                        'data-sonata-select2' => 'false',
+                    ],
+                ]
+            )
+        );
     }
 }

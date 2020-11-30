@@ -30,7 +30,6 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 Encore
     .setOutputPath('public/build/')
     .setPublicPath('/build')
-    // .autoProvidejQuery()
     .cleanupOutputBeforeBuild()
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
@@ -44,8 +43,12 @@ Encore
     .addStyleEntry('css/site/inscription/list', './assets/scss/pages/site/inscription/list.scss')
     .addStyleEntry('css/site/inscription/show', './assets/scss/pages/site/inscription/show.scss')
     .addStyleEntry('css/site/bibliographic-record/list', './assets/scss/pages/site/bibliographic-record/list.scss')
+
+    .addEntry('js/admin/edit-inscription', './assets/js/pages/admin/edit-inscription.js')
+
     .addEntry('js/admin/common', './assets/js/pages/admin/common.js')
     .addStyleEntry('css/admin/common', './assets/scss/pages/admin/common.scss')
+
     .addPlugin(new CopyWebpackPlugin([
         {
             from: './assets/fonts',

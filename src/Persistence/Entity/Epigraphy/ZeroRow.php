@@ -62,7 +62,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_place_on_carrier_references")
      */
     private $placeOnCarrierReferences;
@@ -77,7 +81,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_writing_type_references")
      */
     private $writingTypesReferences;
@@ -92,7 +100,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_writing_method_references")
      */
     private $writingMethodsReferences;
@@ -107,7 +119,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_preservation_state_references")
      */
     private $preservationStatesReferences;
@@ -122,7 +138,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_material_references")
      */
     private $materialsReferences;
@@ -137,7 +157,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_alphabet_references")
      */
     private $alphabetsReferences;
@@ -152,7 +176,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_text_references")
      */
     private $textReferences;
@@ -167,7 +195,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_text_image_file_names_references")
      */
     private $textImageFileNamesReferences;
@@ -182,7 +214,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_transliteration_references")
      */
     private $transliterationReferences;
@@ -197,7 +233,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_translation_references")
      */
     private $translationReferences;
@@ -212,7 +252,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_photo_file_names_references")
      */
     private $photoFileNamesReferences;
@@ -227,7 +271,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_sketch_file_names_references")
      */
     private $sketchFileNamesReferences;
@@ -242,7 +290,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_content_category_references")
      */
     private $contentCategoriesReferences;
@@ -257,7 +309,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_content_references")
      */
     private $contentReferences;
@@ -272,7 +328,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_date_in_text_references")
      */
     private $dateInTextReferences;
@@ -287,7 +347,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_stratigraphical_date_references")
      */
     private $stratigraphicalDateReferences;
@@ -302,7 +366,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_non_stratigraphical_date_references")
      */
     private $nonStratigraphicalDateReferences;
@@ -317,7 +385,11 @@ class ZeroRow
     /**
      * @var Collection|Interpretation[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Interpretation")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @ORM\JoinTable(name="zero_row_historical_date_references")
      */
     private $historicalDateReferences;
