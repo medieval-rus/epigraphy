@@ -4313,6 +4313,11 @@ micromatch@^3.0.4, micromatch@^3.1.10, micromatch@^3.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.2"
 
+microtip@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/microtip/-/microtip-0.2.2.tgz#9d9d43cbbf6815d6d16a514abc71c17c5b91d1e9"
+  integrity sha512-oah38eH5vSHVFP6yXjbKWOYt92mav++0j3zh844h1vhOscqEg7Rf4agDEIwUTFCcAPPdlhYUQMe6eZfHgD+4oQ==
+
 miller-rabin@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/miller-rabin/-/miller-rabin-4.0.1.tgz#f080351c865b0dc562a8462966daa53543c78a4d"

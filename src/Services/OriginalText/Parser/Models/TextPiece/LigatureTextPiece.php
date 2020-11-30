@@ -41,4 +41,14 @@ final class LigatureTextPiece implements TextPieceInterface
     {
         return $this->text;
     }
+
+    public function getLetters(): array
+    {
+        return array_filter(
+            mb_str_split($this->text),
+            static function (string $character): bool {
+                return ' ' !== $character;
+            }
+        );
+    }
 }

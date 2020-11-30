@@ -10,6 +10,7 @@
     "dependencies": {
         "bootstrap": "^4.3.1",
         "jquery": "^3.5.1",
+        "microtip": "^0.2.2",
         "popper.js": "^1.16.1"
     },
     "devDependencies": {

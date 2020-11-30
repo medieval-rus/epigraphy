@@ -34,22 +34,28 @@ use App\Services\OriginalText\Parser\Models\TextPiece\SuperscriptedTextPiece;
 use App\Services\OriginalText\Parser\Models\TextPiece\TextBreakTextPiece;
 use App\Services\OriginalText\Parser\Models\TextPiece\TextPieceInterface;
 use InvalidArgumentException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
 final class OriginalTextFormatter implements OriginalTextFormatterInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     public function format(OriginalText $originalText): string
     {
         return '<div class="eomr-text-wrapper">'.
-            implode('', array_map([$this, 'formatTextPieceAndAddBrs'], $originalText->getPieces())).
+            implode('', array_map([$this, 'formatTextPiece'], $originalText->getPieces())).
             '</div>';
-    }
-
-    private function formatTextPieceAndAddBrs(TextPieceInterface $textPiece): string
-    {
-        return nl2br($this->formatTextPiece($textPiece));
     }
 
     private function formatTextPiece(TextPieceInterface $textPiece): string
@@ -77,26 +83,47 @@ final class OriginalTextFormatter implements OriginalTextFormatterInterface
 
     private function formatLigatureTextPiece(LigatureTextPiece $textPiece)
     {
-        return '<span class="eomr-text-piece-ligature">'.$textPiece->getText().'</span>';
+        $text = nl2br($textPiece->getText());
+
+        $hintText = htmlspecialchars(
+            $this->translator->trans(
+                'originalText.ligature',
+                [
+                    '%symbols%' => implode(
+                        ', ',
+                        array_map(
+                            static function (string $letter): string {
+                                return sprintf('"%s"', $letter);
+                            },
+                            $textPiece->getLetters()
+                        )
+                    ),
+                ]
+            )
+        );
+
+        return '<span aria-label="'.$hintText.'" data-microtip-position="top" role="tooltip" >
+                    <span class="eomr-text-piece-ligature">'.$text.'</span>
+                </span>';
     }
 
     private function formatCommentTextPiece(CommentTextPiece $textPiece): string
     {
-        return '<span class="eomr-text-piece-comment">'.$textPiece->getText().'</span>';
+        return '<span class="eomr-text-piece-comment">'.nl2br($textPiece->getText()).'</span>';
     }
 
     private function formatOriginalTextPiece(OriginalTextPiece $textPiece): string
     {
-        return '<span class="eomr-text-piece-original">'.$textPiece->getText().'</span>';
+        return '<span class="eomr-text-piece-original">'.nl2br($textPiece->getText()).'</span>';
     }
 
     private function formatTextBreakTextPiece(TextPieceInterface $textPiece): string
     {
-        return '<span class="eomr-text-piece-text-break">'.$textPiece->getText().'</span>';
+        return '<span class="eomr-text-piece-text-break">'.nl2br($textPiece->getText()).'</span>';
     }
 
     private function formatSuperscriptedTextPiece(SuperscriptedTextPiece $textPiece)
     {
-        return '<span class="eomr-text-piece-superscripted">'.$textPiece->getText().'</span>';
+        return '<span class="eomr-text-piece-superscripted">'.nl2br($textPiece->getText()).'</span>';
     }
 }

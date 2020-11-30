@@ -20,7 +20,6 @@
  */
 
 import $ from 'jquery';
-import '../../src/common'
 
 $(() => {
     forwardChangesFromInterpretationToZeroRow();
