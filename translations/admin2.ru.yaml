@@ -292,4 +292,22 @@ form:
       historicalDate: «Историческая» дата
       photoFileNames: Фото (названия файлов)
       sketchFileNames: Прориси (названия файлов)
-
+      isPartOfZeroRow:
+        placeOnCarrier: Часть нулевой строки
+        writingTypes: Часть нулевой строки
+        writingMethods: Часть нулевой строки
+        preservationStates: Часть нулевой строки
+        materials: Часть нулевой строки
+        alphabets: Часть нулевой строки
+        text: Часть нулевой строки
+        textImageFileNames: Часть нулевой строки
+        transliteration: Часть нулевой строки
+        translation: Часть нулевой строки
+        contentCategories: Часть нулевой строки
+        content: Часть нулевой строки
+        dateInText: Часть нулевой строки
+        stratigraphicalDate: Часть нулевой строки
+        nonStratigraphicalDate: Часть нулевой строки
+        historicalDate: Часть нулевой строки
+        photoFileNames: Часть нулевой строки
+        sketchFileNames: Часть нулевой строки

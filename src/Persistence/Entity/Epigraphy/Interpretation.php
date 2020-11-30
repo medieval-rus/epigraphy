@@ -37,7 +37,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Interpretation implements StringifiableEntityInterface
 {
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -58,7 +58,7 @@ class Interpretation implements StringifiableEntityInterface
     private $inscription;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=255)
      */
@@ -226,6 +226,16 @@ class Interpretation implements StringifiableEntityInterface
         return sprintf('%s', (string) $this->getSource());
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getInscription(): ?Inscription
     {
         return $this->inscription;
@@ -243,7 +253,7 @@ class Interpretation implements StringifiableEntityInterface
         return $this->source;
     }
 
-    public function setSource(string $source): self
+    public function setSource(?string $source): self
     {
         $this->source = $source;
 

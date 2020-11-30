@@ -93,7 +93,7 @@ controller:
             textImageFileNames: Изображения текста
             transliteration: Транслитерация
             translation: Перевод
-            photoFileNames: Фотографи
+            photoFileNames: Фотографии
             sketchFileNames: Прориси
             contentCategories: Категория по содержанию
             content: Содержание
@@ -117,3 +117,6 @@ type:
   bool:
     "true": да
     "false": нет
+
+originalText:
+  ligature: Лигатура, состоящая из символов %symbols%.

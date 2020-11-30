@@ -20,16 +20,13 @@
  */
 
 @import '../fonts/monomachus';
+@import '~microtip/microtip';
 
 .eomr-text-wrapper {
 
   .eomr-text-piece-ligature {
     @extend .eomr-text-piece-original;
-    margin: 0 0.5px;
-    border-right: 2px #000 solid;
-    border-left: 2px #000 solid;
-    border-bottom: 2px #000 solid;
-    border-radius: 0 0 6px 6px;
+    border-bottom: 1px dotted #000;
   }
 
   .eomr-text-piece-comment {
