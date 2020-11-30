@@ -40,6 +40,6 @@ final class LigatureRuleDefinition implements RuleDefinitionInterface
 
     public function getRegex(): string
     {
-        return '/\*([^ \*]{2,})\*/us';
+        return '/\*([^\*]{2,})\*/us';
     }
 }
