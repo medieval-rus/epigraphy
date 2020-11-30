@@ -93,7 +93,7 @@ controller:
             textImageFileNames: Изображения текста
             transliteration: Транслитерация
             translation: Перевод
-            photoFileNames: Фотографи
+            photoFileNames: Фотографии
             sketchFileNames: Прориси
             contentCategories: Категория по содержанию
             content: Содержание
