@@ -32,4 +32,13 @@ use App\Admin\Abstraction\AbstractNamedEntityAdmin;
  */
 final class MaterialAdmin extends AbstractNamedEntityAdmin
 {
+    /**
+     * @var string
+     */
+    protected $baseRouteName = 'epigraphy_material';
+
+    /**
+     * @var string
+     */
+    protected $baseRoutePattern = 'epigraphy/material';
 }

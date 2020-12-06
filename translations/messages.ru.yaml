@@ -69,6 +69,7 @@ controller:
         searchInFoundButton: Искать в найденном
     show:
       title: Надпись
+      admin: Просмотреть надпись в админке
       inscription:
         label:
           conventionalDate: Условная дата

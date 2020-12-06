@@ -38,6 +38,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CarrierAdmin extends AbstractEntityAdmin
 {
+    /**
+     * @var string
+     */
+    protected $baseRouteName = 'epigraphy_carrier';
+
+    /**
+     * @var string
+     */
+    protected $baseRoutePattern = 'epigraphy/carrier';
+
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper

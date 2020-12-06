@@ -44,6 +44,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class InscriptionAdmin extends AbstractEntityAdmin
 {
+    /**
+     * @var string
+     */
+    protected $baseRouteName = 'epigraphy_inscription';
+
+    /**
+     * @var string
+     */
+    protected $baseRoutePattern = 'epigraphy/inscription';
+
     public function preUpdate($object): void
     {
         if ($object instanceof Inscription) {
@@ -319,7 +329,9 @@ final class InscriptionAdmin extends AbstractEntityAdmin
 
     private function createLabeledReferencesFormOptions(string $fieldName, array $options = []): array
     {
-        $parentInscriptionId = $this->getSubject()->getId();
+        $subject = $this->getSubject();
+
+        $parentInscriptionId = null === $subject ? null : $subject->getId();
 
         return $this->createLabeledManyToManyFormOptions(
             'zeroRow.'.$fieldName,
@@ -330,8 +342,13 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     'query_builder' => static function (
                         InterpretationRepository $entityRepository
                     ) use ($parentInscriptionId) {
-                        return $entityRepository
-                            ->createQueryBuilder('interpretation')
+                        $queryBuilder = $entityRepository->createQueryBuilder('interpretation');
+
+                        if (null === $parentInscriptionId) {
+                            return $queryBuilder;
+                        }
+
+                        return $queryBuilder
                             ->where('interpretation.inscription = :inscriptionId')
                             ->setParameter(':inscriptionId', $parentInscriptionId);
                     },

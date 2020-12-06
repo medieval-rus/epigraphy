@@ -32,4 +32,13 @@ use App\Admin\Abstraction\AbstractNamedEntityAdmin;
  */
 final class AlphabetAdmin extends AbstractNamedEntityAdmin
 {
+    /**
+     * @var string
+     */
+    protected $baseRouteName = 'epigraphy_alphabet';
+
+    /**
+     * @var string
+     */
+    protected $baseRoutePattern = 'epigraphy/alphabet';
 }

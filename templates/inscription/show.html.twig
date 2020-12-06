@@ -64,6 +64,16 @@
             {{ self.format_text_row('zeroRow.historicalDate', self.format_zero_row(inscription, 'historicalDate')) }}
         </tbody>
     </table>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="container">
+            <a href="{{ path('epigraphy_inscription_edit', {'id': inscription.id}) }}"
+               target="_blank"
+               class="h5"
+            >
+                {{- 'controller.inscription.show.admin'|trans -}}
+            </a>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {%- macro format_zero_row(inscription, propertyName, formatType = 'default') -%}

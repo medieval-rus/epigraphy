@@ -32,4 +32,13 @@ use App\Admin\Abstraction\AbstractNamedEntityAdmin;
  */
 final class WritingMethodAdmin extends AbstractNamedEntityAdmin
 {
+    /**
+     * @var string
+     */
+    protected $baseRouteName = 'epigraphy_writing_method';
+
+    /**
+     * @var string
+     */
+    protected $baseRoutePattern = 'epigraphy/writing-method';
 }

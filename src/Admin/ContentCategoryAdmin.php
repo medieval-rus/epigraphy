@@ -32,4 +32,13 @@ use App\Admin\Abstraction\AbstractNamedEntityAdmin;
  */
 final class ContentCategoryAdmin extends AbstractNamedEntityAdmin
 {
+    /**
+     * @var string
+     */
+    protected $baseRouteName = 'epigraphy_content_category';
+
+    /**
+     * @var string
+     */
+    protected $baseRoutePattern = 'epigraphy/content-category';
 }

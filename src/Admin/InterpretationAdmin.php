@@ -42,6 +42,16 @@ use Symfony\Component\Form\FormEvents;
  */
 final class InterpretationAdmin extends AbstractEntityAdmin
 {
+    /**
+     * @var string
+     */
+    protected $baseRouteName = 'epigraphy_interpretation';
+
+    /**
+     * @var string
+     */
+    protected $baseRoutePattern = 'epigraphy/interpretation';
+
     public function wrapInterpretation(PreSetDataEvent $event): void
     {
         if (($interpretation = $event->getData()) instanceof Interpretation &&

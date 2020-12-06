@@ -32,4 +32,13 @@ use App\Admin\Abstraction\AbstractNamedEntityAdmin;
  */
 final class CarrierCategoryAdmin extends AbstractNamedEntityAdmin
 {
+    /**
+     * @var string
+     */
+    protected $baseRouteName = 'epigraphy_carrier_category';
+
+    /**
+     * @var string
+     */
+    protected $baseRoutePattern = 'epigraphy/carrier-category';
 }

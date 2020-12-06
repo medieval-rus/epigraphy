@@ -32,4 +32,13 @@ use App\Admin\Abstraction\AbstractNamedEntityAdmin;
  */
 final class PreservationStateAdmin extends AbstractNamedEntityAdmin
 {
+    /**
+     * @var string
+     */
+    protected $baseRouteName = 'epigraphy_preservation_state';
+
+    /**
+     * @var string
+     */
+    protected $baseRoutePattern = 'epigraphy/preservation-state';
 }
