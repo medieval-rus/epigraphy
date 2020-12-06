@@ -102,9 +102,9 @@ final class OriginalTextFormatter implements OriginalTextFormatterInterface
             )
         );
 
-        return '<span aria-label="'.$hintText.'" data-microtip-position="top" role="tooltip" >
-                    <span class="eomr-text-piece-ligature">'.$text.'</span>
-                </span>';
+        return '<span aria-label="'.$hintText.'" data-microtip-position="top" role="tooltip" >'.
+               '<span class="eomr-text-piece-ligature">'.$text.'</span>'.
+               '</span>';
     }
 
     private function formatCommentTextPiece(CommentTextPiece $textPiece): string
