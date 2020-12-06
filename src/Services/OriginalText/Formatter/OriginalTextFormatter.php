@@ -89,15 +89,7 @@ final class OriginalTextFormatter implements OriginalTextFormatterInterface
             $this->translator->trans(
                 'originalText.ligature',
                 [
-                    '%symbols%' => implode(
-                        ', ',
-                        array_map(
-                            static function (string $letter): string {
-                                return sprintf('"%s"', $letter);
-                            },
-                            $textPiece->getLetters()
-                        )
-                    ),
+                    '%symbols%' => sprintf('"%s"', implode('', $textPiece->getLetters())),
                 ]
             )
         );
