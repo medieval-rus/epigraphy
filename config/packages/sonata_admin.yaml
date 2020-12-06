@@ -32,59 +32,59 @@ sonata_admin:
 sonata_block:
   blocks:
     sonata.admin.block.admin_list:
-      contexts: [admin2]
+      contexts: [admin]
 
 services:
   admin.carrier:
     class: App\Admin\CarrierAdmin
     arguments: [ null, App\Persistence\Entity\Epigraphy\Carrier, null ]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.inscriptions.label, label_catalogue: admin2 }
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.inscriptions.label, label_catalogue: admin }
   admin.carrier_type:
     class: App\Admin\CarrierTypeAdmin
     arguments: [ null, App\Persistence\Entity\Epigraphy\CarrierType, null ]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
   admin.carrier_category:
     class: App\Admin\CarrierCategoryAdmin
     arguments: [ null, App\Persistence\Entity\Epigraphy\CarrierCategory, null ]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
   admin.alphabet:
     class: App\Admin\AlphabetAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\Alphabet, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
   admin.content_category:
     class: App\Admin\ContentCategoryAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\ContentCategory, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
   admin.material:
     class: App\Admin\MaterialAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\Material, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
   admin.preservation_state:
     class: App\Admin\PreservationStateAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\PreservationState, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
   admin.writing_type:
     class: App\Admin\WritingTypeAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\WritingType, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
   admin.writing_method:
     class: App\Admin\WritingMethodAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\WritingMethod, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin2 }
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
   admin.inscription:
     class: App\Admin\InscriptionAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\Inscription, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.inscriptions.label, label_catalogue: admin2 }
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.inscriptions.label, label_catalogue: admin }
   admin.interpretation:
     class: App\Admin\InterpretationAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\Interpretation, null]

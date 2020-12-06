@@ -46,9 +46,6 @@ Encore
 
     .addEntry('js/admin/edit-inscription', './assets/js/pages/admin/edit-inscription.js')
 
-    .addEntry('js/admin/common', './assets/js/pages/admin/common.js')
-    .addStyleEntry('css/admin/common', './assets/scss/pages/admin/common.scss')
-
     .addPlugin(new CopyWebpackPlugin([
         {
             from: './assets/fonts',

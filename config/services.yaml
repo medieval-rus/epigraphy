@@ -44,9 +44,6 @@ services:
     tags:
       - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
 
-  App\Form\ZeroRowTypeConfigurator:
-    tags: ['easyadmin.form.type.configurator']
-
   App\Services\OriginalText\Parser\OriginalTextParser:
     arguments:
       $rules:

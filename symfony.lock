@@ -126,19 +126,6 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
-    "easycorp/easyadmin-bundle": {
-        "version": "2.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "2.0",
-            "ref": "0a51040a43c6f2172a3a0135cd15daf2043905d7"
-        },
-        "files": [
-            "./config/packages/easy_admin.yaml",
-            "./config/routes/easy_admin.yaml"
-        ]
-    },
     "egulias/email-validator": {
         "version": "2.1.11"
     },
@@ -219,9 +206,6 @@
     },
     "opis/closure": {
         "version": "3.5.7"
-    },
-    "pagerfanta/pagerfanta": {
-        "version": "v2.1.3"
     },
     "phan/phan": {
         "version": "2.4.5"
@@ -423,9 +407,6 @@
     },
     "symfony/dependency-injection": {
         "version": "v4.4.1"
-    },
-    "symfony/deprecation-contracts": {
-        "version": "v2.1.3"
     },
     "symfony/doctrine-bridge": {
         "version": "v4.4.1"

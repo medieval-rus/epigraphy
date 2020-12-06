@@ -33,7 +33,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
  */
 abstract class AbstractEntityAdmin extends AbstractAdmin
 {
-    protected $translationDomain = 'admin2';
+    protected $translationDomain = 'admin';
 
     public function getLabel(): string
     {

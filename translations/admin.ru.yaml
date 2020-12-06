@@ -17,65 +17,297 @@
 # «Epigraphy of Medieval Rus'» database,
 # see <http://www.gnu.org/licenses/>.
 
-action:
-  new: Создать объект "%entity_label%"
-  search: Поиск
-  list: Вернуться к списку объектов "%entity_label%"
-  delete: Удалить
-  save: Сохранить изменения
-  edit: Перейти к редактированию
-  cancel: Отменить
-
-page:
-  list:
-    title: Список объектов "%entity_label%"
-  new:
-    title: Создать новый объект "%entity_label%"
-  edit:
-    title: Редактирование объекта "%entity_label%" (ID %entity_id%)
-  show:
-    title: Просмотр объекта "%entity_label%" (ID %entity_id%)
-
-entity:
-  inscription: Надпись
-  interpretation: Интерпретация
-  zeroRow: Нулевая строка
-  carrier: Носитель
-  carrierType: Тип носителя
-  carrierCategory: Категория носителя
-  alphabet: Алфавит
-  contentCategory: Категория по содержанию
-  material: Материал
-  preservationState: Состояние сохранности
-  writingMethod: Способ нанесения
-  writingType: Разряд
-  user: Пользователь
-
 menu:
-  inscriptions: Надписи
-  carriers: Носители
-  entities: Именованные сущности
-  users: Пользователи
-
-label:
-  form:
-    empty_value: Значение не выбрано
-
-form:
+  groups:
+    inscriptions:
+      label: Надписи
+    namedEntities:
+      label: Именованные сущности
+  paragraphs:
+    carrier:
+      label: Носители
+    carrierType:
+      label: Типы носителей
+    carrierCategory:
+      label: Категории носителей
+    alphabet:
+      label: Алфавиты
+    inscription:
+      label: Надписи
+    interpretation:
+      label: Интерпретации
+    contentCategory:
+      label: Категории по содержанию
+    material:
+      label: Материалы
+    preservationState:
+      label: Состояния сохранности
+    writingMethod:
+      label: Способы нанесения
+    writingType:
+      label: Разряды
+tabMenu:
+  siteView: Посмотреть надпись на сайте
+list:
+  carrier:
+    fields:
+      id: Id
+      types: Тип
+      categories: Категория
+      origin1: Происхождение 1
+      origin2: Происхождение 2
+      findCircumstances: Обстоятельства находки
+      characteristics: Характеристики носителя
+      individualName: Индивидуальное название
+      storagePlace: Место хранения
+      inventoryNumber: Инвентарный номер
+      isInSitu: In situ
+  carrierType:
+    fields:
+      id: Внутренний идентификатор
+      name: Название
+  carrierCategory:
+    fields:
+      id: Внутренний идентификатор
+      name: Название
+  alphabet:
+    fields:
+      id: Внутренний идентификатор
+      name: Название
+  contentCategory:
+    fields:
+      id: Внутренний идентификатор
+      name: Название
+  material:
+    fields:
+      id: Внутренний идентификатор
+      name: Название
+  preservationState:
+    fields:
+      id: Внутренний идентификатор
+      name: Название
+  writingType:
+    fields:
+      id: Внутренний идентификатор
+      name: Название
+  writingMethod:
+    fields:
+      id: Внутренний идентификатор
+      name: Название
   inscription:
+    fields:
+      id: Внутренний идентификатор
+      carrier: Носитель
+      interpretations: Интерпретации
+form:
+  carrier:
+    tab:
+      identification:
+        label: Идентификациионные данные
+      classification:
+        label: Классификационные данные
+      origin:
+        label: Происхождение
+      preservation:
+        label: Сохранность
     section:
-      commonData: Common data
-      actualResearchInformation: Actual research information
-      interpretations: Interpretations
-    group:
-      bibliographicAspect: Bibliographic aspect
-      materialAspect: Material aspect
-      linguisticAspect: Linguistic aspect
-      historicalAspect: Historical aspect
-      multimedia: Multimedia
-  user:
-    roles:
-      user: Обычный пользователь (без доступа к админке)
-      editor: Редактор
-      admin: Администратор
-      superAdmin: Администратор с полным доступом
+      identification:
+        label: Данные для идентификации носителя
+      classification:
+        label: Тип и категория
+      origin:
+        label: Происхождение и обстоятельства находки
+      preservation:
+        label: Данные о хранении
+    fields:
+      id: Внутренний идентификатор
+      types: Тип носителя
+      categories: Категория носителя
+      origin1: Происхождение 1 (город, местность)
+      origin2: Происхождение 2 (здание, раскоп)
+      findCircumstances: Обстоятельства находки
+      characteristics: Характеристики носителя
+      individualName: Индивидуальное название носителя
+      storagePlace: Место хранения
+      inventoryNumber: Инвентарный номер
+      isInSitu: In situ
+  carrierType:
+    section:
+      name:
+        label: Название типа носителя
+    fields:
+      name: Название
+  carrierCategory:
+    section:
+      name:
+        label: Название категории носителя
+    fields:
+      name: Название
+  alphabet:
+    section:
+      name:
+        label: Название алфавита
+    fields:
+      name: Название
+  contentCategory:
+    section:
+      name:
+        label: Название категории по содержанию
+    fields:
+      name: Название
+  material:
+    section:
+      name:
+        label: Название материала
+    fields:
+      name: Название
+  preservationState:
+    section:
+      name:
+        label: Название состояния сохранности
+    fields:
+      name: Название
+  writingType:
+    section:
+      name:
+        label: Название разряда
+    fields:
+      name: Название
+  writingMethod:
+    section:
+      name:
+        label: Название способа нанесения
+    fields:
+      name: Название
+  inscription:
+    tab:
+      carrier:
+        label: Носитель
+      actualResearchInformation:
+        label: Актуальная информация
+      interpretations:
+        label: Интерпретации
+    section:
+      carrier:
+        label: Выбор носителя
+      zeroRow:
+        label: «Нулевая строка»
+      interpretations:
+        label: Редактирование интерпретаций надписи
+      zeroRowMaterialAspect:
+        label: Материальный аспект
+      zeroRowLinguisticAspect:
+        label: Лингвистический аспект
+      zeroRowHistoricalAspect:
+        label: Исторические данные
+      zeroRowMultimedia:
+        label: Изображения и прориси
+    fields:
+      carrier: Носитель
+      zeroRow:
+        placeOnCarrier: Расположение на носителе
+        placeOnCarrierReferences: Расположение на носителе (ссылки)
+        writingTypes: Разряд по Франклину
+        writingTypesReferences: Разряд по Франклину (ссылки)
+        writingMethods: Способ нанесения
+        writingMethodsReferences: Способ нанесения (ссылки)
+        preservationStates: Состояние сохранности
+        preservationStatesReferences: Состояние сохранности (ссылки)
+        materials: Материалы
+        materialsReferences: Материалы (ссылки)
+        alphabets: Алфавит
+        alphabetsReferences: Алфавит (ссылки)
+        text: Текст
+        textReferences: Текст (ссылки)
+        textImageFileNames: Изображения текста (названия файлов)
+        textImageFileNamesReferences: Изображения текста (ссылки)
+        transliteration: Транслитерация
+        transliterationReferences: Транслитерация (ссылки)
+        translation: Перевод
+        translationReferences: Перевод (ссылки)
+        contentCategories: Категория по содержанию
+        contentCategoriesReferences: Категория по содержанию (ссылки)
+        content: Содержание
+        contentReferences: Содержание (ссылки)
+        dateInText: Дата в тексте
+        dateInTextReferences: Дата в тексте (ссылки)
+        stratigraphicalDate: Стратиграфическая дата
+        stratigraphicalDateReferences: Стратиграфическая дата (ссылки)
+        nonStratigraphicalDate: Внестратиграфическая дата
+        nonStratigraphicalDateReferences: Внестратиграфическая дата (ссылки)
+        historicalDate: «Историческая» дата
+        historicalDateReferences: «Историческая» дата (ссылки)
+        photoFileNames: Фото (названия файлов)
+        photoFileNamesReferences: Фото (ссылки)
+        sketchFileNames: Прориси (названия файлов)
+        sketchFileNamesReferences: Прориси (ссылки)
+      interpretations: Интерпретации
+  interpretation:
+    tab:
+      identification:
+        label: Идентификациионные данные
+      bibliographicAspect:
+        label: Библиография
+      materialAspect:
+        label: Материальный аспект
+      linguisticAspect:
+        label: Лингвистический аспект
+      historicalAspect:
+        label: Исторический аспект
+      multimedia:
+        label: Мультимедиа
+    section:
+      identification:
+        label: Название источника и комментарий
+      bibliographicAspect:
+        label: Библиографические уточнения
+      materialAspect:
+        label: Материальный аспект
+      linguisticAspect:
+        label: Лингвистический аспект
+      historicalAspect:
+        label: Исторические данные
+      multimedia:
+        label: Изображения и прориси
+    fields:
+      source: Название источника
+      comment: Комментарий к источнику
+      pageNumbersInSource: Номера страниц в публикации
+      numberInSource: Номер в источнике
+      placeOnCarrier: Расположение на носителе
+      writingTypes: Разряд по Франклину
+      writingMethods: Способ нанесения
+      preservationStates: Состояние сохранности
+      materials: Материалы
+      alphabets: Алфавит
+      text: Текст
+      textImageFileNames: Изображения текста (названия файлов)
+      transliteration: Транслитерация
+      translation: Перевод
+      contentCategories: Категория по содержанию
+      content: Содержание
+      dateInText: Дата в тексте
+      stratigraphicalDate: Стратиграфическая дата
+      nonStratigraphicalDate: Внестратиграфическая дата
+      historicalDate: «Историческая» дата
+      photoFileNames: Фото (названия файлов)
+      sketchFileNames: Прориси (названия файлов)
+      isPartOfZeroRow:
+        placeOnCarrier: Часть нулевой строки
+        writingTypes: Часть нулевой строки
+        writingMethods: Часть нулевой строки
+        preservationStates: Часть нулевой строки
+        materials: Часть нулевой строки
+        alphabets: Часть нулевой строки
+        text: Часть нулевой строки
+        textImageFileNames: Часть нулевой строки
+        transliteration: Часть нулевой строки
+        translation: Часть нулевой строки
+        contentCategories: Часть нулевой строки
+        content: Часть нулевой строки
+        dateInText: Часть нулевой строки
+        stratigraphicalDate: Часть нулевой строки
+        nonStratigraphicalDate: Часть нулевой строки
+        historicalDate: Часть нулевой строки
+        photoFileNames: Часть нулевой строки
+        sketchFileNames: Часть нулевой строки
