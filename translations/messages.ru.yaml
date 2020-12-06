@@ -119,4 +119,4 @@ type:
     "false": нет
 
 originalText:
-  ligature: Лигатура, состоящая из символов %symbols%.
+  ligature: Лигатура "%symbols%".
