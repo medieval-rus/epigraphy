@@ -185,7 +185,10 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                     ->add(
                         'text',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('text', ['required' => false])
+                        $this->createLabeledFormOptions(
+                            'text',
+                            ['required' => false, 'attr' => ['data-virtual-keyboard' => true]]
+                        )
                     )
                     ->add(
                         'isTextPartOfZeroRow',

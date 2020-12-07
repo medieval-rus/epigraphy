@@ -3963,6 +3963,11 @@ isstream@~0.1.2:
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
   integrity sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=
 
+jquery-ui@^1.12.1:
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.12.1.tgz#bcb4045c8dd0539c134bc1488cdd3e768a7a9e51"
+  integrity sha1-vLQEXI3QU5wTS8FIjN0+dop6nlE=
+
 jquery@^3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.1.tgz#d7b4d08e1bfdb86ad2f1a3d039ea17304717abb5"
@@ -6077,6 +6082,11 @@ signal-exit@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.3.tgz#a1410c2edd8f077b08b4e253c8eacfcaf057461c"
   integrity sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
+
+simple-keyboard@^2.32.56:
+  version "2.32.56"
+  resolved "https://registry.yarnpkg.com/simple-keyboard/-/simple-keyboard-2.32.56.tgz#53986183f566bd06b7a10eeded5672e8bd7de28e"
+  integrity sha512-DvIlNuKBBe+EEGZ8mILJflSnlV7wkjZATf0FQRrfyHBuDPMnCPlNhwWD9P/mMR/YNaIeCVa2lEf7q/1bqx+EhQ==
 
 simple-swizzle@^0.2.2:
   version "0.2.2"

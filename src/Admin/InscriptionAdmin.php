@@ -170,7 +170,10 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.text',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.text', ['required' => false])
+                        $this->createLabeledFormOptions(
+                            'zeroRow.text',
+                            ['required' => false, 'attr' => ['data-virtual-keyboard' => true]]
+                        )
                     )
                     ->add(
                         'zeroRow.textReferences',

@@ -20,11 +20,18 @@
  */
 
 import $ from 'jquery';
+import 'jquery-ui/ui/widgets/draggable';
+import Keyboard from 'simple-keyboard';
+import isNumber from "../../../../../public/bundles/sonatacore/vendor/moment/src/lib/utils/is-number";
 
+const virtualKeyboardCoordinates = {
+    top: 150,
+    left: 0,
+}
 $(() => {
     forwardChangesFromInterpretationToZeroRow();
-
     forwardChangesFromZeroRowToInterpretation();
+    enableVirtualKeyboards();
 });
 
 function forwardChangesFromInterpretationToZeroRow()
@@ -90,4 +97,89 @@ function forwardChangesFromZeroRowToInterpretation()
             interpretationCheckboxElement[0].checked = isInterpretationSelected;
         }
     });
+}
+
+function enableVirtualKeyboards()
+{
+    $('[data-virtual-keyboard]').each(initializeVirtualKeyboard);
+}
+
+function initializeVirtualKeyboard(index, targetInputDom)
+{
+    const targetInputElement = $(targetInputDom);
+
+    const virtualKeyboardWrapper = createVirtualKeyboard(index, targetInputElement);
+
+    targetInputElement.on('focus', () => {
+        virtualKeyboardWrapper
+            .css('top', virtualKeyboardCoordinates.top + 'px')
+            .css('left', virtualKeyboardCoordinates.left + 'px')
+            .show();
+    });
+
+    $('body').on('click', function (event) {
+        let clickedElement = $(event.target);
+
+        if (0 === clickedElement.closest(virtualKeyboardWrapper).length &&
+            0 === clickedElement.closest(targetInputElement).length
+        ) {
+            virtualKeyboardWrapper.hide();
+        }
+    });
+}
+
+function createVirtualKeyboard(index, targetInputElement)
+{
+    const keyboardElement = $('<div/>')
+        .addClass('simple-keyboard-' + index)
+        .addClass('hg-theme-default')
+        .addClass('hg-layout-default');
+
+    const wrapper = $('<div/>')
+        .css('display', 'none')
+        .css('position', 'fixed')
+        .append(
+            $('<div/>')
+                .addClass('virtual-keyboard-wrapper')
+                .append(keyboardElement)
+        )
+        .appendTo($('body'));
+
+    wrapper.draggable({
+        stop: (event, ui) => {
+            const position = ui.helper.position();
+
+            if (isNumber(position.top) && isNumber(position.left)) {
+                virtualKeyboardCoordinates.top = position.top;
+                virtualKeyboardCoordinates.left = position.left;
+            }
+        }
+    });
+
+    const symbolsMap = new Map();
+
+    symbolsMap.set('_҃', '҃');
+    symbolsMap.set('_҇', '҇');
+
+    const keyboard = new Keyboard(
+        keyboardElement[0],
+        {
+            layout: {
+                default: [
+                    'Ѡ Ѧ Ѫ Ѣ Ѯ Ꙗ Ѹ Ꙋ Ѳ І Є Ѕ Ѥ Ѿ Ѵ Ѱ',
+                    'ѡ ѧ ѫ ѣ ѯ ꙗ ѹ ꙋ ѳ і є ѕ ѥ ѿ ѵ ѱ',
+                    ['҂', '¦', '⸗', ...symbolsMap.keys()].join(' '),
+                ],
+            },
+            onChange: input => {
+                const actualInput = input.startsWith('_') ? input.slice(1) : input;
+
+                targetInputElement.val(targetInputElement.val() + actualInput);
+
+                keyboard.clearInput();
+            }
+        }
+    );
+
+    return wrapper;
 }

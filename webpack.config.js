@@ -44,7 +44,9 @@ Encore
     .addStyleEntry('css/site/inscription/show', './assets/scss/pages/site/inscription/show.scss')
     .addStyleEntry('css/site/bibliographic-record/list', './assets/scss/pages/site/bibliographic-record/list.scss')
 
-    .addEntry('js/admin/edit-inscription', './assets/js/pages/admin/edit-inscription.js')
+
+    .addStyleEntry('css/admin/inscription/edit', './assets/scss/pages/admin/inscription/edit.scss')
+    .addEntry('js/admin/inscription/edit', './assets/js/pages/admin/inscription/edit.js')
 
     .addPlugin(new CopyWebpackPlugin([
         {

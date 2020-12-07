@@ -27,7 +27,9 @@ sonata_admin:
     use_icheck: false
   assets:
     extra_javascripts:
-      - 'build/js/admin/edit-inscription.js'
+      - 'build/js/admin/inscription/edit.js'
+    extra_stylesheets:
+      - 'build/css/admin/inscription/edit.css'
 
 sonata_block:
   blocks:
