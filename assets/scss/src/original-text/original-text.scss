@@ -23,6 +23,7 @@
 @import '~microtip/microtip';
 
 .eomr-text-wrapper {
+  line-height: 1.25;
 
   .eomr-text-piece-ligature {
     @extend .eomr-text-piece-original;
