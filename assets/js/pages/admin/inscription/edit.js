@@ -166,8 +166,8 @@ function createVirtualKeyboard(index, targetInputElement)
         {
             layout: {
                 default: [
-                    'Ѡ Ѧ Ѫ Ѣ Ѯ Ꙗ Ѹ Ꙋ Ѳ І Є Ѕ Ѥ Ѿ Ѵ Ѱ',
-                    'ѡ ѧ ѫ ѣ ѯ ꙗ ѹ ꙋ ѳ і є ѕ ѥ ѿ ѵ ѱ',
+                    'Ѡ Ѿ Ѧ Ѩ Ѫ Ѭ Ѣ Ѯ Ꙗ Ѹ Ꙋ Ѳ І Є Ѥ Ѕ Ѵ Ѱ',
+                    'ѡ ѿ ѧ ѩ ѫ ѭ ѣ ѯ ꙗ ѹ ꙋ ѳ і є ѥ ѕ ѵ ѱ',
                     ['҂', '¦', '⸗', ...symbolsMap.keys()].join(' '),
                 ],
             },
