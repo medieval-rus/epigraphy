@@ -32,5 +32,7 @@ use App\Persistence\Entity\Epigraphy\Inscription;
  */
 interface ImagesFormatterInterface
 {
-    public function format(Inscription $inscription, string $propertyName): string;
+    public function formatZeroRowImages(Inscription $inscription, string $propertyName): string;
+
+    public function formatInscriptionImages(Inscription $inscription, string $propertyName): string;
 }

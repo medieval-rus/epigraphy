@@ -25,7 +25,8 @@ declare(strict_types=1);
 
 namespace App\Services\ActualValue\Extractor;
 
-use App\Models\ActualValue;
+use App\Models\FilesActualValue;
+use App\Models\StringActualValue;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
@@ -48,20 +49,20 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
     }
 
     /**
-     * @return ActualValue[]
+     * @return StringActualValue[]
      */
-    public function extract(Inscription $inscription, string $propertyName): array
+    public function extractFromZeroRowAsStrings(Inscription $inscription, string $propertyName): array
     {
         $referenceValueFormatter = function (
             Interpretation $interpretation
-        ) use ($propertyName): ?ActualValue {
-            $value = $this->formatValue($this->propertyAccessor->getValue($interpretation, $propertyName));
+        ) use ($propertyName): ?StringActualValue {
+            $value = $this->getStringValue($this->propertyAccessor->getValue($interpretation, $propertyName));
 
             if (null === $value) {
                 return null;
             }
 
-            return new ActualValue(
+            return new StringActualValue(
                 $value,
                 $interpretation->getSource()
             );
@@ -73,11 +74,11 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
 
         $referenceValues = array_map($referenceValueFormatter, $references);
 
-        $zeroRowValue = $this->formatValue($this->propertyAccessor->getValue($zeroRow, $propertyName));
+        $zeroRowValue = $this->getStringValue($this->propertyAccessor->getValue($zeroRow, $propertyName));
 
         if (null !== $zeroRowValue) {
             $allValues = [
-                new ActualValue($zeroRowValue, null),
+                new StringActualValue($zeroRowValue, null),
                 ...$referenceValues,
             ];
         } else {
@@ -87,7 +88,58 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
         return array_filter($allValues, [$this, 'isNotNull']);
     }
 
-    private function formatValue($value): ?string
+    /**
+     * @return FilesActualValue[]
+     */
+    public function extractFromZeroRowAsFiles(Inscription $inscription, string $propertyName): array
+    {
+        $referenceValueFormatter = function (
+            Interpretation $interpretation
+        ) use ($propertyName): ?FilesActualValue {
+            $files = $this->propertyAccessor->getValue($interpretation, $propertyName);
+
+            if ($files instanceof Collection) {
+                return new FilesActualValue($files->toArray());
+            }
+
+            return null;
+        };
+
+        $zeroRow = $inscription->getZeroRow();
+
+        $references = $this->propertyAccessor->getValue($zeroRow, $propertyName.'References')->toArray();
+
+        $referenceValues = array_map($referenceValueFormatter, $references);
+
+        $zeroRowValue = $this->propertyAccessor->getValue($zeroRow, $propertyName);
+
+        if ($zeroRowValue instanceof Collection) {
+            $allValues = [
+                new FilesActualValue($zeroRowValue->toArray()),
+                ...$referenceValues,
+            ];
+        } else {
+            $allValues = $referenceValues;
+        }
+
+        return array_filter($allValues, [$this, 'isNotNull']);
+    }
+
+    /**
+     * @return FilesActualValue[]
+     */
+    public function extractFromInscriptionAsFile(Inscription $inscription, string $propertyName): ?FilesActualValue
+    {
+        $inscriptionValue = $this->propertyAccessor->getValue($inscription, $propertyName);
+
+        if ($inscriptionValue instanceof Collection) {
+            return new FilesActualValue($inscriptionValue->toArray());
+        }
+
+        return null;
+    }
+
+    private function getStringValue($value): ?string
     {
         if (\is_string($value) || null === $value) {
             return $value;
@@ -109,7 +161,7 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
                         return (string) $value;
                     },
                     array_filter(
-                        array_map([$this, 'formatValue'], $value->toArray()),
+                        array_map([$this, 'getStringValue'], $value->toArray()),
                         [$this, 'isNotNull']
                     )
                 )

@@ -25,8 +25,8 @@ services:
     autowire: true
     autoconfigure: true
     bind:
-      $googleDriveRootFolder: '%env(resolve:GOOGLE_DRIVE_ROOT_FOLDER)%'
-      $googleDriveApiKey: '%env(resolve:GOOGLE_DRIVE_API_KEY)%'
+      $zenodoApiEndpoint: '%env(resolve:ZENODO_API_ENDPOINT)%'
+      $zenodoAccessToken: '%env(resolve:ZENODO_ACCESS_TOKEN)%'
 
   App\:
     resource: '../src/'

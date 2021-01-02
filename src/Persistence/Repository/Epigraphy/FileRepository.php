@@ -23,34 +23,24 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\DataFixtures\Epigraphy;
+namespace App\Persistence\Repository\Epigraphy;
 
-use App\Persistence\Entity\Epigraphy\PreservationState;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
+use App\Persistence\Entity\Epigraphy\File;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
+ *
+ * @method File|null find(int $id, int $lockMode = null, int $lockVersion = null)
+ * @method File|null findOneBy(array $criteria, array $orderBy = null)
+ * @method File[]    findAll()
+ * @method File[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
  */
-final class PreservationStateFixtures extends Fixture
+final class FileRepository extends ServiceEntityRepository
 {
-    public const REFERENCE_TSELAYA = self::class.'целая';
-
-    public function load(ObjectManager $manager): void
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->loadObject($manager, 'целая', self::REFERENCE_TSELAYA);
-
-        $manager->flush();
-    }
-
-    private function loadObject(ObjectManager $manager, string $name, string $reference): void
-    {
-        $preservationState = (new PreservationState())
-            ->setName($name)
-        ;
-
-        $this->addReference($reference, $preservationState);
-
-        $manager->persist($preservationState);
+        parent::__construct($registry, File::class);
     }
 }

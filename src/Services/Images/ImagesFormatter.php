@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace App\Services\Images;
 
-use App\Models\ActualValue;
+use App\Models\FilesActualValue;
+use App\Persistence\Entity\Epigraphy\File;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\ActualValue\Extractor\ActualValueExtractorInterface;
-use App\Services\GoogleDrive\FileUrlGetter\FileUrlGetterInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
@@ -40,54 +40,63 @@ final class ImagesFormatter implements ImagesFormatterInterface
      */
     private $extractor;
 
-    /**
-     * @var FileUrlGetterInterface
-     */
-    private $fileUrlGetter;
-
-    public function __construct(
-        ActualValueExtractorInterface $extractor,
-        FileUrlGetterInterface $fileUrlGetter
-    ) {
+    public function __construct(ActualValueExtractorInterface $extractor)
+    {
         $this->extractor = $extractor;
-        $this->fileUrlGetter = $fileUrlGetter;
     }
 
-    public function format(Inscription $inscription, string $propertyName): string
+    public function formatZeroRowImages(Inscription $inscription, string $propertyName): string
     {
         return implode(
             '<br>',
             array_map(
-                function (ActualValue $actualValue): string {
-                    $fileNames = explode(', ', $actualValue->getValue());
-
-                    $fileUrls = array_map([$this->fileUrlGetter, 'getFileUrl'], $fileNames);
-
-                    $imagesTags = array_map(
-                        static function (?string $fileUrl, string $fileName): string {
-                            if (null === $fileUrl) {
-                                return '<img alt="'.$fileName.'" />';
-                            }
-
-                            return '<a class="eomr-image-link" href="'.$fileUrl.'" target="_blank">'.
-                                '<img class="eomr-image" src="'.$fileUrl.'" alt="'.$fileName.'" />'.
-                                '</a>';
-                        },
-                        $fileUrls,
-                        $fileNames
-                    );
-
-                    $sourceBlock = null !== $actualValue->getSource()
-                        ? '<div class="eomr-images-source">'.$actualValue->getSource().'</div>'
-                        : '';
-
-                    return '<div class="eomr-images-of-source">'.
-                        '<div class="eomr-images">'.implode('<br>', $imagesTags).'</div>'.
-                        $sourceBlock.
-                        '</div>';
-                },
-                $this->extractor->extract($inscription, $propertyName)
+                [$this, 'formatImages'],
+                $this->extractor->extractFromZeroRowAsFiles($inscription, $propertyName)
             )
         );
+    }
+
+    public function formatInscriptionImages(Inscription $inscription, string $propertyName): string
+    {
+        $file = $this->extractor->extractFromInscriptionAsFile($inscription, $propertyName);
+
+        if (null === $file) {
+            return '';
+        }
+
+        return $this->formatImages($file);
+    }
+
+    private function formatImages(FilesActualValue $actualValue): string
+    {
+        $files = $actualValue->getValue();
+
+        $imageTags = array_map(
+            static function (File $file): string {
+                $createImageTag = static function () use ($file): string {
+                    if (null === $file->getUrl()) {
+                        return '<img class="eomr-images-image" alt="'.$file->getFileName().'" />';
+                    }
+
+                    return '<a class="eomr-images-image-link" href="'.$file->getUrl().'" target="_blank">'.
+                        '<img class="eomr-images-image" src="'.$file->getUrl().'" alt="'.$file->getFileName().'" />'.
+                        '</a>';
+                };
+
+                $createDescriptionTag = static function () use ($file): string {
+                    return '<div class="eomr-images-description">'.$file->getDescription().'</div>';
+                };
+
+                return '<div class="eomr-images-image">'.
+                    $createImageTag().
+                    $createDescriptionTag().
+                    '</div>';
+            },
+            $files
+        );
+
+        return '<div class="eomr-images-wrapper">'.
+            implode('<br>', $imageTags).
+            '</div>';
     }
 }

@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\Services\ActualValue\Formatter;
 
-use App\Models\ActualValue;
+use App\Models\StringActualValue;
 use App\Services\OriginalText\Formatter\OriginalTextFormatterInterface;
 use App\Services\OriginalText\Parser\OriginalTextParserInterface;
 use InvalidArgumentException;
@@ -53,10 +53,10 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
         $this->originalTextFormatter = $originalTextFormatter;
     }
 
-    public function format(ActualValue $actualValue, string $formatType): string
+    public function format(StringActualValue $actualValue, string $formatType): string
     {
         $value = $actualValue->getValue();
-        $source = $actualValue->getSource();
+        $source = $actualValue->getDescription();
 
         switch ($formatType) {
             case self::FORMAT_TYPE_DEFAULT:

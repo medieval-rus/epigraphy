@@ -196,14 +196,14 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         $this->createLabeledZeroRowPartFormOptions('text')
                     )
                     ->add(
-                        'textImageFileNames',
+                        'textImages',
                         TextType::class,
-                        $this->createLabeledFormOptions('textImageFileNames', ['required' => false])
+                        $this->createLabeledFormOptions('textImages', ['required' => false])
                     )
                     ->add(
-                        'isTextImageFileNamesPartOfZeroRow',
+                        'isTextImagesPartOfZeroRow',
                         CheckboxType::class,
-                        $this->createLabeledZeroRowPartFormOptions('textImageFileNames')
+                        $this->createLabeledZeroRowPartFormOptions('textImages')
                     )
                     ->add(
                         'transliteration',
@@ -288,30 +288,6 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         'isHistoricalDatePartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('historicalDate')
-                    )
-                ->end()
-            ->end()
-            ->tab('form.interpretation.tab.multimedia.label')
-                ->with('form.interpretation.section.multimedia.label')
-                    ->add(
-                        'photoFileNames',
-                        TextType::class,
-                        $this->createLabeledFormOptions('photoFileNames', ['required' => false])
-                    )
-                    ->add(
-                        'isPhotoFileNamesPartOfZeroRow',
-                        CheckboxType::class,
-                        $this->createLabeledZeroRowPartFormOptions('photoFileNames')
-                    )
-                    ->add(
-                        'sketchFileNames',
-                        TextType::class,
-                        $this->createLabeledFormOptions('sketchFileNames', ['required' => false])
-                    )
-                    ->add(
-                        'isSketchFileNamesPartOfZeroRow',
-                        CheckboxType::class,
-                        $this->createLabeledZeroRowPartFormOptions('sketchFileNames')
                     )
                 ->end()
             ->end()

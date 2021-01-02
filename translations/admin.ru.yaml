@@ -200,8 +200,6 @@ form:
         label: Лингвистический аспект
       zeroRowHistoricalAspect:
         label: Исторические данные
-      zeroRowMultimedia:
-        label: Изображения и прориси
     fields:
       carrier: Носитель
       zeroRow:
@@ -219,8 +217,8 @@ form:
         alphabetsReferences: Алфавит (ссылки)
         text: Текст
         textReferences: Текст (ссылки)
-        textImageFileNames: Изображения текста (названия файлов)
-        textImageFileNamesReferences: Изображения текста (ссылки)
+        textImages: Изображения текста (названия файлов)
+        textImagesReferences: Изображения текста (ссылки)
         transliteration: Транслитерация
         transliterationReferences: Транслитерация (ссылки)
         translation: Перевод
@@ -237,10 +235,6 @@ form:
         nonStratigraphicalDateReferences: Внестратиграфическая дата (ссылки)
         historicalDate: «Историческая» дата
         historicalDateReferences: «Историческая» дата (ссылки)
-        photoFileNames: Фото (названия файлов)
-        photoFileNamesReferences: Фото (ссылки)
-        sketchFileNames: Прориси (названия файлов)
-        sketchFileNamesReferences: Прориси (ссылки)
       interpretations: Интерпретации
   interpretation:
     tab:
@@ -254,8 +248,6 @@ form:
         label: Лингвистический аспект
       historicalAspect:
         label: Исторический аспект
-      multimedia:
-        label: Мультимедиа
     section:
       identification:
         label: Название источника и комментарий
@@ -267,8 +259,6 @@ form:
         label: Лингвистический аспект
       historicalAspect:
         label: Исторические данные
-      multimedia:
-        label: Изображения и прориси
     fields:
       source: Название источника
       comment: Комментарий к источнику
@@ -281,7 +271,7 @@ form:
       materials: Материалы
       alphabets: Алфавит
       text: Текст
-      textImageFileNames: Изображения текста (названия файлов)
+      textImages: Изображения текста (названия файлов)
       transliteration: Транслитерация
       translation: Перевод
       contentCategories: Категория по содержанию
@@ -290,8 +280,8 @@ form:
       stratigraphicalDate: Стратиграфическая дата
       nonStratigraphicalDate: Внестратиграфическая дата
       historicalDate: «Историческая» дата
-      photoFileNames: Фото (названия файлов)
-      sketchFileNames: Прориси (названия файлов)
+      photos: Фото (названия файлов)
+      sketches: Прориси (названия файлов)
       isPartOfZeroRow:
         placeOnCarrier: Часть нулевой строки
         writingTypes: Часть нулевой строки
@@ -300,7 +290,7 @@ form:
         materials: Часть нулевой строки
         alphabets: Часть нулевой строки
         text: Часть нулевой строки
-        textImageFileNames: Часть нулевой строки
+        textImages: Часть нулевой строки
         transliteration: Часть нулевой строки
         translation: Часть нулевой строки
         contentCategories: Часть нулевой строки
@@ -309,5 +299,5 @@ form:
         stratigraphicalDate: Часть нулевой строки
         nonStratigraphicalDate: Часть нулевой строки
         historicalDate: Часть нулевой строки
-        photoFileNames: Часть нулевой строки
-        sketchFileNames: Часть нулевой строки
+        photos: Часть нулевой строки
+        sketches: Часть нулевой строки

@@ -23,12 +23,33 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\GoogleDrive\FileUrlGetter;
+namespace App\Models;
+
+use App\Persistence\Entity\Epigraphy\File;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-interface FileUrlGetterInterface
+final class FilesActualValue
 {
-    public function getFileUrl(string $fileName): ?string;
+    /**
+     * @var array|File[]
+     */
+    private array $value;
+
+    /**
+     * @param array|File[] $value
+     */
+    public function __construct(array $value)
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * @return array|File[]
+     */
+    public function getValue(): array
+    {
+        return $this->value;
+    }
 }

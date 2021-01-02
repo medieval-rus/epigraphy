@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\Services\ActualValue\Formatter;
 
-use App\Models\ActualValue;
+use App\Models\StringActualValue;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
@@ -35,5 +35,5 @@ interface ActualValueFormatterInterface
     public const FORMAT_TYPE_DEFAULT = 'default';
     public const FORMAT_TYPE_ORIGINAL_TEXT = 'original-text';
 
-    public function format(ActualValue $actualValue, string $formatType): string;
+    public function format(StringActualValue $actualValue, string $formatType): string;
 }

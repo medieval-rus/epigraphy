@@ -45,8 +45,7 @@
         "symfony/yaml": "4.4.*",
         "vyfony/bibliography-bundle": "^0.0.3",
         "vyfony/filterable-table-bundle": "^0.4.1",
-        "vyfony/mysqldump-bundle": "^0.2.0",
-        "vyfony/portation-bundle": "^0.1.0"
+        "vyfony/mysqldump-bundle": "^0.2.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",

@@ -23,34 +23,26 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\DataFixtures\Epigraphy;
+namespace App\Services\Zenodo;
 
-use App\Persistence\Entity\Epigraphy\Material;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
-
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
-final class MaterialFixtures extends Fixture
+interface ZenodoClientInterface
 {
-    public const REFERENCE_SHTUKATURKA = self::class.'штукатурка';
+    /**
+     * @param string[] $keywords
+     */
+    public function createImagesDeposition(
+        string $title,
+        string $description,
+        array $keywords,
+        array $communities,
+        array $creators
+    ): array;
 
-    public function load(ObjectManager $manager): void
-    {
-        $this->loadObject($manager, 'штукатурка', self::REFERENCE_SHTUKATURKA);
+    public function saveFile(string $fileName, string $file, string $depositionId): string;
 
-        $manager->flush();
-    }
+    public function publishDeposition(string $depositionId): void;
 
-    private function loadObject(ObjectManager $manager, string $name, string $reference): void
-    {
-        $material = (new Material())
-            ->setName($name)
-        ;
+    public function newVersion(string $depositionId): string;
 
-        $this->addReference($reference, $material);
-
-        $manager->persist($material);
-    }
+    public function createAndPublishImagesDeposition(): string;
 }

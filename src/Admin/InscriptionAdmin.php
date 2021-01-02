@@ -181,14 +181,14 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         $this->createLabeledReferencesFormOptions('textReferences')
                     )
                     ->add(
-                        'zeroRow.textImageFileNames',
+                        'zeroRow.textImages',
                         TextType::class,
-                        $this->createLabeledFormOptions('zeroRow.textImageFileNames', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.textImages', ['required' => false])
                     )
                     ->add(
-                        'zeroRow.textImageFileNamesReferences',
+                        'zeroRow.textImagesReferences',
                         EntityType::class,
-                        $this->createLabeledReferencesFormOptions('textImageFileNamesReferences')
+                        $this->createLabeledReferencesFormOptions('textImagesReferences')
                     )
                     ->add(
                         'zeroRow.transliteration',
@@ -271,28 +271,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         'zeroRow.historicalDateReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('historicalDateReferences')
-                    )
-                ->end()
-                ->with('form.inscription.section.zeroRowMultimedia.label', ['class' => 'col-md-6'])
-                    ->add(
-                        'zeroRow.photoFileNames',
-                        TextType::class,
-                        $this->createLabeledFormOptions('zeroRow.photoFileNames', ['required' => false])
-                    )
-                    ->add(
-                        'zeroRow.photoFileNamesReferences',
-                        EntityType::class,
-                        $this->createLabeledReferencesFormOptions('photoFileNamesReferences')
-                    )
-                    ->add(
-                        'zeroRow.sketchFileNames',
-                        TextType::class,
-                        $this->createLabeledFormOptions('zeroRow.sketchFileNames', ['required' => false])
-                    )
-                    ->add(
-                        'zeroRow.sketchFileNamesReferences',
-                        EntityType::class,
-                        $this->createLabeledReferencesFormOptions('sketchFileNamesReferences')
                     )
                 ->end()
             ->end()

@@ -135,11 +135,12 @@ class Interpretation implements StringifiableEntityInterface
     private $text;
 
     /**
-     * @var string|null
+     * @var Collection|File[]
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\File", cascade={"persist"})
+     * @ORM\JoinTable(name="interpretation_text_images")
      */
-    private $textImageFileNames;
+    private $textImages;
 
     /**
      * @var string|null
@@ -154,20 +155,6 @@ class Interpretation implements StringifiableEntityInterface
      * @ORM\Column(type="text", nullable=true)
      */
     private $translation;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $photoFileNames;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $sketchFileNames;
 
     /**
      * @var Collection|ContentCategory[]
@@ -404,14 +391,20 @@ class Interpretation implements StringifiableEntityInterface
         return $this;
     }
 
-    public function getTextImageFileNames(): ?string
+    /**
+     * @return Collection|File[]
+     */
+    public function getTextImages(): Collection
     {
-        return $this->textImageFileNames;
+        return $this->textImages;
     }
 
-    public function setTextImageFileNames(?string $textImageFileNames): self
+    /**
+     * @param Collection|File[] $textImages
+     */
+    public function setTextImages(Collection $textImages): self
     {
-        $this->textImageFileNames = $textImageFileNames;
+        $this->textImages = $textImages;
 
         return $this;
     }
@@ -436,30 +429,6 @@ class Interpretation implements StringifiableEntityInterface
     public function setTranslation(?string $translation): self
     {
         $this->translation = $translation;
-
-        return $this;
-    }
-
-    public function getPhotoFileNames(): ?string
-    {
-        return $this->photoFileNames;
-    }
-
-    public function setPhotoFileNames(?string $photoFileNames): self
-    {
-        $this->photoFileNames = $photoFileNames;
-
-        return $this;
-    }
-
-    public function getSketchFileNames(): ?string
-    {
-        return $this->sketchFileNames;
-    }
-
-    public function setSketchFileNames(?string $sketchFileNames): self
-    {
-        $this->sketchFileNames = $sketchFileNames;
 
         return $this;
     }

@@ -25,7 +25,8 @@ declare(strict_types=1);
 
 namespace App\Services\ActualValue\Extractor;
 
-use App\Models\ActualValue;
+use App\Models\FilesActualValue;
+use App\Models\StringActualValue;
 use App\Persistence\Entity\Epigraphy\Inscription;
 
 /**
@@ -34,7 +35,17 @@ use App\Persistence\Entity\Epigraphy\Inscription;
 interface ActualValueExtractorInterface
 {
     /**
-     * @return ActualValue[]
+     * @return StringActualValue[]
      */
-    public function extract(Inscription $inscription, string $propertyName): array;
+    public function extractFromZeroRowAsStrings(Inscription $inscription, string $propertyName): array;
+
+    /**
+     * @return FilesActualValue[]
+     */
+    public function extractFromZeroRowAsFiles(Inscription $inscription, string $propertyName): array;
+
+    /**
+     * @return FilesActualValue[]
+     */
+    public function extractFromInscriptionAsFile(Inscription $inscription, string $propertyName): ?FilesActualValue;
 }
