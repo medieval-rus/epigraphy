@@ -27,6 +27,8 @@ namespace App\Services\Zenodo;
 
 interface ZenodoClientInterface
 {
+    public function getLatestDepositionIdVersion(string $recordId): string;
+
     /**
      * @param string[] $keywords
      */
@@ -38,11 +40,22 @@ interface ZenodoClientInterface
         array $creators
     ): array;
 
-    public function saveFile(string $fileName, string $file, string $depositionId): string;
+    public function saveFile(string $fileName, string $file, string $depositionId): array;
+
+    public function removeFile(string $fileId, string $depositionId): void;
 
     public function publishDeposition(string $depositionId): void;
 
     public function newVersion(string $depositionId): string;
 
-    public function createAndPublishImagesDeposition(): string;
+    public function deleteVersion(string $depositionId): void;
+
+    public function createAndPublishImagesDeposition(
+        string $title,
+        string $description,
+        array $keywords,
+        array $communities,
+        array $creators,
+        string $readmeContent
+    ): string;
 }

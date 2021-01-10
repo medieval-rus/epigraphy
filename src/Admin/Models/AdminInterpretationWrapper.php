@@ -23,7 +23,7 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin;
+namespace App\Admin\Models;
 
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Epigraphy\ZeroRow;
@@ -34,7 +34,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-class AdminInterpretationWrapper extends Interpretation
+final class AdminInterpretationWrapper extends Interpretation
 {
     /**
      * @var bool

@@ -92,3 +92,8 @@ services:
     arguments: [null, App\Persistence\Entity\Epigraphy\Interpretation, null]
     tags:
       - { name: sonata.admin, manager_type: orm, show_in_dashboard: false }
+  admin.file:
+    class: App\Admin\FileAdmin
+    arguments: [ null, App\Persistence\Entity\Epigraphy\File, null, '@App\Services\Zenodo\ZenodoClientInterface', '%env(resolve:ZENODO_RECORD_ID)%' ]
+    tags:
+      - { name: sonata.admin, manager_type: orm, group: menu.groups.media.label, label_catalogue: admin }

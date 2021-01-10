@@ -23,6 +23,8 @@ menu:
       label: Надписи
     namedEntities:
       label: Именованные сущности
+    media:
+      label: Медиа
   paragraphs:
     carrier:
       label: Носители
@@ -32,10 +34,6 @@ menu:
       label: Категории носителей
     alphabet:
       label: Алфавиты
-    inscription:
-      label: Надписи
-    interpretation:
-      label: Интерпретации
     contentCategory:
       label: Категории по содержанию
     material:
@@ -46,6 +44,12 @@ menu:
       label: Способы нанесения
     writingType:
       label: Разряды
+    inscription:
+      label: Надписи
+    interpretation:
+      label: Интерпретации
+    file:
+      label: Файлы
 tabMenu:
   siteView: Посмотреть надпись на сайте
 list:
@@ -99,6 +103,13 @@ list:
       id: Внутренний идентификатор
       carrier: Носитель
       interpretations: Интерпретации
+  file:
+    fields:
+      id: Внутренний идентификатор
+      fileName: Имя файла
+      mediaType: Тип
+      description: Описание
+
 form:
   carrier:
     tab:
@@ -181,15 +192,15 @@ form:
       name: Название
   inscription:
     tab:
-      carrier:
-        label: Носитель
+      common:
+        label: Общие сведения
       actualResearchInformation:
         label: Актуальная информация
       interpretations:
         label: Интерпретации
     section:
-      carrier:
-        label: Выбор носителя
+      common:
+        label: Общие сведения
       zeroRow:
         label: «Нулевая строка»
       interpretations:
@@ -201,7 +212,10 @@ form:
       zeroRowHistoricalAspect:
         label: Исторические данные
     fields:
+      conventionalDate: Условная дата
       carrier: Носитель
+      photos: Фото
+      sketches: Прориси
       zeroRow:
         placeOnCarrier: Расположение на носителе
         placeOnCarrierReferences: Расположение на носителе (ссылки)
@@ -217,7 +231,7 @@ form:
         alphabetsReferences: Алфавит (ссылки)
         text: Текст
         textReferences: Текст (ссылки)
-        textImages: Изображения текста (названия файлов)
+        textImages: Изображения текста (файлы)
         textImagesReferences: Изображения текста (ссылки)
         transliteration: Транслитерация
         transliterationReferences: Транслитерация (ссылки)
@@ -271,7 +285,7 @@ form:
       materials: Материалы
       alphabets: Алфавит
       text: Текст
-      textImages: Изображения текста (названия файлов)
+      textImages: Изображения текста (файлы)
       transliteration: Транслитерация
       translation: Перевод
       contentCategories: Категория по содержанию
@@ -280,8 +294,8 @@ form:
       stratigraphicalDate: Стратиграфическая дата
       nonStratigraphicalDate: Внестратиграфическая дата
       historicalDate: «Историческая» дата
-      photos: Фото (названия файлов)
-      sketches: Прориси (названия файлов)
+      photos: Фото (файлы)
+      sketches: Прориси (файлы)
       isPartOfZeroRow:
         placeOnCarrier: Часть нулевой строки
         writingTypes: Часть нулевой строки
@@ -301,3 +315,11 @@ form:
         historicalDate: Часть нулевой строки
         photos: Часть нулевой строки
         sketches: Часть нулевой строки
+  file:
+    fields:
+      id: Внутренний идентификатор
+      fileName: Имя файла
+      mediaType: Тип
+      url: Адрес
+      description: Описание
+      binaryContent: Файл

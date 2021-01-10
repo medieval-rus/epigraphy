@@ -71,9 +71,23 @@ class File
      */
     private $description;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="binary", length=16777215, nullable=true)
+     */
+    private $binaryContent;
+
+    /**
+     * @var array|null
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $metadata;
+
     public function __toString(): string
     {
-        return (string) $this->url;
+        return (string) $this->fileName;
     }
 
     public function getId(): ?int
@@ -125,6 +139,30 @@ class File
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getBinaryContent(): ?string
+    {
+        return $this->binaryContent;
+    }
+
+    public function setBinaryContent(?string $binaryContent): self
+    {
+        $this->binaryContent = $binaryContent;
+
+        return $this;
+    }
+
+    public function getMetadata(): ?array
+    {
+        return $this->metadata;
+    }
+
+    public function setMetadata(?array $metadata): self
+    {
+        $this->metadata = $metadata;
 
         return $this;
     }

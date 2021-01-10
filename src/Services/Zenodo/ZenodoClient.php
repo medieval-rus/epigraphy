@@ -70,6 +70,25 @@ final class ZenodoClient implements ZenodoClientInterface
         $this->zenodoAccessToken = $zenodoAccessToken;
     }
 
+    public function getLatestDepositionIdVersion(string $recordId): string
+    {
+        $url = $this->zenodoApiEndpoint.'/records/'.$recordId;
+
+        $response = $this->httpClient->request('GET', $url.$this->formatQueryParameters());
+
+        $statusCode = $response->getStatusCode();
+        $content = $response->getContent(false);
+
+        if (Response::HTTP_OK !== $statusCode) {
+            $message = sprintf('Request to "%s" failed with status code "%d": %s', $url, $statusCode, $content);
+            throw new RuntimeException($message);
+        }
+
+        $recordData = (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+
+        return $recordData['metadata']['relations']['version'][0]['last_child']['pid_value'];
+    }
+
     public function createImagesDeposition(
         string $title,
         string $description,
@@ -77,15 +96,11 @@ final class ZenodoClient implements ZenodoClientInterface
         array $communities,
         array $creators
     ): array {
-        $queryParameters = UrlHelper::formatQueryParameters(
-            [
-                'access_token' => $this->zenodoAccessToken,
-            ]
-        );
+        $url = $this->zenodoApiEndpoint.'/deposit/depositions';
 
         $response = $this->httpClient->request(
             'POST',
-            $this->zenodoApiEndpoint.'/deposit/depositions'.$queryParameters,
+            $url.$this->formatQueryParameters(),
             [
                 'body' => json_encode(
                     [
@@ -110,8 +125,6 @@ final class ZenodoClient implements ZenodoClientInterface
             ]
         );
 
-        $info = (array) $response->getInfo();
-        $url = $info['url'];
         $statusCode = $response->getStatusCode();
         $content = $response->getContent(false);
 
@@ -120,17 +133,11 @@ final class ZenodoClient implements ZenodoClientInterface
             throw new RuntimeException($message);
         }
 
-        return (array) json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        return (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
     }
 
-    public function saveFile(string $fileName, string $file, string $depositionId): string
+    public function saveFile(string $fileName, string $file, string $depositionId): array
     {
-        $queryParameters = UrlHelper::formatQueryParameters(
-            [
-                'access_token' => $this->zenodoAccessToken,
-            ]
-        );
-
         $formData = new FormDataPart(
             [
                 'name' => $fileName,
@@ -138,17 +145,17 @@ final class ZenodoClient implements ZenodoClientInterface
             ]
         );
 
+        $url = $this->zenodoApiEndpoint.'/deposit/depositions/'.$depositionId.'/files';
+
         $response = $this->httpClient->request(
             'POST',
-            $this->zenodoApiEndpoint.'/deposit/depositions/'.$depositionId.'/files'.$queryParameters,
+            $url.$this->formatQueryParameters(),
             [
                 'headers' => $formData->getPreparedHeaders()->toArray(),
                 'body' => $formData->bodyToString(),
             ]
         );
 
-        $info = (array) $response->getInfo();
-        $url = $info['url'];
         $statusCode = $response->getStatusCode();
         $content = $response->getContent(false);
 
@@ -157,22 +164,36 @@ final class ZenodoClient implements ZenodoClientInterface
             throw new RuntimeException($message);
         }
 
-        $uploadFileResponse = (array) json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $uploadFileResponse = (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
-        return $uploadFileResponse['links']['download'];
+        return [
+            $uploadFileResponse['links']['download'],
+            $uploadFileResponse['id'],
+        ];
+    }
+
+    public function removeFile(string $fileId, string $depositionId): void
+    {
+        $url = $this->zenodoApiEndpoint.'/deposit/depositions/'.$depositionId.'/files/'.$fileId;
+
+        $response = $this->httpClient->request('DELETE', $url.$this->formatQueryParameters());
+
+        $statusCode = $response->getStatusCode();
+        $content = $response->getContent(false);
+
+        if (Response::HTTP_NO_CONTENT !== $statusCode) {
+            $message = sprintf('Request to "%s" failed with status code "%d": %s', $url, $statusCode, $content);
+            throw new RuntimeException($message);
+        }
     }
 
     public function publishDeposition(string $depositionId): void
     {
-        $queryParameters = UrlHelper::formatQueryParameters(
-            [
-                'access_token' => $this->zenodoAccessToken,
-            ]
-        );
+        $url = $this->zenodoApiEndpoint.'/deposit/depositions/'.$depositionId.'/actions/publish';
 
         $response = $this->httpClient->request(
             'POST',
-            $this->zenodoApiEndpoint.'/deposit/depositions/'.$depositionId.'/actions/publish'.$queryParameters,
+            $url.$this->formatQueryParameters(),
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -180,8 +201,6 @@ final class ZenodoClient implements ZenodoClientInterface
             ]
         );
 
-        $info = (array) $response->getInfo();
-        $url = $info['url'];
         $statusCode = $response->getStatusCode();
         $content = $response->getContent(false);
 
@@ -193,15 +212,11 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function newVersion(string $depositionId): string
     {
-        $queryParameters = UrlHelper::formatQueryParameters(
-            [
-                'access_token' => $this->zenodoAccessToken,
-            ]
-        );
+        $url = $this->zenodoApiEndpoint.'/deposit/depositions/'.$depositionId.'/actions/newversion';
 
         $response = $this->httpClient->request(
             'POST',
-            $this->zenodoApiEndpoint.'/deposit/depositions/'.$depositionId.'/actions/newversion'.$queryParameters,
+            $url.$this->formatQueryParameters(),
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -209,8 +224,6 @@ final class ZenodoClient implements ZenodoClientInterface
             ]
         );
 
-        $info = (array) $response->getInfo();
-        $url = $info['url'];
         $statusCode = $response->getStatusCode();
         $content = $response->getContent(false);
 
@@ -219,44 +232,64 @@ final class ZenodoClient implements ZenodoClientInterface
             throw new RuntimeException($message);
         }
 
-        $newVersionResponse = (array) json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $newVersionResponse = (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
         $parts = explode('/', $newVersionResponse['links']['latest_draft']);
 
         return $parts[\count($parts) - 1];
     }
 
-    public function createAndPublishImagesDeposition(): string
+    public function deleteVersion(string $depositionId): void
     {
-        $deposition = $this->createImagesDeposition(
-            'Test deposition of '.(new \DateTime())->format('Y-m-d H:i:s'),
-            'Images for the «Epigraphy of Medieval Rus\'» database',
-            ['keyword1', 'keyword12'],
-            [['identifier' => 'medieval-rus-epigraphy']],
+        $url = $this->zenodoApiEndpoint.'/deposit/depositions/'.$depositionId;
+
+        $response = $this->httpClient->request(
+            'DELETE',
+            $url.$this->formatQueryParameters(),
             [
-                [
-                    'name' => 'Alexey Gippius',
-                    'affiliation' => 'Project curator',
-                    'orcid' => '0000-0001-7797-9446',
-                ],
-                [
-                    'name' => 'Anton Dyshkant',
-                    'affiliation' => 'Project developer',
-                    'orcid' => '0000-0002-6159-3263',
+                'headers' => [
+                    'Content-Type' => 'application/json',
                 ],
             ]
         );
 
+        $statusCode = $response->getStatusCode();
+        $content = $response->getContent(false);
+
+        if (Response::HTTP_NO_CONTENT !== $statusCode) {
+            $message = sprintf('Request to "%s" failed with status code "%d": %s', $url, $statusCode, $content);
+            throw new RuntimeException($message);
+        }
+    }
+
+    public function createAndPublishImagesDeposition(
+        string $title,
+        string $description,
+        array $keywords,
+        array $communities,
+        array $creators,
+        string $readmeContent
+    ): string {
+        $deposition = $this->createImagesDeposition($title, $description, $keywords, $communities, $creators);
+
         $depositionId = (string) $deposition['id'];
 
-        $this->saveFile(
-            'README',
-            'This repository contains images for the «Epigraphy of Medieval Rus\'» database',
-            $depositionId
-        );
+        $this->saveFile('README', $readmeContent, $depositionId);
 
         $this->publishDeposition($depositionId);
 
         return $depositionId;
+    }
+
+    private function formatQueryParameters(array $queryParameters = [])
+    {
+        return UrlHelper::formatQueryParameters(
+            array_merge(
+                [
+                    'access_token' => $this->zenodoAccessToken,
+                ],
+                $queryParameters
+            )
+        );
     }
 }

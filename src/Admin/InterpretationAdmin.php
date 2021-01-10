@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace App\Admin;
 
 use App\Admin\Abstraction\AbstractEntityAdmin;
+use App\Admin\Models\AdminInterpretationWrapper;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -197,8 +198,8 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                     )
                     ->add(
                         'textImages',
-                        TextType::class,
-                        $this->createLabeledFormOptions('textImages', ['required' => false])
+                        ModelType::class,
+                        $this->createLabeledManyToManyFormOptions('textImages')
                     )
                     ->add(
                         'isTextImagesPartOfZeroRow',
