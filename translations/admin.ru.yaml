@@ -21,8 +21,14 @@ menu:
   groups:
     inscriptions:
       label: Надписи
-    namedEntities:
-      label: Именованные сущности
+    carriers:
+      label: Носители
+    properties:
+      label: Свойства надписей
+    media:
+      label: Медиа
+    security:
+      label: Безопасность
   paragraphs:
     carrier:
       label: Носители
@@ -32,10 +38,6 @@ menu:
       label: Категории носителей
     alphabet:
       label: Алфавиты
-    inscription:
-      label: Надписи
-    interpretation:
-      label: Интерпретации
     contentCategory:
       label: Категории по содержанию
     material:
@@ -46,6 +48,14 @@ menu:
       label: Способы нанесения
     writingType:
       label: Разряды
+    inscription:
+      label: Надписи
+    interpretation:
+      label: Интерпретации
+    file:
+      label: Файлы
+    user:
+      label: Пользователи
 tabMenu:
   siteView: Посмотреть надпись на сайте
 list:
@@ -99,6 +109,19 @@ list:
       id: Внутренний идентификатор
       carrier: Носитель
       interpretations: Интерпретации
+  file:
+    fields:
+      id: Внутренний идентификатор
+      fileName: Имя файла
+      mediaType: Тип
+      description: Описание
+  user:
+    fields:
+      id: Внутренний идентификатор
+      username: Имя пользователя (логин)
+      fullName: Полное имя
+      roles: Роли
+
 form:
   carrier:
     tab:
@@ -181,15 +204,15 @@ form:
       name: Название
   inscription:
     tab:
-      carrier:
-        label: Носитель
+      common:
+        label: Общие сведения
       actualResearchInformation:
         label: Актуальная информация
       interpretations:
         label: Интерпретации
     section:
-      carrier:
-        label: Выбор носителя
+      common:
+        label: Общие сведения
       zeroRow:
         label: «Нулевая строка»
       interpretations:
@@ -200,10 +223,11 @@ form:
         label: Лингвистический аспект
       zeroRowHistoricalAspect:
         label: Исторические данные
-      zeroRowMultimedia:
-        label: Изображения и прориси
     fields:
+      conventionalDate: Условная дата
       carrier: Носитель
+      photos: Фото
+      sketches: Прориси
       zeroRow:
         placeOnCarrier: Расположение на носителе
         placeOnCarrierReferences: Расположение на носителе (ссылки)
@@ -219,8 +243,8 @@ form:
         alphabetsReferences: Алфавит (ссылки)
         text: Текст
         textReferences: Текст (ссылки)
-        textImageFileNames: Изображения текста (названия файлов)
-        textImageFileNamesReferences: Изображения текста (ссылки)
+        textImages: Изображения текста (файлы)
+        textImagesReferences: Изображения текста (ссылки)
         transliteration: Транслитерация
         transliterationReferences: Транслитерация (ссылки)
         translation: Перевод
@@ -237,10 +261,6 @@ form:
         nonStratigraphicalDateReferences: Внестратиграфическая дата (ссылки)
         historicalDate: «Историческая» дата
         historicalDateReferences: «Историческая» дата (ссылки)
-        photoFileNames: Фото (названия файлов)
-        photoFileNamesReferences: Фото (ссылки)
-        sketchFileNames: Прориси (названия файлов)
-        sketchFileNamesReferences: Прориси (ссылки)
       interpretations: Интерпретации
   interpretation:
     tab:
@@ -254,8 +274,6 @@ form:
         label: Лингвистический аспект
       historicalAspect:
         label: Исторический аспект
-      multimedia:
-        label: Мультимедиа
     section:
       identification:
         label: Название источника и комментарий
@@ -267,8 +285,6 @@ form:
         label: Лингвистический аспект
       historicalAspect:
         label: Исторические данные
-      multimedia:
-        label: Изображения и прориси
     fields:
       source: Название источника
       comment: Комментарий к источнику
@@ -281,7 +297,7 @@ form:
       materials: Материалы
       alphabets: Алфавит
       text: Текст
-      textImageFileNames: Изображения текста (названия файлов)
+      textImages: Изображения текста (файлы)
       transliteration: Транслитерация
       translation: Перевод
       contentCategories: Категория по содержанию
@@ -290,8 +306,8 @@ form:
       stratigraphicalDate: Стратиграфическая дата
       nonStratigraphicalDate: Внестратиграфическая дата
       historicalDate: «Историческая» дата
-      photoFileNames: Фото (названия файлов)
-      sketchFileNames: Прориси (названия файлов)
+      photos: Фото (файлы)
+      sketches: Прориси (файлы)
       isPartOfZeroRow:
         placeOnCarrier: Часть нулевой строки
         writingTypes: Часть нулевой строки
@@ -300,7 +316,7 @@ form:
         materials: Часть нулевой строки
         alphabets: Часть нулевой строки
         text: Часть нулевой строки
-        textImageFileNames: Часть нулевой строки
+        textImages: Часть нулевой строки
         transliteration: Часть нулевой строки
         translation: Часть нулевой строки
         contentCategories: Часть нулевой строки
@@ -309,5 +325,20 @@ form:
         stratigraphicalDate: Часть нулевой строки
         nonStratigraphicalDate: Часть нулевой строки
         historicalDate: Часть нулевой строки
-        photoFileNames: Часть нулевой строки
-        sketchFileNames: Часть нулевой строки
+        photos: Часть нулевой строки
+        sketches: Часть нулевой строки
+  file:
+    fields:
+      id: Внутренний идентификатор
+      fileName: Имя файла
+      mediaType: Тип
+      url: Адрес
+      description: Описание
+      binaryContent: Файл
+  user:
+    fields:
+      id: Внутренний идентификатор
+      username: Имя пользователя (логин)
+      fullName: Полное имя
+      roles: Роли
+      plainPassword: Новый пароль

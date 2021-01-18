@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace App\Persistence\Repository\Epigraphy;
 
-use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
 use App\Persistence\Entity\Epigraphy\PreservationState;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
@@ -36,18 +36,11 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method PreservationState|null findOneBy(array $criteria, array $orderBy = null)
  * @method PreservationState[]    findAll()
  * @method PreservationState[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- * @method PreservationState|null findOneByName(string $name)
- * @method PreservationState      findOneByNameOrCreate(string $name)
  */
-final class PreservationStateRepository extends NamedEntityRepository
+final class PreservationStateRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PreservationState::class);
-    }
-
-    protected function createEmpty(): NamedEntityInterface
-    {
-        return new PreservationState();
     }
 }

@@ -22,16 +22,20 @@
 {% extends 'base.html.twig' %}
 
 {% block page_content %}
-    <form method="post">
+
+    <form action="{{ path("app_login") }}" method="post" role="form">
+
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
+
+        {{ form_row(form._token) }}
 
         <label for="inputUsername">{{ ('controller.'~controller~'.'~method~'.form.username')|trans }}</label>
         <input
                 type="text"
                 value="{{ last_username }}"
-                name="username"
+                name="{{ form.username.vars.full_name }}"
                 id="inputUsername"
                 class="form-control"
                 required
@@ -41,15 +45,10 @@
         <label for="inputPassword">{{ ('controller.'~controller~'.'~method~'.form.password')|trans }}</label>
         <input
                 type="password"
-                name="password"
+                name="{{ form.password.vars.full_name }}"
                 id="inputPassword"
                 class="form-control"
                 required
-        >
-
-        <input type="hidden"
-               name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
         >
 
         <div class="checkbox mb-3">
@@ -63,4 +62,5 @@
             {{ ('controller.'~controller~'.'~method~'.form.signIn')|trans }}
         </button>
     </form>
+
 {% endblock %}

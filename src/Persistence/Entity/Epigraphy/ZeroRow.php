@@ -186,11 +186,12 @@ class ZeroRow
     private $textReferences;
 
     /**
-     * @var string|null
+     * @var Collection|File[]
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\ManyToMany(targetEntity="File", cascade={"persist"})
+     * @ORM\JoinTable(name="zero_row_text_images")
      */
-    private $textImageFileNames;
+    private $textImages;
 
     /**
      * @var Collection|Interpretation[]
@@ -200,9 +201,9 @@ class ZeroRow
      *     cascade={"persist", "remove"},
      *     orphanRemoval=true
      * )
-     * @ORM\JoinTable(name="zero_row_text_image_file_names_references")
+     * @ORM\JoinTable(name="zero_row_text_images_references")
      */
-    private $textImageFileNamesReferences;
+    private $textImagesReferences;
 
     /**
      * @var string|null
@@ -241,44 +242,6 @@ class ZeroRow
      * @ORM\JoinTable(name="zero_row_translation_references")
      */
     private $translationReferences;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $photoFileNames;
-
-    /**
-     * @var Collection|Interpretation[]
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     * @ORM\JoinTable(name="zero_row_photo_file_names_references")
-     */
-    private $photoFileNamesReferences;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $sketchFileNames;
-
-    /**
-     * @var Collection|Interpretation[]
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     * @ORM\JoinTable(name="zero_row_sketch_file_names_references")
-     */
-    private $sketchFileNamesReferences;
 
     /**
      * @var Collection|ContentCategory[]
@@ -408,11 +371,10 @@ class ZeroRow
         $this->alphabets = new ArrayCollection();
         $this->alphabetsReferences = new ArrayCollection();
         $this->textReferences = new ArrayCollection();
-        $this->textImageFileNamesReferences = new ArrayCollection();
+        $this->textImages = new ArrayCollection();
+        $this->textImagesReferences = new ArrayCollection();
         $this->transliterationReferences = new ArrayCollection();
         $this->translationReferences = new ArrayCollection();
-        $this->photoFileNamesReferences = new ArrayCollection();
-        $this->sketchFileNamesReferences = new ArrayCollection();
         $this->contentCategories = new ArrayCollection();
         $this->contentCategoriesReferences = new ArrayCollection();
         $this->contentReferences = new ArrayCollection();
@@ -420,6 +382,11 @@ class ZeroRow
         $this->stratigraphicalDateReferences = new ArrayCollection();
         $this->nonStratigraphicalDateReferences = new ArrayCollection();
         $this->historicalDateReferences = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getInscription(): Inscription
@@ -573,6 +540,24 @@ class ZeroRow
     }
 
     /**
+     * @return Collection|Material[]
+     */
+    public function getMaterials(): Collection
+    {
+        return $this->materials;
+    }
+
+    /**
+     * @param Collection|Material[] $materials
+     */
+    public function setMaterials(Collection $materials): self
+    {
+        $this->materials = $materials;
+
+        return $this;
+    }
+
+    /**
      * @return Collection|Interpretation[]
      */
     public function getMaterialsReferences(): Collection
@@ -656,14 +641,20 @@ class ZeroRow
         return $this;
     }
 
-    public function getTextImageFileNames(): ?string
+    /**
+     * @return Collection|File[]
+     */
+    public function getTextImages(): Collection
     {
-        return $this->textImageFileNames;
+        return $this->textImages;
     }
 
-    public function setTextImageFileNames(?string $textImageFileNames): self
+    /**
+     * @param Collection|File[] $textImages
+     */
+    public function setTextImages(Collection $textImages): self
     {
-        $this->textImageFileNames = $textImageFileNames;
+        $this->textImages = $textImages;
 
         return $this;
     }
@@ -671,17 +662,17 @@ class ZeroRow
     /**
      * @return Collection|Interpretation[]
      */
-    public function getTextImageFileNamesReferences(): Collection
+    public function getTextImagesReferences(): Collection
     {
-        return $this->textImageFileNamesReferences;
+        return $this->textImagesReferences;
     }
 
     /**
-     * @param Collection|Interpretation[] $textImageFileNamesReferences
+     * @param Collection|Interpretation[] $textImagesReferences
      */
-    public function setTextImageFileNamesReferences(Collection $textImageFileNamesReferences): self
+    public function setTextImagesReferences(Collection $textImagesReferences): self
     {
-        $this->textImageFileNamesReferences = $textImageFileNamesReferences;
+        $this->textImagesReferences = $textImagesReferences;
 
         return $this;
     }
@@ -742,66 +733,6 @@ class ZeroRow
     public function setTranslationReferences(Collection $translationReferences): self
     {
         $this->translationReferences = $translationReferences;
-
-        return $this;
-    }
-
-    public function getPhotoFileNames(): ?string
-    {
-        return $this->photoFileNames;
-    }
-
-    public function setPhotoFileNames(?string $photoFileNames): self
-    {
-        $this->photoFileNames = $photoFileNames;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Interpretation[]
-     */
-    public function getPhotoFileNamesReferences(): Collection
-    {
-        return $this->photoFileNamesReferences;
-    }
-
-    /**
-     * @param Collection|Interpretation[] $photoFileNamesReferences
-     */
-    public function setPhotoFileNamesReferences(Collection $photoFileNamesReferences): self
-    {
-        $this->photoFileNamesReferences = $photoFileNamesReferences;
-
-        return $this;
-    }
-
-    public function getSketchFileNames(): ?string
-    {
-        return $this->sketchFileNames;
-    }
-
-    public function setSketchFileNames(?string $sketchFileNames): self
-    {
-        $this->sketchFileNames = $sketchFileNames;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Interpretation[]
-     */
-    public function getSketchFileNamesReferences(): Collection
-    {
-        return $this->sketchFileNamesReferences;
-    }
-
-    /**
-     * @param Collection|Interpretation[] $sketchFileNamesReferences
-     */
-    public function setSketchFileNamesReferences(Collection $sketchFileNamesReferences): self
-    {
-        $this->sketchFileNamesReferences = $sketchFileNamesReferences;
 
         return $this;
     }
@@ -988,28 +919,6 @@ class ZeroRow
     public function setHistoricalDateReferences(Collection $historicalDateReferences): self
     {
         $this->historicalDateReferences = $historicalDateReferences;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Interpretation[]
-     */
-
-    /**
-     * @return Collection|Material[]
-     */
-    public function getMaterials(): Collection
-    {
-        return $this->materials;
-    }
-
-    /**
-     * @param Collection|Material[] $materials
-     */
-    public function setMaterials(Collection $materials): self
-    {
-        $this->materials = $materials;
 
         return $this;
     }

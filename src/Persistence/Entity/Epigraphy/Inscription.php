@@ -60,6 +60,22 @@ class Inscription implements StringifiableEntityInterface
     private $conventionalDate;
 
     /**
+     * @var Collection|File[]
+     *
+     * @ORM\ManyToMany(targetEntity="File", cascade={"persist"})
+     * @ORM\JoinTable(name="inscription_photos")
+     */
+    private $photos;
+
+    /**
+     * @var Collection|File[]
+     *
+     * @ORM\ManyToMany(targetEntity="File", cascade={"persist"})
+     * @ORM\JoinTable(name="inscription_sketches")
+     */
+    private $sketches;
+
+    /**
      * @var ZeroRow|null
      *
      * @ORM\OneToOne(targetEntity="App\Persistence\Entity\Epigraphy\ZeroRow", cascade={"persist", "remove"})
@@ -80,6 +96,8 @@ class Inscription implements StringifiableEntityInterface
 
     public function __construct()
     {
+        $this->photos = new ArrayCollection();
+        $this->sketches = new ArrayCollection();
         $this->zeroRow = new ZeroRow();
         $this->interpretations = new ArrayCollection();
     }
@@ -114,6 +132,42 @@ class Inscription implements StringifiableEntityInterface
     public function setConventionalDate(?string $conventionalDate): self
     {
         $this->conventionalDate = $conventionalDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|File[]
+     */
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
+    }
+
+    /**
+     * @param Collection|File[] $photos
+     */
+    public function setPhotos(Collection $photos): self
+    {
+        $this->photos = $photos;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|File[]
+     */
+    public function getSketches(): Collection
+    {
+        return $this->sketches;
+    }
+
+    /**
+     * @param Collection|File[] $sketches
+     */
+    public function setSketches(Collection $sketches): self
+    {
+        $this->sketches = $sketches;
 
         return $this;
     }

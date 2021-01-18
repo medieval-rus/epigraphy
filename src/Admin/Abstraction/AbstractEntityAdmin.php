@@ -55,11 +55,14 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
         return 'list.'.$this->getEntityKey().'.fields.'.$fieldName;
     }
 
-    protected function createLabeledListOptions(string $fieldName): array
+    protected function createLabeledListOptions(string $fieldName, array $options = []): array
     {
-        return [
-            'label' => $this->getListKeyForFieldName($fieldName),
-        ];
+        return array_merge(
+            $options,
+            [
+                'label' => $this->getListKeyForFieldName($fieldName),
+            ]
+        );
     }
 
     protected function createLabeledFormOptions(string $fieldName, array $options = []): array

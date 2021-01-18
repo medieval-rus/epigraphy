@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace App\Persistence\Repository\Epigraphy;
 
-use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
 use App\Persistence\Entity\Epigraphy\WritingMethod;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
@@ -36,18 +36,11 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method WritingMethod|null findOneBy(array $criteria, array $orderBy = null)
  * @method WritingMethod[]    findAll()
  * @method WritingMethod[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- * @method WritingMethod|null findOneByName(string $name)
- * @method WritingMethod      findOneByNameOrCreate(string $name)
  */
-final class WritingMethodRepository extends NamedEntityRepository
+final class WritingMethodRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, WritingMethod::class);
-    }
-
-    protected function createEmpty(): NamedEntityInterface
-    {
-        return new WritingMethod();
     }
 }

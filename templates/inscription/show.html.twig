@@ -51,11 +51,11 @@
             {{ self.format_text_row('zeroRow.materials', self.format_zero_row(inscription, 'materials')) }}
             {{ self.format_text_row('zeroRow.alphabets', self.format_zero_row(inscription, 'alphabets')) }}
             {{ self.format_text_row('zeroRow.text', self.format_zero_row(inscription, 'text', 'original-text')) }}
-            {{ self.format_text_row('zeroRow.textImageFileNames', self.format_images(inscription, 'textImageFileNames')) }}
+            {{ self.format_text_row('zeroRow.textImages', self.format_zero_row_images(inscription, 'textImages')) }}
             {{ self.format_text_row('zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
             {{ self.format_text_row('zeroRow.translation', self.format_zero_row(inscription, 'translation')) }}
-            {{ self.format_text_row('zeroRow.photoFileNames', self.format_images(inscription, 'photoFileNames')) }}
-            {{ self.format_text_row('zeroRow.sketchFileNames', self.format_images(inscription, 'sketchFileNames')) }}
+            {{ self.format_text_row('photos', self.format_inscription_images(inscription, 'photos')) }}
+            {{ self.format_text_row('sketches', self.format_inscription_images(inscription, 'sketches')) }}
             {{ self.format_text_row('zeroRow.contentCategories', self.format_zero_row(inscription, 'contentCategories')) }}
             {{ self.format_text_row('zeroRow.content', self.format_zero_row(inscription, 'content')) }}
             {{ self.format_text_row('zeroRow.dateInText', self.format_zero_row(inscription, 'dateInText')) }}
@@ -83,11 +83,18 @@
     {{ valueStringifier.stringify(inscription, propertyName, formatType)|raw }}
 {%- endmacro -%}
 
-{%- macro format_images(inscription, propertyName) -%}
+{%- macro format_zero_row_images(inscription, propertyName) -%}
 
     {% import _self as self %}
 
-    {{ imagesFormatter.format(inscription, propertyName)|raw }}
+    {{ imagesFormatter.formatZeroRowImages(inscription, propertyName)|raw }}
+{%- endmacro -%}
+
+{%- macro format_inscription_images(inscription, propertyName) -%}
+
+    {% import _self as self %}
+
+    {{ imagesFormatter.formatInscriptionImages(inscription, propertyName)|raw }}
 {%- endmacro -%}
 
 {%- macro format_text_row(labelTranslationKey, content) -%}

@@ -23,34 +23,12 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\DataFixtures\Epigraphy;
-
-use App\Persistence\Entity\Epigraphy\Material;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
+namespace App\Helper;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-final class MaterialFixtures extends Fixture
+abstract class RegexHelper
 {
-    public const REFERENCE_SHTUKATURKA = self::class.'штукатурка';
-
-    public function load(ObjectManager $manager): void
-    {
-        $this->loadObject($manager, 'штукатурка', self::REFERENCE_SHTUKATURKA);
-
-        $manager->flush();
-    }
-
-    private function loadObject(ObjectManager $manager, string $name, string $reference): void
-    {
-        $material = (new Material())
-            ->setName($name)
-        ;
-
-        $this->addReference($reference, $material);
-
-        $manager->persist($material);
-    }
+    public const GUID_PATTERN = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
 }

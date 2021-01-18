@@ -28,16 +28,16 @@ namespace App\Models;
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-final class ActualValue
+final class StringActualValue
 {
     private string $value;
 
-    private ?string $source;
+    private ?string $description;
 
-    public function __construct(string $value, ?string $source)
+    public function __construct(string $value, ?string $description)
     {
         $this->value = $value;
-        $this->source = $source;
+        $this->description = $description;
     }
 
     public function getValue(): string
@@ -45,8 +45,8 @@ final class ActualValue
         return $this->value;
     }
 
-    public function getSource(): ?string
+    public function getDescription(): ?string
     {
-        return $this->source;
+        return $this->description;
     }
 }

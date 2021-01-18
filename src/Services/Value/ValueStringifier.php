@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\Services\Value;
 
-use App\Models\ActualValue;
+use App\Models\StringActualValue;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\ActualValue\Extractor\ActualValueExtractorInterface;
 use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
@@ -58,13 +58,13 @@ final class ValueStringifier implements ValueStringifierInterface
         string $propertyName,
         string $formatType = ActualValueFormatterInterface::FORMAT_TYPE_DEFAULT
     ): string {
-        $format = function (ActualValue $actualValue) use ($formatType): string {
+        $format = function (StringActualValue $actualValue) use ($formatType): string {
             return $this->formatter->format($actualValue, $formatType);
         };
 
         return implode(
             '<br />',
-            array_map($format, $this->extractor->extract($inscription, $propertyName))
+            array_map($format, $this->extractor->extractFromZeroRowAsStrings($inscription, $propertyName))
         );
     }
 }

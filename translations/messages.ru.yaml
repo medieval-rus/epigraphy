@@ -73,6 +73,8 @@ controller:
       inscription:
         label:
           conventionalDate: Условная дата
+          photos: Фотографии
+          sketches: Прориси
           carrier:
             types: Тип носителя
             categories: Категория носителя
@@ -91,11 +93,9 @@ controller:
             preservationStates: Состояние сохранности
             alphabets: Алфавит
             text: Текст
-            textImageFileNames: Изображения текста
+            textImages: Изображения текста
             transliteration: Транслитерация
             translation: Перевод
-            photoFileNames: Фотографии
-            sketchFileNames: Прориси
             contentCategories: Категория по содержанию
             content: Содержание
             dateInText: Дата в тексте

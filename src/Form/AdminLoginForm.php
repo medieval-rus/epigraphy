@@ -23,37 +23,22 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Epigraphy;
+namespace App\Form;
 
-use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\ORMException;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-abstract class NamedEntityRepository extends ServiceEntityRepository
+final class AdminLoginForm extends AbstractType
 {
-    public function findOneByName(string $name): ?NamedEntityInterface
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        return $this->findOneBy(['name' => $name]);
+        $builder
+            ->add('username', TextType::class)
+            ->add('password', PasswordType::class);
     }
-
-    /**
-     * @throws ORMException
-     */
-    public function findOneByNameOrCreate(string $name): NamedEntityInterface
-    {
-        $entity = $this->findOneByName($name);
-
-        if (null === $entity) {
-            $entity = $this->createEmpty();
-
-            $entity->setName($name);
-        }
-
-        return $entity;
-    }
-
-    abstract protected function createEmpty(): NamedEntityInterface;
 }

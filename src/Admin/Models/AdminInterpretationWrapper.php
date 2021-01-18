@@ -23,7 +23,7 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin;
+namespace App\Admin\Models;
 
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Epigraphy\ZeroRow;
@@ -34,7 +34,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-class AdminInterpretationWrapper extends Interpretation
+final class AdminInterpretationWrapper extends Interpretation
 {
     /**
      * @var bool
@@ -74,7 +74,7 @@ class AdminInterpretationWrapper extends Interpretation
     /**
      * @var bool
      */
-    private $isTextImageFileNamesPartOfZeroRow;
+    private $isTextImagesPartOfZeroRow;
 
     /**
      * @var bool
@@ -85,16 +85,6 @@ class AdminInterpretationWrapper extends Interpretation
      * @var bool
      */
     private $isTranslationPartOfZeroRow;
-
-    /**
-     * @var bool
-     */
-    private $isPhotoFileNamesPartOfZeroRow;
-
-    /**
-     * @var bool
-     */
-    private $isSketchFileNamesPartOfZeroRow;
 
     /**
      * @var bool
@@ -152,11 +142,9 @@ class AdminInterpretationWrapper extends Interpretation
         $this->isMaterialsPartOfZeroRow = $zeroRow->getMaterialsReferences()->exists($predicate);
         $this->isAlphabetsPartOfZeroRow = $zeroRow->getAlphabetsReferences()->exists($predicate);
         $this->isTextPartOfZeroRow = $zeroRow->getTextReferences()->exists($predicate);
-        $this->isTextImageFileNamesPartOfZeroRow = $zeroRow->getTextImageFileNamesReferences()->exists($predicate);
+        $this->isTextImagesPartOfZeroRow = $zeroRow->getTextImagesReferences()->exists($predicate);
         $this->isTransliterationPartOfZeroRow = $zeroRow->getTransliterationReferences()->exists($predicate);
         $this->isTranslationPartOfZeroRow = $zeroRow->getTranslationReferences()->exists($predicate);
-        $this->isPhotoFileNamesPartOfZeroRow = $zeroRow->getPhotoFileNamesReferences()->exists($predicate);
-        $this->isSketchFileNamesPartOfZeroRow = $zeroRow->getSketchFileNamesReferences()->exists($predicate);
         $this->isContentCategoriesPartOfZeroRow = $zeroRow->getContentCategoriesReferences()->exists($predicate);
         $this->isContentPartOfZeroRow = $zeroRow->getContentReferences()->exists($predicate);
         $this->isDateInTextPartOfZeroRow = $zeroRow->getDateInTextReferences()->exists($predicate);
@@ -185,11 +173,9 @@ class AdminInterpretationWrapper extends Interpretation
         $this->updateReferences($zeroRow->getMaterialsReferences(), $this->isMaterialsPartOfZeroRow);
         $this->updateReferences($zeroRow->getAlphabetsReferences(), $this->isAlphabetsPartOfZeroRow);
         $this->updateReferences($zeroRow->getTextReferences(), $this->isTextPartOfZeroRow);
-        $this->updateReferences($zeroRow->getTextImageFileNamesReferences(), $this->isTextImageFileNamesPartOfZeroRow);
+        $this->updateReferences($zeroRow->getTextImagesReferences(), $this->isTextImagesPartOfZeroRow);
         $this->updateReferences($zeroRow->getTransliterationReferences(), $this->isTransliterationPartOfZeroRow);
         $this->updateReferences($zeroRow->getTranslationReferences(), $this->isTranslationPartOfZeroRow);
-        $this->updateReferences($zeroRow->getPhotoFileNamesReferences(), $this->isPhotoFileNamesPartOfZeroRow);
-        $this->updateReferences($zeroRow->getSketchFileNamesReferences(), $this->isSketchFileNamesPartOfZeroRow);
         $this->updateReferences($zeroRow->getContentCategoriesReferences(), $this->isContentCategoriesPartOfZeroRow);
         $this->updateReferences($zeroRow->getContentReferences(), $this->isContentPartOfZeroRow);
         $this->updateReferences($zeroRow->getDateInTextReferences(), $this->isDateInTextPartOfZeroRow);
@@ -274,14 +260,14 @@ class AdminInterpretationWrapper extends Interpretation
         $this->isTextPartOfZeroRow = $isTextPartOfZeroRow;
     }
 
-    public function getIsTextImageFileNamesPartOfZeroRow(): ?bool
+    public function getIsTextImagesPartOfZeroRow(): ?bool
     {
-        return $this->isTextImageFileNamesPartOfZeroRow;
+        return $this->isTextImagesPartOfZeroRow;
     }
 
-    public function setIsTextImageFileNamesPartOfZeroRow(?bool $isTextImageFileNamesPartOfZeroRow): void
+    public function setIsTextImagesPartOfZeroRow(?bool $isTextImagesPartOfZeroRow): void
     {
-        $this->isTextImageFileNamesPartOfZeroRow = $isTextImageFileNamesPartOfZeroRow;
+        $this->isTextImagesPartOfZeroRow = $isTextImagesPartOfZeroRow;
     }
 
     public function getIsTransliterationPartOfZeroRow(): ?bool
@@ -302,26 +288,6 @@ class AdminInterpretationWrapper extends Interpretation
     public function setIsTranslationPartOfZeroRow(?bool $isTranslationPartOfZeroRow): void
     {
         $this->isTranslationPartOfZeroRow = $isTranslationPartOfZeroRow;
-    }
-
-    public function getIsPhotoFileNamesPartOfZeroRow(): ?bool
-    {
-        return $this->isPhotoFileNamesPartOfZeroRow;
-    }
-
-    public function setIsPhotoFileNamesPartOfZeroRow(?bool $isPhotoFileNamesPartOfZeroRow): void
-    {
-        $this->isPhotoFileNamesPartOfZeroRow = $isPhotoFileNamesPartOfZeroRow;
-    }
-
-    public function getIsSketchFileNamesPartOfZeroRow(): ?bool
-    {
-        return $this->isSketchFileNamesPartOfZeroRow;
-    }
-
-    public function setIsSketchFileNamesPartOfZeroRow(?bool $isSketchFileNamesPartOfZeroRow): void
-    {
-        $this->isSketchFileNamesPartOfZeroRow = $isSketchFileNamesPartOfZeroRow;
     }
 
     public function getIsContentCategoriesPartOfZeroRow(): ?bool
