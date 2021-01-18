@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace App\Persistence\Repository\Epigraphy;
 
 use App\Persistence\Entity\Epigraphy\Alphabet;
-use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
@@ -36,18 +36,11 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method Alphabet|null findOneBy(array $criteria, array $orderBy = null)
  * @method Alphabet[]    findAll()
  * @method Alphabet[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- * @method Alphabet|null findOneByName(string $name)
- * @method Alphabet      findOneByNameOrCreate(string $name)
  */
-final class AlphabetRepository extends NamedEntityRepository
+final class AlphabetRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Alphabet::class);
-    }
-
-    protected function createEmpty(): NamedEntityInterface
-    {
-        return new Alphabet();
     }
 }

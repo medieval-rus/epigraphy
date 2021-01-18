@@ -23,37 +23,12 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Epigraphy;
-
-use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\ORMException;
+namespace App\Helper;
 
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
-abstract class NamedEntityRepository extends ServiceEntityRepository
+abstract class RegexHelper
 {
-    public function findOneByName(string $name): ?NamedEntityInterface
-    {
-        return $this->findOneBy(['name' => $name]);
-    }
-
-    /**
-     * @throws ORMException
-     */
-    public function findOneByNameOrCreate(string $name): NamedEntityInterface
-    {
-        $entity = $this->findOneByName($name);
-
-        if (null === $entity) {
-            $entity = $this->createEmpty();
-
-            $entity->setName($name);
-        }
-
-        return $entity;
-    }
-
-    abstract protected function createEmpty(): NamedEntityInterface;
+    public const GUID_PATTERN = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
 }

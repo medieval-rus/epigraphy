@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use App\Form\AdminLoginForm;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,7 +38,6 @@ final class SecurityController extends AbstractController
 {
     /**
      * @Route("/login", name="app_login")
-     * @Template("security/login.html.twig")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -46,17 +45,21 @@ final class SecurityController extends AbstractController
             return $this->redirectToRoute('admin');
         }
 
-        $error = $authenticationUtils->getLastAuthenticationError();
-
-        $lastUsername = $authenticationUtils->getLastUsername();
-
         return $this->render(
             'security/login.html.twig',
             [
                 'controller' => 'security',
                 'method' => 'login',
-                'last_username' => $lastUsername,
-                'error' => $error,
+                'last_username' => $authenticationUtils->getLastUsername(),
+                'error' => $authenticationUtils->getLastAuthenticationError(),
+                'form' => $this
+                    ->createForm(
+                        AdminLoginForm::class,
+                        [
+                            'username' => $authenticationUtils->getLastUsername(),
+                        ]
+                    )
+                    ->createView(),
             ]
         );
     }

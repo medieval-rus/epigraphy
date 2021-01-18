@@ -267,7 +267,7 @@ return [
         'PhanAccessClassInternal',
         'PhanAccessClassConstantInternal',
         'PhanAccessPropertyInternal',
-        'PhanAccessMethodInternal',
+//        'PhanAccessMethodInternal', // useless
         'PhanAccessWrongInheritanceCategory',
         'PhanAccessWrongInheritanceCategoryInternal',
         'PhanAccessExtendsFinalClass',

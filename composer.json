@@ -1,7 +1,6 @@
 {
     "name": "medieval-rus/epigraphy",
     "description": "«Epigraphy of Medieval Rus'» database",
-    "version": "0.0.1",
     "type": "project",
     "keywords": ["rus'" ,"medieval rus'", "epigraphy", "linguistics", "science"],
     "license": "GPL-3.0-only",

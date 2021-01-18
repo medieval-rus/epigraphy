@@ -776,6 +776,9 @@
     "vyfony/mysqldump-bundle": {
         "version": "v0.2.0"
     },
+    "webimpress/safe-writer": {
+        "version": "2.1.0"
+    },
     "webmozart/assert": {
         "version": "1.6.0"
     },

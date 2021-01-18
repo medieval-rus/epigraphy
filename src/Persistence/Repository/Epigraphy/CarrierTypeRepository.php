@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace App\Persistence\Repository\Epigraphy;
 
 use App\Persistence\Entity\Epigraphy\CarrierType;
-use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
@@ -36,18 +36,11 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method CarrierType|null findOneBy(array $criteria, array $orderBy = null)
  * @method CarrierType[]    findAll()
  * @method CarrierType[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- * @method CarrierType|null findOneByName(string $name)
- * @method CarrierType      findOneByNameOrCreate(string $name)
  */
-final class CarrierTypeRepository extends NamedEntityRepository
+final class CarrierTypeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CarrierType::class);
-    }
-
-    protected function createEmpty(): NamedEntityInterface
-    {
-        return new CarrierType();
     }
 }

@@ -46,7 +46,7 @@ class File
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $fileName;
 
@@ -60,7 +60,7 @@ class File
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=2048)
+     * @ORM\Column(type="string", length=2048, nullable=true)
      */
     private $url;
 
@@ -77,6 +77,13 @@ class File
      * @ORM\Column(type="binary", length=16777215, nullable=true)
      */
     private $binaryContent;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=32, options={"fixed" = true}, unique=true)
+     */
+    private $hash;
 
     /**
      * @var array|null
@@ -155,6 +162,18 @@ class File
         return $this;
     }
 
+    public function getHash(): ?string
+    {
+        return $this->hash;
+    }
+
+    public function setHash(?string $hash): self
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
     public function getMetadata(): ?array
     {
         return $this->metadata;
@@ -163,6 +182,21 @@ class File
     public function setMetadata(?array $metadata): self
     {
         $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    public function setZenodoFileId(string $zenodoFileId): self
+    {
+        $metadata = $this->getMetadata() ?? [];
+
+        if (!\array_key_exists('zenodo', $metadata)) {
+            $metadata['zenodo'] = [];
+        }
+
+        $metadata['zenodo']['id'] = $zenodoFileId;
+
+        $this->setMetadata($metadata);
 
         return $this;
     }

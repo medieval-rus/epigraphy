@@ -25,14 +25,20 @@ declare(strict_types=1);
 
 namespace App\Services\Zenodo;
 
+use DateTime;
+
 interface ZenodoClientInterface
 {
     public function getLatestDepositionIdVersion(string $recordId): string;
 
-    /**
-     * @param string[] $keywords
-     */
-    public function createImagesDeposition(
+    public function getRecord(string $recordId): array;
+
+    public function getDepositions(): array;
+
+    public function getDeposition(string $depositionId): array;
+
+    public function createDeposition(
+        DateTime $publicationDate,
         string $title,
         string $description,
         array $keywords,
@@ -40,17 +46,20 @@ interface ZenodoClientInterface
         array $creators
     ): array;
 
-    public function saveFile(string $fileName, string $file, string $depositionId): array;
-
-    public function removeFile(string $fileId, string $depositionId): void;
-
-    public function publishDeposition(string $depositionId): void;
+    public function publishDeposition(string $depositionId): array;
 
     public function newVersion(string $depositionId): string;
 
     public function deleteVersion(string $depositionId): void;
 
-    public function createAndPublishImagesDeposition(
+    public function getFiles(string $depositionId): array;
+
+    public function saveFile(string $fileName, string $file, string $depositionId): array;
+
+    public function removeFile(string $fileId, string $depositionId): void;
+
+    public function createAndPublishDeposition(
+        DateTime $publicationDate,
         string $title,
         string $description,
         array $keywords,

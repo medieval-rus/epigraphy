@@ -22,6 +22,44 @@ sonata_admin:
   dashboard:
     blocks:
       - { type: sonata.admin.block.admin_list, position: left }
+    groups:
+      carriers:
+        label_catalogue: admin
+        label: menu.groups.carriers.label
+        items:
+          - admin.carrier
+          - admin.carrier_type
+          - admin.carrier_category
+        roles: [ ROLE_ADMIN ]
+      properties:
+        label_catalogue: admin
+        label: menu.groups.properties.label
+        items:
+          - admin.alphabet
+          - admin.content_category
+          - admin.material
+          - admin.preservation_state
+          - admin.writing_type
+          - admin.writing_method
+        roles: [ ROLE_ADMIN ]
+      inscriptions:
+        label_catalogue: admin
+        label: menu.groups.inscriptions.label
+        items:
+          - admin.inscription
+        roles: [ ROLE_ADMIN ]
+      media:
+        label_catalogue: admin
+        label: menu.groups.media.label
+        items:
+          - admin.file
+        roles: [ ROLE_ADMIN ]
+      security:
+        label_catalogue: admin
+        label: menu.groups.security.label
+        items:
+          - admin.user
+        roles: [ ROLE_SUPER_ADMIN ]
   options:
     legacy_twig_text_extension: false
     use_icheck: false
@@ -41,59 +79,76 @@ services:
     class: App\Admin\CarrierAdmin
     arguments: [ null, App\Persistence\Entity\Epigraphy\Carrier, null ]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.inscriptions.label, label_catalogue: admin }
+      - { name: sonata.admin, manager_type: orm }
   admin.carrier_type:
     class: App\Admin\CarrierTypeAdmin
     arguments: [ null, App\Persistence\Entity\Epigraphy\CarrierType, null ]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
+      - { name: sonata.admin, manager_type: orm }
   admin.carrier_category:
     class: App\Admin\CarrierCategoryAdmin
     arguments: [ null, App\Persistence\Entity\Epigraphy\CarrierCategory, null ]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
+      - { name: sonata.admin, manager_type: orm }
   admin.alphabet:
     class: App\Admin\AlphabetAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\Alphabet, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
+      - { name: sonata.admin, manager_type: orm }
   admin.content_category:
     class: App\Admin\ContentCategoryAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\ContentCategory, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
+      - { name: sonata.admin, manager_type: orm }
   admin.material:
     class: App\Admin\MaterialAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\Material, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
+      - { name: sonata.admin, manager_type: orm }
   admin.preservation_state:
     class: App\Admin\PreservationStateAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\PreservationState, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
+      - { name: sonata.admin, manager_type: orm }
   admin.writing_type:
     class: App\Admin\WritingTypeAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\WritingType, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
+      - { name: sonata.admin, manager_type: orm }
   admin.writing_method:
     class: App\Admin\WritingMethodAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\WritingMethod, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.namedEntities.label, label_catalogue: admin }
+      - { name: sonata.admin, manager_type: orm }
   admin.inscription:
     class: App\Admin\InscriptionAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\Inscription, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.inscriptions.label, label_catalogue: admin }
+      - { name: sonata.admin, manager_type: orm }
   admin.interpretation:
     class: App\Admin\InterpretationAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\Interpretation, null]
     tags:
-      - { name: sonata.admin, manager_type: orm, show_in_dashboard: false }
+      - { name: sonata.admin, manager_type: orm }
   admin.file:
     class: App\Admin\FileAdmin
-    arguments: [ null, App\Persistence\Entity\Epigraphy\File, null, '@App\Services\Zenodo\ZenodoClientInterface', '%env(resolve:ZENODO_RECORD_ID)%' ]
+    arguments:
+      - null
+      - App\Persistence\Entity\Epigraphy\File
+      - null
+      - '@logger'
+      - '@App\Services\Zenodo\ZenodoClientInterface'
+      - '@App\Persistence\Repository\Epigraphy\FileRepository'
+      - '%env(resolve:ZENODO_RECORD_ID)%'
     tags:
-      - { name: sonata.admin, manager_type: orm, group: menu.groups.media.label, label_catalogue: admin }
+      - { name: sonata.admin, manager_type: orm }
+  admin.user:
+    class: App\Admin\UserAdmin
+    arguments:
+      - null
+      - App\Persistence\Entity\Security\User
+      - null
+      - '@Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface'
+      - '@Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface'
+    tags:
+      - { name: sonata.admin, manager_type: orm }

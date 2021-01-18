@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace App\Helper;
 
+use Generator;
+
 /**
  * @author Anton Dyshkant <vyshkant@gmail.com>
  */
@@ -41,10 +43,19 @@ abstract class ArrayHelper
         return $grouped;
     }
 
-    public static function mapKeys(array $array, callable $projection): iterable
+    public static function mapKeys(array $array, callable $projection): Generator
     {
         foreach ($array as $key => $value) {
             yield $projection($key) => $value;
+        }
+    }
+
+    public static function mapWithKeys(array $array, callable $projection): Generator
+    {
+        foreach ($array as $key => $value) {
+            [$newKey, $newValue] = $projection($key, $value);
+
+            yield $newKey => $newValue;
         }
     }
 }

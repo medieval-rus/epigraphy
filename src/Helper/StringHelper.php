@@ -48,31 +48,54 @@ abstract class StringHelper
         return $string;
     }
 
-    public static function removeFromStart(string $haystack, string $needle): string
+    public static function removeFromStart(string $string, string $search): string
     {
-        if (self::startsWith($haystack, $needle)) {
-            return substr($haystack, \strlen($needle));
+        if (self::startsWith($string, $search)) {
+            return substr($string, \strlen($search));
         }
 
-        return $haystack;
+        return $string;
     }
 
-    public static function removeFromEnd(string $haystack, string $needle): string
+    public static function removeFromEnd(string $string, string $search): string
     {
-        if (self::endsWith($haystack, $needle)) {
-            return substr($haystack, 0, \strlen($haystack) - \strlen($needle));
+        if (self::endsWith($string, $search)) {
+            return substr($string, 0, \strlen($string) - \strlen($search));
         }
 
-        return $haystack;
+        return $string;
     }
 
-    public static function startsWith(string $haystack, string $needle): bool
+    public static function replaceStart(string $string, string $search, string $replace): string
     {
-        return 0 === strpos($haystack, $needle);
+        if (self::startsWith($string, $search)) {
+            return substr_replace($string, $replace, 0, \strlen($search));
+        }
+
+        return $string;
     }
 
-    public static function endsWith(string $haystack, string $needle): bool
+    public static function replaceEnd(string $string, string $search, string $replace): string
     {
-        return strpos($haystack, $needle) === \strlen($haystack) - \strlen($needle);
+        if (self::endsWith($string, $search)) {
+            return substr_replace($string, $replace, -\strlen($search));
+        }
+
+        return $string;
+    }
+
+    public static function startsWith(string $string, string $search): bool
+    {
+        return 0 === strpos($string, $search);
+    }
+
+    public static function endsWith(string $string, string $search): bool
+    {
+        return strpos($string, $search) === \strlen($string) - \strlen($search);
+    }
+
+    public static function isLowercased(string $string): bool
+    {
+        return mb_strtolower($string) === $string;
     }
 }
