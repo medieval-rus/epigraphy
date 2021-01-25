@@ -45,7 +45,7 @@ controller:
           id: Id
           carrier:
             category: Категория носителя
-            origin1: Происхождение (город, местность)
+            origin1: Происхождение носителя (город, местность)
           interpretation:
             text: Текст
             content: Содержание
@@ -78,14 +78,14 @@ controller:
           carrier:
             types: Тип носителя
             categories: Категория носителя
-            origin1: Происхождение 1 (город, местность)
-            origin2: Происхождение 2 (здание, раскоп)
+            origin1: Происхождение носителя 1 (город, местность)
+            origin2: Происхождение носителя 2 (здание, раскоп)
+            findCircumstances: Обстоятельства находки носителя
+            characteristics: Характеристики носителя
             individualName: Индивидуальное название носителя
-            storagePlace: Место хранения
-            inventoryNumber: Инвентарный номер
-            isInSitu: In situ
-            findCircumstances: todo
-            characteristics: todo
+            storagePlace: Место хранения носителя
+            inventoryNumber: Инвентарный номер носителя
+            isInSitu: Носитель in situ?
           zeroRow:
             placeOnCarrier: Расположение на носителе
             writingTypes: Разряд (по Франклину)

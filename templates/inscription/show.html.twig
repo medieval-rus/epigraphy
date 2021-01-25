@@ -40,6 +40,8 @@
             {{ self.format_text_row('carrier.categories', inscription.carrier.categories|map(namedEntity => namedEntity.name)) }}
             {{ self.format_text_row('carrier.origin1', inscription.carrier.origin1) }}
             {{ self.format_text_row('carrier.origin2', inscription.carrier.origin2) }}
+            {{ self.format_text_row('carrier.findCircumstances', inscription.carrier.findCircumstances) }}
+            {{ self.format_text_row('carrier.characteristics', inscription.carrier.characteristics) }}
             {{ self.format_text_row('carrier.individualName', inscription.carrier.individualName) }}
             {{ self.format_text_row('carrier.storagePlace', inscription.carrier.storagePlace) }}
             {{ self.format_text_row('carrier.inventoryNumber', inscription.carrier.inventoryNumber) }}

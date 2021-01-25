@@ -190,14 +190,6 @@ final class FileAdmin extends AbstractEntityAdmin
         }
     }
 
-    /**
-     * @param File $object
-     */
-    public function toString($object): string
-    {
-        return $object->getFileName();
-    }
-
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper

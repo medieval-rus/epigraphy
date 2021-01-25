@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Epigraphy;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -113,6 +114,12 @@ class Carrier implements StringifiableEntityInterface
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $isInSitu;
+
+    public function __construct()
+    {
+        $this->types = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+    }
 
     public function __toString(): string
     {
