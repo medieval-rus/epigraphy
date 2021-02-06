@@ -139,7 +139,7 @@ services:
       - '@logger'
       - '@App\Services\Zenodo\ZenodoClientInterface'
       - '@App\Persistence\Repository\Epigraphy\FileRepository'
-      - '%env(resolve:ZENODO_RECORD_ID)%'
+      - '%env(resolve:ZENODO_FIRST_DEPOSITION_ID)%'
     tags:
       - { name: sonata.admin, manager_type: orm }
   admin.user:
