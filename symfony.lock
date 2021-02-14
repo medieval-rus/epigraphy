@@ -147,6 +147,9 @@
             ".php_cs.dist"
         ]
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.3"
+    },
     "gitonomy/gitlib": {
         "version": "v1.2.0"
     },
@@ -200,9 +203,6 @@
     },
     "ocramius/package-versions": {
         "version": "1.4.2"
-    },
-    "ocramius/proxy-manager": {
-        "version": "2.2.3"
     },
     "ondram/ci-detector": {
         "version": "3.5.1"
@@ -775,9 +775,6 @@
     },
     "vyfony/mysqldump-bundle": {
         "version": "v0.2.0"
-    },
-    "webimpress/safe-writer": {
-        "version": "2.1.0"
     },
     "webmozart/assert": {
         "version": "1.6.0"
