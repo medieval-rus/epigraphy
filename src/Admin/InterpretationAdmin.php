@@ -199,7 +199,7 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                     ->add(
                         'textImages',
                         ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('textImages')
+                        $this->createLabeledManyToManyFormOptions('textImages', ['btn_add' => false])
                     )
                     ->add(
                         'isTextImagesPartOfZeroRow',
