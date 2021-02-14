@@ -336,13 +336,9 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     'query_builder' => static function (
                         InterpretationRepository $entityRepository
                     ) use ($parentInscriptionId) {
-                        $queryBuilder = $entityRepository->createQueryBuilder('interpretation');
-
-                        if (null === $parentInscriptionId) {
-                            return $queryBuilder;
-                        }
-
-                        return $queryBuilder
+                        return $entityRepository
+                            ->createQueryBuilder('interpretation')
+                            ->where('interpretation.inscription IS NOT NULL')
                             ->where('interpretation.inscription = :inscriptionId')
                             ->setParameter(':inscriptionId', $parentInscriptionId);
                     },

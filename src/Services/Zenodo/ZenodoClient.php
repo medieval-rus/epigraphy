@@ -46,26 +46,31 @@ final class ZenodoClient implements ZenodoClientInterface
     /**
      * @var string
      */
-    private $zenodoClientApiEndpoint;
+    private $zenodoClientEndpoint;
 
     /**
      * @var string
      */
-    private $zenodoClientWriteAccessToken;
+    private $zenodoClientAccessToken;
 
     public function __construct(
         HttpClientInterface $httpClient,
-        string $zenodoClientApiEndpoint,
-        string $zenodoClientWriteAccessToken
+        string $zenodoClientEndpoint,
+        string $zenodoClientAccessToken
     ) {
         $this->httpClient = $httpClient;
-        $this->zenodoClientApiEndpoint = $zenodoClientApiEndpoint;
-        $this->zenodoClientWriteAccessToken = $zenodoClientWriteAccessToken;
+        $this->zenodoClientEndpoint = $zenodoClientEndpoint;
+        $this->zenodoClientAccessToken = $zenodoClientAccessToken;
+    }
+
+    public function getEndpoint(): string
+    {
+        return $this->zenodoClientEndpoint;
     }
 
     public function getLatestDepositionIdVersion(string $recordId): string
     {
-        $url = $this->zenodoClientApiEndpoint.'/records/'.$recordId;
+        $url = $this->zenodoClientEndpoint.'/api/records/'.$recordId;
 
         $response = $this->httpClient->request('GET', $url.$this->formatQueryParameters());
 
@@ -84,7 +89,7 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function getRecord(string $recordId): array
     {
-        $url = $this->zenodoClientApiEndpoint.'/records/'.$recordId;
+        $url = $this->zenodoClientEndpoint.'/api/records/'.$recordId;
 
         $response = $this->httpClient->request('GET', $url.$this->formatQueryParameters());
 
@@ -101,7 +106,7 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function getDepositions(): array
     {
-        $url = $this->zenodoClientApiEndpoint.'/deposit/depositions';
+        $url = $this->zenodoClientEndpoint.'/api/deposit/depositions';
 
         $response = $this->httpClient->request('GET', $url.$this->formatQueryParameters());
 
@@ -118,7 +123,7 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function getDeposition(string $depositionId): array
     {
-        $url = $this->zenodoClientApiEndpoint.'/deposit/depositions/'.$depositionId;
+        $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId;
 
         $response = $this->httpClient->request('GET', $url.$this->formatQueryParameters());
 
@@ -141,7 +146,7 @@ final class ZenodoClient implements ZenodoClientInterface
         array $communities,
         array $creators
     ): array {
-        $url = $this->zenodoClientApiEndpoint.'/deposit/depositions';
+        $url = $this->zenodoClientEndpoint.'/api/deposit/depositions';
 
         $response = $this->httpClient->request(
             'POST',
@@ -182,7 +187,7 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function publishDeposition(string $depositionId): array
     {
-        $url = $this->zenodoClientApiEndpoint.'/deposit/depositions/'.$depositionId.'/actions/publish';
+        $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/actions/publish';
 
         $response = $this->httpClient->request(
             'POST',
@@ -207,7 +212,7 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function newVersion(string $depositionId): string
     {
-        $url = $this->zenodoClientApiEndpoint.'/deposit/depositions/'.$depositionId.'/actions/newversion';
+        $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/actions/newversion';
 
         $response = $this->httpClient->request(
             'POST',
@@ -236,7 +241,7 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function deleteVersion(string $depositionId): void
     {
-        $url = $this->zenodoClientApiEndpoint.'/deposit/depositions/'.$depositionId;
+        $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId;
 
         $response = $this->httpClient->request(
             'DELETE',
@@ -259,7 +264,7 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function getFiles(string $depositionId): array
     {
-        $url = $this->zenodoClientApiEndpoint.'/deposit/depositions/'.$depositionId.'/files';
+        $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/files';
 
         $response = $this->httpClient->request('GET', $url.$this->formatQueryParameters());
 
@@ -286,7 +291,7 @@ final class ZenodoClient implements ZenodoClientInterface
             ]
         );
 
-        $url = $this->zenodoClientApiEndpoint.'/deposit/depositions/'.$depositionId.'/files';
+        $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/files';
 
         $response = $this->httpClient->request(
             'POST',
@@ -317,7 +322,7 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function removeFile(string $fileId, string $depositionId): void
     {
-        $url = $this->zenodoClientApiEndpoint.'/deposit/depositions/'.$depositionId.'/files/'.$fileId;
+        $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/files/'.$fileId;
 
         $response = $this->httpClient->request('DELETE', $url.$this->formatQueryParameters());
 
@@ -362,7 +367,7 @@ final class ZenodoClient implements ZenodoClientInterface
         return UrlHelper::formatQueryParameters(
             array_merge(
                 [
-                    'access_token' => $this->zenodoClientWriteAccessToken,
+                    'access_token' => $this->zenodoClientAccessToken,
                 ],
                 $queryParameters
             )

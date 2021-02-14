@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace App\Admin;
 
 use App\Admin\Abstraction\AbstractEntityAdmin;
-use App\Helper\ArrayHelper;
 use App\Helper\StringHelper;
 use App\Persistence\Entity\Epigraphy\File;
 use App\Persistence\Repository\Epigraphy\FileRepository;
@@ -77,7 +76,7 @@ final class FileAdmin extends AbstractEntityAdmin
     /**
      * @var string
      */
-    private $zenodoRecordId;
+    private $zenodoFirstDepositionId;
 
     public function __construct(
         string $code,
@@ -86,14 +85,14 @@ final class FileAdmin extends AbstractEntityAdmin
         LoggerInterface $logger,
         ZenodoClientInterface $zenodoClient,
         FileRepository $fileRepository,
-        string $zenodoRecordId
+        string $zenodoFirstDepositionId
     ) {
         parent::__construct($code, $class, $baseControllerName);
 
         $this->logger = $logger;
         $this->zenodoClient = $zenodoClient;
         $this->fileRepository = $fileRepository;
-        $this->zenodoRecordId = $zenodoRecordId;
+        $this->zenodoFirstDepositionId = $zenodoFirstDepositionId;
     }
 
     /**
@@ -111,9 +110,7 @@ final class FileAdmin extends AbstractEntityAdmin
 
         $originalFileName = $uploadedFile->getClientOriginalName();
 
-        $depositionId = $this->zenodoClient->getLatestDepositionIdVersion($this->zenodoRecordId);
-
-        $newDepositionVersionId = $this->zenodoClient->newVersion($depositionId);
+        $newDepositionId = $this->zenodoClient->newVersion($this->zenodoFirstDepositionId);
 
         $fileContent = file_get_contents($uploadedFile->getRealPath());
         $hash = md5($fileContent);
@@ -122,37 +119,26 @@ final class FileAdmin extends AbstractEntityAdmin
             $saveResult = $this->zenodoClient->saveFile(
                 $originalFileName,
                 $fileContent,
-                $newDepositionVersionId
+                $newDepositionId
             );
         } catch (Throwable $exception) {
-            $this->zenodoClient->deleteVersion($newDepositionVersionId);
+            $this->zenodoClient->deleteVersion($newDepositionId);
 
             throw $exception;
+        } finally {
+            unset($fileContent);
         }
 
-        unset($fileContent);
-
-        $this->zenodoClient->publishDeposition($newDepositionVersionId);
-
-        $record = $this->zenodoClient->getRecord($newDepositionVersionId);
+        $publishedDeposition = $this->zenodoClient->publishDeposition($newDepositionId);
 
         $fileName = (string) $saveResult['filename'];
 
-        $filesFromRecordByName = iterator_to_array(
-            ArrayHelper::mapWithKeys(
-                $record['files'],
-                static function (int $index, array $fileData) {
-                    return [$fileData['key'], $fileData];
-                }
-            )
+        $url = sprintf(
+            '%s/record/%d/files/%s',
+            $this->zenodoClient->getEndpoint(),
+            $publishedDeposition['record_id'],
+            $saveResult['filename']
         );
-
-        if (!\array_key_exists($fileName, $filesFromRecordByName)) {
-            $this->logger->error(sprintf('Unable to set Zenodo url for file "%s"', $fileName));
-            $url = null;
-        } else {
-            $url = $filesFromRecordByName[$fileName]['links']['self'];
-        }
 
         $object->setFileName($fileName);
         $object->setZenodoFileId((string) $saveResult['id']);
@@ -166,28 +152,27 @@ final class FileAdmin extends AbstractEntityAdmin
      */
     public function postRemove($object): void
     {
-        return;
         // todo: this is draft for delete flow
         // because of Zenodo versioning approach, simple "delete" action is impossible, as it may cause
         // a collision: two different versions with the same content (which is impossible in Zenodo)
-        $metadata = $object->getMetadata();
-
-        if (null !== $metadata && \array_key_exists('zenodo', $metadata)) {
-            $depositionId = $this->zenodoClient->getLatestDepositionIdVersion($this->zenodoRecordId);
-
-            $newDepositionVersionId = $this->zenodoClient->newVersion($depositionId);
-            $fileId = $metadata['zenodo']['id'];
-
-            try {
-                $this->zenodoClient->removeFile($fileId, $newDepositionVersionId);
-            } catch (Throwable $exception) {
-                $this->zenodoClient->deleteVersion($newDepositionVersionId);
-
-                throw $exception;
-            }
-
-            $this->zenodoClient->publishDeposition($newDepositionVersionId);
-        }
+//         $metadata = $object->getMetadata();
+//
+//         if (null !== $metadata && \array_key_exists('zenodo', $metadata)) {
+//             $depositionId = $this->zenodoClient->getLatestDepositionIdVersion($this->zenodoRecordId);
+//
+//             $newDepositionVersionId = $this->zenodoClient->newVersion($depositionId);
+//             $fileId = $metadata['zenodo']['id'];
+//
+//             try {
+//                 $this->zenodoClient->removeFile($fileId, $newDepositionVersionId);
+//             } catch (Throwable $exception) {
+//                 $this->zenodoClient->deleteVersion($newDepositionVersionId);
+//
+//                 throw $exception;
+//             }
+//
+//             $this->zenodoClient->publishDeposition($newDepositionVersionId);
+//         }
     }
 
     protected function configureListFields(ListMapper $listMapper): void

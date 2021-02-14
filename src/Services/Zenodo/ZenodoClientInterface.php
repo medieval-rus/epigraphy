@@ -29,6 +29,8 @@ use DateTime;
 
 interface ZenodoClientInterface
 {
+    public function getEndpoint(): string;
+
     public function getLatestDepositionIdVersion(string $recordId): string;
 
     public function getRecord(string $recordId): array;

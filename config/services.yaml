@@ -25,9 +25,9 @@ services:
     autowire: true
     autoconfigure: true
     bind:
-      $zenodoClientApiEndpoint: '%env(resolve:ZENODO_CLIENT_API_ENDPOINT)%'
-      $zenodoClientWriteAccessToken: '%env(resolve:ZENODO_CLIENT_WRITE_ACCESS_TOKEN)%'
-      $zenodoRecordId: '%env(resolve:ZENODO_RECORD_ID)%'
+      $zenodoClientEndpoint: '%env(resolve:ZENODO_CLIENT_ENDPOINT)%'
+      $zenodoClientAccessToken: '%env(resolve:ZENODO_CLIENT_ACCESS_TOKEN)%'
+      $zenodoFirstDepositionId: '%env(resolve:ZENODO_FIRST_DEPOSITION_ID)%'
 
   App\:
     resource: '../src/'

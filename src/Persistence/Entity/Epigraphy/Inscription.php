@@ -78,7 +78,7 @@ class Inscription implements StringifiableEntityInterface
     /**
      * @var ZeroRow|null
      *
-     * @ORM\OneToOne(targetEntity="App\Persistence\Entity\Epigraphy\ZeroRow", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Persistence\Entity\Epigraphy\ZeroRow", cascade={"persist", "remove"}, inversedBy="inscription")
      */
     private $zeroRow;
 
