@@ -107,12 +107,12 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'photos',
                         ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('photos')
+                        $this->createLabeledManyToManyFormOptions('photos', ['btn_add' => false])
                     )
                     ->add(
                         'sketches',
                         ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('sketches')
+                        $this->createLabeledManyToManyFormOptions('sketches', ['btn_add' => false])
                     )
                 ->end()
             ->end()
@@ -196,7 +196,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.textImages',
                         ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.textImages')
+                        $this->createLabeledManyToManyFormOptions('zeroRow.textImages', ['btn_add' => false])
                     )
                     ->add(
                         'zeroRow.textImagesReferences',
