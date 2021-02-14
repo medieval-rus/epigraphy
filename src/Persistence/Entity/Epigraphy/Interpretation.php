@@ -205,6 +205,7 @@ class Interpretation implements StringifiableEntityInterface
         $this->preservationStates = new ArrayCollection();
         $this->materials = new ArrayCollection();
         $this->alphabets = new ArrayCollection();
+        $this->textImages = new ArrayCollection();
         $this->contentCategories = new ArrayCollection();
     }
 
