@@ -58,7 +58,7 @@ abstract class AbstractNamedEntityAdmin extends AbstractEntityAdmin
                 ->add(
                     'name',
                     TextType::class,
-                    $this->createLabeledFormOptions('name', ['required' => false])
+                    $this->createLabeledFormOptions('name', ['required' => true])
                 )
             ->end()
         ;

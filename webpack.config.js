@@ -21,8 +21,6 @@
 
 var Encore = require('@symfony/webpack-encore');
 
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-
 if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
@@ -48,12 +46,10 @@ Encore
     .addStyleEntry('css/admin/inscription/edit', './assets/scss/pages/admin/inscription/edit.scss')
     .addEntry('js/admin/inscription/edit', './assets/js/pages/admin/inscription/edit.js')
 
-    .addPlugin(new CopyWebpackPlugin([
-        {
-            from: './assets/fonts',
-            to: 'fonts'
-        }
-    ]))
+    .copyFiles(        {
+        from: './assets/fonts',
+        to: 'fonts'
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();
