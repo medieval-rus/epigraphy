@@ -70,19 +70,7 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function getLatestDepositionIdVersion(string $recordId): string
     {
-        $url = $this->zenodoClientEndpoint.'/api/records/'.$recordId;
-
-        $response = $this->httpClient->request('GET', $url.$this->formatQueryParameters());
-
-        $statusCode = $response->getStatusCode();
-        $content = $response->getContent(false);
-
-        if (Response::HTTP_OK !== $statusCode) {
-            $message = sprintf('Request to "%s" failed with status code "%d": %s', $url, $statusCode, $content);
-            throw new RuntimeException($message);
-        }
-
-        $recordData = (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        $recordData = $this->getRecord($recordId);
 
         return $recordData['metadata']['relations']['version'][0]['last_child']['pid_value'];
     }
@@ -91,7 +79,7 @@ final class ZenodoClient implements ZenodoClientInterface
     {
         $url = $this->zenodoClientEndpoint.'/api/records/'.$recordId;
 
-        $response = $this->httpClient->request('GET', $url.$this->formatQueryParameters());
+        $response = $this->sendRequest('GET', $url);
 
         $statusCode = $response->getStatusCode();
         $content = $response->getContent(false);
@@ -108,7 +96,7 @@ final class ZenodoClient implements ZenodoClientInterface
     {
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions';
 
-        $response = $this->httpClient->request('GET', $url.$this->formatQueryParameters());
+        $response = $this->sendRequest('GET', $url);
 
         $statusCode = $response->getStatusCode();
         $content = $response->getContent(false);
@@ -125,7 +113,7 @@ final class ZenodoClient implements ZenodoClientInterface
     {
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId;
 
-        $response = $this->httpClient->request('GET', $url.$this->formatQueryParameters());
+        $response = $this->sendRequest('GET', $url);
 
         $statusCode = $response->getStatusCode();
         $content = $response->getContent(false);
@@ -148,9 +136,9 @@ final class ZenodoClient implements ZenodoClientInterface
     ): array {
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions';
 
-        $response = $this->httpClient->request(
+        $response = $this->sendRequest(
             'POST',
-            $url.$this->formatQueryParameters(),
+            $url,
             [
                 'body' => json_encode(
                     [
@@ -189,9 +177,9 @@ final class ZenodoClient implements ZenodoClientInterface
     {
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/actions/publish';
 
-        $response = $this->httpClient->request(
+        $response = $this->sendRequest(
             'POST',
-            $url.$this->formatQueryParameters(),
+            $url,
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -214,9 +202,9 @@ final class ZenodoClient implements ZenodoClientInterface
     {
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/actions/newversion';
 
-        $response = $this->httpClient->request(
+        $response = $this->sendRequest(
             'POST',
-            $url.$this->formatQueryParameters(),
+            $url,
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -243,9 +231,9 @@ final class ZenodoClient implements ZenodoClientInterface
     {
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId;
 
-        $response = $this->httpClient->request(
+        $response = $this->sendRequest(
             'DELETE',
-            $url.$this->formatQueryParameters(),
+            $url,
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -266,7 +254,7 @@ final class ZenodoClient implements ZenodoClientInterface
     {
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/files';
 
-        $response = $this->httpClient->request('GET', $url.$this->formatQueryParameters());
+        $response = $this->sendRequest('GET', $url);
 
         $statusCode = $response->getStatusCode();
         $content = $response->getContent(false);
@@ -293,9 +281,9 @@ final class ZenodoClient implements ZenodoClientInterface
 
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/files';
 
-        $response = $this->httpClient->request(
+        $response = $this->sendRequest(
             'POST',
-            $url.$this->formatQueryParameters(),
+            $url,
             [
                 'headers' => $formData->getPreparedHeaders()->toArray(),
                 'body' => $formData->bodyToString(),
@@ -324,7 +312,7 @@ final class ZenodoClient implements ZenodoClientInterface
     {
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/files/'.$fileId;
 
-        $response = $this->httpClient->request('DELETE', $url.$this->formatQueryParameters());
+        $response = $this->sendRequest('DELETE', $url);
 
         $statusCode = $response->getStatusCode();
         $content = $response->getContent(false);
@@ -360,6 +348,17 @@ final class ZenodoClient implements ZenodoClientInterface
         $this->publishDeposition($depositionId);
 
         return $depositionId;
+    }
+
+    private function sendRequest(string $method, string $url, array $options = [])
+    {
+        $options['timeout'] = 250;
+
+        return $this->httpClient->request(
+            $method,
+            $url.$this->formatQueryParameters(),
+            $options
+        );
     }
 
     private function formatQueryParameters(array $queryParameters = [])
