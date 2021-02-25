@@ -89,7 +89,7 @@ final class ZenodoClient implements ZenodoClientInterface
             throw new RuntimeException($message);
         }
 
-        return (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        return (array) json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
     }
 
     public function getDepositions(): array
@@ -106,7 +106,7 @@ final class ZenodoClient implements ZenodoClientInterface
             throw new RuntimeException($message);
         }
 
-        return (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        return (array) json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
     }
 
     public function getDeposition(string $depositionId): array
@@ -123,7 +123,7 @@ final class ZenodoClient implements ZenodoClientInterface
             throw new RuntimeException($message);
         }
 
-        return (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        return (array) json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
     }
 
     public function createDeposition(
@@ -153,7 +153,7 @@ final class ZenodoClient implements ZenodoClientInterface
                             'keywords' => $keywords,
                         ],
                     ],
-                    JSON_THROW_ON_ERROR,
+                    \JSON_THROW_ON_ERROR,
                     512
                 ),
                 'headers' => [
@@ -170,7 +170,7 @@ final class ZenodoClient implements ZenodoClientInterface
             throw new RuntimeException($message);
         }
 
-        return (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        return (array) json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
     }
 
     public function publishDeposition(string $depositionId): array
@@ -195,7 +195,7 @@ final class ZenodoClient implements ZenodoClientInterface
             throw new RuntimeException($message);
         }
 
-        return (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        return (array) json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
     }
 
     public function newVersion(string $depositionId): string
@@ -220,7 +220,7 @@ final class ZenodoClient implements ZenodoClientInterface
             throw new RuntimeException($message);
         }
 
-        $newVersionResponse = (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        $newVersionResponse = (array) json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
 
         $parts = explode('/', $newVersionResponse['links']['latest_draft']);
 
@@ -264,7 +264,7 @@ final class ZenodoClient implements ZenodoClientInterface
             throw new RuntimeException($message);
         }
 
-        return (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        return (array) json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
     }
 
     public function saveFile(
@@ -298,7 +298,7 @@ final class ZenodoClient implements ZenodoClientInterface
             throw new RuntimeException($message);
         }
 
-        $saveFileResponse = (array) json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        $saveFileResponse = (array) json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
 
         if ($saveFileResponse['filename'] !== $fileName) {
             $message = sprintf('Illegal file name "%s", should be "%s"', $fileName, $saveFileResponse['filename']);

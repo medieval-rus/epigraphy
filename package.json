@@ -16,12 +16,12 @@
         "simple-keyboard": "^2.32.56"
     },
     "devDependencies": {
-        "@symfony/webpack-encore": "^0.28.2",
-        "copy-webpack-plugin": "^5.1.1",
+        "@symfony/webpack-encore": "^1.0.0",
         "core-js": "^3.0.0",
+        "file-loader": "^6.0.0",
         "node-sass": "^4.12.0",
         "regenerator-runtime": "^0.13.2",
-        "sass-loader": "^7.2.0",
+        "sass-loader": "^11.0.0",
         "webpack-notifier": "^1.6.0"
     }
 }

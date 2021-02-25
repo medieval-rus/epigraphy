@@ -19,7 +19,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-var Encore = require('@symfony/webpack-encore');
+const Encore = require('@symfony/webpack-encore');
 
 if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
@@ -33,6 +33,9 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
     .enableSassLoader()
+    .configureBabel((config) => {
+        config.plugins.push('@babel/plugin-proposal-class-properties');
+    })
     .configureBabelPresetEnv((config) => {
         config.useBuiltIns = 'usage';
         config.corejs = 3;
@@ -41,14 +44,11 @@ Encore
     .addStyleEntry('css/site/inscription/list', './assets/scss/pages/site/inscription/list.scss')
     .addStyleEntry('css/site/inscription/show', './assets/scss/pages/site/inscription/show.scss')
     .addStyleEntry('css/site/bibliographic-record/list', './assets/scss/pages/site/bibliographic-record/list.scss')
-
-
     .addStyleEntry('css/admin/inscription/edit', './assets/scss/pages/admin/inscription/edit.scss')
     .addEntry('js/admin/inscription/edit', './assets/js/pages/admin/inscription/edit.js')
-
-    .copyFiles(        {
+    .copyFiles({
         from: './assets/fonts',
-        to: 'fonts'
+        to: 'fonts/[path][name].[ext]',
     })
 ;
 
