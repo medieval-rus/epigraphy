@@ -22,7 +22,6 @@
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/draggable';
 import Keyboard from 'simple-keyboard';
-import isNumber from "../../../../../public/bundles/sonatacore/vendor/moment/src/lib/utils/is-number";
 
 const virtualKeyboardCoordinates = {
     top: 150,
@@ -182,4 +181,9 @@ function createVirtualKeyboard(index, targetInputElement)
     );
 
     return wrapper;
+}
+
+function isNumber(input)
+{
+    return typeof input === 'number' || Object.prototype.toString.call(input) === '[object Number]';
 }

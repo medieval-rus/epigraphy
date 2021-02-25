@@ -95,4 +95,4 @@ return PhpCsFixer\Config::create()
                 ]
             )
     )
-    ;
+;

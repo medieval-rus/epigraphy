@@ -76,7 +76,9 @@ grumphp:
       always_execute: true
       metadata:
         priority: -110
-    securitychecker:
+    securitychecker_enlightn:
+      lockfile: ./composer.lock
+      run_always: true
       metadata:
         priority: -120
     phan:

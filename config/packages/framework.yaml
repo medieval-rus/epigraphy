@@ -23,6 +23,6 @@ framework:
     handler_id: null
     cookie_secure: auto
     cookie_samesite: lax
-    cookie_lifetime: 0
+    cookie_lifetime: 2592000
   php_errors:
     log: true
