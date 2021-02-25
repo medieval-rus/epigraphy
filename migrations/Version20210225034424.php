@@ -32,7 +32,7 @@ final class Version20210225034424 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Refactored bibliography; Added Bibliography admin.';
     }
 
     public function up(Schema $schema): void
