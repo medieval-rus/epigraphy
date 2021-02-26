@@ -33,9 +33,6 @@ use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class ZenodoClient implements ZenodoClientInterface
 {
     /**

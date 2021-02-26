@@ -32,8 +32,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Vyfony\Bundle\FilterableTableBundle\Table\TableInterface;
 
 /**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- *
  * @Route("/epigraphy/inscription")
  */
 final class InscriptionController extends AbstractController

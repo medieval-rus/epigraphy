@@ -36,9 +36,6 @@ use App\Services\OriginalText\Parser\Models\TextPiece\TextPieceInterface;
 use InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class OriginalTextFormatter implements OriginalTextFormatterInterface
 {
     /**

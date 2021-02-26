@@ -30,9 +30,6 @@ use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\ActualValue\Extractor\ActualValueExtractorInterface;
 use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class ValueStringifier implements ValueStringifierInterface
 {
     /**

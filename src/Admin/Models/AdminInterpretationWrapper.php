@@ -31,9 +31,6 @@ use Doctrine\Common\Collections\Collection;
 use ReflectionObject;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class AdminInterpretationWrapper extends Interpretation
 {
     /**

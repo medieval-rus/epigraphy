@@ -25,9 +25,6 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Epigraphy;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 interface NamedEntityInterface extends StringifiableEntityInterface
 {
     public function getName(): ?string;

@@ -29,9 +29,6 @@ use App\Models\FilesActualValue;
 use App\Models\StringActualValue;
 use App\Persistence\Entity\Epigraphy\Inscription;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 interface ActualValueExtractorInterface
 {
     /**

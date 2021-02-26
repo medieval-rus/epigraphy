@@ -29,9 +29,6 @@ use App\Services\OriginalText\Parser\Models\TextPiece\TextPieceInterface;
 use App\Services\OriginalText\Parser\Models\TextPiece\UnhandledTextArea;
 use App\Services\OriginalText\Parser\Rules\RuleDefinitionInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class RuleParser implements RuleParserInterface
 {
     /**

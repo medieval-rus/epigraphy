@@ -30,8 +30,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\InterpretationRepository")
  */
 class Interpretation implements StringifiableEntityInterface

@@ -32,9 +32,6 @@ use App\Services\OriginalText\Parser\Models\TextPiece\UnhandledTextAreaInterface
 use App\Services\OriginalText\Parser\RuleParser\RuleParserInterface;
 use App\Services\OriginalText\Parser\Rules\RuleDefinitionInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class OriginalTextParser implements OriginalTextParserInterface
 {
     /**

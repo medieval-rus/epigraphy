@@ -35,9 +35,6 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Configurator\AbstractTableConfigur
 use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
 use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadataInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class InscriptionsTableConfigurator extends AbstractTableConfigurator
 {
     /**

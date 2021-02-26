@@ -39,9 +39,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class InscriptionAdmin extends AbstractEntityAdmin
 {
     /**

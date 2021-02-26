@@ -43,9 +43,6 @@ use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Table\Tabl
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Restriction\FilterRestrictionInterface;
 use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
 {
     /**

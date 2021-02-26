@@ -27,9 +27,6 @@ namespace App\Helper;
 
 use Generator;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 abstract class ArrayHelper
 {
     public static function group(array $array, callable $keyExtractor): array

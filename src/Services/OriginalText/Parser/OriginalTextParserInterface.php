@@ -27,9 +27,6 @@ namespace App\Services\OriginalText\Parser;
 
 use App\Services\OriginalText\Parser\Models\OriginalText;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 interface OriginalTextParserInterface
 {
     public function parse(string $originalText): OriginalText;

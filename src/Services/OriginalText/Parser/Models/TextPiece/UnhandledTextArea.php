@@ -25,9 +25,6 @@ declare(strict_types=1);
 
 namespace App\Services\OriginalText\Parser\Models\TextPiece;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class UnhandledTextArea implements UnhandledTextAreaInterface
 {
     private string $text;

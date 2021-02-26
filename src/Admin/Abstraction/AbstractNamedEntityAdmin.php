@@ -30,9 +30,6 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 abstract class AbstractNamedEntityAdmin extends AbstractEntityAdmin
 {
     /**

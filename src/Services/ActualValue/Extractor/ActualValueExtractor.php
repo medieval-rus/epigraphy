@@ -33,9 +33,6 @@ use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class ActualValueExtractor implements ActualValueExtractorInterface
 {
     /**

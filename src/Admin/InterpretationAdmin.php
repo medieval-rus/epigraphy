@@ -38,9 +38,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormEvents;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class InterpretationAdmin extends AbstractEntityAdmin
 {
     /**

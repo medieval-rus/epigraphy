@@ -27,9 +27,6 @@ namespace App\Models;
 
 use App\Persistence\Entity\Epigraphy\File;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class FilesActualValue
 {
     /**

@@ -28,9 +28,6 @@ namespace App\Services\OriginalText\Parser\RuleParser;
 use App\Services\OriginalText\Parser\Models\TextPiece\TextPieceInterface;
 use App\Services\OriginalText\Parser\Rules\RuleDefinitionInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 interface RuleParserInterface
 {
     /**

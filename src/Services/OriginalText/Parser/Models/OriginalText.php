@@ -27,9 +27,6 @@ namespace App\Services\OriginalText\Parser\Models;
 
 use App\Services\OriginalText\Parser\Models\TextPiece\TextPieceInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class OriginalText
 {
     /**

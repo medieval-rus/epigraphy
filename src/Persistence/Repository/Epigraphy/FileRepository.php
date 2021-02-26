@@ -30,8 +30,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- *
  * @method File|null find(int $id, int $lockMode = null, int $lockVersion = null)
  * @method File|null findOneBy(array $criteria, array $orderBy = null)
  * @method File[]    findAll()

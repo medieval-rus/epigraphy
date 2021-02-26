@@ -28,9 +28,6 @@ namespace App\Services\Value;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 interface ValueStringifierInterface
 {
     public function stringify(
