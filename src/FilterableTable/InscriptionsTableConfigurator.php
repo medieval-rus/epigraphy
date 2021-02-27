@@ -86,6 +86,12 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                 ->setIsSortable(true)
                 ->setLabel('controller.inscription.list.table.column.id'),
             (new ColumnMetadata())
+                ->setName('number')
+                ->setLabel('controller.inscription.list.table.column.number')
+                ->setValueExtractor(static function (Inscription $inscription): string {
+                    return $inscription->getNumber() ?? '';
+                }),
+            (new ColumnMetadata())
                 ->setName('carrier-category')
                 ->setValueExtractor(static function (Inscription $inscription): string {
                     return implode(
@@ -115,7 +121,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setName('interpretation-contentCategories')
                 ->setValueExtractor(function (Inscription $inscription): string {
-                    return $this->valueStringifier->stringify($inscription, 'contentCategories');
+                    return $this->valueStringifier->stringify($inscription, 'contentCategories') ?? '-';
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)

@@ -54,14 +54,16 @@ final class ValueStringifier implements ValueStringifierInterface
         Inscription $inscription,
         string $propertyName,
         string $formatType = ActualValueFormatterInterface::FORMAT_TYPE_DEFAULT
-    ): string {
+    ): ?string {
         $format = function (StringActualValue $actualValue) use ($formatType): string {
             return $this->formatter->format($actualValue, $formatType);
         };
 
-        return implode(
+        $result = implode(
             '<br />',
             array_map($format, $this->extractor->extractFromZeroRowAsStrings($inscription, $propertyName))
         );
+
+        return '' === $result ? null : $result;
     }
 }

@@ -194,7 +194,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
                                 ->setIsRaw(true)
                                 ->setName('interpretation-content')
                                 ->setValueExtractor(function (Inscription $inscription): string {
-                                    return $this->valueStringifier->stringify($inscription, 'content');
+                                    return $this->valueStringifier->stringify($inscription, 'content') ?? '-';
                                 })
                                 ->setLabel('controller.inscription.list.table.column.interpretation.content')
                         )
@@ -212,7 +212,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
                                         $inscription,
                                         'text',
                                         ActualValueFormatterInterface::FORMAT_TYPE_ORIGINAL_TEXT
-                                    );
+                                    ) ?? '-';
                                 })
                                 ->setLabel('controller.inscription.list.table.column.interpretation.text')
                         )

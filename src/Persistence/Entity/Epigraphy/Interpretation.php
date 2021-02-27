@@ -88,6 +88,13 @@ class Interpretation implements StringifiableEntityInterface
      *
      * @ORM\Column(type="text", nullable=true)
      */
+    private $origin;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
     private $placeOnCarrier;
 
     /**
@@ -278,6 +285,18 @@ class Interpretation implements StringifiableEntityInterface
     public function setNumberInSource(?string $numberInSource): self
     {
         $this->numberInSource = $numberInSource;
+
+        return $this;
+    }
+
+    public function getOrigin(): ?string
+    {
+        return $this->origin;
+    }
+
+    public function setOrigin(?string $origin): self
+    {
+        $this->origin = $origin;
 
         return $this;
     }

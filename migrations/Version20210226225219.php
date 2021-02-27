@@ -23,16 +23,25 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\Value;
+namespace DoctrineMigrations;
 
-use App\Persistence\Entity\Epigraphy\Inscription;
-use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
-interface ValueStringifierInterface
+final class Version20210226225219 extends AbstractMigration
 {
-    public function stringify(
-        Inscription $inscription,
-        string $propertyName,
-        string $formatType = ActualValueFormatterInterface::FORMAT_TYPE_DEFAULT
-    ): ?string;
+    public function getDescription(): string
+    {
+        return 'Added a column for a public inscription number (in opposition to internal "id" column)';
+    }
+
+    public function up(Schema $schema): void
+    {
+        $this->addSql('ALTER TABLE inscription ADD number VARCHAR(255) DEFAULT NULL');
+    }
+
+    public function down(Schema $schema): void
+    {
+        $this->addSql('ALTER TABLE inscription DROP number');
+    }
 }

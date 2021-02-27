@@ -35,6 +35,7 @@
 
     <table class="table table-bordered">
         <tbody>
+            {{ self.format_text_row('number', inscription.number) }}
             {{ self.format_text_row('conventionalDate', inscription.conventionalDate) }}
             {{ self.format_text_row('carrier.types', inscription.carrier.types|map(namedEntity => namedEntity.name)) }}
             {{ self.format_text_row('carrier.categories', inscription.carrier.categories|map(namedEntity => namedEntity.name)) }}
@@ -46,6 +47,7 @@
             {{ self.format_text_row('carrier.storagePlace', inscription.carrier.storagePlace) }}
             {{ self.format_text_row('carrier.inventoryNumber', inscription.carrier.inventoryNumber) }}
             {{ self.format_text_row('carrier.isInSitu', inscription.carrier.isInSitu) }}
+            {{ self.format_text_row('zeroRow.origin', self.format_zero_row(inscription, 'origin')) }}
             {{ self.format_text_row('zeroRow.placeOnCarrier', self.format_zero_row(inscription, 'placeOnCarrier')) }}
             {{ self.format_text_row('zeroRow.writingTypes', self.format_zero_row(inscription, 'writingTypes')) }}
             {{ self.format_text_row('zeroRow.writingMethods', self.format_zero_row(inscription, 'writingMethods')) }}
@@ -82,7 +84,7 @@
 
     {% import _self as self %}
 
-    {{ valueStringifier.stringify(inscription, propertyName, formatType)|raw }}
+    {{- valueStringifier.stringify(inscription, propertyName, formatType)|raw -}}
 {%- endmacro -%}
 
 {%- macro format_zero_row_images(inscription, propertyName) -%}

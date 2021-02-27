@@ -81,6 +81,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
     {
         $listMapper
             ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
+            ->addIdentifier('number', null, $this->createLabeledListOptions('number'))
             ->add('carrier', null, $this->createLabeledListOptions('carrier'))
             ->add('interpretations', null, $this->createLabeledListOptions('interpretations'))
         ;
@@ -91,6 +92,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         $formMapper
             ->tab('form.inscription.tab.common.label')
                 ->with('form.inscription.section.common.label')
+                    ->add(
+                        'number',
+                        null,
+                        $this->createLabeledFormOptions('number')
+                    )
                     ->add(
                         'conventionalDate',
                         null,
@@ -242,6 +248,16 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     )
                 ->end()
                 ->with('form.inscription.section.zeroRowHistoricalAspect.label', ['class' => 'col-md-6'])
+                    ->add(
+                        'zeroRow.origin',
+                        TextType::class,
+                        $this->createLabeledFormOptions('zeroRow.origin', ['required' => false])
+                    )
+                    ->add(
+                        'zeroRow.originReferences',
+                        EntityType::class,
+                        $this->createLabeledReferencesFormOptions('originReferences')
+                    )
                     ->add(
                         'zeroRow.dateInText',
                         TextType::class,

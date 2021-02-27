@@ -248,6 +248,16 @@ final class InterpretationAdmin extends AbstractEntityAdmin
             ->tab('form.interpretation.tab.historicalAspect.label')
                 ->with('form.interpretation.section.historicalAspect.label')
                     ->add(
+                        'origin',
+                        TextType::class,
+                        $this->createLabeledFormOptions('origin', ['required' => false])
+                    )
+                    ->add(
+                        'isOriginPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('origin')
+                    )
+                    ->add(
                         'dateInText',
                         TextType::class,
                         $this->createLabeledFormOptions('dateInText', ['required' => false])

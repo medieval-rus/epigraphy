@@ -23,8 +23,6 @@ menu:
       label: Надписи
     carriers:
       label: Носители
-    properties:
-      label: Свойства надписей
     media:
       label: Медиа
     security:
@@ -107,6 +105,7 @@ list:
   inscription:
     fields:
       id: Внутренний идентификатор
+      number: Номер
       carrier: Носитель
       interpretations: Интерпретации
   file:
@@ -144,6 +143,7 @@ form:
         label: Данные о хранении
     fields:
       id: Внутренний идентификатор
+      number: Номер
       types: Тип носителя
       categories: Категория носителя
       origin1: Происхождение 1 (город, местность)
@@ -224,11 +224,14 @@ form:
       zeroRowHistoricalAspect:
         label: Исторические данные
     fields:
+      number: Номер
       conventionalDate: Условная дата
       carrier: Носитель
       photos: Фото
       sketches: Прориси
       zeroRow:
+        origin: Происхождение надписи
+        originReferences: Происхождение надписи (ссылки)
         placeOnCarrier: Расположение на носителе
         placeOnCarrierReferences: Расположение на носителе (ссылки)
         writingTypes: Разряд по Франклину
@@ -290,6 +293,7 @@ form:
       comment: Комментарий к источнику
       pageNumbersInSource: Номера страниц в публикации
       numberInSource: Номер в источнике
+      origin: Происхождение надписи
       placeOnCarrier: Расположение на носителе
       writingTypes: Разряд по Франклину
       writingMethods: Способ нанесения
@@ -309,6 +313,7 @@ form:
       photos: Фото (файлы)
       sketches: Прориси (файлы)
       isPartOfZeroRow:
+        origin: Часть нулевой строки
         placeOnCarrier: Часть нулевой строки
         writingTypes: Часть нулевой строки
         writingMethods: Часть нулевой строки
