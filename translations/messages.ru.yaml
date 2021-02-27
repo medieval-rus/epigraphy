@@ -71,6 +71,9 @@ controller:
     show:
       title: Надпись
       admin: Просмотреть надпись в админке
+      carrierSpoiler:
+        open: Носитель (развернуть)
+        close: Носитель (свернуть)
       inscription:
         label:
           number: Номер
