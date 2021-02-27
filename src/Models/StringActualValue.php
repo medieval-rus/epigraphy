@@ -25,9 +25,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class StringActualValue
 {
     private string $value;

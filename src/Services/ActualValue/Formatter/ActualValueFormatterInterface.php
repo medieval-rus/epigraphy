@@ -27,9 +27,6 @@ namespace App\Services\ActualValue\Formatter;
 
 use App\Models\StringActualValue;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 interface ActualValueFormatterInterface
 {
     public const FORMAT_TYPE_DEFAULT = 'default';

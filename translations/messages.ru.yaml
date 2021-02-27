@@ -43,6 +43,7 @@ controller:
       table:
         column:
           id: Id
+          number: Номер
           carrier:
             category: Категория носителя
             origin1: Происхождение носителя (город, местность)
@@ -70,8 +71,12 @@ controller:
     show:
       title: Надпись
       admin: Просмотреть надпись в админке
+      carrierSpoiler:
+        open: Носитель (развернуть)
+        close: Носитель (свернуть)
       inscription:
         label:
+          number: Номер
           conventionalDate: Условная дата
           photos: Фотографии
           sketches: Прориси
@@ -87,6 +92,7 @@ controller:
             inventoryNumber: Инвентарный номер носителя
             isInSitu: Носитель in situ?
           zeroRow:
+            origin: Происхождение надписи
             placeOnCarrier: Расположение на носителе
             writingTypes: Разряд (по Франклину)
             writingMethods: Способ нанесения

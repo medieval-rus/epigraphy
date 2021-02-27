@@ -43,9 +43,6 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Context\ExecutionContext;
 use Throwable;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class FileAdmin extends AbstractEntityAdmin
 {
     /**

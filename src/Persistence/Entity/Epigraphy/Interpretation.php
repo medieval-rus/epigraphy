@@ -30,8 +30,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\InterpretationRepository")
  */
 class Interpretation implements StringifiableEntityInterface
@@ -84,6 +82,13 @@ class Interpretation implements StringifiableEntityInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $numberInSource;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $origin;
 
     /**
      * @var string|null
@@ -280,6 +285,18 @@ class Interpretation implements StringifiableEntityInterface
     public function setNumberInSource(?string $numberInSource): self
     {
         $this->numberInSource = $numberInSource;
+
+        return $this;
+    }
+
+    public function getOrigin(): ?string
+    {
+        return $this->origin;
+    }
+
+    public function setOrigin(?string $origin): self
+    {
+        $this->origin = $origin;
 
         return $this;
     }

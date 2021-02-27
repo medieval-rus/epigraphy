@@ -2148,24 +2148,26 @@
         },
         {
             "name": "laminas/laminas-zendframework-bridge",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
-                "reference": "6ede70583e101030bcace4dcddd648f760ddf642"
+                "reference": "6cccbddfcfc742eb02158d6137ca5687d92cee32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/6ede70583e101030bcace4dcddd648f760ddf642",
-                "reference": "6ede70583e101030bcace4dcddd648f760ddf642",
+                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/6cccbddfcfc742eb02158d6137ca5687d92cee32",
+                "reference": "6cccbddfcfc742eb02158d6137ca5687d92cee32",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6 || ^7.0 || ^8.0"
+                "php": "^7.3 || ^8.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^8.1 || ^9.3",
-                "squizlabs/php_codesniffer": "^3.5"
+                "psalm/plugin-phpunit": "^0.15.1",
+                "squizlabs/php_codesniffer": "^3.5",
+                "vimeo/psalm": "^4.6"
             },
             "type": "library",
             "extra": {
@@ -2204,7 +2206,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2020-09-14T14:23:00+00:00"
+            "time": "2021-02-25T21:54:58+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -3402,16 +3404,16 @@
         },
         {
             "name": "sonata-project/admin-bundle",
-            "version": "3.89.1",
+            "version": "3.90.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataAdminBundle.git",
-                "reference": "b1e0ff836342cf2695da6a0e52c979792864081d"
+                "reference": "6caae26d4682500d52ed6fbd955a3c09d925142b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/b1e0ff836342cf2695da6a0e52c979792864081d",
-                "reference": "b1e0ff836342cf2695da6a0e52c979792864081d",
+                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/6caae26d4682500d52ed6fbd955a3c09d925142b",
+                "reference": "6caae26d4682500d52ed6fbd955a3c09d925142b",
                 "shasum": ""
             },
             "require": {
@@ -3523,7 +3525,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sonata-project/SonataAdminBundle/issues",
-                "source": "https://github.com/sonata-project/SonataAdminBundle/tree/3.89.1"
+                "source": "https://github.com/sonata-project/SonataAdminBundle/tree/3.90.0"
             },
             "funding": [
                 {
@@ -3543,7 +3545,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-16T13:40:21+00:00"
+            "time": "2021-02-25T14:41:43+00:00"
         },
         {
             "name": "sonata-project/block-bundle",

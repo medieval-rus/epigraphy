@@ -28,8 +28,6 @@ namespace App\Persistence\Entity\Epigraphy;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\FileRepository")
  */
 class File

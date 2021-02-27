@@ -34,9 +34,6 @@ use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Expression
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class WritingTypeFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
     /**

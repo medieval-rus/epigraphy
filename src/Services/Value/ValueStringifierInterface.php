@@ -28,14 +28,11 @@ namespace App\Services\Value;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 interface ValueStringifierInterface
 {
     public function stringify(
         Inscription $inscription,
         string $propertyName,
         string $formatType = ActualValueFormatterInterface::FORMAT_TYPE_DEFAULT
-    ): string;
+    ): ?string;
 }

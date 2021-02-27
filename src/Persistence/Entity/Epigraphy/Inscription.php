@@ -30,20 +30,25 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\InscriptionRepository")
  */
 class Inscription implements StringifiableEntityInterface
 {
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $number;
 
     /**
      * @var Carrier|null
@@ -114,6 +119,21 @@ class Inscription implements StringifiableEntityInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getNumber(): ?string
+    {
+        return $this->number;
+    }
+
+    public function setNumber(?string $number): void
+    {
+        $this->number = $number;
     }
 
     public function getCarrier(): ?Carrier

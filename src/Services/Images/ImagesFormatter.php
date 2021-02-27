@@ -30,9 +30,6 @@ use App\Persistence\Entity\Epigraphy\File;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\ActualValue\Extractor\ActualValueExtractorInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class ImagesFormatter implements ImagesFormatterInterface
 {
     /**

@@ -31,9 +31,6 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class UserFixtures extends Fixture implements FixtureGroupInterface
 {
     /**

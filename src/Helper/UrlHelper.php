@@ -25,9 +25,6 @@ declare(strict_types=1);
 
 namespace App\Helper;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 abstract class UrlHelper
 {
     public static function formatQueryParameters(array $queryParameters): string

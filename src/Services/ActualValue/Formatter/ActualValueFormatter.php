@@ -30,9 +30,6 @@ use App\Services\OriginalText\Formatter\OriginalTextFormatterInterface;
 use App\Services\OriginalText\Parser\OriginalTextParserInterface;
 use InvalidArgumentException;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class ActualValueFormatter implements ActualValueFormatterInterface
 {
     /**

@@ -29,9 +29,6 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class MenuBuilder
 {
     /**

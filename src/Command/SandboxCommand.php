@@ -29,9 +29,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class SandboxCommand extends Command
 {
     protected static $defaultName = 'app:sandbox';

@@ -31,11 +31,13 @@ use Doctrine\Common\Collections\Collection;
 use ReflectionObject;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class AdminInterpretationWrapper extends Interpretation
 {
+    /**
+     * @var bool
+     */
+    private $isOriginPartOfZeroRow;
+
     /**
      * @var bool
      */
@@ -135,6 +137,7 @@ final class AdminInterpretationWrapper extends Interpretation
             return $existingInterpretation->getId() === $this->source->getId();
         };
 
+        $this->isOriginPartOfZeroRow = $zeroRow->getOriginReferences()->exists($predicate);
         $this->isPlaceOnCarrierPartOfZeroRow = $zeroRow->getPlaceOnCarrierReferences()->exists($predicate);
         $this->isWritingTypesPartOfZeroRow = $zeroRow->getWritingTypesReferences()->exists($predicate);
         $this->isWritingMethodsPartOfZeroRow = $zeroRow->getWritingMethodsReferences()->exists($predicate);
@@ -166,6 +169,7 @@ final class AdminInterpretationWrapper extends Interpretation
 
     public function updateZeroRow(ZeroRow $zeroRow): void
     {
+        $this->updateReferences($zeroRow->getOriginReferences(), $this->isOriginPartOfZeroRow);
         $this->updateReferences($zeroRow->getPlaceOnCarrierReferences(), $this->isPlaceOnCarrierPartOfZeroRow);
         $this->updateReferences($zeroRow->getWritingTypesReferences(), $this->isWritingTypesPartOfZeroRow);
         $this->updateReferences($zeroRow->getWritingMethodsReferences(), $this->isWritingMethodsPartOfZeroRow);
@@ -188,6 +192,16 @@ final class AdminInterpretationWrapper extends Interpretation
             $this->isNonStratigraphicalDatePartOfZeroRow
         );
         $this->updateReferences($zeroRow->getHistoricalDateReferences(), $this->isHistoricalDatePartOfZeroRow);
+    }
+
+    public function getIsOriginPartOfZeroRow(): ?bool
+    {
+        return $this->isOriginPartOfZeroRow;
+    }
+
+    public function setIsOriginPartOfZeroRow(?bool $isOriginPartOfZeroRow): void
+    {
+        $this->isOriginPartOfZeroRow = $isOriginPartOfZeroRow;
     }
 
     public function getIsPlaceOnCarrierPartOfZeroRow(): ?bool

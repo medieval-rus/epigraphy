@@ -23,50 +23,25 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Epigraphy;
+namespace DoctrineMigrations;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
-/**
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\CarrierTypeRepository")
- */
-class CarrierType implements NamedEntityInterface
+final class Version20210226225219 extends AbstractMigration
 {
-    /**
-     * @var int
-     *
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, unique=true)
-     */
-    private $name;
-
-    public function __toString(): string
+    public function getDescription(): string
     {
-        return (string) $this->getName();
+        return 'Added a column for a public inscription number (in opposition to internal "id" column)';
     }
 
-    public function getId(): ?int
+    public function up(Schema $schema): void
     {
-        return $this->id;
+        $this->addSql('ALTER TABLE inscription ADD number VARCHAR(255) DEFAULT NULL');
     }
 
-    public function getName(): ?string
+    public function down(Schema $schema): void
     {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
+        $this->addSql('ALTER TABLE inscription DROP number');
     }
 }

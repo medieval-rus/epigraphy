@@ -23,18 +23,11 @@ sonata_admin:
     blocks:
       - { type: sonata.admin.block.admin_list, position: left }
     groups:
-      carriers:
+      inscriptions:
         label_catalogue: admin
-        label: menu.groups.carriers.label
+        label: menu.groups.inscriptions.label
         items:
-          - admin.carrier
-          - admin.carrier_type
-          - admin.carrier_category
-        roles: [ ROLE_ADMIN ]
-      properties:
-        label_catalogue: admin
-        label: menu.groups.properties.label
-        items:
+          - admin.inscription
           - admin.alphabet
           - admin.content_category
           - admin.material
@@ -42,11 +35,13 @@ sonata_admin:
           - admin.writing_type
           - admin.writing_method
         roles: [ ROLE_ADMIN ]
-      inscriptions:
+      carriers:
         label_catalogue: admin
-        label: menu.groups.inscriptions.label
+        label: menu.groups.carriers.label
         items:
-          - admin.inscription
+          - admin.carrier
+          - admin.carrier_type
+          - admin.carrier_category
         roles: [ ROLE_ADMIN ]
       media:
         label_catalogue: admin

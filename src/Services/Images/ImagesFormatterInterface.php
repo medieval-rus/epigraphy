@@ -27,9 +27,6 @@ namespace App\Services\Images;
 
 use App\Persistence\Entity\Epigraphy\Inscription;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 interface ImagesFormatterInterface
 {
     public function formatZeroRowImages(Inscription $inscription, string $propertyName): string;

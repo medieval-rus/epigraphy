@@ -31,8 +31,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- *
  * @method Interpretation|null find(int $id, int $lockMode = null, int $lockVersion = null)
  * @method Interpretation|null findOneBy(array $criteria, array $orderBy = null)
  * @method Interpretation[]    findAll()

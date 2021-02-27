@@ -28,9 +28,6 @@ namespace App\Admin\Abstraction;
 use ReflectionClass;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 abstract class AbstractEntityAdmin extends AbstractAdmin
 {
     protected $translationDomain = 'admin';

@@ -35,9 +35,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class UserAdmin extends AbstractEntityAdmin
 {
     /**

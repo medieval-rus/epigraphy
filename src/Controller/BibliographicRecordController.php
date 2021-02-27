@@ -32,8 +32,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Vyfony\Bundle\BibliographyBundle\Persistence\Entity\BibliographicRecord;
 
 /**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- *
  * @Route("/epigraphy/bibliography/record")
  */
 final class BibliographicRecordController extends AbstractController

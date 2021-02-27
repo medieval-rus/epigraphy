@@ -29,8 +29,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\Security\UserRepository")
  */
 class User implements UserInterface

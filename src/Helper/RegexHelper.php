@@ -25,9 +25,6 @@ declare(strict_types=1);
 
 namespace App\Helper;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 abstract class RegexHelper
 {
     public const GUID_PATTERN = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';

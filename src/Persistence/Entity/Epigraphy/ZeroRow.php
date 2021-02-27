@@ -30,8 +30,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- *
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\ZeroRowRepository")
  */
 class ZeroRow
@@ -51,6 +49,25 @@ class ZeroRow
      * @ORM\OneToOne(targetEntity="App\Persistence\Entity\Epigraphy\Inscription", mappedBy="zeroRow")
      */
     private $inscription;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $origin;
+
+    /**
+     * @var Collection|Interpretation[]
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
+     * @ORM\JoinTable(name="zero_row_origin_references")
+     */
+    private $originReferences;
 
     /**
      * @var string|null
@@ -359,6 +376,7 @@ class ZeroRow
 
     public function __construct()
     {
+        $this->originReferences = new ArrayCollection();
         $this->placeOnCarrierReferences = new ArrayCollection();
         $this->writingTypes = new ArrayCollection();
         $this->writingTypesReferences = new ArrayCollection();
@@ -397,6 +415,34 @@ class ZeroRow
     public function setInscription(Inscription $inscription): self
     {
         $this->inscription = $inscription;
+
+        return $this;
+    }
+
+    public function getOrigin(): ?string
+    {
+        return $this->origin;
+    }
+
+    public function setOrigin(?string $origin): void
+    {
+        $this->origin = $origin;
+    }
+
+    /**
+     * @return Collection|Interpretation[]
+     */
+    public function getOriginReferences(): Collection
+    {
+        return $this->originReferences;
+    }
+
+    /**
+     * @param Collection|Interpretation[] $originReferences
+     */
+    public function setOriginReferences(Collection $originReferences): self
+    {
+        $this->originReferences = $originReferences;
 
         return $this;
     }

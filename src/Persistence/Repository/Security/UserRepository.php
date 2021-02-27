@@ -33,8 +33,6 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- *
  * @method User|null find(int $id, int $lockMode = null, int $lockVersion = null)
  * @method User|null findOneBy(array $criteria, array $orderBy = null)
  * @method User[]    findAll()

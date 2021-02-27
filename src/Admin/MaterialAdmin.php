@@ -27,9 +27,6 @@ namespace App\Admin;
 
 use App\Admin\Abstraction\AbstractNamedEntityAdmin;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class MaterialAdmin extends AbstractNamedEntityAdmin
 {
     /**

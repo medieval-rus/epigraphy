@@ -28,9 +28,6 @@ namespace App\Services\OriginalText\Parser\Rules;
 use App\Services\OriginalText\Parser\Models\TextPiece\TextBreakTextPiece;
 use App\Services\OriginalText\Parser\Models\TextPiece\TextPieceInterface;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class TextBreakRuleDefinition implements RuleDefinitionInterface
 {
     public function createTextPiece(string $text): TextPieceInterface

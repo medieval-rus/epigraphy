@@ -38,9 +38,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormEvents;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 final class InterpretationAdmin extends AbstractEntityAdmin
 {
     /**
@@ -250,6 +247,16 @@ final class InterpretationAdmin extends AbstractEntityAdmin
             ->end()
             ->tab('form.interpretation.tab.historicalAspect.label')
                 ->with('form.interpretation.section.historicalAspect.label')
+                    ->add(
+                        'origin',
+                        TextType::class,
+                        $this->createLabeledFormOptions('origin', ['required' => false])
+                    )
+                    ->add(
+                        'isOriginPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('origin')
+                    )
                     ->add(
                         'dateInText',
                         TextType::class,

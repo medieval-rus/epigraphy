@@ -25,9 +25,6 @@ declare(strict_types=1);
 
 namespace App\Helper;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 abstract class StringHelper
 {
     public static function emptyIfNull(?string $nullableString): string

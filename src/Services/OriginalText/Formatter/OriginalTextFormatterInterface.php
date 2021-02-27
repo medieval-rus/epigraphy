@@ -27,9 +27,6 @@ namespace App\Services\OriginalText\Formatter;
 
 use App\Services\OriginalText\Parser\Models\OriginalText;
 
-/**
- * @author Anton Dyshkant <vyshkant@gmail.com>
- */
 interface OriginalTextFormatterInterface
 {
     public function format(OriginalText $originalText): string;

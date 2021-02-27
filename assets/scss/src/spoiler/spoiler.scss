@@ -1,0 +1,64 @@
+.eomr-blocked-cell {
+  @extend .bg-light;
+}
+
+.eomr-spoiler-button {
+  display: block;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  cursor: pointer;
+  padding: 3px 3px 3px 6px;
+  height: 30px;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 30px;
+  box-sizing: content-box;
+}
+
+.eomr-spoiler-container {
+  > details {
+    > summary {
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      > .toggler-text {
+        display: none;
+
+        &.closed-spoiler {
+          display: inline;
+        }
+      }
+    }
+
+    > .eomr-spoiler-content-wrapper {
+      background-color: #ffffff;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+
+    &[open] {
+      > summary {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        padding-bottom: 1.25rem;
+
+        > .toggler-text {
+          &.open-spoiler {
+            display: inline;
+          }
+
+          &.closed-spoiler {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
