@@ -269,14 +269,14 @@ final class ZenodoClient implements ZenodoClientInterface
         string $file,
         string $depositionId
     ): array {
+        $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/files';
+
         $formData = new FormDataPart(
             [
                 'name' => $fileName,
                 'file' => new DataPart($file, $fileName),
             ]
         );
-
-        $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/files';
 
         $response = $this->sendRequest(
             'POST',
@@ -349,7 +349,7 @@ final class ZenodoClient implements ZenodoClientInterface
 
     private function sendRequest(string $method, string $url, array $options = [])
     {
-        $options['timeout'] = 250;
+        $options['timeout'] = 3600;
 
         return $this->httpClient->request(
             $method,

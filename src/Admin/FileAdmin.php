@@ -118,6 +118,8 @@ final class FileAdmin extends AbstractEntityAdmin
                 $fileContent,
                 $newDepositionId
             );
+
+            $publishedDeposition = $this->zenodoClient->publishDeposition($newDepositionId);
         } catch (Throwable $exception) {
             $this->zenodoClient->deleteVersion($newDepositionId);
 
@@ -125,8 +127,6 @@ final class FileAdmin extends AbstractEntityAdmin
         } finally {
             unset($fileContent);
         }
-
-        $publishedDeposition = $this->zenodoClient->publishDeposition($newDepositionId);
 
         $fileName = (string) $saveResult['filename'];
 
