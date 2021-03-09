@@ -33,7 +33,7 @@ use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingTypeFilterParameter;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
-use App\Services\Value\ValueStringifierInterface;
+use App\Services\Stringifier\ValueStringifierInterface;
 use InvalidArgumentException;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\AbstractFilterConfigurator;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;

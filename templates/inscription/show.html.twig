@@ -37,6 +37,7 @@
         <tbody>
             {{ self.format_text_row('number', inscription.number) }}
             {{ self.format_text_row('conventionalDate', inscription.conventionalDate) }}
+            {{ self.format_text_row('comment', inscription.comment) }}
             {{ self.format_carrier(inscription) }}
             {{ self.format_text_row('zeroRow.origin', self.format_zero_row(inscription, 'origin')) }}
             {{ self.format_text_row('zeroRow.placeOnCarrier', self.format_zero_row(inscription, 'placeOnCarrier')) }}

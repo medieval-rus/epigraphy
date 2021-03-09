@@ -81,6 +81,13 @@ class Inscription implements StringifiableEntityInterface
     private $sketches;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
+    /**
      * @var ZeroRow|null
      *
      * @ORM\OneToOne(
@@ -192,6 +199,18 @@ class Inscription implements StringifiableEntityInterface
     public function setSketches(Collection $sketches): self
     {
         $this->sketches = $sketches;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }

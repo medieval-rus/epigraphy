@@ -80,6 +80,7 @@ controller:
           conventionalDate: Условная дата
           photos: Фотографии
           sketches: Прориси
+          comment: Комментарий
           carrier:
             types: Тип носителя
             categories: Категория носителя

@@ -117,6 +117,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         ModelType::class,
                         $this->createLabeledManyToManyFormOptions('sketches', ['btn_add' => false])
                     )
+                    ->add(
+                        'comment',
+                        null,
+                        $this->createLabeledFormOptions('comment')
+                    )
                 ->end()
             ->end()
             ->tab('form.inscription.tab.actualResearchInformation.label')

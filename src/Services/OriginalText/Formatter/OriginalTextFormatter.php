@@ -108,7 +108,7 @@ final class OriginalTextFormatter implements OriginalTextFormatterInterface
 
     private function formatTextBreakTextPiece(TextPieceInterface $textPiece): string
     {
-        return '<span class="eomr-text-piece-text-break">'.nl2br($textPiece->getText()).'</span>';
+        return '<span class="eomr-text-piece-text-break font-italic">'.nl2br($textPiece->getText()).'</span>';
     }
 
     private function formatSuperscriptedTextPiece(SuperscriptedTextPiece $textPiece)
