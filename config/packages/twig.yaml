@@ -23,5 +23,5 @@ twig:
   strict_variables: '%kernel.debug%'
   exception_controller: null
   globals:
-    valueStringifier: '@App\Services\Value\ValueStringifierInterface'
+    valueStringifier: '@App\Services\Stringifier\ValueStringifierInterface'
     imagesFormatter: '@App\Services\Images\ImagesFormatterInterface'

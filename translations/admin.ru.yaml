@@ -54,8 +54,10 @@ menu:
       label: Файлы
     user:
       label: Пользователи
+
 tabMenu:
   siteView: Посмотреть надпись на сайте
+
 list:
   carrier:
     fields:
@@ -229,6 +231,7 @@ form:
       carrier: Носитель
       photos: Фото
       sketches: Прориси
+      comment: Комментарий
       zeroRow:
         origin: Происхождение надписи
         originReferences: Происхождение надписи (ссылки)

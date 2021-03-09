@@ -157,23 +157,19 @@ function createVirtualKeyboard(index, targetInputElement)
 
     const symbolsMap = new Map();
 
-    symbolsMap.set('_҃', '҃');
-    symbolsMap.set('_҇', '҇');
-
     const keyboard = new Keyboard(
         keyboardElement[0],
         {
             layout: {
                 default: [
-                    'Ѡ Ѿ Ѧ Ѩ Ѫ Ѭ Ѣ Ѯ Ꙗ Ѹ Ꙋ Ѳ І Є Ѥ Ѕ Ѵ Ѱ',
-                    'ѡ ѿ ѧ ѩ ѫ ѭ ѣ ѯ ꙗ ѹ ꙋ ѳ і є ѥ ѕ ѵ ѱ',
-                    ['҂', '¦', '⸗', ...symbolsMap.keys()].join(' '),
+                    'Ѡ Ѿ Ѧ Ѩ Ѫ Ѭ Ѣ Ѯ Ꙗ Ѹ Ꙋ Ѳ І Є Ѥ Ѕ Ѵ Ѱ Ꙑ',
+                    'ѡ ѿ ѧ ѩ ѫ ѭ ѣ ѯ ꙗ ѹ ꙋ ѳ і є ѥ ѕ ѵ ѱ ꙑ',
+                    ['⁙', '҂', '|', '¦', '⸗', '҃', '҇'].join(' '),
                 ],
             },
             onChange: input => {
-                const actualInput = input.startsWith('_') ? input.slice(1) : input;
 
-                targetInputElement.val(targetInputElement.val() + actualInput);
+                insertAtCursorPosition(targetInputElement, input);
 
                 keyboard.clearInput();
             }
@@ -186,4 +182,22 @@ function createVirtualKeyboard(index, targetInputElement)
 function isNumber(input)
 {
     return typeof input === 'number' || Object.prototype.toString.call(input) === '[object Number]';
+}
+
+function insertAtCursorPosition(inputElement, textToInsert)
+{
+    const selectionStart = inputElement.prop('selectionStart');
+    const selectionEnd = inputElement.prop('selectionEnd');
+    const currentValue = inputElement.val();
+    const textBeforeSelection = currentValue.substring(0,  selectionStart);
+    const textAfterSelection  = currentValue.substring(selectionEnd, currentValue.length);
+
+    const newCursorPosition = selectionStart + textToInsert.length;
+
+    const newValue = textBeforeSelection + textToInsert + textAfterSelection;
+
+    inputElement.val(newValue);
+    inputElement.prop('selectionStart', newCursorPosition);
+    inputElement.prop('selectionEnd', newCursorPosition);
+    setTimeout(() => inputElement.focus(), 250);
 }

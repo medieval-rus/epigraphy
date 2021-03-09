@@ -27,7 +27,7 @@ namespace App\FilterableTable;
 
 use App\Persistence\Entity\Epigraphy\CarrierCategory;
 use App\Persistence\Entity\Epigraphy\Inscription;
-use App\Services\Value\ValueStringifierInterface;
+use App\Services\Stringifier\ValueStringifierInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\FilterConfiguratorInterface;
 use Vyfony\Bundle\FilterableTableBundle\Table\Checkbox\CheckboxHandlerInterface;

@@ -23,7 +23,7 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\Value;
+namespace App\Services\Stringifier;
 
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
