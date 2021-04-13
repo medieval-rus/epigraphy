@@ -113,7 +113,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setName('carrier-origin1')
                 ->setValueExtractor(function (Inscription $inscription): string {
-                    return $inscription->getCarrier()->getOrigin1();
+                    return (string) $inscription->getCarrier()->getOrigin1();
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)
