@@ -27,6 +27,7 @@ namespace App\Services\Zenodo;
 
 use App\Helper\UrlHelper;
 use DateTime;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Part\DataPart;
@@ -35,6 +36,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class ZenodoClient implements ZenodoClientInterface
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     /**
      * @var HttpClientInterface
      */
@@ -51,10 +57,12 @@ final class ZenodoClient implements ZenodoClientInterface
     private $zenodoClientAccessToken;
 
     public function __construct(
+        LoggerInterface $logger,
         HttpClientInterface $httpClient,
         string $zenodoClientEndpoint,
         string $zenodoClientAccessToken
     ) {
+        $this->logger = $logger;
         $this->httpClient = $httpClient;
         $this->zenodoClientEndpoint = $zenodoClientEndpoint;
         $this->zenodoClientAccessToken = $zenodoClientAccessToken;
@@ -62,11 +70,15 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function getEndpoint(): string
     {
+        $this->logger->info('[ZenodoClient] <getEndpoint>');
+
         return $this->zenodoClientEndpoint;
     }
 
     public function getLatestDepositionIdVersion(string $recordId): string
     {
+        $this->logger->info(sprintf('[ZenodoClient] <getLatestDepositionIdVersion> $recordId = "%s"', $recordId));
+
         $recordData = $this->getRecord($recordId);
 
         return $recordData['metadata']['relations']['version'][0]['last_child']['pid_value'];
@@ -74,6 +86,8 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function getRecord(string $recordId): array
     {
+        $this->logger->info(sprintf('[ZenodoClient] <getRecord> $recordId = "%s"', $recordId));
+
         $url = $this->zenodoClientEndpoint.'/api/records/'.$recordId;
 
         $response = $this->sendRequest('GET', $url);
@@ -91,6 +105,8 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function getDepositions(): array
     {
+        $this->logger->info('[ZenodoClient] <getDepositions>');
+
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions';
 
         $response = $this->sendRequest('GET', $url);
@@ -108,6 +124,8 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function getDeposition(string $depositionId): array
     {
+        $this->logger->info(sprintf('[ZenodoClient] <getDeposition> $depositionId = "%s"', $depositionId));
+
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId;
 
         $response = $this->sendRequest('GET', $url);
@@ -131,6 +149,15 @@ final class ZenodoClient implements ZenodoClientInterface
         array $communities,
         array $creators
     ): array {
+        $this->logger->info(
+            sprintf(
+                '[ZenodoClient] <createDeposition> $publicationDate = "%s"; $title = "%s"; $description = "%s"',
+                $publicationDate->format('Y-m-d H:i:s'),
+                $title,
+                $description
+            )
+        );
+
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions';
 
         $response = $this->sendRequest(
@@ -172,6 +199,8 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function publishDeposition(string $depositionId): array
     {
+        $this->logger->info(sprintf('[ZenodoClient] <publishDeposition> $depositionId = "%s"', $depositionId));
+
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/actions/publish';
 
         $response = $this->sendRequest(
@@ -197,6 +226,8 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function newVersion(string $depositionId): string
     {
+        $this->logger->info(sprintf('[ZenodoClient] <newVersion> $depositionId = "%s"', $depositionId));
+
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/actions/newversion';
 
         $response = $this->sendRequest(
@@ -226,6 +257,8 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function deleteVersion(string $depositionId): void
     {
+        $this->logger->info(sprintf('[ZenodoClient] <deleteVersion> $depositionId = "%s"', $depositionId));
+
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId;
 
         $response = $this->sendRequest(
@@ -249,6 +282,8 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function getFiles(string $depositionId): array
     {
+        $this->logger->info(sprintf('[ZenodoClient] <getFiles> $depositionId = "%s"', $depositionId));
+
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/files';
 
         $response = $this->sendRequest('GET', $url);
@@ -269,6 +304,14 @@ final class ZenodoClient implements ZenodoClientInterface
         string $file,
         string $depositionId
     ): array {
+        $this->logger->info(
+            sprintf(
+                '[ZenodoClient] <saveFile> $fileName = "%s" $depositionId = "%s"',
+                $fileName,
+                $depositionId
+            )
+        );
+
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/files';
 
         $formData = new FormDataPart(
@@ -307,6 +350,8 @@ final class ZenodoClient implements ZenodoClientInterface
 
     public function removeFile(string $fileId, string $depositionId): void
     {
+        $this->logger->info(sprintf('[ZenodoClient] <removeFile> $depositionId = "%s"', $depositionId));
+
         $url = $this->zenodoClientEndpoint.'/api/deposit/depositions/'.$depositionId.'/files/'.$fileId;
 
         $response = $this->sendRequest('DELETE', $url);
@@ -329,6 +374,18 @@ final class ZenodoClient implements ZenodoClientInterface
         array $creators,
         string $readmeContent
     ): string {
+        $this->logger->info(
+            sprintf(
+                '[ZenodoClient] <createAndPublishDeposition> '.
+                '$publicationDate = "%s"; '.
+                '$title = "%s"; '.
+                '$description = "%s"',
+                $publicationDate->format('Y-m-d H:i:s'),
+                $title,
+                $description
+            )
+        );
+
         $deposition = $this->createDeposition(
             $publicationDate,
             $title,
@@ -349,6 +406,20 @@ final class ZenodoClient implements ZenodoClientInterface
 
     private function sendRequest(string $method, string $url, array $options = [])
     {
+        $this->logger->debug(
+            sprintf(
+                '[ZenodoClient] <sendRequest> '.
+                '$method = "%s"; '.
+                '$url = "%s"; '.
+                '$options = "%s"; '.
+                'get_class($this->httpClient) = "%s"',
+                $method,
+                $url,
+                json_encode($options),
+                \get_class($this->httpClient)
+            )
+        );
+
         $options['timeout'] = 3600;
 
         return $this->httpClient->request(
