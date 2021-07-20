@@ -166,12 +166,19 @@ final class FileAdmin extends AbstractEntityAdmin
                                             ->addViolation();
                                     }
 
-                                    $queryBuilder = $this->fileRepository->createQueryBuilder('file');
+                                    $pathToUploadedFile = $uploadedFile->getRealPath();
 
-                                    $fileName = $uploadedFile->getClientOriginalName();
-                                    $hash = md5(file_get_contents($uploadedFile->getRealPath()));
+                                    if (is_dir($pathToUploadedFile)) {
+                                        $context
+                                            ->buildViolation(sprintf('Uploaded file "%s" has wrong format.', $fileName))
+                                            ->addViolation();
+                                    }
 
-                                    $result = $queryBuilder
+                                    $hash = md5(file_get_contents($pathToUploadedFile));
+
+                                    $result = $this
+                                        ->fileRepository
+                                        ->createQueryBuilder('file')
                                         ->where('file.fileName = ?1')
                                         ->orWhere('file.hash = ?2')
                                         ->setParameter(1, $fileName)
