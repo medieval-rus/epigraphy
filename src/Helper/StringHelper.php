@@ -83,7 +83,7 @@ abstract class StringHelper
 
     public static function startsWith(string $string, string $search): bool
     {
-        return 0 === strpos($string, $search);
+        return 0 === mb_strpos($string, $search);
     }
 
     public static function endsWith(string $string, string $search): bool

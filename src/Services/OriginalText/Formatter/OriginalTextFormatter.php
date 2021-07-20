@@ -62,19 +62,16 @@ final class OriginalTextFormatter implements OriginalTextFormatterInterface
                 return $this->formatLigatureTextPiece($textPiece);
             case $textPiece instanceof CommentTextPiece:
                 return $this->formatCommentTextPiece($textPiece);
-
             case $textPiece instanceof OriginalTextPiece:
                 return $this->formatOriginalTextPiece($textPiece);
-
             case $textPiece instanceof TextBreakTextPiece:
                 return $this->formatTextBreakTextPiece($textPiece);
-
             case $textPiece instanceof SuperscriptedTextPiece:
                 return $this->formatSuperscriptedTextPiece($textPiece);
-
             default:
-                $message = sprintf('Unknown text piece type "%s".', TypeHelper::getTypeName($textPiece));
-                throw new InvalidArgumentException($message);
+                throw new InvalidArgumentException(
+                    sprintf('Unknown text piece type "%s".', TypeHelper::getTypeName($textPiece))
+                );
         }
     }
 

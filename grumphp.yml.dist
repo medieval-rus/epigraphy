@@ -22,7 +22,7 @@ grumphp:
   process_timeout: null
   tasks:
     phpversion:
-      project: '7.2'
+      project: '7.4'
       metadata:
         priority: 0
     git_blacklist:
@@ -72,7 +72,7 @@ grumphp:
         - '/vendor/*'
       metadata:
         priority: -100
-    phpunitbridge:
+    phpunit:
       always_execute: true
       metadata:
         priority: -110

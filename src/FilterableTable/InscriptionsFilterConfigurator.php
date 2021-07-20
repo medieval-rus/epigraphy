@@ -147,9 +147,9 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     public function getEntityId($entity)
     {
         if (!$entity instanceof Inscription) {
-            $message = sprintf('Expected entity of type "%s", "%s" given', Inscription::class, $entity);
-
-            throw new InvalidArgumentException($message);
+            throw new InvalidArgumentException(
+                sprintf('Expected entity of type "%s", "%s" given', Inscription::class, $entity)
+            );
         }
 
         return $entity->getId();

@@ -18,7 +18,7 @@
 # see <http://www.gnu.org/licenses/>.
 
 framework:
-  secret: '%env(APP_SECRET)%'
+  secret: '%env(resolve:APP_SECRET)%'
   session:
     handler_id: null
     cookie_secure: auto

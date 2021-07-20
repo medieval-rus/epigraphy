@@ -184,15 +184,15 @@ class File
         return $this;
     }
 
-    public function setZenodoFileId(string $zenodoFileId): self
+    public function setOsfFileId(string $osfFileId): self
     {
         $metadata = $this->getMetadata() ?? [];
 
-        if (!\array_key_exists('zenodo', $metadata)) {
-            $metadata['zenodo'] = [];
+        if (!\array_key_exists('osf', $metadata)) {
+            $metadata['osf'] = [];
         }
 
-        $metadata['zenodo']['id'] = $zenodoFileId;
+        $metadata['osf']['id'] = $osfFileId;
 
         $this->setMetadata($metadata);
 
