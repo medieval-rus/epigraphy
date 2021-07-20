@@ -149,7 +149,7 @@ final class OsfConnector implements OsfConnectorInterface
         $response = $this->httpClient->request(
             $method,
             $fullUrl,
-            array_merge(['auth_bearer' => $this->osfAccessToken], $options)
+            array_merge(['auth_bearer' => $this->osfAccessToken, 'timeout' => 60], $options)
         );
 
         $statusCode = $response->getStatusCode();
