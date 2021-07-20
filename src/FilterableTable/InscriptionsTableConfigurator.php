@@ -12,7 +12,7 @@ declare(strict_types=1);
  * GNU General Public License as published by the Free Software Foundation, version 3.
  *
  * «Epigraphy of Medieval Rus» database is distributed
- * in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
@@ -113,7 +113,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setName('carrier-origin1')
                 ->setValueExtractor(function (Inscription $inscription): string {
-                    return (string) $inscription->getCarrier()->getOrigin1();
+                    return $inscription->getCarrier()->getOrigin1() ?? '';
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)

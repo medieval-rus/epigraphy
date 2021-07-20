@@ -12,7 +12,7 @@ declare(strict_types=1);
  * GNU General Public License as published by the Free Software Foundation, version 3.
  *
  * «Epigraphy of Medieval Rus» database is distributed
- * in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace App\Admin;
 
 use App\Admin\Abstraction\AbstractEntityAdmin;
+use App\DataStorage\DataStorageManagerInterface;
 use App\Helper\StringHelper;
 use App\Persistence\Entity\Epigraphy\File;
 use App\Persistence\Repository\Epigraphy\FileRepository;
-use App\Services\Zenodo\ZenodoClientInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -41,7 +41,6 @@ use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Context\ExecutionContext;
-use Throwable;
 
 final class FileAdmin extends AbstractEntityAdmin
 {
@@ -61,35 +60,28 @@ final class FileAdmin extends AbstractEntityAdmin
     private $logger;
 
     /**
-     * @var ZenodoClientInterface
-     */
-    private $zenodoClient;
-
-    /**
      * @var FileRepository
      */
     private $fileRepository;
 
     /**
-     * @var string
+     * @var DataStorageManagerInterface
      */
-    private $zenodoFirstDepositionId;
+    private $dataStorageManager;
 
     public function __construct(
         string $code,
         string $class,
         string $baseControllerName,
         LoggerInterface $logger,
-        ZenodoClientInterface $zenodoClient,
         FileRepository $fileRepository,
-        string $zenodoFirstDepositionId
+        DataStorageManagerInterface $dataStorageManager
     ) {
         parent::__construct($code, $class, $baseControllerName);
 
         $this->logger = $logger;
-        $this->zenodoClient = $zenodoClient;
         $this->fileRepository = $fileRepository;
-        $this->zenodoFirstDepositionId = $zenodoFirstDepositionId;
+        $this->dataStorageManager = $dataStorageManager;
     }
 
     /**
@@ -105,71 +97,7 @@ final class FileAdmin extends AbstractEntityAdmin
             throw new RuntimeException('Uploaded file is invalid.');
         }
 
-        $originalFileName = $uploadedFile->getClientOriginalName();
-
-        $newDepositionId = $this->zenodoClient->newVersion($this->zenodoFirstDepositionId);
-
-        $fileContent = file_get_contents($uploadedFile->getRealPath());
-        $hash = md5($fileContent);
-
-        try {
-            $saveResult = $this->zenodoClient->saveFile(
-                $originalFileName,
-                $fileContent,
-                $newDepositionId
-            );
-
-            $publishedDeposition = $this->zenodoClient->publishDeposition($newDepositionId);
-        } catch (Throwable $exception) {
-            $this->zenodoClient->deleteVersion($newDepositionId);
-
-            throw $exception;
-        } finally {
-            unset($fileContent);
-        }
-
-        $fileName = (string) $saveResult['filename'];
-
-        $url = sprintf(
-            '%s/record/%d/files/%s',
-            $this->zenodoClient->getEndpoint(),
-            $publishedDeposition['record_id'],
-            $saveResult['filename']
-        );
-
-        $object->setFileName($fileName);
-        $object->setZenodoFileId((string) $saveResult['id']);
-        $object->setMediaType($uploadedFile->getMimeType());
-        $object->setHash($hash);
-        $object->setUrl($url);
-    }
-
-    /**
-     * @param File $object
-     */
-    public function postRemove($object): void
-    {
-        // todo: this is draft for delete flow
-        // because of Zenodo versioning approach, simple "delete" action is impossible, as it may cause
-        // a collision: two different versions with the same content (which is impossible in Zenodo)
-//         $metadata = $object->getMetadata();
-//
-//         if (null !== $metadata && \array_key_exists('zenodo', $metadata)) {
-//             $depositionId = $this->zenodoClient->getLatestDepositionIdVersion($this->zenodoRecordId);
-//
-//             $newDepositionVersionId = $this->zenodoClient->newVersion($depositionId);
-//             $fileId = $metadata['zenodo']['id'];
-//
-//             try {
-//                 $this->zenodoClient->removeFile($fileId, $newDepositionVersionId);
-//             } catch (Throwable $exception) {
-//                 $this->zenodoClient->deleteVersion($newDepositionVersionId);
-//
-//                 throw $exception;
-//             }
-//
-//             $this->zenodoClient->publishDeposition($newDepositionVersionId);
-//         }
+        $this->dataStorageManager->prePersist($object, $uploadedFile);
     }
 
     protected function configureListFields(ListMapper $listMapper): void
@@ -238,12 +166,19 @@ final class FileAdmin extends AbstractEntityAdmin
                                             ->addViolation();
                                     }
 
-                                    $queryBuilder = $this->fileRepository->createQueryBuilder('file');
+                                    $pathToUploadedFile = $uploadedFile->getRealPath();
 
-                                    $fileName = $uploadedFile->getClientOriginalName();
-                                    $hash = md5(file_get_contents($uploadedFile->getRealPath()));
+                                    if (is_dir($pathToUploadedFile)) {
+                                        $context
+                                            ->buildViolation(sprintf('Uploaded file "%s" has wrong format.', $fileName))
+                                            ->addViolation();
+                                    }
 
-                                    $result = $queryBuilder
+                                    $hash = md5(file_get_contents($pathToUploadedFile));
+
+                                    $result = $this
+                                        ->fileRepository
+                                        ->createQueryBuilder('file')
                                         ->where('file.fileName = ?1')
                                         ->orWhere('file.hash = ?2')
                                         ->setParameter(1, $fileName)

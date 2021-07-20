@@ -12,7 +12,7 @@ declare(strict_types=1);
  * GNU General Public License as published by the Free Software Foundation, version 3.
  *
  * «Epigraphy of Medieval Rus» database is distributed
- * in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
@@ -62,19 +62,16 @@ final class OriginalTextFormatter implements OriginalTextFormatterInterface
                 return $this->formatLigatureTextPiece($textPiece);
             case $textPiece instanceof CommentTextPiece:
                 return $this->formatCommentTextPiece($textPiece);
-
             case $textPiece instanceof OriginalTextPiece:
                 return $this->formatOriginalTextPiece($textPiece);
-
             case $textPiece instanceof TextBreakTextPiece:
                 return $this->formatTextBreakTextPiece($textPiece);
-
             case $textPiece instanceof SuperscriptedTextPiece:
                 return $this->formatSuperscriptedTextPiece($textPiece);
-
             default:
-                $message = sprintf('Unknown text piece type "%s".', TypeHelper::getTypeName($textPiece));
-                throw new InvalidArgumentException($message);
+                throw new InvalidArgumentException(
+                    sprintf('Unknown text piece type "%s".', TypeHelper::getTypeName($textPiece))
+                );
         }
     }
 

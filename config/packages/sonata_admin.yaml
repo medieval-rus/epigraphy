@@ -7,7 +7,7 @@
 # GNU General Public License as published by the Free Software Foundation, version 3.
 #
 # «Epigraphy of Medieval Rus» database is distributed
-# in the hope  that it will be useful, but WITHOUT ANY WARRANTY; without even
+# in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
 # the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the GNU General Public License for more details.
 #
@@ -132,9 +132,8 @@ services:
       - App\Persistence\Entity\Epigraphy\File
       - null
       - '@logger'
-      - '@App\Services\Zenodo\ZenodoClientInterface'
       - '@App\Persistence\Repository\Epigraphy\FileRepository'
-      - '%env(resolve:ZENODO_FIRST_DEPOSITION_ID)%'
+      - '@App\DataStorage\DataStorageManagerInterface'
     tags:
       - { name: sonata.admin, manager_type: orm }
   admin.user:
