@@ -26,17 +26,14 @@ declare(strict_types=1);
 namespace App\Admin;
 
 use App\Admin\Abstraction\AbstractEntityAdmin;
-use App\Admin\Models\AdminInterpretationWrapper;
-use App\Persistence\Entity\Epigraphy\Interpretation;
+use App\Form\DataTransformer\InterpretationAdminTransformer;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
-use Symfony\Component\Form\Event\PreSetDataEvent;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormEvents;
 
 final class InterpretationAdmin extends AbstractEntityAdmin
 {
@@ -50,15 +47,6 @@ final class InterpretationAdmin extends AbstractEntityAdmin
      */
     protected $baseRoutePattern = 'epigraphy/interpretation';
 
-    public function wrapInterpretation(PreSetDataEvent $event): void
-    {
-        if (($interpretation = $event->getData()) instanceof Interpretation &&
-            !$interpretation instanceof AdminInterpretationWrapper
-        ) {
-            $event->setData(new AdminInterpretationWrapper($interpretation));
-        }
-    }
-
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
@@ -69,17 +57,6 @@ final class InterpretationAdmin extends AbstractEntityAdmin
 
     protected function configureFormFields(FormMapper $formMapper): void
     {
-        $formMapper
-            ->getFormBuilder()
-            ->getEventDispatcher()
-            ->addListener(FormEvents::PRE_SET_DATA, [$this, 'wrapInterpretation']);
-
-        $subject = $this->getSubject();
-
-        if ($subject instanceof AdminInterpretationWrapper) {
-            $this->setSubject($subject->toInterpretation());
-        }
-
         $formMapper
             ->tab('form.interpretation.tab.identification.label')
                 ->with('form.interpretation.section.identification.label')
@@ -301,9 +278,7 @@ final class InterpretationAdmin extends AbstractEntityAdmin
             ->end()
         ;
 
-        if ($subject instanceof AdminInterpretationWrapper) {
-            $this->setSubject($subject);
-        }
+        $formMapper->getFormBuilder()->addViewTransformer(new InterpretationAdminTransformer());
     }
 
     private function createLabeledZeroRowPartFormOptions(

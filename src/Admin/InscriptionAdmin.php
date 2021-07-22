@@ -27,6 +27,7 @@ namespace App\Admin;
 
 use App\Admin\Abstraction\AbstractEntityAdmin;
 use App\Admin\Models\AdminInterpretationWrapper;
+use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Repository\Epigraphy\InterpretationRepository;
 use Knp\Menu\ItemInterface;
@@ -51,29 +52,23 @@ final class InscriptionAdmin extends AbstractEntityAdmin
      */
     protected $baseRoutePattern = 'epigraphy/inscription';
 
+    /**
+     * @param Inscription $object
+     */
     public function preUpdate($object): void
     {
         $inscription = $object;
         $zeroRow = $inscription->getZeroRow();
         $interpretations = $inscription->getInterpretations();
 
-        $unwrappedInterpretations = [];
-
-        foreach ($interpretations as $index => $element) {
-            if ($element instanceof AdminInterpretationWrapper) {
-                $wrapper = $element;
+        foreach ($interpretations as $wrapper) {
+            if ($wrapper instanceof AdminInterpretationWrapper) {
                 $interpretation = $wrapper->toInterpretation();
-
-                $unwrappedInterpretations[$index] = $interpretation;
 
                 if (null === $interpretation->getId()) {
                     $wrapper->updateZeroRow($zeroRow);
                 }
             }
-        }
-
-        foreach ($unwrappedInterpretations as $index => $interpretation) {
-            $interpretations->set($index, $interpretation);
         }
     }
 
@@ -314,7 +309,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                             'interpretations',
                             ['required' => false]
                         ),
-                        ['edit' => 'inline']
+                        ['edit' => 'inline', 'admin_code' => 'admin.interpretation']
                     )
                 ->end()
             ->end()
