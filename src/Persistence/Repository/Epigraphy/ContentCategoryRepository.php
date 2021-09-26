@@ -27,14 +27,8 @@ namespace App\Persistence\Repository\Epigraphy;
 
 use App\Persistence\Entity\Epigraphy\ContentCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method ContentCategory|null find(int $id, int $lockMode = null, int $lockVersion = null)
- * @method ContentCategory|null findOneBy(array $criteria, array $orderBy = null)
- * @method ContentCategory[]    findAll()
- * @method ContentCategory[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- */
 final class ContentCategoryRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

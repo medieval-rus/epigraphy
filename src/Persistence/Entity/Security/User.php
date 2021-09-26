@@ -26,47 +26,48 @@ declare(strict_types=1);
 namespace App\Persistence\Entity\Security;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Persistence\Repository\Security\UserRepository")
  */
-class User implements UserInterface
+class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     /**
      * @var int
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(name="username", type="string", length=180, unique=true)
      */
     private $username;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255, unique=false)
+     * @ORM\Column(name="full_name", type="string", length=255, unique=false)
      */
     private $fullName;
 
     /**
      * @var string[]
      *
-     * @ORM\Column(type="json")
+     * @ORM\Column(name="roles", type="json")
      */
     private $roles;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
 
@@ -80,7 +81,7 @@ class User implements UserInterface
         $this->roles = ['ROLE_USER'];
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->username;
     }
@@ -88,6 +89,11 @@ class User implements UserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->username;
     }
 
     public function getUsername(): ?string

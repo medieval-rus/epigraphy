@@ -28,6 +28,7 @@ namespace App\Controller;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Vyfony\Bundle\FilterableTableBundle\Table\TableInterface;
 
@@ -38,16 +39,18 @@ final class InscriptionController extends AbstractController
 {
     /**
      * @Route("/list", name="inscription__list", methods={"GET"})
-     * @Template("inscription/list.html.twig")
      */
-    public function list(TableInterface $filterableTable): array
+    public function list(TableInterface $filterableTable): Response
     {
-        return [
-            'controller' => 'inscription',
-            'method' => 'list',
-            'filterForm' => $filterableTable->getFormView(),
-            'table' => $filterableTable->getTableMetadata(),
-        ];
+        return $this->render(
+            'inscription/list.html.twig',
+            [
+                'controller' => 'inscription',
+                'method' => 'list',
+                'filterForm' => $filterableTable->getFormView(),
+                'table' => $filterableTable->getTableMetadata(),
+            ]
+        );
     }
 
     /**

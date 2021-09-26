@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Persistence\Entity\Bibliography\BibliographicRecord;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Vyfony\Bundle\BibliographyBundle\Persistence\Entity\BibliographicRecord;
 
 /**
  * @Route("/bibliography/record")

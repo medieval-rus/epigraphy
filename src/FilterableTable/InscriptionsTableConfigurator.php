@@ -30,6 +30,7 @@ use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\Stringifier\ValueStringifierInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\FilterConfiguratorInterface;
+use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Routing\RouteConfiguration;
 use Vyfony\Bundle\FilterableTableBundle\Table\Checkbox\CheckboxHandlerInterface;
 use Vyfony\Bundle\FilterableTableBundle\Table\Configurator\AbstractTableConfigurator;
 use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
@@ -45,28 +46,29 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
     public function __construct(
         RouterInterface $router,
         FilterConfiguratorInterface $filterConfigurator,
-        string $defaultSortBy,
-        string $defaultSortOrder,
-        string $listRoute,
-        string $showRoute,
-        array $showRouteParameters,
-        int $pageSize,
-        int $paginatorTailLength,
         ValueStringifierInterface $valueStringifier
     ) {
-        parent::__construct(
-            $router,
-            $filterConfigurator,
-            $defaultSortBy,
-            $defaultSortOrder,
-            $listRoute,
-            $showRoute,
-            $showRouteParameters,
-            $pageSize,
-            $paginatorTailLength
-        );
+        parent::__construct($router, $filterConfigurator);
 
         $this->valueStringifier = $valueStringifier;
+    }
+
+    protected function getListRoute(): RouteConfiguration
+    {
+        return new RouteConfiguration('inscription__list', []);
+    }
+
+    /**
+     * @param Inscription $entity
+     */
+    protected function getShowRoute($entity): RouteConfiguration
+    {
+        return new RouteConfiguration(
+            'inscription__show',
+            [
+                'id' => $entity->getId(),
+            ]
+        );
     }
 
     protected function getResultsCountText(): string

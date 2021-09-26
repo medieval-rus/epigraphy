@@ -27,14 +27,8 @@ namespace App\Persistence\Repository\Epigraphy;
 
 use App\Persistence\Entity\Epigraphy\Material;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method Material|null find(int $id, int $lockMode = null, int $lockVersion = null)
- * @method Material|null findOneBy(array $criteria, array $orderBy = null)
- * @method Material[]    findAll()
- * @method Material[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- */
 final class MaterialRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

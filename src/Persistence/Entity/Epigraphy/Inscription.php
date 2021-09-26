@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Epigraphy;
 
+use App\Persistence\Entity\Media\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -39,14 +40,14 @@ class Inscription implements StringifiableEntityInterface
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="number", type="string", length=255, nullable=true)
      */
     private $number;
 
@@ -54,20 +55,21 @@ class Inscription implements StringifiableEntityInterface
      * @var Carrier|null
      *
      * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Epigraphy\Carrier", cascade={"persist"})
+     * @ORM\JoinTable(name="inscription_carrier")
      */
     private $carrier;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="conventional_date", type="string", length=255, nullable=true)
      */
     private $conventionalDate;
 
     /**
      * @var Collection|File[]
      *
-     * @ORM\ManyToMany(targetEntity="File", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
      * @ORM\JoinTable(name="inscription_photos")
      */
     private $photos;
@@ -75,7 +77,7 @@ class Inscription implements StringifiableEntityInterface
     /**
      * @var Collection|File[]
      *
-     * @ORM\ManyToMany(targetEntity="File", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
      * @ORM\JoinTable(name="inscription_sketches")
      */
     private $sketches;
@@ -83,7 +85,7 @@ class Inscription implements StringifiableEntityInterface
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="comment", type="text", length=65535, nullable=true)
      */
     private $comment;
 

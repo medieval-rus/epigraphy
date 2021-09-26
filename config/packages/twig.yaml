@@ -25,3 +25,7 @@ twig:
   globals:
     valueStringifier: '@App\Services\Stringifier\ValueStringifierInterface'
     imagesFormatter: '@App\Services\Images\ImagesFormatterInterface'
+
+when@test:
+  twig:
+    strict_variables: true

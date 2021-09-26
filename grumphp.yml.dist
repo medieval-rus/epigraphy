@@ -50,15 +50,8 @@ grumphp:
       triggered_by: ['php']
       metadata:
         priority: -70
-    phpmnd:
-      exclude_path:
-        - 'node_modules'
-        - 'var'
-        - 'vendor'
-      metadata:
-        priority: -80
     phpcsfixer2:
-      config: .php_cs.dist
+      config: .php-cs-fixer.dist.php
       metadata:
         priority: -90
     phpcs:
@@ -66,7 +59,6 @@ grumphp:
       ignore_patterns:
         - '/migrations/*'
         - '/node_modules/*'
-        - '/src/Persistence/DataFixtures/*'
         - '/tests/*'
         - '/var/*'
         - '/vendor/*'

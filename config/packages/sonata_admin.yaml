@@ -18,11 +18,17 @@
 # see <http://www.gnu.org/licenses/>.
 
 sonata_admin:
-  title: Epigraphy of Medieval Rus
+  title: Древнерусская эпиграфика
   dashboard:
     blocks:
       - { type: sonata.admin.block.admin_list, position: left }
     groups:
+      security:
+        label_catalogue: admin
+        label: menu.groups.security.label
+        items:
+          - admin.user
+        roles: [ ROLE_SUPER_ADMIN ]
       inscriptions:
         label_catalogue: admin
         label: menu.groups.inscriptions.label
@@ -49,14 +55,15 @@ sonata_admin:
         items:
           - admin.file
         roles: [ ROLE_ADMIN ]
-      security:
+      bibliography:
         label_catalogue: admin
-        label: menu.groups.security.label
+        label: menu.groups.bibliography.label
         items:
-          - admin.user
-        roles: [ ROLE_SUPER_ADMIN ]
+          - admin.bibliography.bibliographic_record
+          - admin.bibliography.author
+          - admin.bibliography.references_list
+        roles: [ ROLE_ADMIN ]
   options:
-    legacy_twig_text_extension: false
     use_icheck: false
   assets:
     extra_javascripts:
@@ -70,79 +77,135 @@ sonata_block:
       contexts: [admin]
 
 services:
-  admin.carrier:
-    class: App\Admin\CarrierAdmin
-    arguments: [ null, App\Persistence\Entity\Epigraphy\Carrier, null ]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.carrier_type:
-    class: App\Admin\CarrierTypeAdmin
-    arguments: [ null, App\Persistence\Entity\Epigraphy\CarrierType, null ]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.carrier_category:
-    class: App\Admin\CarrierCategoryAdmin
-    arguments: [ null, App\Persistence\Entity\Epigraphy\CarrierCategory, null ]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.alphabet:
-    class: App\Admin\AlphabetAdmin
-    arguments: [null, App\Persistence\Entity\Epigraphy\Alphabet, null]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.content_category:
-    class: App\Admin\ContentCategoryAdmin
-    arguments: [null, App\Persistence\Entity\Epigraphy\ContentCategory, null]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.material:
-    class: App\Admin\MaterialAdmin
-    arguments: [null, App\Persistence\Entity\Epigraphy\Material, null]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.preservation_state:
-    class: App\Admin\PreservationStateAdmin
-    arguments: [null, App\Persistence\Entity\Epigraphy\PreservationState, null]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.writing_type:
-    class: App\Admin\WritingTypeAdmin
-    arguments: [null, App\Persistence\Entity\Epigraphy\WritingType, null]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.writing_method:
-    class: App\Admin\WritingMethodAdmin
-    arguments: [null, App\Persistence\Entity\Epigraphy\WritingMethod, null]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.inscription:
-    class: App\Admin\InscriptionAdmin
-    arguments: [null, App\Persistence\Entity\Epigraphy\Inscription, null]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.interpretation:
-    class: App\Admin\InterpretationAdmin
-    arguments: [null, App\Persistence\Entity\Epigraphy\Interpretation, null]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.file:
-    class: App\Admin\FileAdmin
-    arguments:
-      - null
-      - App\Persistence\Entity\Epigraphy\File
-      - null
-      - '@logger'
-      - '@App\Persistence\Repository\Epigraphy\FileRepository'
-      - '@App\DataStorage\DataStorageManagerInterface'
-    tags:
-      - { name: sonata.admin, manager_type: orm }
   admin.user:
-    class: App\Admin\UserAdmin
+    class: App\Admin\Security\UserAdmin
     arguments:
       - null
       - App\Persistence\Entity\Security\User
       - null
-      - '@Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface'
-      - '@Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface'
+      - '@security.password_hasher'
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.carrier:
+    class: App\Admin\Epigraphy\CarrierAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\Carrier, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.carrier_type:
+    class: App\Admin\Epigraphy\CarrierTypeAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\CarrierType, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.carrier_category:
+    class: App\Admin\Epigraphy\CarrierCategoryAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\CarrierCategory, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.alphabet:
+    class: App\Admin\Epigraphy\AlphabetAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\Alphabet, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.content_category:
+    class: App\Admin\Epigraphy\ContentCategoryAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\ContentCategory, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.material:
+    class: App\Admin\Epigraphy\MaterialAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\Material, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.preservation_state:
+    class: App\Admin\Epigraphy\PreservationStateAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\PreservationState, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.writing_type:
+    class: App\Admin\Epigraphy\WritingTypeAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\WritingType, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.writing_method:
+    class: App\Admin\Epigraphy\WritingMethodAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\WritingMethod, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.inscription:
+    class: App\Admin\Epigraphy\InscriptionAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\Inscription, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.interpretation:
+    class: App\Admin\Epigraphy\InterpretationAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\Interpretation, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.file:
+    class: App\Admin\Media\FileAdmin
+    arguments:
+      - null
+      - App\Persistence\Entity\Media\File
+      - null
+      - '@App\Persistence\Repository\Epigraphy\FileRepository'
+      - '@App\DataStorage\DataStorageManagerInterface'
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.bibliography.bibliographic_record:
+    class: App\Admin\Bibliography\BibliographicRecordAdmin
+    arguments:
+      - null
+      - App\Persistence\Entity\Bibliography\BibliographicRecord
+      - null
+      - '@App\DataStorage\DataStorageManagerInterface'
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.bibliography.author:
+    class: App\Admin\Bibliography\AuthorAdmin
+    arguments: [null, App\Persistence\Entity\Bibliography\Author, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.bibliography.references_list:
+    class: App\Admin\Bibliography\ReferencesListAdmin
+    arguments: [null, App\Persistence\Entity\Bibliography\ReferencesList, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.bibliography.references_list.item:
+    class: App\Admin\Bibliography\ReferencesListItemAdmin
+    arguments: [null, App\Persistence\Entity\Bibliography\ReferencesListItem, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:
       - { name: sonata.admin, manager_type: orm }

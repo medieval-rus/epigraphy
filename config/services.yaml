@@ -25,11 +25,11 @@ services:
     autowire: true
     autoconfigure: true
     bind:
-      $osfEndpoint: '%env(resolve:OSF_ENDPOINT)%'
-      $osfAccessToken: '%env(resolve:OSF_ACCESS_TOKEN)%'
-      $osfPhotosFolderId: '%env(resolve:OSF_PHOTOS_FOLDER_ID)%'
-      $osfDrawingsFolderId: '%env(resolve:OSF_DRAWINGS_FOLDER_ID)%'
-      $osfTextImagesFolderId: '%env(resolve:OSF_TEXT_IMAGES_FOLDER_ID)%'
+      $osfEndpoint: '%env(OSF_ENDPOINT)%'
+      $osfAccessToken: '%env(OSF_ACCESS_TOKEN)%'
+      $osfPhotosFolderId: '%env(OSF_PHOTOS_FOLDER_ID)%'
+      $osfDrawingsFolderId: '%env(OSF_DRAWINGS_FOLDER_ID)%'
+      $osfTextImagesFolderId: '%env(OSF_TEXT_IMAGES_FOLDER_ID)%'
 
   App\:
     resource: '../src/'

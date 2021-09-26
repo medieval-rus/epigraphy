@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Epigraphy;
 
+use App\Persistence\Entity\Media\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -39,7 +40,7 @@ class Interpretation implements StringifiableEntityInterface
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
@@ -58,42 +59,42 @@ class Interpretation implements StringifiableEntityInterface
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="source", type="string", length=255)
      */
     private $source;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="comment", type="text", length=65535, nullable=true)
      */
     private $comment;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="page_numbers_in_source", type="string", length=255, nullable=true)
      */
     private $pageNumbersInSource;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="number_in_source", type="string", length=255, nullable=true)
      */
     private $numberInSource;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="origin", type="text", length=65535, nullable=true)
      */
     private $origin;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="place_on_carrier", type="text", length=65535, nullable=true)
      */
     private $placeOnCarrier;
 
@@ -101,6 +102,7 @@ class Interpretation implements StringifiableEntityInterface
      * @var Collection|WritingType[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\WritingType", cascade={"persist"})
+     * @ORM\JoinTable(name="interpretation_writing_type")
      */
     private $writingTypes;
 
@@ -108,6 +110,7 @@ class Interpretation implements StringifiableEntityInterface
      * @var Collection|WritingMethod[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\WritingMethod", cascade={"persist"})
+     * @ORM\JoinTable(name="interpretation_writing_method")
      */
     private $writingMethods;
 
@@ -115,6 +118,7 @@ class Interpretation implements StringifiableEntityInterface
      * @var Collection|PreservationState[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\PreservationState", cascade={"persist"})
+     * @ORM\JoinTable(name="interpretation_preservation_state")
      */
     private $preservationStates;
 
@@ -122,6 +126,7 @@ class Interpretation implements StringifiableEntityInterface
      * @var Collection|Material[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Material", cascade={"persist"})
+     * @ORM\JoinTable(name="interpretation_material")
      */
     private $materials;
 
@@ -129,20 +134,21 @@ class Interpretation implements StringifiableEntityInterface
      * @var Collection|Alphabet[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Alphabet", cascade={"persist"})
+     * @ORM\JoinTable(name="interpretation_alphabet")
      */
     private $alphabets;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="text", type="text", length=65535, nullable=true)
      */
     private $text;
 
     /**
      * @var Collection|File[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\File", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
      * @ORM\JoinTable(name="interpretation_text_images")
      */
     private $textImages;
@@ -150,14 +156,14 @@ class Interpretation implements StringifiableEntityInterface
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="transliteration", type="text", length=65535, nullable=true)
      */
     private $transliteration;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="translation", type="text", length=65535, nullable=true)
      */
     private $translation;
 
@@ -165,41 +171,42 @@ class Interpretation implements StringifiableEntityInterface
      * @var Collection|ContentCategory[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\ContentCategory", cascade={"persist"})
+     * @ORM\JoinTable(name="interpretation_content_category")
      */
     private $contentCategories;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="content", type="text", length=65535, nullable=true)
      */
     private $content;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="date_in_text", type="text", length=65535, nullable=true)
      */
     private $dateInText;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="stratigraphical_date", type="text", length=65535, nullable=true)
      */
     private $stratigraphicalDate;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="non_stratigraphical_date", type="text", length=65535, nullable=true)
      */
     private $nonStratigraphicalDate;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="historical_date", type="text", length=65535, nullable=true)
      */
     private $historicalDate;
 

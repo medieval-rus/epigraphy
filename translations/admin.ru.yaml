@@ -19,15 +19,19 @@
 
 menu:
   groups:
+    security:
+      label: Безопасность
     inscriptions:
       label: Надписи
     carriers:
       label: Носители
     media:
       label: Медиа
-    security:
-      label: Безопасность
+    bibliography:
+      label: Библиография
   paragraphs:
+    user:
+      label: Пользователи
     carrier:
       label: Носители
     carrierType:
@@ -52,13 +56,23 @@ menu:
       label: Интерпретации
     file:
       label: Файлы
-    user:
-      label: Пользователи
+    bibliographicRecord:
+      label: Библиографические записи
+    author:
+      label: Авторы
+    referencesList:
+      label: Списки литературы
 
 tabMenu:
   siteView: Посмотреть надпись на сайте
 
 list:
+  user:
+    fields:
+      id: Внутренний идентификатор
+      username: Имя пользователя (логин)
+      fullName: Полное имя
+      roles: Роли
   carrier:
     fields:
       id: Id
@@ -116,14 +130,26 @@ list:
       fileName: Имя файла
       mediaType: Тип
       description: Описание
+  bibliographicRecord:
+    fields:
+      shortName: Краткое название
+      title: Наименование работы
+      year: Год публикации
+  author:
+    fields:
+      fullName: Полное имя
+  referencesList:
+    fields:
+      name: Название списка
+
+form:
   user:
     fields:
       id: Внутренний идентификатор
       username: Имя пользователя (логин)
       fullName: Полное имя
       roles: Роли
-
-form:
+      plainPassword: Новый пароль
   carrier:
     tab:
       identification:
@@ -343,10 +369,83 @@ form:
       url: Адрес
       description: Описание
       binaryContent: Файл
-  user:
+  bibliographicRecord:
+    tab:
+      main:
+        label: Основная информация
+    section:
+      basicInformation:
+        label: Основная информация
+      details:
+        label: Детали библиографической записи
     fields:
-      id: Внутренний идентификатор
-      username: Имя пользователя (логин)
+      shortName: Краткое название
+      title: Наименование работы
+      year: Год публикации
+      authors: Авторы работы
+      formalNotation: Отображаемое значение (формальная запись)
+  author:
+    section:
+      data:
+        label: Сведения об авторе
+    fields:
       fullName: Полное имя
-      roles: Роли
-      plainPassword: Новый пароль
+  referencesList:
+    section:
+      information:
+        label: Сведения о списке
+      content:
+        label: Содержимое списка
+    fields:
+      name: Название
+      description: Описание
+      items: Элементы
+  referencesListItem:
+    fields:
+      bibliographicRecord: Библиографическая запись
+      position: Номер по порядку
+
+user_list: Пользователи
+user_create: Добавить нового пользователя
+user_delete: Удалить пользователя
+carrier_list: Носители
+carrier_create: Добавить новый носитель
+carrier_delete: Удалить носитель
+carrierType_list: Типы носителей
+carrierType_create: Добавить новый тип носителя
+carrierType_delete: Удалить тип носителя
+carrierCategory_list: Категории носителей
+carrierCategory_create: Добавить новую категорию носителя
+carrierCategory_delete: Удалить категорию носителя
+alphabet_list: Алфавиты
+alphabet_create: Добавить новый алфавит
+alphabet_delete: Удалить алфавит
+contentCategory_list: Категории по содержанию
+contentCategory_create: Добавить новую категорию по содержанию
+contentCategory_delete: Удалить категорию по содержанию
+material_list: Материалы
+material_create: Добавить новый материал
+material_delete: Удалить материал
+preservationState_list: Состояния сохранности
+preservationState_create: Добавить новое состояние сохранности
+preservationState_delete: Удалить состояние сохранности
+writingType_list: Разряды
+writingType_create: Добавить новый разряд
+writingType_delete: Удалить разряд
+writingMethod_list: Способы нанесения
+writingMethod_create: Добавить новый способ нанесения
+writingMethod_delete: Удалить способ нанесения
+inscription_list: Надписи
+inscription_create: Добавить новую надпись
+inscription_delete: Удалить надпись
+file_list: Загруженные файлы
+file_create: Загрузить новый файл
+bibliographicRecord_list: Библиографические записи
+bibliographicRecord_create: Добавить запись
+bibliographicRecord_delete: Удалить запись
+author_list: Авторы
+author_create: Добавить автора
+author_delete: Удалить автора
+referencesList_list: Списки литературы
+referencesList_create: Создать список
+referencesList_delete: Удалить список
