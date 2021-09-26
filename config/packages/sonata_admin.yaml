@@ -65,6 +65,11 @@ sonata_admin:
         roles: [ ROLE_ADMIN ]
   options:
     use_icheck: false
+    default_admin_route: edit
+  global_search:
+    admin_route: edit
+  breadcrumbs:
+    child_admin_route: edit
   assets:
     extra_javascripts:
       - 'build/js/admin/inscription/edit.js'
