@@ -23,29 +23,24 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Controller;
+namespace DoctrineMigrations;
 
-use App\Persistence\Entity\Bibliography\BibliographicRecord;
-use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
-/**
- * @Route("/bibliography/record")
- */
-final class BibliographicRecordController extends AbstractController
+final class Version20210926010045 extends AbstractMigration
 {
-    /**
-     * @Route("/list", name="bibiliograpic_record__list", methods={"GET"})
-     * @Template("bibliography/list.html.twig")
-     */
-    public function list(EntityManagerInterface $entityManager): array
+    public function getDescription(): string
     {
-        return [
-            'controller' => 'bibliographic-record',
-            'method' => 'list',
-            'records' => $entityManager->getRepository(BibliographicRecord::class)->findAll(),
-        ];
+        return 'New bibliographic record structure.';
+    }
+
+    public function up(Schema $schema): void
+    {
+        $this->addSql('ALTER TABLE bibliography__bibliographic_record ADD formal_notation TEXT NULL');
+        $this->addSql('UPDATE bibliography__bibliographic_record SET formal_notation = CONCAT(IF(authors = \'\', \'\', CONCAT(authors, \'. \')), title, \' // \', details)');
+        $this->addSql('ALTER TABLE bibliography__bibliographic_record CHANGE formal_notation formal_notation TEXT NOT NULL');
+        $this->addSql('ALTER TABLE bibliography__bibliographic_record DROP authors');
+        $this->addSql('ALTER TABLE bibliography__bibliographic_record DROP details');
     }
 }

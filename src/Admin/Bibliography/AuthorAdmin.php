@@ -23,29 +23,31 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Controller;
+namespace App\Admin\Bibliography;
 
-use App\Persistence\Entity\Bibliography\BibliographicRecord;
-use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Admin\AbstractEntityAdmin;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Form\FormMapper;
 
-/**
- * @Route("/bibliography/record")
- */
-final class BibliographicRecordController extends AbstractController
+final class AuthorAdmin extends AbstractEntityAdmin
 {
-    /**
-     * @Route("/list", name="bibiliograpic_record__list", methods={"GET"})
-     * @Template("bibliography/list.html.twig")
-     */
-    public function list(EntityManagerInterface $entityManager): array
+    protected string $baseRouteName = 'bibliography_author';
+
+    protected string $baseRoutePattern = 'bibliography/author';
+
+    protected function configureListFields(ListMapper $listMapper): void
     {
-        return [
-            'controller' => 'bibliographic-record',
-            'method' => 'list',
-            'records' => $entityManager->getRepository(BibliographicRecord::class)->findAll(),
-        ];
+        $listMapper
+            ->addIdentifier('fullName', null, $this->createLabeledFormOptions('fullName'))
+        ;
+    }
+
+    protected function configureFormFields(FormMapper $formMapper): void
+    {
+        $formMapper
+            ->with($this->getSectionLabel('data'))
+                ->add('fullName', null, $this->createLabeledFormOptions('fullName'))
+            ->end()
+        ;
     }
 }

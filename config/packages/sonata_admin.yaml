@@ -23,6 +23,12 @@ sonata_admin:
     blocks:
       - { type: sonata.admin.block.admin_list, position: left }
     groups:
+      security:
+        label_catalogue: admin
+        label: menu.groups.security.label
+        items:
+          - admin.user
+        roles: [ ROLE_SUPER_ADMIN ]
       inscriptions:
         label_catalogue: admin
         label: menu.groups.inscriptions.label
@@ -49,12 +55,14 @@ sonata_admin:
         items:
           - admin.file
         roles: [ ROLE_ADMIN ]
-      security:
+      bibliography:
         label_catalogue: admin
-        label: menu.groups.security.label
+        label: menu.groups.bibliography.label
         items:
-          - admin.user
-        roles: [ ROLE_SUPER_ADMIN ]
+          - admin.bibliography.bibliographic_record
+          - admin.bibliography.author
+          - admin.bibliography.references_list
+        roles: [ ROLE_ADMIN ]
   options:
     use_icheck: false
   assets:
@@ -69,6 +77,17 @@ sonata_block:
       contexts: [admin]
 
 services:
+  admin.user:
+    class: App\Admin\Security\UserAdmin
+    arguments:
+      - null
+      - App\Persistence\Entity\Security\User
+      - null
+      - '@security.password_hasher'
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
   admin.carrier:
     class: App\Admin\Epigraphy\CarrierAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\Carrier, null]
@@ -158,13 +177,34 @@ services:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:
       - { name: sonata.admin, manager_type: orm }
-  admin.user:
-    class: App\Admin\Security\UserAdmin
+  admin.bibliography.bibliographic_record:
+    class: App\Admin\Bibliography\BibliographicRecordAdmin
     arguments:
       - null
-      - App\Persistence\Entity\Security\User
+      - App\Persistence\Entity\Bibliography\BibliographicRecord
       - null
-      - '@security.password_hasher'
+      - '@App\DataStorage\DataStorageManagerInterface'
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.bibliography.author:
+    class: App\Admin\Bibliography\AuthorAdmin
+    arguments: [null, App\Persistence\Entity\Bibliography\Author, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.bibliography.references_list:
+    class: App\Admin\Bibliography\ReferencesListAdmin
+    arguments: [null, App\Persistence\Entity\Bibliography\ReferencesList, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.bibliography.references_list.item:
+    class: App\Admin\Bibliography\ReferencesListItemAdmin
+    arguments: [null, App\Persistence\Entity\Bibliography\ReferencesListItem, null]
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:

@@ -23,29 +23,27 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Controller;
+namespace App\Admin\Bibliography;
 
-use App\Persistence\Entity\Bibliography\BibliographicRecord;
-use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Admin\AbstractEntityAdmin;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
-/**
- * @Route("/bibliography/record")
- */
-final class BibliographicRecordController extends AbstractController
+final class ReferencesListItemAdmin extends AbstractEntityAdmin
 {
-    /**
-     * @Route("/list", name="bibiliograpic_record__list", methods={"GET"})
-     * @Template("bibliography/list.html.twig")
-     */
-    public function list(EntityManagerInterface $entityManager): array
+    protected string $baseRouteName = 'bibliography_references_list_item';
+
+    protected string $baseRoutePattern = 'bibliography/references-list/item';
+
+    protected function configureFormFields(FormMapper $formMapper): void
     {
-        return [
-            'controller' => 'bibliographic-record',
-            'method' => 'list',
-            'records' => $entityManager->getRepository(BibliographicRecord::class)->findAll(),
-        ];
+        $formMapper
+            ->add(
+                'bibliographicRecord.shortName',
+                null,
+                $this->createLabeledFormOptions('bibliographicRecord', ['disabled' => true])
+            )
+            ->add('position', HiddenType::class, $this->createLabeledFormOptions('position'))
+        ;
     }
 }
