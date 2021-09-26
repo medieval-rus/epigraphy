@@ -32,9 +32,9 @@ use Sonata\Form\Type\CollectionType;
 
 final class ReferencesListAdmin extends AbstractEntityAdmin
 {
-    protected string $baseRouteName = 'bibliography_references_list';
+    protected $baseRouteName = 'bibliography_references_list';
 
-    protected string $baseRoutePattern = 'bibliography/references-list';
+    protected $baseRoutePattern = 'bibliography/references-list';
 
     protected function configureListFields(ListMapper $listMapper): void
     {

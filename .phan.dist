@@ -209,7 +209,7 @@ return [
         'PhanParamSignaturePHPDocMismatchParamNotVariadic',
         'PhanParamSignatureRealMismatchParamType',
         'PhanParamSignatureRealMismatchParamTypeInternal',
-        'PhanParamSignaturePHPDocMismatchParamType',
+//        'PhanParamSignaturePHPDocMismatchParamType', // produces false positive error
         'PhanNoopArray',
         'PhanNoopClosure',
         'PhanNoopConstant',

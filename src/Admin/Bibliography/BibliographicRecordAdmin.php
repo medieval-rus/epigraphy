@@ -31,9 +31,9 @@ use Sonata\AdminBundle\Form\FormMapper;
 
 final class BibliographicRecordAdmin extends AbstractEntityAdmin
 {
-    protected string $baseRouteName = 'bibliography_record';
+    protected $baseRouteName = 'bibliography_record';
 
-    protected string $baseRoutePattern = 'bibliography/bibliographic-record';
+    protected $baseRoutePattern = 'bibliography/bibliographic-record';
 
     protected function configureListFields(ListMapper $listMapper): void
     {

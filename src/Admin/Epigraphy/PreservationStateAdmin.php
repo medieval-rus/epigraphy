@@ -29,7 +29,7 @@ use App\Admin\AbstractNamedEntityAdmin;
 
 final class PreservationStateAdmin extends AbstractNamedEntityAdmin
 {
-    protected string $baseRouteName = 'epigraphy_preservation_state';
+    protected $baseRouteName = 'epigraphy_preservation_state';
 
-    protected string $baseRoutePattern = 'epigraphy/preservation-state';
+    protected $baseRoutePattern = 'epigraphy/preservation-state';
 }

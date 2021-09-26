@@ -34,9 +34,9 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 final class InterpretationAdmin extends AbstractEntityAdmin
 {
-    protected string $baseRouteName = 'epigraphy_interpretation';
+    protected $baseRouteName = 'epigraphy_interpretation';
 
-    protected string $baseRoutePattern = 'epigraphy/interpretation';
+    protected $baseRoutePattern = 'epigraphy/interpretation';
 
     protected function configureListFields(ListMapper $listMapper): void
     {

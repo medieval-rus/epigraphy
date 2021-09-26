@@ -32,9 +32,9 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 final class CarrierAdmin extends AbstractEntityAdmin
 {
-    protected string $baseRouteName = 'epigraphy_carrier';
+    protected $baseRouteName = 'epigraphy_carrier';
 
-    protected string $baseRoutePattern = 'epigraphy/carrier';
+    protected $baseRoutePattern = 'epigraphy/carrier';
 
     protected function configureListFields(ListMapper $listMapper): void
     {

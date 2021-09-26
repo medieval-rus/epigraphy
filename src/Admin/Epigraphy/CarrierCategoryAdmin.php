@@ -29,7 +29,7 @@ use App\Admin\AbstractNamedEntityAdmin;
 
 final class CarrierCategoryAdmin extends AbstractNamedEntityAdmin
 {
-    protected string $baseRouteName = 'epigraphy_carrier_category';
+    protected $baseRouteName = 'epigraphy_carrier_category';
 
-    protected string $baseRoutePattern = 'epigraphy/carrier-category';
+    protected $baseRoutePattern = 'epigraphy/carrier-category';
 }

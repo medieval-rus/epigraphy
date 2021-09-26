@@ -29,7 +29,7 @@ use App\Admin\AbstractNamedEntityAdmin;
 
 final class WritingTypeAdmin extends AbstractNamedEntityAdmin
 {
-    protected string $baseRouteName = 'epigraphy_writing_type';
+    protected $baseRouteName = 'epigraphy_writing_type';
 
-    protected string $baseRoutePattern = 'epigraphy/writing-type';
+    protected $baseRoutePattern = 'epigraphy/writing-type';
 }

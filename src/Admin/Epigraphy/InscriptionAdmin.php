@@ -42,9 +42,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 final class InscriptionAdmin extends AbstractEntityAdmin
 {
-    protected string $baseRouteName = 'epigraphy_inscription';
+    protected $baseRouteName = 'epigraphy_inscription';
 
-    protected string $baseRoutePattern = 'epigraphy/inscription';
+    protected $baseRoutePattern = 'epigraphy/inscription';
 
     /**
      * @param Inscription $object

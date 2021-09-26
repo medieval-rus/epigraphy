@@ -29,7 +29,7 @@ use App\Admin\AbstractNamedEntityAdmin;
 
 final class AlphabetAdmin extends AbstractNamedEntityAdmin
 {
-    protected string $baseRouteName = 'epigraphy_alphabet';
+    protected $baseRouteName = 'epigraphy_alphabet';
 
-    protected string $baseRoutePattern = 'epigraphy/alphabet';
+    protected $baseRoutePattern = 'epigraphy/alphabet';
 }

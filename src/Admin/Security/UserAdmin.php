@@ -36,9 +36,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class UserAdmin extends AbstractEntityAdmin
 {
-    protected string $baseRouteName = 'security_user';
+    protected $baseRouteName = 'security_user';
 
-    protected string $baseRoutePattern = 'security/user';
+    protected $baseRoutePattern = 'security/user';
 
     private UserPasswordHasherInterface $passwordHasher;
 

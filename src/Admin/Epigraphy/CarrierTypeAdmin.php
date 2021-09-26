@@ -29,7 +29,7 @@ use App\Admin\AbstractNamedEntityAdmin;
 
 final class CarrierTypeAdmin extends AbstractNamedEntityAdmin
 {
-    protected string $baseRouteName = 'epigraphy_carrier_type';
+    protected $baseRouteName = 'epigraphy_carrier_type';
 
-    protected string $baseRoutePattern = 'epigraphy/carrier-type';
+    protected $baseRoutePattern = 'epigraphy/carrier-type';
 }

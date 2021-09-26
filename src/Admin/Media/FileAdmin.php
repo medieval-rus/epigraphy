@@ -43,9 +43,9 @@ use Symfony\Component\Validator\Context\ExecutionContext;
 
 final class FileAdmin extends AbstractEntityAdmin
 {
-    protected string $baseRouteName = 'media_file';
+    protected $baseRouteName = 'media_file';
 
-    protected string $baseRoutePattern = 'media/file';
+    protected $baseRoutePattern = 'media/file';
 
     private FileRepository $fileRepository;
 
