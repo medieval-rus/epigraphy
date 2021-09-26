@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace App\Services\Images;
 
 use App\Models\FilesActualValue;
-use App\Persistence\Entity\Epigraphy\File;
 use App\Persistence\Entity\Epigraphy\Inscription;
+use App\Persistence\Entity\Media\File;
 use App\Services\ActualValue\Extractor\ActualValueExtractorInterface;
 
 final class ImagesFormatter implements ImagesFormatterInterface

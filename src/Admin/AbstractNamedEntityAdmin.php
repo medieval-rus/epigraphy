@@ -23,12 +23,11 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin\Abstraction;
+namespace App\Admin;
 
 use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 abstract class AbstractNamedEntityAdmin extends AbstractEntityAdmin
 {
@@ -51,12 +50,8 @@ abstract class AbstractNamedEntityAdmin extends AbstractEntityAdmin
     protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
-            ->with('form.'.$this->getEntityKey().'.section.name.label')
-                ->add(
-                    'name',
-                    TextType::class,
-                    $this->createLabeledFormOptions('name', ['required' => true])
-                )
+            ->with($this->getSectionLabel('name'))
+                ->add('name', null, $this->createLabeledFormOptions('name'))
             ->end()
         ;
     }

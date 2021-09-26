@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\Form\DataTransformer;
 
-use App\Admin\Models\AdminInterpretationWrapper;
+use App\Admin\Epigraphy\Models\AdminInterpretationWrapper;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use Symfony\Component\Form\DataTransformerInterface;
 

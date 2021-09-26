@@ -23,19 +23,13 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin;
+namespace App\Admin\Epigraphy;
 
-use App\Admin\Abstraction\AbstractNamedEntityAdmin;
+use App\Admin\AbstractNamedEntityAdmin;
 
-final class WritingMethodAdmin extends AbstractNamedEntityAdmin
+final class CarrierTypeAdmin extends AbstractNamedEntityAdmin
 {
-    /**
-     * @var string
-     */
-    protected $baseRouteName = 'epigraphy_writing_method';
+    protected string $baseRouteName = 'epigraphy_carrier_type';
 
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'epigraphy/writing-method';
+    protected string $baseRoutePattern = 'epigraphy/carrier-type';
 }

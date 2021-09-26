@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Persistence\Entity\Epigraphy\File;
+use App\Persistence\Entity\Media\File;
 
 final class FilesActualValue
 {

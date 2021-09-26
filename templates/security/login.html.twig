@@ -23,18 +23,18 @@
 
 {% block page_content %}
 
-    <form action="{{ path("app_login") }}" method="post" role="form">
+    <form action="{{ path("security__login") }}" method="post" role="form">
 
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-        {{ form_row(form._token) }}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
         <label for="inputUsername">{{ ('controller.'~controller~'.'~method~'.form.username')|trans }}</label>
         <input
                 type="text"
-                value="{{ last_username }}"
+                value="{{ form.username.vars.value }}"
                 name="{{ form.username.vars.full_name }}"
                 id="inputUsername"
                 class="form-control"
@@ -53,7 +53,7 @@
 
         <div class="checkbox mb-3">
             <label>
-                <input type="checkbox" name="_remember_me">
+                <input type="checkbox" name="_remember_me" checked>
                 {{ ('controller.'~controller~'.'~method~'.form.rememberMe')|trans }}
             </label>
         </div>

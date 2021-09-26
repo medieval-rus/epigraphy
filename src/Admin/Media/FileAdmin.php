@@ -23,18 +23,17 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin;
+namespace App\Admin\Media;
 
-use App\Admin\Abstraction\AbstractEntityAdmin;
+use App\Admin\AbstractEntityAdmin;
 use App\DataStorage\DataStorageManagerInterface;
 use App\Helper\StringHelper;
-use App\Persistence\Entity\Epigraphy\File;
+use App\Persistence\Entity\Media\File;
 use App\Persistence\Repository\Epigraphy\FileRepository;
-use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints\Callback;
@@ -44,42 +43,23 @@ use Symfony\Component\Validator\Context\ExecutionContext;
 
 final class FileAdmin extends AbstractEntityAdmin
 {
-    /**
-     * @var string
-     */
-    protected $baseRouteName = 'epigraphy_file';
+    protected string $baseRouteName = 'media_file';
 
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'epigraphy/file';
+    protected string $baseRoutePattern = 'media/file';
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private FileRepository $fileRepository;
 
-    /**
-     * @var FileRepository
-     */
-    private $fileRepository;
-
-    /**
-     * @var DataStorageManagerInterface
-     */
-    private $dataStorageManager;
+    private DataStorageManagerInterface $dataStorageManager;
 
     public function __construct(
         string $code,
         string $class,
         string $baseControllerName,
-        LoggerInterface $logger,
         FileRepository $fileRepository,
         DataStorageManagerInterface $dataStorageManager
     ) {
         parent::__construct($code, $class, $baseControllerName);
 
-        $this->logger = $logger;
         $this->fileRepository = $fileRepository;
         $this->dataStorageManager = $dataStorageManager;
     }
@@ -119,7 +99,7 @@ final class FileAdmin extends AbstractEntityAdmin
         }
     }
 
-    protected function configureRoutes(RouteCollection $collection): void
+    protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->remove('delete');
     }

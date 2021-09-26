@@ -27,14 +27,8 @@ namespace App\Persistence\Repository\Epigraphy;
 
 use App\Persistence\Entity\Epigraphy\WritingType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method WritingType|null find(int $id, int $lockMode = null, int $lockVersion = null)
- * @method WritingType|null findOneBy(array $criteria, array $orderBy = null)
- * @method WritingType[]    findAll()
- * @method WritingType[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- */
 final class WritingTypeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

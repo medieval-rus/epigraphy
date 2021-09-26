@@ -27,7 +27,7 @@ namespace App\DataStorage;
 
 use App\DataStorage\Connectors\Osf\OsfConnectorInterface;
 use App\Helper\StringHelper;
-use App\Persistence\Entity\Epigraphy\File;
+use App\Persistence\Entity\Media\File;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Throwable;

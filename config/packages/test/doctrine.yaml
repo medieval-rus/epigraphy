@@ -18,32 +18,5 @@
 # see <http://www.gnu.org/licenses/>.
 
 doctrine:
-  orm:
-    mappings:
-      VyfonyBibliographyBundle:
-        is_bundle: false
-        type: annotation
-        dir: '%kernel.project_dir%/vendor/vyfony/bibliography-bundle/src/Persistence/Entity'
-        prefix: 'Vyfony\Bundle\BibliographyBundle\Persistence\Entity'
-        alias: Vyfony\Bundle\BibliographyBundle
-
-framework:
-  translator:
-    paths:
-      - '%kernel.project_dir%/vendor/vyfony/bibliography-bundle/translations'
-
-twig:
-  paths:
-    '%kernel.project_dir%/vendor/vyfony/bibliography-bundle/templates': VyfonyBibliography
-
-sonata_admin:
-  dashboard:
-    groups:
-      bibliography:
-        label_catalogue: vyfony_bibliography_admin
-        label: menu.groups.bibliography.label
-        items:
-          - vyfony_bibliography.admin.bibliographic_record
-          - vyfony_bibliography.admin.author
-          - vyfony_bibliography.admin.references_list
-        roles: [ ROLE_ADMIN ]
+  dbal:
+    dbname_suffix: '_test%env(default::TEST_TOKEN)%'

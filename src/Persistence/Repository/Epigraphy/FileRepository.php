@@ -25,16 +25,10 @@ declare(strict_types=1);
 
 namespace App\Persistence\Repository\Epigraphy;
 
-use App\Persistence\Entity\Epigraphy\File;
+use App\Persistence\Entity\Media\File;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method File|null find(int $id, int $lockMode = null, int $lockVersion = null)
- * @method File|null findOneBy(array $criteria, array $orderBy = null)
- * @method File[]    findAll()
- * @method File[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- */
 final class FileRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\DataStorage;
 
-use App\Persistence\Entity\Epigraphy\File;
+use App\Persistence\Entity\Media\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface DataStorageManagerInterface

@@ -23,51 +23,34 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin;
+namespace App\Admin\Security;
 
-use App\Admin\Abstraction\AbstractEntityAdmin;
+use App\Admin\AbstractEntityAdmin;
 use App\Persistence\Entity\Security\User;
 use RuntimeException;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class UserAdmin extends AbstractEntityAdmin
 {
-    /**
-     * @var string
-     */
-    protected $baseRouteName = 'security_user';
+    protected string $baseRouteName = 'security_user';
 
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'security/user';
+    protected string $baseRoutePattern = 'security/user';
 
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-    private $passwordEncoder;
-
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
+    private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(
         string $code,
         string $class,
         string $baseControllerName,
-        UserPasswordEncoderInterface $passwordEncoder,
-        AuthorizationCheckerInterface $authorizationChecker
+        UserPasswordHasherInterface $passwordHasher
     ) {
         parent::__construct($code, $class, $baseControllerName);
 
-        $this->passwordEncoder = $passwordEncoder;
-        $this->authorizationChecker = $authorizationChecker;
+        $this->passwordHasher = $passwordHasher;
     }
 
     /**
@@ -100,6 +83,8 @@ final class UserAdmin extends AbstractEntityAdmin
     {
         $isEditForm = $this->isEditForm();
 
+        $formMapper->with($this->getSectionLabel('common'));
+
         if ($isEditForm) {
             $formMapper
                 ->add('id', null, $this->createLabeledFormOptions('id', ['required' => true, 'disabled' => true]))
@@ -131,13 +116,15 @@ final class UserAdmin extends AbstractEntityAdmin
                 $this->createLabeledFormOptions('plainPassword', ['required' => !$isEditForm])
             )
         ;
+
+        $formMapper->end();
     }
 
     private function encodePassword(User $user): void
     {
         if (null !== $user->getPlainPassword()) {
             $user->setPassword(
-                $this->passwordEncoder->encodePassword($user, $user->getPlainPassword())
+                $this->passwordHasher->hashPassword($user, $user->getPlainPassword())
             );
         }
     }

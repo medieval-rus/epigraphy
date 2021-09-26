@@ -27,14 +27,8 @@ namespace App\Persistence\Repository\Epigraphy;
 
 use App\Persistence\Entity\Epigraphy\Alphabet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method Alphabet|null find(int $id, int $lockMode = null, int $lockVersion = null)
- * @method Alphabet|null findOneBy(array $criteria, array $orderBy = null)
- * @method Alphabet[]    findAll()
- * @method Alphabet[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- */
 final class AlphabetRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

@@ -350,3 +350,39 @@ form:
       fullName: Полное имя
       roles: Роли
       plainPassword: Новый пароль
+
+carrier_list: Носители
+carrier_create: Добавить новый носитель
+carrier_delete: Удалить носитель
+carrierType_list: Типы носителей
+carrierType_create: Добавить новый тип носителя
+carrierType_delete: Удалить тип носителя
+carrierCategory_list: Категории носителей
+carrierCategory_create: Добавить новую категорию носителя
+carrierCategory_delete: Удалить категорию носителя
+alphabet_list: Алфавиты
+alphabet_create: Добавить новый алфавит
+alphabet_delete: Удалить алфавит
+contentCategory_list: Категории по содержанию
+contentCategory_create: Добавить новую категорию по содержанию
+contentCategory_delete: Удалить категорию по содержанию
+material_list: Материалы
+material_create: Добавить новый материал
+material_delete: Удалить материал
+preservationState_list: Состояния сохранности
+preservationState_create: Добавить новое состояние сохранности
+preservationState_delete: Удалить состояние сохранности
+writingType_list: Разряды
+writingType_create: Добавить новый разряд
+writingType_delete: Удалить разряд
+writingMethod_list: Способы нанесения
+writingMethod_create: Добавить новый способ нанесения
+writingMethod_delete: Удалить способ нанесения
+inscription_list: Надписи
+inscription_create: Добавить новую надпись
+inscription_delete: Удалить надпись
+file_list: Загруженные файлы
+file_create: Загрузить новый файл
+user_list: Пользователи
+user_create: Добавить нового пользователя
+user_delete: Удалить пользователя

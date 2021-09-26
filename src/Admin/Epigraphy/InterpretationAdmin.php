@@ -23,29 +23,20 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin;
+namespace App\Admin\Epigraphy;
 
-use App\Admin\Abstraction\AbstractEntityAdmin;
+use App\Admin\AbstractEntityAdmin;
 use App\Form\DataTransformer\InterpretationAdminTransformer;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Form\Type\ModelType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class InterpretationAdmin extends AbstractEntityAdmin
 {
-    /**
-     * @var string
-     */
-    protected $baseRouteName = 'epigraphy_interpretation';
+    protected string $baseRouteName = 'epigraphy_interpretation';
 
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'epigraphy/interpretation';
+    protected string $baseRoutePattern = 'epigraphy/interpretation';
 
     protected function configureListFields(ListMapper $listMapper): void
     {
@@ -58,86 +49,50 @@ final class InterpretationAdmin extends AbstractEntityAdmin
     protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
-            ->tab('form.interpretation.tab.identification.label')
-                ->with('form.interpretation.section.identification.label')
+            ->tab($this->getTabLabel('identification'))
+                ->with($this->getSectionLabel('identification'))
                     ->add(
                         'id',
                         HiddenType::class,
                         ['attr' => ['data-interpretation-id' => $this->getSubject()->getId()]]
                     )
-                    ->add(
-                        'source',
-                        TextType::class,
-                        $this->createLabeledFormOptions('source', ['required' => true])
-                    )
-                    ->add(
-                        'comment',
-                        TextareaType::class,
-                        $this->createLabeledFormOptions('comment', ['required' => false])
-                    )
+                    ->add('source', null, $this->createLabeledFormOptions('source'))
+                    ->add('comment', null, $this->createLabeledFormOptions('comment'))
                 ->end()
             ->end()
-            ->tab('form.interpretation.tab.bibliographicAspect.label')
-                ->with('form.interpretation.section.bibliographicAspect.label')
-                    ->add(
-                        'pageNumbersInSource',
-                        TextType::class,
-                        $this->createLabeledFormOptions('pageNumbersInSource', ['required' => false])
-                    )
-                    ->add(
-                        'numberInSource',
-                        TextType::class,
-                        $this->createLabeledFormOptions('numberInSource', ['required' => false])
-                    )
+            ->tab($this->getTabLabel('bibliographicAspect'))
+                ->with($this->getSectionLabel('bibliographicAspect'))
+                    ->add('pageNumbersInSource', null, $this->createLabeledFormOptions('pageNumbersInSource'))
+                    ->add('numberInSource', null, $this->createLabeledFormOptions('numberInSource'))
                 ->end()
             ->end()
-            ->tab('form.interpretation.tab.materialAspect.label')
-                ->with('form.interpretation.section.materialAspect.label')
-                    ->add(
-                        'placeOnCarrier',
-                        TextType::class,
-                        $this->createLabeledFormOptions('placeOnCarrier', ['required' => false])
-                    )
+            ->tab($this->getTabLabel('materialAspect'))
+                ->with($this->getSectionLabel('materialAspect'))
+                    ->add('placeOnCarrier', null, $this->createLabeledFormOptions('placeOnCarrier'))
                     ->add(
                         'isPlaceOnCarrierPartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('placeOnCarrier')
                     )
-                    ->add(
-                        'writingTypes',
-                        ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('writingTypes')
-                    )
+                    ->add('writingTypes', null, $this->createLabeledManyToManyFormOptions('writingTypes'))
                     ->add(
                         'isWritingTypesPartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('writingTypes')
                     )
-                    ->add(
-                        'writingMethods',
-                        ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('writingMethods')
-                    )
+                    ->add('writingMethods', null, $this->createLabeledManyToManyFormOptions('writingMethods'))
                     ->add(
                         'isWritingMethodsPartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('writingMethods')
                     )
-                    ->add(
-                        'preservationStates',
-                        ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('preservationStates')
-                    )
+                    ->add('preservationStates', null, $this->createLabeledManyToManyFormOptions('preservationStates'))
                     ->add(
                         'isPreservationStatesPartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('preservationStates')
                     )
-                    ->add(
-                        'materials',
-                        ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('materials')
-                    )
+                    ->add('materials', null, $this->createLabeledManyToManyFormOptions('materials'))
                     ->add(
                         'isMaterialsPartOfZeroRow',
                         CheckboxType::class,
@@ -145,13 +100,9 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                     )
                 ->end()
             ->end()
-            ->tab('form.interpretation.tab.linguisticAspect.label')
-                ->with('form.interpretation.section.linguisticAspect.label')
-                    ->add(
-                        'alphabets',
-                        ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('alphabets')
-                    )
+            ->tab($this->getTabLabel('linguisticAspect'))
+                ->with($this->getSectionLabel('linguisticAspect'))
+                    ->add('alphabets', null, $this->createLabeledManyToManyFormOptions('alphabets'))
                     ->add(
                         'isAlphabetsPartOfZeroRow',
                         CheckboxType::class,
@@ -159,62 +110,39 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                     )
                     ->add(
                         'text',
-                        TextareaType::class,
-                        $this->createLabeledFormOptions(
-                            'text',
-                            ['required' => false, 'attr' => ['data-virtual-keyboard' => true]]
-                        )
+                        null,
+                        $this->createLabeledFormOptions('text', ['attr' => ['data-virtual-keyboard' => true]])
                     )
                     ->add(
                         'isTextPartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('text')
                     )
-                    ->add(
-                        'textImages',
-                        ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('textImages', ['btn_add' => false])
-                    )
+                    ->add('textImages', null, $this->createLabeledManyToManyFormOptions('textImages'))
                     ->add(
                         'isTextImagesPartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('textImages')
                     )
-                    ->add(
-                        'transliteration',
-                        TextareaType::class,
-                        $this->createLabeledFormOptions('transliteration', ['required' => false])
-                    )
+                    ->add('transliteration', null, $this->createLabeledFormOptions('transliteration'))
                     ->add(
                         'isTransliterationPartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('transliteration')
                     )
-                    ->add(
-                        'translation',
-                        TextareaType::class,
-                        $this->createLabeledFormOptions('translation', ['required' => false])
-                    )
+                    ->add('translation', null, $this->createLabeledFormOptions('translation'))
                     ->add(
                         'isTranslationPartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('translation')
                     )
-                    ->add(
-                        'contentCategories',
-                        ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('contentCategories')
-                    )
+                    ->add('contentCategories', null, $this->createLabeledManyToManyFormOptions('contentCategories'))
                     ->add(
                         'isContentCategoriesPartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('contentCategories')
                     )
-                    ->add(
-                        'content',
-                        TextareaType::class,
-                        $this->createLabeledFormOptions('content', ['required' => false])
-                    )
+                    ->add('content', null, $this->createLabeledFormOptions('content'))
                     ->add(
                         'isContentPartOfZeroRow',
                         CheckboxType::class,
@@ -222,53 +150,33 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                     )
                 ->end()
             ->end()
-            ->tab('form.interpretation.tab.historicalAspect.label')
-                ->with('form.interpretation.section.historicalAspect.label')
-                    ->add(
-                        'origin',
-                        TextType::class,
-                        $this->createLabeledFormOptions('origin', ['required' => false])
-                    )
+            ->tab($this->getTabLabel('historicalAspect'))
+                ->with($this->getSectionLabel('historicalAspect'))
+                    ->add('origin', null, $this->createLabeledFormOptions('origin'))
                     ->add(
                         'isOriginPartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('origin')
                     )
-                    ->add(
-                        'dateInText',
-                        TextType::class,
-                        $this->createLabeledFormOptions('dateInText', ['required' => false])
-                    )
+                    ->add('dateInText', null, $this->createLabeledFormOptions('dateInText'))
                     ->add(
                         'isDateInTextPartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('dateInText')
                     )
-                    ->add(
-                        'stratigraphicalDate',
-                        TextType::class,
-                        $this->createLabeledFormOptions('stratigraphicalDate', ['required' => false])
-                    )
+                    ->add('stratigraphicalDate', null, $this->createLabeledFormOptions('stratigraphicalDate'))
                     ->add(
                         'isStratigraphicalDatePartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('stratigraphicalDate')
                     )
-                    ->add(
-                        'nonStratigraphicalDate',
-                        TextType::class,
-                        $this->createLabeledFormOptions('nonStratigraphicalDate', ['required' => false])
-                    )
+                    ->add('nonStratigraphicalDate', null, $this->createLabeledFormOptions('nonStratigraphicalDate'))
                     ->add(
                         'isNonStratigraphicalDatePartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('nonStratigraphicalDate')
                     )
-                    ->add(
-                        'historicalDate',
-                        TextType::class,
-                        $this->createLabeledFormOptions('historicalDate', ['required' => false])
-                    )
+                    ->add('historicalDate', null, $this->createLabeledFormOptions('historicalDate'))
                     ->add(
                         'isHistoricalDatePartOfZeroRow',
                         CheckboxType::class,

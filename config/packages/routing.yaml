@@ -20,3 +20,8 @@
 framework:
   router:
     utf8: true
+
+when@prod:
+  framework:
+    router:
+      strict_requirements: null

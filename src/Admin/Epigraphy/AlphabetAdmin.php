@@ -23,19 +23,13 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin;
+namespace App\Admin\Epigraphy;
 
-use App\Admin\Abstraction\AbstractNamedEntityAdmin;
+use App\Admin\AbstractNamedEntityAdmin;
 
 final class AlphabetAdmin extends AbstractNamedEntityAdmin
 {
-    /**
-     * @var string
-     */
-    protected $baseRouteName = 'epigraphy_alphabet';
+    protected string $baseRouteName = 'epigraphy_alphabet';
 
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'epigraphy/alphabet';
+    protected string $baseRoutePattern = 'epigraphy/alphabet';
 }

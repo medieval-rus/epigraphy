@@ -28,14 +28,8 @@ namespace App\Persistence\Repository\Epigraphy;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method Interpretation|null find(int $id, int $lockMode = null, int $lockVersion = null)
- * @method Interpretation|null findOneBy(array $criteria, array $orderBy = null)
- * @method Interpretation[]    findAll()
- * @method Interpretation[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- */
 final class InterpretationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

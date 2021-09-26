@@ -39,7 +39,7 @@ class Carrier implements StringifiableEntityInterface
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
@@ -47,6 +47,7 @@ class Carrier implements StringifiableEntityInterface
      * @var Collection|CarrierType[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\CarrierType", cascade={"persist"})
+     * @ORM\JoinTable(name="carrier_carrier_type")
      */
     private $types;
 
@@ -54,62 +55,63 @@ class Carrier implements StringifiableEntityInterface
      * @var Collection|CarrierCategory[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\CarrierCategory", cascade={"persist"})
+     * @ORM\JoinTable(name="carrier_carrier_category")
      */
     private $categories;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="origin1", type="string", length=255, nullable=true)
      */
     private $origin1;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="origin2", type="string", length=255, nullable=true)
      */
     private $origin2;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="find_circumstances", type="text", length=65535, nullable=true)
      */
     private $findCircumstances;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="characteristics", type="text", length=65535, nullable=true)
      */
     private $characteristics;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="individual_name", type="string", length=255, nullable=true)
      */
     private $individualName;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="storage_place", type="string", length=255, nullable=true)
      */
     private $storagePlace;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="inventory_number", type="string", length=255, nullable=true)
      */
     private $inventoryNumber;
 
     /**
      * @var bool|null
      *
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="is_in_situ", type="boolean", nullable=true)
      */
     private $isInSitu;
 

@@ -23,18 +23,20 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin\Abstraction;
+namespace App\Admin;
 
 use ReflectionClass;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 
 abstract class AbstractEntityAdmin extends AbstractAdmin
 {
-    protected $translationDomain = 'admin';
-
-    public function getLabel(): string
+    protected function configure(): void
     {
-        return 'menu.paragraphs.'.$this->getEntityKey().'.label';
+        $entityKey = $this->getEntityKey();
+
+        $this->classnameLabel = $entityKey;
+        $this->setLabel('menu.paragraphs.'.$entityKey.'.label');
+        $this->setTranslationDomain('admin');
     }
 
     protected function getEntityKey(): string
@@ -72,7 +74,7 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
         );
     }
 
-    protected function createLabeledManyToManyFormOptions(string $fieldName, array $options = [])
+    protected function createLabeledManyToManyFormOptions(string $fieldName, array $options = []): array
     {
         return $this->createLabeledFormOptions(
             $fieldName,
@@ -86,5 +88,10 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
     protected function getSectionLabel(string $key): string
     {
         return 'form.'.$this->getEntityKey().'.section.'.$key.'.label';
+    }
+
+    protected function getTabLabel(string $key): string
+    {
+        return 'form.'.$this->getEntityKey().'.tab.'.$key.'.label';
     }
 }

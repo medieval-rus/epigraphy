@@ -44,7 +44,7 @@ a copy of the GNU General Public License along with
 see <http://www.gnu.org/licenses/>.
 HEADER;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules([
         '@PHP56Migration' => true,
         '@PHP56Migration:risky' => true,
@@ -75,13 +75,7 @@ return PhpCsFixer\Config::create()
     ->setUsingCache(false)
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->in(
-                [
-                    'migrations',
-                    'src',
-                    'tests',
-                ]
-            )
+            ->in(['migrations', 'src', 'tests'])
             ->append(
                 [
                     __FILE__,

@@ -23,19 +23,13 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin;
+namespace App\Admin\Epigraphy;
 
-use App\Admin\Abstraction\AbstractNamedEntityAdmin;
+use App\Admin\AbstractNamedEntityAdmin;
 
-final class CarrierTypeAdmin extends AbstractNamedEntityAdmin
+final class ContentCategoryAdmin extends AbstractNamedEntityAdmin
 {
-    /**
-     * @var string
-     */
-    protected $baseRouteName = 'epigraphy_carrier_type';
+    protected string $baseRouteName = 'epigraphy_content_category';
 
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'epigraphy/carrier-type';
+    protected string $baseRoutePattern = 'epigraphy/content-category';
 }

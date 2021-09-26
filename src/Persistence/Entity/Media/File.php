@@ -23,7 +23,7 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Epigraphy;
+namespace App\Persistence\Entity\Media;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -37,56 +37,56 @@ class File
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(name="file_name", type="string", length=255, unique=true)
      */
     private $fileName;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="media_type", type="string", length=255)
      */
     private $mediaType;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=2048, nullable=true)
+     * @ORM\Column(name="url", type="string", length=2048, nullable=true)
      */
     private $url;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="description", type="text", length=65535, nullable=true)
      */
     private $description;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="binary", length=16777215, nullable=true)
+     * @ORM\Column(name="binary_content", type="binary", length=16777215, nullable=true)
      */
     private $binaryContent;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=32, options={"fixed" = true}, unique=true)
+     * @ORM\Column(name="hash", type="string", length=32, options={"fixed" = true}, unique=true)
      */
     private $hash;
 
     /**
      * @var array|null
      *
-     * @ORM\Column(type="json", nullable=true)
+     * @ORM\Column(name="metadata", type="json", nullable=true)
      */
     private $metadata;
 

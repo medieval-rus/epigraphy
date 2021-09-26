@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Epigraphy;
 
+use App\Persistence\Entity\Media\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -39,7 +40,7 @@ class ZeroRow
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
@@ -53,7 +54,7 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="origin", type="text", length=65535, nullable=true)
      */
     private $origin;
 
@@ -72,7 +73,7 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="place_on_carrier", type="text", length=65535, nullable=true)
      */
     private $placeOnCarrier;
 
@@ -92,6 +93,7 @@ class ZeroRow
      * @var Collection|WritingType[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\WritingType", cascade={"persist"})
+     * @ORM\JoinTable(name="zero_row_writing_type")
      */
     private $writingTypes;
 
@@ -111,6 +113,7 @@ class ZeroRow
      * @var Collection|WritingMethod[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\WritingMethod", cascade={"persist"})
+     * @ORM\JoinTable(name="zero_row_writing_method")
      */
     private $writingMethods;
 
@@ -130,6 +133,7 @@ class ZeroRow
      * @var Collection|PreservationState[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\PreservationState", cascade={"persist"})
+     * @ORM\JoinTable(name="zero_row_preservation_state")
      */
     private $preservationStates;
 
@@ -149,6 +153,7 @@ class ZeroRow
      * @var Collection|Material[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Material", cascade={"persist"})
+     * @ORM\JoinTable(name="zero_row_material")
      */
     private $materials;
 
@@ -168,6 +173,7 @@ class ZeroRow
      * @var Collection|Alphabet[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Alphabet", cascade={"persist"})
+     * @ORM\JoinTable(name="zero_row_alphabet")
      */
     private $alphabets;
 
@@ -186,7 +192,7 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="text", type="text", length=65535, nullable=true)
      */
     private $text;
 
@@ -205,7 +211,7 @@ class ZeroRow
     /**
      * @var Collection|File[]
      *
-     * @ORM\ManyToMany(targetEntity="File", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
      * @ORM\JoinTable(name="zero_row_text_images")
      */
     private $textImages;
@@ -225,7 +231,7 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="transliteration", type="text", length=65535, nullable=true)
      */
     private $transliteration;
 
@@ -244,7 +250,7 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="translation", type="text", length=65535, nullable=true)
      */
     private $translation;
 
@@ -264,6 +270,7 @@ class ZeroRow
      * @var Collection|ContentCategory[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\ContentCategory", cascade={"persist"})
+     * @ORM\JoinTable(name="zero_row_content_category")
      */
     private $contentCategories;
 
@@ -282,7 +289,7 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="content", type="text", length=65535, nullable=true)
      */
     private $content;
 
@@ -301,7 +308,7 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="date_in_text", type="text", length=65535, nullable=true)
      */
     private $dateInText;
 
@@ -320,7 +327,7 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="stratigraphical_date", type="text", length=65535, nullable=true)
      */
     private $stratigraphicalDate;
 
@@ -339,7 +346,7 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="non_stratigraphical_date", type="text", length=65535, nullable=true)
      */
     private $nonStratigraphicalDate;
 
@@ -358,7 +365,7 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="historical_date", type="text", length=65535, nullable=true)
      */
     private $historicalDate;
 

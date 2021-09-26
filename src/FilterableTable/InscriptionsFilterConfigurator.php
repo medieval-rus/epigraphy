@@ -41,6 +41,9 @@ use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Table\Radi
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Table\RadioOption\RadioOption;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Table\TableParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Restriction\FilterRestrictionInterface;
+use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Sorting\CustomSortConfigurationInterface;
+use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Sorting\DbSortConfiguration;
+use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Sorting\DbSortConfigurationInterface;
 use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
 
 final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
@@ -134,11 +137,6 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         ];
     }
 
-    public function getDisablePaginationLabel(): string
-    {
-        return 'controller.inscription.list.filter.disablePaginator';
-    }
-
     /**
      * @param mixed $entity
      *
@@ -220,5 +218,21 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
                 ->setQueryParameterName('dataColumn')
                 ->setLabel('controller.inscription.list.filter.dataColumn.label'),
         ];
+    }
+
+    protected function createDbSortConfiguration(): ?DbSortConfigurationInterface
+    {
+        return new DbSortConfiguration(
+            'id',
+            true,
+            200,
+            3,
+            'controller.inscription.list.filter.disablePaginator'
+        );
+    }
+
+    protected function createCustomSortConfiguration(): ?CustomSortConfigurationInterface
+    {
+        return null;
     }
 }

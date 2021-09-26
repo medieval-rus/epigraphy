@@ -27,14 +27,8 @@ namespace App\Persistence\Repository\Epigraphy;
 
 use App\Persistence\Entity\Epigraphy\Carrier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method Carrier|null find(int $id, int $lockMode = null, int $lockVersion = null)
- * @method Carrier|null findOneBy(array $criteria, array $orderBy = null)
- * @method Carrier[]    findAll()
- * @method Carrier[]    findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null)
- */
 final class CarrierRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

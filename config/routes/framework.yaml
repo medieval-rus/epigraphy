@@ -17,10 +17,7 @@
 # «Epigraphy of Medieval Rus» database,
 # see <http://www.gnu.org/licenses/>.
 
-monolog:
-  channels: [deprecation]
-  handlers:
-    deprecation:
-      type: stream
-      channels: [deprecation]
-      path: "%env(resolve:LOGS_DIR)%/%kernel.environment%.deprecations.log"
+when@dev:
+  _errors:
+    resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
+    prefix: /_error

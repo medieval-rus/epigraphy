@@ -23,19 +23,13 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin;
+namespace App\Admin\Epigraphy;
 
-use App\Admin\Abstraction\AbstractNamedEntityAdmin;
+use App\Admin\AbstractNamedEntityAdmin;
 
-final class PreservationStateAdmin extends AbstractNamedEntityAdmin
+final class CarrierCategoryAdmin extends AbstractNamedEntityAdmin
 {
-    /**
-     * @var string
-     */
-    protected $baseRouteName = 'epigraphy_preservation_state';
+    protected string $baseRouteName = 'epigraphy_carrier_category';
 
-    /**
-     * @var string
-     */
-    protected $baseRoutePattern = 'epigraphy/preservation-state';
+    protected string $baseRoutePattern = 'epigraphy/carrier-category';
 }
