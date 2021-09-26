@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractEntityAdmin;
+use App\DataStorage\DataStorageManagerInterface;
 use App\Form\DataTransformer\InterpretationAdminTransformer;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -37,6 +38,19 @@ final class InterpretationAdmin extends AbstractEntityAdmin
     protected $baseRouteName = 'epigraphy_interpretation';
 
     protected $baseRoutePattern = 'epigraphy/interpretation';
+
+    private DataStorageManagerInterface $dataStorageManager;
+
+    public function __construct(
+        string $code,
+        string $class,
+        string $baseControllerName,
+        DataStorageManagerInterface $dataStorageManager
+    ) {
+        parent::__construct($code, $class, $baseControllerName);
+
+        $this->dataStorageManager = $dataStorageManager;
+    }
 
     protected function configureListFields(ListMapper $listMapper): void
     {
@@ -118,7 +132,17 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('text')
                     )
-                    ->add('textImages', null, $this->createLabeledManyToManyFormOptions('textImages'))
+                    ->add(
+                        'textImages',
+                        null,
+                        $this->createLabeledManyToManyFormOptions(
+                            'textImages',
+                            [
+                                'choice_filter' => $this->dataStorageManager->getFolderFilter('text'),
+                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                            ]
+                        )
+                    )
                     ->add(
                         'isTextImagesPartOfZeroRow',
                         CheckboxType::class,

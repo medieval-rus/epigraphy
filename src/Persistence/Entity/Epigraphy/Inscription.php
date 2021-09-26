@@ -78,9 +78,9 @@ class Inscription implements StringifiableEntityInterface
      * @var Collection|File[]
      *
      * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
-     * @ORM\JoinTable(name="inscription_sketches")
+     * @ORM\JoinTable(name="inscription_drawings")
      */
-    private $sketches;
+    private $drawings;
 
     /**
      * @var string|null
@@ -115,7 +115,7 @@ class Inscription implements StringifiableEntityInterface
     public function __construct()
     {
         $this->photos = new ArrayCollection();
-        $this->sketches = new ArrayCollection();
+        $this->drawings = new ArrayCollection();
         $this->zeroRow = new ZeroRow();
         $this->interpretations = new ArrayCollection();
     }
@@ -190,17 +190,17 @@ class Inscription implements StringifiableEntityInterface
     /**
      * @return Collection|File[]
      */
-    public function getSketches(): Collection
+    public function getDrawings(): Collection
     {
-        return $this->sketches;
+        return $this->drawings;
     }
 
     /**
-     * @param Collection|File[] $sketches
+     * @param Collection|File[] $drawings
      */
-    public function setSketches(Collection $sketches): self
+    public function setDrawings(Collection $drawings): self
     {
-        $this->sketches = $sketches;
+        $this->drawings = $drawings;
 
         return $this;
     }

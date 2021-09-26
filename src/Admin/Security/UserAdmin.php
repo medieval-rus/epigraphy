@@ -56,17 +56,17 @@ final class UserAdmin extends AbstractEntityAdmin
     /**
      * @param User $object
      */
-    public function prePersist($object): void
+    public function prePersist(object $object): void
     {
-        $this->encodePassword($object);
+        $this->setHashedPassword($object);
     }
 
     /**
      * @param User $object
      */
-    public function preUpdate($object): void
+    public function preUpdate(object $object): void
     {
-        $this->encodePassword($object);
+        $this->setHashedPassword($object);
     }
 
     protected function configureListFields(ListMapper $listMapper): void
@@ -120,7 +120,7 @@ final class UserAdmin extends AbstractEntityAdmin
         $formMapper->end();
     }
 
-    private function encodePassword(User $user): void
+    private function setHashedPassword(User $user): void
     {
         if (null !== $user->getPlainPassword()) {
             $user->setPassword(

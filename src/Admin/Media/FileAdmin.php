@@ -27,7 +27,6 @@ namespace App\Admin\Media;
 
 use App\Admin\AbstractEntityAdmin;
 use App\DataStorage\DataStorageManagerInterface;
-use App\Helper\StringHelper;
 use App\Persistence\Entity\Media\File;
 use App\Persistence\Repository\Epigraphy\FileRepository;
 use RuntimeException;
@@ -67,7 +66,7 @@ final class FileAdmin extends AbstractEntityAdmin
     /**
      * @param File $object
      */
-    public function prePersist($object): void
+    public function prePersist(object $object): void
     {
         $object->setBinaryContent(null);
 
@@ -77,7 +76,12 @@ final class FileAdmin extends AbstractEntityAdmin
             throw new RuntimeException('Uploaded file is invalid.');
         }
 
-        $this->dataStorageManager->prePersist($object, $uploadedFile);
+        $this->dataStorageManager->upload(
+            $object,
+            $uploadedFile->getClientOriginalName(),
+            $uploadedFile->getRealPath(),
+            $uploadedFile->getMimeType()
+        );
     }
 
     protected function configureListFields(ListMapper $listMapper): void
@@ -140,7 +144,7 @@ final class FileAdmin extends AbstractEntityAdmin
                                 function (UploadedFile $uploadedFile, ExecutionContext $context): void {
                                     $fileName = $uploadedFile->getClientOriginalName();
 
-                                    if (!self::isFileNameValid($fileName)) {
+                                    if (!$this->dataStorageManager->isFileNameValid($fileName)) {
                                         $context
                                             ->buildViolation(sprintf('Uploaded file name "%s" is invalid.', $fileName))
                                             ->addViolation();
@@ -222,22 +226,5 @@ final class FileAdmin extends AbstractEntityAdmin
         }
 
         return null !== $file->getId();
-    }
-
-    private static function isFileNameValid(string $fileName): bool
-    {
-        if (!StringHelper::isLowercased($fileName)) {
-            return false;
-        }
-
-        preg_match(
-            '/^(photo|drawing|text)_([0-9a-z-]+)_([0-9]+)\.([a-z0-9]+)$/u',
-            $fileName,
-            $matches
-        );
-
-        $expectedMatchesCount = 5;
-
-        return $expectedMatchesCount === \count($matches);
     }
 }

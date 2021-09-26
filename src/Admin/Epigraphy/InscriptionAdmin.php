@@ -27,6 +27,7 @@ namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractEntityAdmin;
 use App\Admin\Epigraphy\Models\AdminInterpretationWrapper;
+use App\DataStorage\DataStorageManagerInterface;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Media\File;
@@ -46,10 +47,23 @@ final class InscriptionAdmin extends AbstractEntityAdmin
 
     protected $baseRoutePattern = 'epigraphy/inscription';
 
+    private DataStorageManagerInterface $dataStorageManager;
+
+    public function __construct(
+        string $code,
+        string $class,
+        string $baseControllerName,
+        DataStorageManagerInterface $dataStorageManager
+    ) {
+        parent::__construct($code, $class, $baseControllerName);
+
+        $this->dataStorageManager = $dataStorageManager;
+    }
+
     /**
      * @param Inscription $object
      */
-    public function preUpdate($object): void
+    public function preUpdate(object $object): void
     {
         $inscription = $object;
         $zeroRow = $inscription->getZeroRow();
@@ -84,8 +98,28 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add('number', null, $this->createLabeledFormOptions('number'))
                     ->add('conventionalDate', null, $this->createLabeledFormOptions('conventionalDate'))
                     ->add('carrier', null, $this->createLabeledFormOptions('carrier'))
-                    ->add('photos', null, $this->createLabeledManyToManyFormOptions('photos'))
-                    ->add('sketches', null, $this->createLabeledManyToManyFormOptions('sketches'))
+                    ->add(
+                        'photos',
+                        null,
+                        $this->createLabeledManyToManyFormOptions(
+                            'photos',
+                            [
+                                'choice_filter' => $this->dataStorageManager->getFolderFilter('photo'),
+                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                            ]
+                        )
+                    )
+                    ->add(
+                        'drawings',
+                        null,
+                        $this->createLabeledManyToManyFormOptions(
+                            'drawings',
+                            [
+                                'choice_filter' => $this->dataStorageManager->getFolderFilter('drawing'),
+                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                            ]
+                        )
+                    )
                     ->add('comment', null, $this->createLabeledFormOptions('comment'))
                 ->end()
             ->end()
@@ -169,7 +203,14 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.textImages',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.textImages', ['class' => File::class])
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.textImages',
+                            [
+                                'class' => File::class,
+                                'choice_filter' => $this->dataStorageManager->getFolderFilter('text'),
+                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                            ]
+                        )
                     )
                     ->add(
                         'zeroRow.textImagesReferences',

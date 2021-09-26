@@ -78,8 +78,8 @@ list:
       id: Id
       types: Тип
       categories: Категория
-      origin1: Происхождение 1
-      origin2: Происхождение 2
+      origin1: Город, местность
+      origin2: Здание, раскоп
       findCircumstances: Обстоятельства находки
       characteristics: Характеристики носителя
       individualName: Индивидуальное название
@@ -174,8 +174,8 @@ form:
       number: Номер
       types: Тип носителя
       categories: Категория носителя
-      origin1: Происхождение 1 (город, местность)
-      origin2: Происхождение 2 (здание, раскоп)
+      origin1: Город, местность
+      origin2: Здание, раскоп
       findCircumstances: Обстоятельства находки
       characteristics: Характеристики носителя
       individualName: Индивидуальное название носителя
@@ -256,7 +256,7 @@ form:
       conventionalDate: Условная дата
       carrier: Носитель
       photos: Фото
-      sketches: Прориси
+      drawings: Прориси
       comment: Комментарий
       zeroRow:
         origin: Происхождение надписи
@@ -340,7 +340,7 @@ form:
       nonStratigraphicalDate: Внестратиграфическая дата
       historicalDate: «Историческая» дата
       photos: Фото (файлы)
-      sketches: Прориси (файлы)
+      drawings: Прориси (файлы)
       isPartOfZeroRow:
         origin: Часть нулевой строки
         placeOnCarrier: Часть нулевой строки
@@ -360,7 +360,7 @@ form:
         nonStratigraphicalDate: Часть нулевой строки
         historicalDate: Часть нулевой строки
         photos: Часть нулевой строки
-        sketches: Часть нулевой строки
+        drawings: Часть нулевой строки
   file:
     fields:
       id: Внутренний идентификатор

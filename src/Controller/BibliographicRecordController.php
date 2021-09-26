@@ -45,7 +45,7 @@ final class BibliographicRecordController extends AbstractController
         return [
             'controller' => 'bibliographic-record',
             'method' => 'list',
-            'records' => $entityManager->getRepository(BibliographicRecord::class)->findAll(),
+            'records' => $entityManager->getRepository(BibliographicRecord::class)->findBy([], ['shortName' => 'ASC']),
         ];
     }
 }

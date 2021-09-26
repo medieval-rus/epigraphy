@@ -27,9 +27,16 @@ services:
     bind:
       $osfEndpoint: '%env(OSF_ENDPOINT)%'
       $osfAccessToken: '%env(OSF_ACCESS_TOKEN)%'
-      $osfPhotosFolderId: '%env(OSF_PHOTOS_FOLDER_ID)%'
-      $osfDrawingsFolderId: '%env(OSF_DRAWINGS_FOLDER_ID)%'
-      $osfTextImagesFolderId: '%env(OSF_TEXT_IMAGES_FOLDER_ID)%'
+      $osfFolders:
+        photo:
+          id: '%env(OSF_PHOTOS_FOLDER_ID)%'
+          pattern: '/^photo_([0-9a-z-]+)_([0-9]+)\.([a-z0-9]+)$/u'
+        drawing:
+          id: '%env(OSF_DRAWINGS_FOLDER_ID)%'
+          pattern: '/^drawing_([0-9a-z-]+)_([0-9]+)\.([a-z0-9]+)$/u'
+        text:
+          id: '%env(OSF_TEXT_IMAGES_FOLDER_ID)%'
+          pattern: '/^text_([0-9a-z-]+)_([0-9]+)\.([a-z0-9]+)$/u'
 
   App\:
     resource: '../src/'

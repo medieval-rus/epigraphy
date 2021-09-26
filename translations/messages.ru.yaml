@@ -46,7 +46,7 @@ controller:
           number: Номер
           carrier:
             category: Категория носителя
-            origin1: Происхождение носителя (город, местность)
+            origin1: Город, местность
           interpretation:
             text: Текст
             content: Содержание
@@ -79,13 +79,13 @@ controller:
           number: Номер
           conventionalDate: Условная дата
           photos: Фотографии
-          sketches: Прориси
+          drawings: Прориси
           comment: Комментарий
           carrier:
             types: Тип носителя
             categories: Категория носителя
-            origin1: Происхождение носителя 1 (город, местность)
-            origin2: Происхождение носителя 2 (здание, раскоп)
+            origin1: Город, местность
+            origin2: Здание, раскоп
             findCircumstances: Обстоятельства находки носителя
             characteristics: Характеристики носителя
             individualName: Индивидуальное название носителя

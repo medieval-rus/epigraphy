@@ -26,65 +26,108 @@ declare(strict_types=1);
 namespace App\DataStorage;
 
 use App\DataStorage\Connectors\Osf\OsfConnectorInterface;
-use App\Helper\StringHelper;
 use App\Persistence\Entity\Media\File;
+use Doctrine\ORM\EntityRepository;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Throwable;
 
 final class DataStorageManager implements DataStorageManagerInterface
 {
     private OsfConnectorInterface $osfConnector;
 
-    private string $osfPhotosFolderId;
-
-    private string $osfDrawingsFolderId;
-
-    private string $osfTextImagesFolderId;
+    private array $osfFolders;
 
     public function __construct(
         OsfConnectorInterface $osfConnector,
-        string $osfPhotosFolderId,
-        string $osfDrawingsFolderId,
-        string $osfTextImagesFolderId
+        array $osfFolders
     ) {
         $this->osfConnector = $osfConnector;
-        $this->osfPhotosFolderId = $osfPhotosFolderId;
-        $this->osfDrawingsFolderId = $osfDrawingsFolderId;
-        $this->osfTextImagesFolderId = $osfTextImagesFolderId;
+        $this->osfFolders = $osfFolders;
     }
 
-    public function prePersist(File $file, UploadedFile $uploadedFile): void
+    public function upload(File $file, string $fileName, string $pathToSource, string $mimeType): void
     {
-        $fileName = $uploadedFile->getClientOriginalName();
+        krsort($this->osfFolders);
 
-        switch (true) {
-            case StringHelper::startsWith($fileName, 'photo_'):
-                $remoteFolderId = $this->osfPhotosFolderId;
+        $remoteFolderId = null;
+        foreach ($this->osfFolders as $folderData) {
+            if ($this->fileNameMatchesFolder($fileName, $folderData)) {
+                $remoteFolderId = $folderData['id'];
                 break;
-            case StringHelper::startsWith($fileName, 'drawing_'):
-                $remoteFolderId = $this->osfDrawingsFolderId;
-                break;
-            case StringHelper::startsWith($fileName, 'text_'):
-                $remoteFolderId = $this->osfTextImagesFolderId;
-                break;
-            default:
-                throw new RuntimeException(sprintf('Unexpected file name %s', $fileName));
+            }
+        }
+
+        if (null === $remoteFolderId) {
+            throw new RuntimeException(
+                sprintf(
+                    'Unexpected file name "%s". Known patterns are: %s',
+                    $fileName,
+                    implode(
+                        ', ',
+                        array_map(
+                            fn ($folderData) => sprintf('"%s"', $folderData['pattern']),
+                            $this->osfFolders
+                        )
+                    )
+                )
+            );
         }
 
         $uploadUrl = $this->osfConnector->getUploadUrl($remoteFolderId);
 
         try {
-            [$id, $hash, $url] = $this->osfConnector->uploadFile($uploadUrl, $fileName, $uploadedFile->getRealPath());
+            [$id, $hash, $url] = $this->osfConnector->uploadFile($uploadUrl, $fileName, $pathToSource);
         } catch (Throwable $exception) {
             // todo roll back the changes (try to remove uploaded file)
             throw $exception;
         }
 
         $file->setFileName($fileName);
-        $file->setMediaType($uploadedFile->getMimeType());
+        $file->setMediaType($mimeType);
         $file->setUrl($url);
         $file->setHash($hash);
         $file->setOsfFileId((string) $id);
+    }
+
+    public function isFileNameValid(string $fileName): bool
+    {
+        foreach ($this->osfFolders as $folderData) {
+            if ($this->fileNameMatchesFolder($fileName, $folderData)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getFolderFilter(string $folderKey): callable
+    {
+        if (!\array_key_exists($folderKey, $this->osfFolders)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Unknown folder key "%s". Known folder keys are: %s',
+                    $folderKey,
+                    implode(', ', array_map(fn ($key) => sprintf('"%s"', $key), array_keys($this->osfFolders)))
+                )
+            );
+        }
+
+        return function (?File $file) use ($folderKey): bool {
+            return null === $file || $this->fileNameMatchesFolder($file->getFileName(), $this->osfFolders[$folderKey]);
+        };
+    }
+
+    public function getQueryBuilder(): callable
+    {
+        return function (EntityRepository $entityRepository) {
+            return $entityRepository
+                ->createQueryBuilder('f')
+                ->orderBy('f.id', 'DESC');
+        };
+    }
+
+    private function fileNameMatchesFolder(string $fileName, array $folderData): bool
+    {
+        return 1 === preg_match($folderData['pattern'], $fileName);
     }
 }

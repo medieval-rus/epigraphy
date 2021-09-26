@@ -23,17 +23,25 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\DataStorage;
+namespace DoctrineMigrations;
 
-use App\Persistence\Entity\Media\File;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
-interface DataStorageManagerInterface
+final class Version20210926033028 extends AbstractMigration
 {
-    public function upload(File $file, string $fileName, string $pathToSource, string $mimeType): void;
+    public function getDescription(): string
+    {
+        return 'Renamed drawings table.';
+    }
 
-    public function isFileNameValid(string $fileName): bool;
+    public function up(Schema $schema): void
+    {
+        $this->addSql('RENAME TABLE inscription_sketches TO inscription_drawings');
+    }
 
-    public function getFolderFilter(string $folderKey): callable;
-
-    public function getQueryBuilder(): callable;
+    public function down(Schema $schema): void
+    {
+        $this->addSql('RENAME TABLE inscription_drawings TO inscription_sketches');
+    }
 }

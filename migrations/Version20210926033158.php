@@ -23,17 +23,27 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\DataStorage;
+namespace DoctrineMigrations;
 
-use App\Persistence\Entity\Media\File;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
-interface DataStorageManagerInterface
+final class Version20210926033158 extends AbstractMigration
 {
-    public function upload(File $file, string $fileName, string $pathToSource, string $mimeType): void;
+    public function getDescription(): string
+    {
+        return 'Renamed indexes for drawings table.';
+    }
 
-    public function isFileNameValid(string $fileName): bool;
+    public function up(Schema $schema): void
+    {
+        $this->addSql('ALTER TABLE inscription_drawings RENAME INDEX idx_8d638b575dac5993 TO IDX_8C6CACEA5DAC5993');
+        $this->addSql('ALTER TABLE inscription_drawings RENAME INDEX idx_8d638b5793cb796c TO IDX_8C6CACEA93CB796C');
+    }
 
-    public function getFolderFilter(string $folderKey): callable;
-
-    public function getQueryBuilder(): callable;
+    public function down(Schema $schema): void
+    {
+        $this->addSql('ALTER TABLE inscription_drawings RENAME INDEX idx_8c6cacea5dac5993 TO IDX_8D638B575DAC5993');
+        $this->addSql('ALTER TABLE inscription_drawings RENAME INDEX idx_8c6cacea93cb796c TO IDX_8D638B5793CB796C');
+    }
 }

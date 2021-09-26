@@ -158,14 +158,22 @@ services:
       - { name: sonata.admin, manager_type: orm }
   admin.inscription:
     class: App\Admin\Epigraphy\InscriptionAdmin
-    arguments: [null, App\Persistence\Entity\Epigraphy\Inscription, null]
+    arguments:
+      - null
+      - App\Persistence\Entity\Epigraphy\Inscription
+      - null
+      - '@App\DataStorage\DataStorageManagerInterface'
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:
       - { name: sonata.admin, manager_type: orm }
   admin.interpretation:
     class: App\Admin\Epigraphy\InterpretationAdmin
-    arguments: [null, App\Persistence\Entity\Epigraphy\Interpretation, null]
+    arguments:
+      - null
+      - App\Persistence\Entity\Epigraphy\Interpretation
+      - null
+      - '@App\DataStorage\DataStorageManagerInterface'
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:
