@@ -53,7 +53,7 @@ sonata_admin:
         label_catalogue: admin
         label: menu.groups.media.label
         items:
-          - admin.file
+          - admin.media.file
         roles: [ ROLE_ADMIN ]
       bibliography:
         label_catalogue: admin
@@ -178,7 +178,7 @@ services:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:
       - { name: sonata.admin, manager_type: orm }
-  admin.file:
+  admin.media.file:
     class: App\Admin\Media\FileAdmin
     arguments:
       - null
@@ -186,6 +186,8 @@ services:
       - null
       - '@App\Persistence\Repository\Epigraphy\FileRepository'
       - '@App\DataStorage\DataStorageManagerInterface'
+      - '@App\Services\Media\Thumbnails\ThumbnailsGeneratorInterface'
+      - '@event_dispatcher'
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:

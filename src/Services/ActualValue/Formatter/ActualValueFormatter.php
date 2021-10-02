@@ -32,15 +32,9 @@ use InvalidArgumentException;
 
 final class ActualValueFormatter implements ActualValueFormatterInterface
 {
-    /**
-     * @var OriginalTextParserInterface
-     */
-    private $originalTextParser;
+    private OriginalTextParserInterface $originalTextParser;
 
-    /**
-     * @var OriginalTextFormatterInterface
-     */
-    private $originalTextFormatter;
+    private OriginalTextFormatterInterface $originalTextFormatter;
 
     public function __construct(
         OriginalTextParserInterface $originalTextParser,

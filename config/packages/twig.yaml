@@ -25,6 +25,7 @@ twig:
   globals:
     valueStringifier: '@App\Services\Stringifier\ValueStringifierInterface'
     imagesFormatter: '@App\Services\Images\ImagesFormatterInterface'
+    thumbnailsGenerator: '@App\Services\Media\Thumbnails\ThumbnailsGenerator'
 
 when@test:
   twig:

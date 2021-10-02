@@ -29,17 +29,20 @@ use App\Models\FilesActualValue;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Media\File;
 use App\Services\ActualValue\Extractor\ActualValueExtractorInterface;
+use App\Services\Media\Thumbnails\ThumbnailsGeneratorInterface;
 
 final class ImagesFormatter implements ImagesFormatterInterface
 {
-    /**
-     * @var ActualValueExtractorInterface
-     */
-    private $extractor;
+    private ActualValueExtractorInterface $extractor;
 
-    public function __construct(ActualValueExtractorInterface $extractor)
-    {
+    private ThumbnailsGeneratorInterface $thumbnailsGenerator;
+
+    public function __construct(
+        ActualValueExtractorInterface $extractor,
+        ThumbnailsGeneratorInterface $thumbnailsGenerator
+    ) {
         $this->extractor = $extractor;
+        $this->thumbnailsGenerator = $thumbnailsGenerator;
     }
 
     public function formatZeroRowImages(Inscription $inscription, string $propertyName): string
@@ -69,14 +72,16 @@ final class ImagesFormatter implements ImagesFormatterInterface
         $files = $actualValue->getValue();
 
         $imageTags = array_map(
-            static function (File $file): string {
-                $createImageTag = static function () use ($file): string {
+            function (File $file): string {
+                $createImageTag = function () use ($file): string {
                     if (null === $file->getUrl()) {
                         return '<img class="eomr-images-image" alt="'.$file->getFileName().'" />';
                     }
 
+                    $thumbnailUrl = $this->thumbnailsGenerator->getThumbnail($file, 'large');
+
                     return '<a class="eomr-images-image-link" href="'.$file->getUrl().'" target="_blank">'.
-                        '<img class="eomr-images-image" src="'.$file->getUrl().'" alt="'.$file->getFileName().'" />'.
+                        '<img class="eomr-images-image" src="'.$thumbnailUrl.'" alt="'.$file->getFileName().'" />'.
                         '</a>';
                 };
 

@@ -18,6 +18,7 @@
 # see <http://www.gnu.org/licenses/>.
 
 /src/Command/DebugCommand.php
+/public/thumbs/
 
 ###> symfony/framework-bundle ###
 /.env.local

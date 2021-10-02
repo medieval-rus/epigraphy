@@ -25,23 +25,51 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Persistence\Entity\Media\File;
+use App\Services\Media\Thumbnails\ThumbnailsGeneratorInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class SandboxCommand extends Command
+final class GenerateThumbnailsCommand extends Command
 {
-    protected static $defaultName = 'app:sandbox';
+    protected static $defaultName = 'app:generate-thumbnails';
+    protected static $defaultDescription = 'Generate thumbnails for all the media content';
+
+    private EntityManagerInterface $doctrine;
+
+    private ThumbnailsGeneratorInterface $thumbnailsGenerator;
+
+    public function __construct(
+        EntityManagerInterface $doctrine,
+        ThumbnailsGeneratorInterface $thumbnailsGenerator
+    ) {
+        parent::__construct();
+
+        $this->doctrine = $doctrine;
+        $this->thumbnailsGenerator = $thumbnailsGenerator;
+    }
 
     protected function configure(): void
     {
-        $this
-            ->setDescription('A sandbox')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        return 0;
+        $io = new SymfonyStyle($input, $output);
+
+        $io->info('Generating thumbnails.');
+
+        $files = $this->doctrine->getRepository(File::class)->findAll();
+
+        foreach ($files as $file) {
+            $this->thumbnailsGenerator->generateAll($file);
+        }
+
+        $io->success('Thumbnails successfully generated.');
+
+        return Command::SUCCESS;
     }
 }

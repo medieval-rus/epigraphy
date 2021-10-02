@@ -32,15 +32,9 @@ use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
 
 final class ValueStringifier implements ValueStringifierInterface
 {
-    /**
-     * @var ActualValueExtractorInterface
-     */
-    private $extractor;
+    private ActualValueExtractorInterface $extractor;
 
-    /**
-     * @var ActualValueFormatterInterface
-     */
-    private $formatter;
+    private ActualValueFormatterInterface $formatter;
 
     public function __construct(
         ActualValueExtractorInterface $extractor,

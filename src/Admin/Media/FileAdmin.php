@@ -29,12 +29,15 @@ use App\Admin\AbstractEntityAdmin;
 use App\DataStorage\DataStorageManagerInterface;
 use App\Persistence\Entity\Media\File;
 use App\Persistence\Repository\Epigraphy\FileRepository;
+use App\Services\Media\Thumbnails\ThumbnailsGeneratorInterface;
 use RuntimeException;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -50,17 +53,25 @@ final class FileAdmin extends AbstractEntityAdmin
 
     private DataStorageManagerInterface $dataStorageManager;
 
+    private ThumbnailsGeneratorInterface $thumbnailsGenerator;
+
+    private EventDispatcherInterface $dispatcher;
+
     public function __construct(
         string $code,
         string $class,
         string $baseControllerName,
         FileRepository $fileRepository,
-        DataStorageManagerInterface $dataStorageManager
+        DataStorageManagerInterface $dataStorageManager,
+        ThumbnailsGeneratorInterface $thumbnailsGenerator,
+        EventDispatcherInterface $dispatcher
     ) {
         parent::__construct($code, $class, $baseControllerName);
 
         $this->fileRepository = $fileRepository;
         $this->dataStorageManager = $dataStorageManager;
+        $this->thumbnailsGenerator = $thumbnailsGenerator;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -82,6 +93,17 @@ final class FileAdmin extends AbstractEntityAdmin
             $uploadedFile->getRealPath(),
             $uploadedFile->getMimeType()
         );
+    }
+
+    /**
+     * @param File $object
+     */
+    protected function postPersist(object $object): void
+    {
+        // todo: enable thumbnails generation
+//        $this->dispatcher->addListener(KernelEvents::TERMINATE, function () use ($object): void {
+//            $this->thumbnailsGenerator->generateAll($object);
+//        });
     }
 
     protected function configureListFields(ListMapper $listMapper): void

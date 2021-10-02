@@ -34,15 +34,12 @@ use App\Services\OriginalText\Parser\Rules\RuleDefinitionInterface;
 
 final class OriginalTextParser implements OriginalTextParserInterface
 {
-    /**
-     * @var RuleParserInterface
-     */
-    private $ruleParser;
+    private RuleParserInterface $ruleParser;
 
     /**
      * @var RuleDefinitionInterface[]
      */
-    private $rules;
+    private array $rules;
 
     /**
      * @param RuleDefinitionInterface[] $rules

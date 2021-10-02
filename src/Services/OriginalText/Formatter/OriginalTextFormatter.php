@@ -38,10 +38,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class OriginalTextFormatter implements OriginalTextFormatterInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)
     {

@@ -40,6 +40,24 @@ services:
         bibliography_document:
           id: '%env(OSF_BIBLIOGRAPHY_DOCUMENTS_FOLDER_ID)%'
           pattern: '/^bibliography_document_([a-z0-9-]+)( \(.+\))?\.([a-z0-9]+)$/u'
+      $thumbnailsDirectory: '%env(THUMBNAILS_DIRECTORY)%'
+      $thumbnailPresets:
+        default:
+          - media-types: ['image/jpeg', 'image/png', 'image/bmp']
+            type: jpeg
+            extension: jpeg
+            quality: 70
+            max-dimension: 1200
+          - media-types: ['image/gif']
+            type: raw
+        large:
+          - media-types: ['image/jpeg', 'image/png', 'image/bmp']
+            type: jpeg
+            extension: jpeg
+            quality: 70
+            max-dimension: 6000
+          - media-types: ['image/gif']
+            type: raw
 
   App\:
     resource: '../src/'
