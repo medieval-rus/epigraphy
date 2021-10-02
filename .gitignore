@@ -17,6 +17,8 @@
 # «Epigraphy of Medieval Rus» database,
 # see <http://www.gnu.org/licenses/>.
 
+/src/Command/DebugCommand.php
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

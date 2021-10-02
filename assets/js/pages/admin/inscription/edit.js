@@ -155,8 +155,6 @@ function createVirtualKeyboard(index, targetInputElement)
         }
     });
 
-    const symbolsMap = new Map();
-
     const keyboard = new Keyboard(
         keyboardElement[0],
         {
@@ -164,7 +162,7 @@ function createVirtualKeyboard(index, targetInputElement)
                 default: [
                     'Ѡ Ѿ Ѧ Ѩ Ѫ Ѭ Ѣ Ѯ Ꙗ Ѹ Ꙋ Ѳ І Є Ѥ Ѕ Ѵ Ѱ Ꙑ',
                     'ѡ ѿ ѧ ѩ ѫ ѭ ѣ ѯ ꙗ ѹ ꙋ ѳ і є ѥ ѕ ѵ ѱ ꙑ',
-                    ['⁙', '҂', '|', '¦', '⸗', '҃', '҇'].join(' '),
+                    ['⁙', '҂', '|', '¦', '⸗', '҃', '҇', '·'].join(' '),
                 ],
             },
             onChange: input => {
