@@ -36,7 +36,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Interpretation implements StringifiableEntityInterface
 {
     /**
-     * @var int|null
+     * @var int
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -45,7 +45,7 @@ class Interpretation implements StringifiableEntityInterface
     private $id;
 
     /**
-     * @var Inscription|null
+     * @var Inscription
      *
      * @ORM\ManyToOne(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Inscription",
@@ -57,7 +57,7 @@ class Interpretation implements StringifiableEntityInterface
     private $inscription;
 
     /**
-     * @var string|null
+     * @var string
      *
      * @ORM\Column(name="source", type="string", length=255)
      */

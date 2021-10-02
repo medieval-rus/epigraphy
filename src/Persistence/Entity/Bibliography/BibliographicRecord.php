@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Bibliography;
 
+use App\Persistence\Entity\Media\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -83,6 +84,14 @@ class BibliographicRecord
      * @ORM\JoinTable(name="bibliography__bibliographic_record_author")
      */
     private $authors;
+
+    /**
+     * @var File|null
+     *
+     * @ORM\OneToOne(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
+     * @ORM\JoinColumn(name="main_file_id", referencedColumnName="id")
+     */
+    private $mainFile;
 
     public function __construct()
     {
@@ -161,6 +170,18 @@ class BibliographicRecord
     public function setAuthors(Collection $authors): self
     {
         $this->authors = $authors;
+
+        return $this;
+    }
+
+    public function getMainFile(): ?File
+    {
+        return $this->mainFile;
+    }
+
+    public function setMainFile(?File $mainFile): self
+    {
+        $this->mainFile = $mainFile;
 
         return $this;
     }

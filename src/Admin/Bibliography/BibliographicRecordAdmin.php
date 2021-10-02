@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace App\Admin\Bibliography;
 
 use App\Admin\AbstractEntityAdmin;
+use App\DataStorage\DataStorageManagerInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 
@@ -34,6 +35,19 @@ final class BibliographicRecordAdmin extends AbstractEntityAdmin
     protected $baseRouteName = 'bibliography_record';
 
     protected $baseRoutePattern = 'bibliography/bibliographic-record';
+
+    private DataStorageManagerInterface $dataStorageManager;
+
+    public function __construct(
+        string $code,
+        string $class,
+        string $baseControllerName,
+        DataStorageManagerInterface $dataStorageManager
+    ) {
+        parent::__construct($code, $class, $baseControllerName);
+
+        $this->dataStorageManager = $dataStorageManager;
+    }
 
     protected function configureListFields(ListMapper $listMapper): void
     {
@@ -56,6 +70,21 @@ final class BibliographicRecordAdmin extends AbstractEntityAdmin
                 ->end()
                 ->with($this->getSectionLabel('details'), ['class' => 'col-md-5'])
                     ->add('formalNotation', null, $this->createLabeledFormOptions('formalNotation'))
+                ->end()
+            ->end()
+            ->tab($this->getTabLabel('media'))
+                ->with($this->getSectionLabel('media'))
+                    ->add(
+                        'mainFile',
+                        null,
+                        $this->createLabeledFormOptions(
+                            'mainFile',
+                            [
+                                'choice_filter' => $this->dataStorageManager->getFolderFilter('bibliography_document'),
+                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                            ]
+                        )
+                    )
                 ->end()
             ->end()
         ;

@@ -37,6 +37,9 @@ services:
         text:
           id: '%env(OSF_TEXT_IMAGES_FOLDER_ID)%'
           pattern: '/^text_([0-9a-z-]+)_([0-9]+)\.([a-z0-9]+)$/u'
+        bibliography_document:
+          id: '%env(OSF_BIBLIOGRAPHY_DOCUMENTS_FOLDER_ID)%'
+          pattern: '/^bibliography_document_([a-z0-9-]+)( \(.+\))?\.([a-z0-9]+)$/u'
 
   App\:
     resource: '../src/'
