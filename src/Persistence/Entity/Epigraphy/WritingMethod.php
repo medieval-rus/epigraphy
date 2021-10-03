@@ -28,7 +28,7 @@ namespace App\Persistence\Entity\Epigraphy;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\WritingMethodRepository")
+ * @ORM\Entity()
  */
 class WritingMethod implements NamedEntityInterface
 {

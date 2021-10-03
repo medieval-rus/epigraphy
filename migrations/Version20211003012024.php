@@ -23,16 +23,25 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Epigraphy;
+namespace DoctrineMigrations;
 
-use App\Persistence\Entity\Epigraphy\Inscription;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
-final class InscriptionRepository extends ServiceEntityRepository
+final class Version20211003012024 extends AbstractMigration
 {
-    public function __construct(ManagerRegistry $registry)
+    public function getDescription(): string
     {
-        parent::__construct($registry, Inscription::class);
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        $this->addSql('CREATE TABLE post (id INT AUTO_INCREMENT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+    }
+
+    public function down(Schema $schema): void
+    {
+        $this->addSql('DROP TABLE post');
     }
 }

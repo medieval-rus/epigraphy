@@ -60,6 +60,14 @@ final class MenuBuilder
         ;
 
         $menu
+            ->addChild('page.menu.aboutSite', ['route' => 'information__about_site'])
+        ;
+
+        $menu
+            ->addChild('page.menu.news', ['route' => 'information__news'])
+        ;
+
+        $menu
             ->addChild('page.menu.bibliography', ['route' => 'bibiliograpic_record__list'])
         ;
 

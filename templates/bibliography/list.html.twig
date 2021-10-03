@@ -23,9 +23,10 @@
 
 {%- block page_content -%}
 
+    {% import 'content/post.html.twig' as post_helper %}
     {% import _self as self %}
 
-    <p class="eomr-subtitle">{{ 'controller.bibliographic-record.list.description'|trans }}</p>
+    {{ post_helper.render_post_body(post.body) }}
 
     {% for record in records %}
         <p>{{ self.render_record(record) }}</p>

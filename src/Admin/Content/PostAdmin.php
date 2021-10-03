@@ -23,16 +23,33 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Epigraphy;
+namespace App\Admin\Content;
 
-use App\Persistence\Entity\Media\File;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Admin\AbstractEntityAdmin;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Form\FormMapper;
 
-final class FileRepository extends ServiceEntityRepository
+final class PostAdmin extends AbstractEntityAdmin
 {
-    public function __construct(ManagerRegistry $registry)
+    protected $baseRouteName = 'content_post';
+
+    protected $baseRoutePattern = 'content/post';
+
+    protected function configureListFields(ListMapper $listMapper): void
     {
-        parent::__construct($registry, File::class);
+        $listMapper
+            ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
+            ->add('title', null, $this->createLabeledListOptions('title'))
+        ;
+    }
+
+    protected function configureFormFields(FormMapper $formMapper): void
+    {
+        $formMapper
+            ->with($this->getSectionLabel('common'))
+                ->add('title', null, $this->createLabeledFormOptions('title'))
+                ->add('body', null, $this->createLabeledFormOptions('body'))
+            ->end()
+        ;
     }
 }

@@ -1,7 +1,3 @@
-<?php
-
-declare(strict_types=1);
-
 /*
  * This file is part of «Epigraphy of Medieval Rus» database.
  *
@@ -23,16 +19,4 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Epigraphy;
-
-use App\Persistence\Entity\Epigraphy\Alphabet;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
-
-final class AlphabetRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Alphabet::class);
-    }
-}
+@import '../base';

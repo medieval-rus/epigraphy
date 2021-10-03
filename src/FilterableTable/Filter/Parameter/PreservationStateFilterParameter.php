@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace App\FilterableTable\Filter\Parameter;
 
 use App\Persistence\Entity\Epigraphy\PreservationState;
-use App\Persistence\Repository\Epigraphy\PreservationStateRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\ExpressionBuilderInterface;
@@ -36,10 +36,7 @@ use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFact
 
 final class PreservationStateFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
-    /**
-     * @var AliasFactoryInterface
-     */
-    private $aliasFactory;
+    private AliasFactoryInterface $aliasFactory;
 
     public function __construct(AliasFactoryInterface $aliasFactory)
     {
@@ -116,7 +113,7 @@ final class PreservationStateFilterParameter implements FilterParameterInterface
 
     private function createQueryBuilder(): callable
     {
-        return function (PreservationStateRepository $repository): QueryBuilder {
+        return function (EntityRepository $repository): QueryBuilder {
             $entityAlias = $this->createAlias();
 
             return $repository

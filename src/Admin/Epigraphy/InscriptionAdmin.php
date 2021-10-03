@@ -31,7 +31,7 @@ use App\DataStorage\DataStorageManagerInterface;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Media\File;
-use App\Persistence\Repository\Epigraphy\InterpretationRepository;
+use Doctrine\ORM\EntityRepository;
 use Knp\Menu\ItemInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -354,9 +354,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                 $options,
                 [
                     'class' => Interpretation::class,
-                    'query_builder' => static function (
-                        InterpretationRepository $entityRepository
-                    ) use ($parentInscriptionId) {
+                    'query_builder' => static function (EntityRepository $entityRepository) use ($parentInscriptionId) {
                         return $entityRepository
                             ->createQueryBuilder('interpretation')
                             ->where('interpretation.inscription IS NOT NULL')

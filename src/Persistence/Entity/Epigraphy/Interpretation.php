@@ -31,7 +31,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\InterpretationRepository")
+ * @ORM\Entity()
  */
 class Interpretation implements StringifiableEntityInterface
 {
@@ -231,7 +231,7 @@ class Interpretation implements StringifiableEntityInterface
         return $this->id;
     }
 
-    public function setId(?int $id): void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -241,7 +241,7 @@ class Interpretation implements StringifiableEntityInterface
         return $this->inscription;
     }
 
-    public function setInscription(?Inscription $inscription): self
+    public function setInscription(Inscription $inscription): self
     {
         $this->inscription = $inscription;
 
@@ -253,7 +253,7 @@ class Interpretation implements StringifiableEntityInterface
         return $this->source;
     }
 
-    public function setSource(?string $source): self
+    public function setSource(string $source): self
     {
         $this->source = $source;
 

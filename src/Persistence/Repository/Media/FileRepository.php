@@ -23,16 +23,16 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Epigraphy;
+namespace App\Persistence\Repository\Media;
 
-use App\Persistence\Entity\Epigraphy\Carrier;
+use App\Persistence\Entity\Media\File;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-final class CarrierRepository extends ServiceEntityRepository
+final class FileRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Carrier::class);
+        parent::__construct($registry, File::class);
     }
 }

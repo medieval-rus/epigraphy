@@ -48,40 +48,19 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
 
 final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
 {
-    /**
-     * @var ValueStringifierInterface
-     */
-    private $valueStringifier;
+    private ValueStringifierInterface $valueStringifier;
 
-    /**
-     * @var CarrierTypeFilterParameter
-     */
-    private $carrierTypeFilterParameter;
+    private CarrierTypeFilterParameter $carrierTypeFilterParameter;
 
-    /**
-     * @var CarrierCategoryFilterParameter
-     */
-    private $carrierCategoryFilterParameter;
+    private CarrierCategoryFilterParameter $carrierCategoryFilterParameter;
 
-    /**
-     * @var WritingTypeFilterParameter
-     */
-    private $writingTypeFilterParameter;
+    private WritingTypeFilterParameter $writingTypeFilterParameter;
 
-    /**
-     * @var WritingMethodFilterParameter
-     */
-    private $writingMethodFilterParameter;
+    private WritingMethodFilterParameter $writingMethodFilterParameter;
 
-    /**
-     * @var PreservationStateFilterParameter
-     */
-    private $preservationStateFilterParameter;
+    private PreservationStateFilterParameter $preservationStateFilterParameter;
 
-    /**
-     * @var AlphabetFilterParameter
-     */
-    private $alphabetFilterParameter;
+    private AlphabetFilterParameter $alphabetFilterParameter;
 
     public function __construct(
         ValueStringifierInterface $valueStringifier,

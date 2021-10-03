@@ -38,10 +38,7 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadataInte
 
 final class InscriptionsTableConfigurator extends AbstractTableConfigurator
 {
-    /**
-     * @var ValueStringifierInterface
-     */
-    private $valueStringifier;
+    private ValueStringifierInterface $valueStringifier;
 
     public function __construct(
         RouterInterface $router,

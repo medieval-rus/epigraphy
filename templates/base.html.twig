@@ -20,18 +20,17 @@
  #}
 
 <!doctype html>
-<html>
+<html lang="{{ app.request.locale }}">
     <head>
         <meta charset="utf-8">
-        <title>{% block title %}{{ ('controller.'~controller~'.'~method~'.title')|trans }}{% endblock %} – {{ 'page.label'|trans }}</title>
+        <title>{% block title %}{{ 'title'|transWithContext(translationContext) }}{% endblock %} – {{ 'page.label'|trans }}</title>
 
         {% block stylesheets %}
-            <link href="{{ asset('build/css/site/'~controller~'/'~method~'.css') }}" rel="stylesheet">
+            {{ encore_entry_link_tags('css/site/'~assetsContext) }}
         {% endblock %}
     </head>
 
     <body>
-
         <nav class="navbar navbar-dark bg-dark flex-nowrap p-0 eomr-header">
             <a class="navbar-brand col-12 eomr-navbar-brand" href="{{ path('index') }}">{{ 'page.label'|trans }}</a>
         </nav>
@@ -75,6 +74,8 @@
             </div>
         </footer>
 
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+            {{ encore_entry_script_tags('js/site/'~assetsContext) }}
+        {% endblock %}
     </body>
 </html>

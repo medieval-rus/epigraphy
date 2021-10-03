@@ -23,18 +23,17 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Entity\Epigraphy;
+namespace App\Persistence\Entity\Content;
 
+use App\Persistence\Repository\Content\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass=PostRepository::class)
  */
-class Material implements NamedEntityInterface
+class Post
 {
     /**
-     * @var int
-     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(name="id", type="integer")
@@ -44,13 +43,20 @@ class Material implements NamedEntityInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255, unique=true)
+     * @ORM\Column(name="title", type="text", length=65535)
      */
-    private $name;
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="body", type="text", length=65535)
+     */
+    private $body;
 
     public function __toString(): string
     {
-        return (string) $this->getName();
+        return (string) $this->title;
     }
 
     public function getId(): ?int
@@ -58,14 +64,26 @@ class Material implements NamedEntityInterface
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getTitle(): ?string
     {
-        return $this->name;
+        return $this->title;
     }
 
-    public function setName(string $name): self
+    public function setTitle(string $title): self
     {
-        $this->name = $name;
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
+
+    public function setBody(string $body): self
+    {
+        $this->body = $body;
 
         return $this;
     }

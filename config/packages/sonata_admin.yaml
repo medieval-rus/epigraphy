@@ -49,6 +49,12 @@ sonata_admin:
           - admin.carrier_type
           - admin.carrier_category
         roles: [ ROLE_ADMIN ]
+      content:
+        label_catalogue: admin
+        label: menu.groups.content.label
+        items:
+          - admin.content.post
+        roles: [ ROLE_ADMIN ]
       media:
         label_catalogue: admin
         label: menu.groups.media.label
@@ -82,6 +88,13 @@ sonata_block:
       contexts: [admin]
 
 services:
+  admin.content.post:
+    class: App\Admin\Content\PostAdmin
+    arguments: [null, App\Persistence\Entity\Content\Post, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
   admin.user:
     class: App\Admin\Security\UserAdmin
     arguments:
@@ -184,7 +197,7 @@ services:
       - null
       - App\Persistence\Entity\Media\File
       - null
-      - '@App\Persistence\Repository\Epigraphy\FileRepository'
+      - '@App\Persistence\Repository\Media\FileRepository'
       - '@App\DataStorage\DataStorageManagerInterface'
       - '@App\Services\Media\Thumbnails\ThumbnailsGeneratorInterface'
       - '@event_dispatcher'

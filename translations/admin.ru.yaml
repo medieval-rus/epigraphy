@@ -19,6 +19,8 @@
 
 menu:
   groups:
+    content:
+      label: Контент
     security:
       label: Безопасность
     inscriptions:
@@ -30,6 +32,8 @@ menu:
     bibliography:
       label: Библиография
   paragraphs:
+    post:
+      label: Страницы
     user:
       label: Пользователи
     carrier:
@@ -67,6 +71,10 @@ tabMenu:
   siteView: Посмотреть надпись на сайте
 
 list:
+  post:
+    fields:
+      id: Внутренний идентификатор
+      title: Заголовок
   user:
     fields:
       id: Внутренний идентификатор
@@ -143,6 +151,13 @@ list:
       name: Название списка
 
 form:
+  post:
+    fields:
+      title: Заголовок
+      body: Содержимое
+    section:
+      common:
+        label: Страница
   user:
     fields:
       id: Внутренний идентификатор
@@ -410,6 +425,9 @@ form:
       bibliographicRecord: Библиографическая запись
       position: Номер по порядку
 
+post_list: Страницы
+post_create: Добавить новую страницу
+post_delete: Удалить страницу
 user_list: Пользователи
 user_create: Добавить нового пользователя
 user_delete: Удалить пользователя

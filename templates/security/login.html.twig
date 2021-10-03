@@ -31,7 +31,7 @@
 
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        <label for="inputUsername">{{ ('controller.'~controller~'.'~method~'.form.username')|trans }}</label>
+        <label for="inputUsername">{{ 'form.username'|transWithContext(translationContext) }}</label>
         <input
                 type="text"
                 value="{{ form.username.vars.value }}"
@@ -42,7 +42,7 @@
                 autofocus
         >
 
-        <label for="inputPassword">{{ ('controller.'~controller~'.'~method~'.form.password')|trans }}</label>
+        <label for="inputPassword">{{ 'form.password'|transWithContext(translationContext) }}</label>
         <input
                 type="password"
                 name="{{ form.password.vars.full_name }}"
@@ -54,12 +54,12 @@
         <div class="checkbox mb-3">
             <label>
                 <input type="checkbox" name="_remember_me" checked>
-                {{ ('controller.'~controller~'.'~method~'.form.rememberMe')|trans }}
+                {{ 'form.rememberMe'|transWithContext(translationContext) }}
             </label>
         </div>
 
         <button class="btn btn-lg btn-primary" type="submit">
-            {{ ('controller.'~controller~'.'~method~'.form.signIn')|trans }}
+            {{ 'form.signIn'|transWithContext(translationContext) }}
         </button>
     </form>
 

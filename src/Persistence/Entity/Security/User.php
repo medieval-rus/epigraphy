@@ -25,12 +25,13 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Security;
 
+use App\Persistence\Repository\Security\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\Security\UserRepository")
+ * @ORM\Entity(repositoryClass=UserRepository::class)
  */
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {

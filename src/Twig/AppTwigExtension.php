@@ -23,16 +23,35 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Epigraphy;
+namespace App\Twig;
 
-use App\Persistence\Entity\Epigraphy\PreservationState;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
-final class PreservationStateRepository extends ServiceEntityRepository
+final class AppTwigExtension extends AbstractExtension
 {
-    public function __construct(ManagerRegistry $registry)
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
     {
-        parent::__construct($registry, PreservationState::class);
+        $this->translator = $translator;
+    }
+
+    public function getFilters(): array
+    {
+        return [
+            new TwigFilter('transWithContext', [$this, 'translateWithContext']),
+        ];
+    }
+
+    public function translateWithContext(
+        string $message,
+        string $context,
+        ?array $parameters = [],
+        ?string $domain = null,
+        ?string $locale = null
+    ): string {
+        return $this->translator->trans($context.'.'.$message, $parameters, $domain, $locale);
     }
 }

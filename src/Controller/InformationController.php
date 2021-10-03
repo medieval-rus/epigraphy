@@ -25,44 +25,54 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Persistence\Entity\Epigraphy\Inscription;
+use App\Persistence\Repository\Content\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Vyfony\Bundle\FilterableTableBundle\Table\TableInterface;
 
-/**
- * @Route("/inscription")
- */
-final class InscriptionController extends AbstractController
+final class InformationController extends AbstractController
 {
     /**
-     * @Route("/list", name="inscription__list", methods={"GET"})
+     * @Route("/about-site", name="information__about_site")
      */
-    public function list(TableInterface $filterableTable): Response
+    public function aboutSite(PostRepository $postRepository): Response
     {
         return $this->render(
-            'inscription/list.html.twig',
+            'content/post.html.twig',
             [
-                'translationContext' => 'controller.inscription.list',
-                'assetsContext' => 'inscription/list',
-                'filterForm' => $filterableTable->getFormView(),
-                'table' => $filterableTable->getTableMetadata(),
+                'translationContext' => 'controller.information.aboutSite',
+                'assetsContext' => 'content/post',
+                'post' => $postRepository->findAboutSite(),
             ]
         );
     }
 
     /**
-     * @Route("/show/{id}", name="inscription__show", methods={"GET"})
+     * @Route("/news", name="information__news")
      */
-    public function show(Inscription $inscription): Response
+    public function news(PostRepository $postRepository): Response
     {
         return $this->render(
-            'inscription/show.html.twig',
+            'content/post.html.twig',
             [
-                'translationContext' => 'controller.inscription.show',
-                'assetsContext' => 'inscription/show',
-                'inscription' => $inscription,
+                'translationContext' => 'controller.information.news',
+                'assetsContext' => 'content/post',
+                'post' => $postRepository->findNews(),
+            ]
+        );
+    }
+
+    /**
+     * @Route("/legend", name="information__legend")
+     */
+    public function legend(PostRepository $postRepository): Response
+    {
+        return $this->render(
+            'content/post.html.twig',
+            [
+                'translationContext' => 'controller.information.legend',
+                'assetsContext' => 'content/post',
+                'post' => $postRepository->findLegend(),
             ]
         );
     }

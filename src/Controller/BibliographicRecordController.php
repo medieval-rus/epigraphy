@@ -26,9 +26,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Persistence\Entity\Bibliography\BibliographicRecord;
+use App\Persistence\Repository\Content\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -38,14 +39,19 @@ final class BibliographicRecordController extends AbstractController
 {
     /**
      * @Route("/list", name="bibiliograpic_record__list", methods={"GET"})
-     * @Template("bibliography/list.html.twig")
      */
-    public function list(EntityManagerInterface $entityManager): array
+    public function list(EntityManagerInterface $entityManager, PostRepository $postRepository): Response
     {
-        return [
-            'controller' => 'bibliographic-record',
-            'method' => 'list',
-            'records' => $entityManager->getRepository(BibliographicRecord::class)->findBy([], ['shortName' => 'ASC']),
-        ];
+        return $this->render(
+            'bibliography/list.html.twig',
+            [
+                'translationContext' => 'controller.bibliographic-record.list',
+                'assetsContext' => 'bibliographic-record/list',
+                'records' => $entityManager
+                    ->getRepository(BibliographicRecord::class)
+                    ->findBy([], ['shortName' => 'ASC']),
+                'post' => $postRepository->findBibliographyDescription(),
+            ]
+        );
     }
 }

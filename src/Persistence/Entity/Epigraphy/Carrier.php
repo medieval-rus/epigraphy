@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\CarrierRepository")
+ * @ORM\Entity()
  */
 class Carrier implements StringifiableEntityInterface
 {

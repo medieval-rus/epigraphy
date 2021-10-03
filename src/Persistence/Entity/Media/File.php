@@ -28,7 +28,7 @@ namespace App\Persistence\Entity\Media;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Persistence\Repository\Epigraphy\FileRepository")
+ * @ORM\Entity()
  */
 class File
 {

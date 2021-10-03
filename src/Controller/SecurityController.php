@@ -45,8 +45,8 @@ final class SecurityController extends AbstractController
         return $this->render(
             'security/login.html.twig',
             [
-                'controller' => 'security',
-                'method' => 'login',
+                'translationContext' => 'controller.security.login',
+                'assetsContext' => 'security/login',
                 'last_username' => $authenticationUtils->getLastUsername(),
                 'error' => $authenticationUtils->getLastAuthenticationError(),
                 'form' => $this

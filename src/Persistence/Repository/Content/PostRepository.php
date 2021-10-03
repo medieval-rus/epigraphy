@@ -23,25 +23,36 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Epigraphy;
+namespace App\Persistence\Repository\Content;
 
-use App\Persistence\Entity\Epigraphy\Inscription;
-use App\Persistence\Entity\Epigraphy\Interpretation;
+use App\Persistence\Entity\Content\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-final class InterpretationRepository extends ServiceEntityRepository
+final class PostRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Interpretation::class);
+        parent::__construct($registry, Post::class);
     }
 
-    public function findOneBySource(Inscription $inscription, string $referenceSource): ?Interpretation
+    public function findAboutSite(): Post
     {
-        return $this->findOneBy([
-            'inscription' => $inscription,
-            'source' => $referenceSource,
-        ]);
+        return $this->find(1);
+    }
+
+    public function findNews(): Post
+    {
+        return $this->find(2);
+    }
+
+    public function findLegend(): Post
+    {
+        return $this->find(3);
+    }
+
+    public function findBibliographyDescription(): Post
+    {
+        return $this->find(4);
     }
 }

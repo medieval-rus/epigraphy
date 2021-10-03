@@ -1,3 +1,4 @@
+{#
 # This file is part of «Epigraphy of Medieval Rus» database.
 #
 # Copyright (c) National Research University Higher School of Economics
@@ -16,9 +17,20 @@
 # a copy of the GNU General Public License along with
 # «Epigraphy of Medieval Rus» database,
 # see <http://www.gnu.org/licenses/>.
+#}
 
-webpack_encore:
-  output_path: '%kernel.project_dir%/public/build'
-  strict_mode: false
-  script_attributes:
-    defer: true
+{%- extends 'base.html.twig' -%}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{%- block page_content -%}
+
+    {% import _self as self %}
+
+    {{ self.render_post_body(post.body) }}
+{%- endblock -%}
+
+{% macro render_post_body(body) %}
+    {% import _self as self %}
+    <div>{{ body|raw }}</div>
+{% endmacro %}

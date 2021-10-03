@@ -28,7 +28,7 @@ namespace App\Admin\Media;
 use App\Admin\AbstractEntityAdmin;
 use App\DataStorage\DataStorageManagerInterface;
 use App\Persistence\Entity\Media\File;
-use App\Persistence\Repository\Epigraphy\FileRepository;
+use App\Persistence\Repository\Media\FileRepository;
 use App\Services\Media\Thumbnails\ThumbnailsGeneratorInterface;
 use RuntimeException;
 use Sonata\AdminBundle\Datagrid\ListMapper;
