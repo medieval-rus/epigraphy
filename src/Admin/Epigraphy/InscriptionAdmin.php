@@ -128,7 +128,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.placeOnCarrier',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.placeOnCarrier')
+                        $this->createLabeledFormOptions('zeroRow.placeOnCarrier', ['required' => false])
                     )
                     ->add(
                         'zeroRow.placeOnCarrierReferences',
@@ -192,7 +192,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         TextareaType::class,
                         $this->createLabeledFormOptions(
                             'zeroRow.text',
-                            ['attr' => ['data-virtual-keyboard' => true]]
+                            ['required' => false, 'attr' => ['data-virtual-keyboard' => true]]
                         )
                     )
                     ->add(
@@ -220,7 +220,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.transliteration',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.transliteration')
+                        $this->createLabeledFormOptions('zeroRow.transliteration', ['required' => false])
                     )
                     ->add(
                         'zeroRow.transliterationReferences',
@@ -230,7 +230,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.translation',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.translation')
+                        $this->createLabeledFormOptions('zeroRow.translation', ['required' => false])
                     )
                     ->add(
                         'zeroRow.translationReferences',
@@ -250,7 +250,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.content',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.content')
+                        $this->createLabeledFormOptions('zeroRow.content', ['required' => false])
                     )
                     ->add(
                         'zeroRow.contentReferences',
@@ -262,7 +262,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.origin',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.origin')
+                        $this->createLabeledFormOptions('zeroRow.origin', ['required' => false])
                     )
                     ->add(
                         'zeroRow.originReferences',
@@ -272,7 +272,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.dateInText',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.dateInText')
+                        $this->createLabeledFormOptions('zeroRow.dateInText', ['required' => false])
                     )
                     ->add(
                         'zeroRow.dateInTextReferences',
@@ -282,7 +282,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.stratigraphicalDate',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.stratigraphicalDate')
+                        $this->createLabeledFormOptions('zeroRow.stratigraphicalDate', ['required' => false])
                     )
                     ->add(
                         'zeroRow.stratigraphicalDateReferences',
@@ -292,7 +292,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.nonStratigraphicalDate',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.nonStratigraphicalDate')
+                        $this->createLabeledFormOptions('zeroRow.nonStratigraphicalDate', ['required' => false])
                     )
                     ->add(
                         'zeroRow.nonStratigraphicalDateReferences',
@@ -302,7 +302,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.historicalDate',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.historicalDate')
+                        $this->createLabeledFormOptions('zeroRow.historicalDate', ['required' => false])
                     )
                     ->add(
                         'zeroRow.historicalDateReferences',
