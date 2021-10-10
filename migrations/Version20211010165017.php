@@ -28,20 +28,21 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-final class Version20211003012024 extends AbstractMigration
+final class Version20211010165017 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Added post table';
+        return 'Created relation between interpretation and bibliographic record.';
     }
 
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE TABLE post (id INT AUTO_INCREMENT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-    }
-
-    public function down(Schema $schema): void
-    {
-        $this->addSql('DROP TABLE post');
+        $this->addSql('ALTER TABLE interpretation ADD source_id INT NULL');
+        $this->addSql('UPDATE interpretation i JOIN bibliography__bibliographic_record br ON i.source = br.short_name SET i.source_id = br.id');
+        $this->addSql('ALTER TABLE interpretation CHANGE source_id source_id INT NOT NULL');
+        $this->addSql('ALTER TABLE interpretation DROP source');
+        $this->addSql('ALTER TABLE interpretation ADD CONSTRAINT FK_EBDBD117953C1C61 FOREIGN KEY (source_id) REFERENCES bibliography__bibliographic_record (id)');
+        $this->addSql('CREATE INDEX IDX_EBDBD117953C1C61 ON interpretation (source_id)');
+        $this->addSql('CREATE UNIQUE INDEX source_is_unique_within_inscription ON interpretation (inscription_id, source_id)');
     }
 }

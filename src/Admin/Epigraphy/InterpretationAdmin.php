@@ -28,7 +28,6 @@ namespace App\Admin\Epigraphy;
 use App\Admin\AbstractEntityAdmin;
 use App\DataStorage\DataStorageManagerInterface;
 use App\Form\DataTransformer\InterpretationAdminTransformer;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -52,14 +51,6 @@ final class InterpretationAdmin extends AbstractEntityAdmin
         $this->dataStorageManager = $dataStorageManager;
     }
 
-    protected function configureListFields(ListMapper $listMapper): void
-    {
-        $listMapper
-            ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
-            ->add('source', null, $this->createLabeledListOptions('source'))
-        ;
-    }
-
     protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
@@ -71,13 +62,9 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         ['attr' => ['data-interpretation-id' => $this->getSubject()->getId()]]
                     )
                     ->add('source', null, $this->createLabeledFormOptions('source'))
-                    ->add('comment', null, $this->createLabeledFormOptions('comment'))
-                ->end()
-            ->end()
-            ->tab($this->getTabLabel('bibliographicAspect'))
-                ->with($this->getSectionLabel('bibliographicAspect'))
                     ->add('pageNumbersInSource', null, $this->createLabeledFormOptions('pageNumbersInSource'))
                     ->add('numberInSource', null, $this->createLabeledFormOptions('numberInSource'))
+                    ->add('comment', null, $this->createLabeledFormOptions('comment'))
                 ->end()
             ->end()
             ->tab($this->getTabLabel('materialAspect'))

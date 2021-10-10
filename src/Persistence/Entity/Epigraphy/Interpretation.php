@@ -25,12 +25,22 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Epigraphy;
 
+use App\Persistence\Entity\Bibliography\BibliographicRecord;
 use App\Persistence\Entity\Media\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(
+ *     name="interpretation",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(
+ *             name="source_is_unique_within_inscription",
+ *             columns={"inscription_id", "source_id"}
+ *         )
+ *     }
+ * )
  * @ORM\Entity()
  */
 class Interpretation implements StringifiableEntityInterface
@@ -52,14 +62,15 @@ class Interpretation implements StringifiableEntityInterface
      *     cascade={"persist"},
      *     inversedBy="interpretations"
      * )
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="inscription_id", referencedColumnName="id", nullable=false)
      */
     private $inscription;
 
     /**
-     * @var string
+     * @var BibliographicRecord
      *
-     * @ORM\Column(name="source", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Bibliography\BibliographicRecord", cascade={"persist"})
+     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=false)
      */
     private $source;
 
@@ -248,12 +259,12 @@ class Interpretation implements StringifiableEntityInterface
         return $this;
     }
 
-    public function getSource(): ?string
+    public function getSource(): ?BibliographicRecord
     {
         return $this->source;
     }
 
-    public function setSource(string $source): self
+    public function setSource(BibliographicRecord $source): self
     {
         $this->source = $source;
 

@@ -313,8 +313,6 @@ form:
     tab:
       identification:
         label: Идентификациионные данные
-      bibliographicAspect:
-        label: Библиография
       materialAspect:
         label: Материальный аспект
       linguisticAspect:
@@ -323,9 +321,7 @@ form:
         label: Исторический аспект
     section:
       identification:
-        label: Название источника и комментарий
-      bibliographicAspect:
-        label: Библиографические уточнения
+        label: Источник
       materialAspect:
         label: Материальный аспект
       linguisticAspect:
@@ -333,10 +329,10 @@ form:
       historicalAspect:
         label: Исторические данные
     fields:
-      source: Название источника
-      comment: Комментарий к источнику
+      source: Библиографическая запись
       pageNumbersInSource: Номера страниц в публикации
       numberInSource: Номер в источнике
+      comment: Комментарий к источнику
       origin: Происхождение надписи
       placeOnCarrier: Расположение на носителе
       writingTypes: Разряд по Франклину
