@@ -58,7 +58,7 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
 
             return new StringActualValue(
                 $value,
-                $interpretation->getSource()
+                $interpretation->getSource()->getShortName()
             );
         };
 

@@ -234,7 +234,7 @@ class Interpretation implements StringifiableEntityInterface
 
     public function __toString(): string
     {
-        return sprintf('%s', (string) $this->getSource());
+        return sprintf('%s', (string) $this->getSource()->getShortName());
     }
 
     public function getId(): ?int
