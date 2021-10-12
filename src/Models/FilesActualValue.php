@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Media\File;
 
 final class FilesActualValue
@@ -34,12 +35,15 @@ final class FilesActualValue
      */
     private array $value;
 
+    private ?Interpretation $interpretation;
+
     /**
      * @param array|File[] $value
      */
-    public function __construct(array $value)
+    public function __construct(array $value, ?Interpretation $interpretation)
     {
         $this->value = $value;
+        $this->interpretation = $interpretation;
     }
 
     /**
@@ -48,5 +52,10 @@ final class FilesActualValue
     public function getValue(): array
     {
         return $this->value;
+    }
+
+    public function getInterpretation(): ?Interpretation
+    {
+        return $this->interpretation;
     }
 }

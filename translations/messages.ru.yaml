@@ -71,8 +71,6 @@ controller:
         label:
           number: Номер
           conventionalDate: Условная дата
-          photos: Фотографии
-          drawings: Прориси
           comment: Комментарий
           carrier:
             types: Тип носителя
@@ -104,6 +102,8 @@ controller:
             historicalDate: «Историческая» дата
             comment: Комментарий (разночтения с источником)
             materials: Материалы
+            photos: Фотографии
+            drawings: Прориси
 
 page:
   label: Древнерусская эпиграфика
@@ -123,3 +123,5 @@ type:
 
 originalText:
   ligature: Лигатура "%symbols%".
+image:
+  source: Взято из работы %source%

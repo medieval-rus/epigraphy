@@ -119,6 +119,16 @@ final class AdminInterpretationWrapper extends Interpretation
     private $isHistoricalDatePartOfZeroRow;
 
     /**
+     * @var bool
+     */
+    private $isPhotosPartOfZeroRow;
+
+    /**
+     * @var bool
+     */
+    private $isDrawingsPartOfZeroRow;
+
+    /**
      * @var Interpretation
      */
     private $source;
@@ -156,6 +166,8 @@ final class AdminInterpretationWrapper extends Interpretation
             ->getNonStratigraphicalDateReferences()
             ->exists($predicate);
         $this->isHistoricalDatePartOfZeroRow = $zeroRow->getHistoricalDateReferences()->exists($predicate);
+        $this->isPhotosPartOfZeroRow = $zeroRow->getPhotosReferences()->exists($predicate);
+        $this->isDrawingsPartOfZeroRow = $zeroRow->getDrawingsReferences()->exists($predicate);
     }
 
     public function toInterpretation(): Interpretation
@@ -192,6 +204,8 @@ final class AdminInterpretationWrapper extends Interpretation
             $this->isNonStratigraphicalDatePartOfZeroRow
         );
         $this->updateReferences($zeroRow->getHistoricalDateReferences(), $this->isHistoricalDatePartOfZeroRow);
+        $this->updateReferences($zeroRow->getPhotosReferences(), $this->isPhotosPartOfZeroRow);
+        $this->updateReferences($zeroRow->getDrawingsReferences(), $this->isDrawingsPartOfZeroRow);
     }
 
     public function getIsOriginPartOfZeroRow(): ?bool
@@ -362,6 +376,26 @@ final class AdminInterpretationWrapper extends Interpretation
     public function setIsHistoricalDatePartOfZeroRow(?bool $isHistoricalDatePartOfZeroRow): void
     {
         $this->isHistoricalDatePartOfZeroRow = $isHistoricalDatePartOfZeroRow;
+    }
+
+    public function getIsPhotosPartOfZeroRow(): ?bool
+    {
+        return $this->isPhotosPartOfZeroRow;
+    }
+
+    public function setIsPhotosPartOfZeroRow(?bool $isPhotosPartOfZeroRow): void
+    {
+        $this->isPhotosPartOfZeroRow = $isPhotosPartOfZeroRow;
+    }
+
+    public function getIsDrawingsPartOfZeroRow(): ?bool
+    {
+        return $this->isDrawingsPartOfZeroRow;
+    }
+
+    public function setIsDrawingsPartOfZeroRow(?bool $isDrawingsPartOfZeroRow): void
+    {
+        $this->isDrawingsPartOfZeroRow = $isDrawingsPartOfZeroRow;
     }
 
     private function updateReferences(

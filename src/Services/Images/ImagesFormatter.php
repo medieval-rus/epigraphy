@@ -30,6 +30,7 @@ use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Media\File;
 use App\Services\ActualValue\Extractor\ActualValueExtractorInterface;
 use App\Services\Media\Thumbnails\ThumbnailsGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ImagesFormatter implements ImagesFormatterInterface
 {
@@ -37,12 +38,16 @@ final class ImagesFormatter implements ImagesFormatterInterface
 
     private ThumbnailsGeneratorInterface $thumbnailsGenerator;
 
+    private TranslatorInterface $translator;
+
     public function __construct(
         ActualValueExtractorInterface $extractor,
-        ThumbnailsGeneratorInterface $thumbnailsGenerator
+        ThumbnailsGeneratorInterface $thumbnailsGenerator,
+        TranslatorInterface $translator
     ) {
         $this->extractor = $extractor;
         $this->thumbnailsGenerator = $thumbnailsGenerator;
+        $this->translator = $translator;
     }
 
     public function formatZeroRowImages(Inscription $inscription, string $propertyName): string
@@ -56,23 +61,23 @@ final class ImagesFormatter implements ImagesFormatterInterface
         );
     }
 
-    public function formatInscriptionImages(Inscription $inscription, string $propertyName): string
-    {
-        $file = $this->extractor->extractFromInscriptionAsFile($inscription, $propertyName);
-
-        if (null === $file) {
-            return '';
-        }
-
-        return $this->formatImages($file);
-    }
-
     private function formatImages(FilesActualValue $actualValue): string
     {
+        $interpretation = $actualValue->getInterpretation();
         $files = $actualValue->getValue();
 
+        $formattedInterpretation = null;
+        if (null !== $interpretation) {
+            $formattedInterpretation = $this->translator->trans(
+                'image.source',
+                [
+                    '%source%' => $interpretation->getSource()->getShortName(),
+                ]
+            );
+        }
+
         $imageTags = array_map(
-            function (File $file): string {
+            function (File $file) use ($formattedInterpretation): string {
                 $createImageTag = function () use ($file): string {
                     if (null === $file->getUrl()) {
                         return '<img class="eomr-images-image" alt="'.$file->getFileName().'" />';
@@ -85,8 +90,17 @@ final class ImagesFormatter implements ImagesFormatterInterface
                         '</a>';
                 };
 
-                $createDescriptionTag = static function () use ($file): string {
-                    return '<div class="eomr-images-description">'.$file->getDescription().'</div>';
+                $createDescriptionTag = static function () use ($formattedInterpretation, $file): string {
+                    $descriptionParts = [];
+                    if (null !== $formattedInterpretation) {
+                        $descriptionParts[] = $formattedInterpretation;
+                    }
+
+                    if (null !== $file->getDescription()) {
+                        $descriptionParts[] = $file->getDescription();
+                    }
+
+                    return '<div class="eomr-images-description">'.implode('; ', $descriptionParts).'</div>';
                 };
 
                 return '<div class="eomr-images-image">'.

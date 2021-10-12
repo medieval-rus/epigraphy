@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Epigraphy;
 
-use App\Persistence\Entity\Media\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -65,22 +64,6 @@ class Inscription implements StringifiableEntityInterface
      * @ORM\Column(name="conventional_date", type="string", length=255, nullable=true)
      */
     private $conventionalDate;
-
-    /**
-     * @var Collection|File[]
-     *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
-     * @ORM\JoinTable(name="inscription_photos")
-     */
-    private $photos;
-
-    /**
-     * @var Collection|File[]
-     *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
-     * @ORM\JoinTable(name="inscription_drawings")
-     */
-    private $drawings;
 
     /**
      * @var string|null
@@ -160,42 +143,6 @@ class Inscription implements StringifiableEntityInterface
     public function setConventionalDate(?string $conventionalDate): self
     {
         $this->conventionalDate = $conventionalDate;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|File[]
-     */
-    public function getPhotos(): Collection
-    {
-        return $this->photos;
-    }
-
-    /**
-     * @param Collection|File[] $photos
-     */
-    public function setPhotos(Collection $photos): self
-    {
-        $this->photos = $photos;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|File[]
-     */
-    public function getDrawings(): Collection
-    {
-        return $this->drawings;
-    }
-
-    /**
-     * @param Collection|File[] $drawings
-     */
-    public function setDrawings(Collection $drawings): self
-    {
-        $this->drawings = $drawings;
 
         return $this;
     }

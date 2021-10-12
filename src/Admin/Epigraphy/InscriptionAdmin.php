@@ -98,28 +98,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add('number', null, $this->createLabeledFormOptions('number'))
                     ->add('conventionalDate', null, $this->createLabeledFormOptions('conventionalDate'))
                     ->add('carrier', null, $this->createLabeledFormOptions('carrier'))
-                    ->add(
-                        'photos',
-                        null,
-                        $this->createLabeledManyToManyFormOptions(
-                            'photos',
-                            [
-                                'choice_filter' => $this->dataStorageManager->getFolderFilter('photo'),
-                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
-                            ]
-                        )
-                    )
-                    ->add(
-                        'drawings',
-                        null,
-                        $this->createLabeledManyToManyFormOptions(
-                            'drawings',
-                            [
-                                'choice_filter' => $this->dataStorageManager->getFolderFilter('drawing'),
-                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
-                            ]
-                        )
-                    )
                     ->add('comment', null, $this->createLabeledFormOptions('comment'))
                 ->end()
             ->end()
@@ -199,23 +177,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         'zeroRow.textReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('textReferences')
-                    )
-                    ->add(
-                        'zeroRow.textImages',
-                        EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
-                            'zeroRow.textImages',
-                            [
-                                'class' => File::class,
-                                'choice_filter' => $this->dataStorageManager->getFolderFilter('text'),
-                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
-                            ]
-                        )
-                    )
-                    ->add(
-                        'zeroRow.textImagesReferences',
-                        EntityType::class,
-                        $this->createLabeledReferencesFormOptions('textImagesReferences')
                     )
                     ->add(
                         'zeroRow.transliteration',
@@ -308,6 +269,59 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         'zeroRow.historicalDateReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('historicalDateReferences')
+                    )
+                ->end()
+                ->with($this->getSectionLabel('zeroRowMedia'), ['class' => 'col-md-6'])
+                    ->add(
+                        'zeroRow.photos',
+                        EntityType::class,
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.photos',
+                            [
+                                'class' => File::class,
+                                'choice_filter' => $this->dataStorageManager->getFolderFilter('photo'),
+                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                            ]
+                        )
+                    )
+                    ->add(
+                        'zeroRow.photosReferences',
+                        EntityType::class,
+                        $this->createLabeledReferencesFormOptions('photosReferences')
+                    )
+                    ->add(
+                        'zeroRow.drawings',
+                        EntityType::class,
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.drawings',
+                            [
+                                'class' => File::class,
+                                'choice_filter' => $this->dataStorageManager->getFolderFilter('drawing'),
+                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                            ]
+                        )
+                    )
+                    ->add(
+                        'zeroRow.drawingsReferences',
+                        EntityType::class,
+                        $this->createLabeledReferencesFormOptions('drawingsReferences')
+                    )
+                    ->add(
+                        'zeroRow.textImages',
+                        EntityType::class,
+                        $this->createLabeledManyToManyFormOptions(
+                            'zeroRow.textImages',
+                            [
+                                'class' => File::class,
+                                'choice_filter' => $this->dataStorageManager->getFolderFilter('text'),
+                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                            ]
+                        )
+                    )
+                    ->add(
+                        'zeroRow.textImagesReferences',
+                        EntityType::class,
+                        $this->createLabeledReferencesFormOptions('textImagesReferences')
                     )
                 ->end()
             ->end()

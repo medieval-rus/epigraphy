@@ -23,21 +23,21 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\ActualValue\Extractor;
+namespace DoctrineMigrations;
 
-use App\Models\FilesActualValue;
-use App\Models\StringActualValue;
-use App\Persistence\Entity\Epigraphy\Inscription;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
-interface ActualValueExtractorInterface
+final class Version20211011235033 extends AbstractMigration
 {
-    /**
-     * @return StringActualValue[]
-     */
-    public function extractFromZeroRowAsStrings(Inscription $inscription, string $propertyName): array;
+    public function getDescription(): string
+    {
+        return 'Foreign key rename: step 1.';
+    }
 
-    /**
-     * @return FilesActualValue[]
-     */
-    public function extractFromZeroRowAsFiles(Inscription $inscription, string $propertyName): array;
+    public function up(Schema $schema): void
+    {
+        $this->addSql('ALTER TABLE zero_row_photos DROP FOREIGN KEY KF_6E0C0D3093CB796C');
+        $this->addSql('ALTER TABLE zero_row_drawings DROP FOREIGN KEY KF_74FE635593CB796C');
+    }
 }

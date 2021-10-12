@@ -119,22 +119,6 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('text')
                     )
-                    ->add(
-                        'textImages',
-                        null,
-                        $this->createLabeledManyToManyFormOptions(
-                            'textImages',
-                            [
-                                'choice_filter' => $this->dataStorageManager->getFolderFilter('text'),
-                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
-                            ]
-                        )
-                    )
-                    ->add(
-                        'isTextImagesPartOfZeroRow',
-                        CheckboxType::class,
-                        $this->createLabeledZeroRowPartFormOptions('textImages')
-                    )
                     ->add('transliteration', null, $this->createLabeledFormOptions('transliteration'))
                     ->add(
                         'isTransliterationPartOfZeroRow',
@@ -192,6 +176,58 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         'isHistoricalDatePartOfZeroRow',
                         CheckboxType::class,
                         $this->createLabeledZeroRowPartFormOptions('historicalDate')
+                    )
+                ->end()
+            ->end()
+            ->tab($this->getTabLabel('media'))
+                ->with($this->getSectionLabel('media'))
+                    ->add(
+                        'photos',
+                        null,
+                        $this->createLabeledManyToManyFormOptions(
+                            'photos',
+                            [
+                                'choice_filter' => $this->dataStorageManager->getFolderFilter('photo'),
+                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                            ]
+                        )
+                    )
+                    ->add(
+                        'isPhotosPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('photos')
+                    )
+                    ->add(
+                        'drawings',
+                        null,
+                        $this->createLabeledManyToManyFormOptions(
+                            'drawings',
+                            [
+                                'choice_filter' => $this->dataStorageManager->getFolderFilter('drawing'),
+                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                            ]
+                        )
+                    )
+                    ->add(
+                        'isDrawingsPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('drawings')
+                    )
+                    ->add(
+                        'textImages',
+                        null,
+                        $this->createLabeledManyToManyFormOptions(
+                            'textImages',
+                            [
+                                'choice_filter' => $this->dataStorageManager->getFolderFilter('text'),
+                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                            ]
+                        )
+                    )
+                    ->add(
+                        'isTextImagesPartOfZeroRow',
+                        CheckboxType::class,
+                        $this->createLabeledZeroRowPartFormOptions('textImages')
                     )
                 ->end()
             ->end()

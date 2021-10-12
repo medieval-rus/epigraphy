@@ -46,7 +46,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Interpretation implements StringifiableEntityInterface
 {
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -55,7 +55,7 @@ class Interpretation implements StringifiableEntityInterface
     private $id;
 
     /**
-     * @var Inscription
+     * @var Inscription|null
      *
      * @ORM\ManyToOne(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Inscription",
@@ -67,7 +67,7 @@ class Interpretation implements StringifiableEntityInterface
     private $inscription;
 
     /**
-     * @var BibliographicRecord
+     * @var BibliographicRecord|null
      *
      * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Bibliography\BibliographicRecord", cascade={"persist"})
      * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=false)
@@ -221,6 +221,22 @@ class Interpretation implements StringifiableEntityInterface
      */
     private $historicalDate;
 
+    /**
+     * @var Collection|File[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
+     * @ORM\JoinTable(name="interpretation_photos")
+     */
+    private $photos;
+
+    /**
+     * @var Collection|File[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
+     * @ORM\JoinTable(name="interpretation_drawings")
+     */
+    private $drawings;
+
     public function __construct()
     {
         $this->writingTypes = new ArrayCollection();
@@ -230,6 +246,8 @@ class Interpretation implements StringifiableEntityInterface
         $this->alphabets = new ArrayCollection();
         $this->textImages = new ArrayCollection();
         $this->contentCategories = new ArrayCollection();
+        $this->photos = new ArrayCollection();
+        $this->drawings = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -242,7 +260,7 @@ class Interpretation implements StringifiableEntityInterface
         return $this->id;
     }
 
-    public function setId(int $id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
@@ -252,7 +270,7 @@ class Interpretation implements StringifiableEntityInterface
         return $this->inscription;
     }
 
-    public function setInscription(Inscription $inscription): self
+    public function setInscription(?Inscription $inscription): self
     {
         $this->inscription = $inscription;
 
@@ -264,7 +282,7 @@ class Interpretation implements StringifiableEntityInterface
         return $this->source;
     }
 
-    public function setSource(BibliographicRecord $source): self
+    public function setSource(?BibliographicRecord $source): self
     {
         $this->source = $source;
 
@@ -543,6 +561,42 @@ class Interpretation implements StringifiableEntityInterface
     public function setHistoricalDate(?string $historicalDate): self
     {
         $this->historicalDate = $historicalDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|File[]
+     */
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
+    }
+
+    /**
+     * @param Collection|File[] $photos
+     */
+    public function setPhotos(Collection $photos): self
+    {
+        $this->photos = $photos;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|File[]
+     */
+    public function getDrawings(): Collection
+    {
+        return $this->drawings;
+    }
+
+    /**
+     * @param Collection|File[] $drawings
+     */
+    public function setDrawings(Collection $drawings): self
+    {
+        $this->drawings = $drawings;
 
         return $this;
     }

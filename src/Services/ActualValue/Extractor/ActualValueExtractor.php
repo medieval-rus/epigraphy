@@ -87,13 +87,11 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
      */
     public function extractFromZeroRowAsFiles(Inscription $inscription, string $propertyName): array
     {
-        $referenceValueFormatter = function (
-            Interpretation $interpretation
-        ) use ($propertyName): ?FilesActualValue {
+        $referenceValueFormatter = function (Interpretation $interpretation) use ($propertyName): ?FilesActualValue {
             $files = $this->propertyAccessor->getValue($interpretation, $propertyName);
 
             if ($files instanceof Collection) {
-                return new FilesActualValue($files->toArray());
+                return new FilesActualValue($files->toArray(), $interpretation);
             }
 
             return null;
@@ -109,7 +107,7 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
 
         if ($zeroRowValue instanceof Collection) {
             $allValues = [
-                new FilesActualValue($zeroRowValue->toArray()),
+                new FilesActualValue($zeroRowValue->toArray(), null),
                 ...$referenceValues,
             ];
         } else {
@@ -117,20 +115,6 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
         }
 
         return array_filter($allValues, [$this, 'isNotNull']);
-    }
-
-    /**
-     * @return FilesActualValue[]
-     */
-    public function extractFromInscriptionAsFile(Inscription $inscription, string $propertyName): ?FilesActualValue
-    {
-        $inscriptionValue = $this->propertyAccessor->getValue($inscription, $propertyName);
-
-        if ($inscriptionValue instanceof Collection) {
-            return new FilesActualValue($inscriptionValue->toArray());
-        }
-
-        return null;
     }
 
     private function getStringValue($value): ?string

@@ -46,8 +46,8 @@
             {{ self.format_text_row(translationContext, 'zeroRow.textImages', self.format_zero_row_images(inscription, 'textImages')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_zero_row(inscription, 'translation')) }}
-            {{ self.format_text_row(translationContext, 'photos', self.format_inscription_images(inscription, 'photos')) }}
-            {{ self.format_text_row(translationContext, 'drawings', self.format_inscription_images(inscription, 'drawings')) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.photos', self.format_zero_row_images(inscription, 'photos')) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.drawings', self.format_zero_row_images(inscription, 'drawings')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.contentCategories', self.format_zero_row(inscription, 'contentCategories')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.content', self.format_zero_row(inscription, 'content')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.dateInText', self.format_zero_row(inscription, 'dateInText')) }}
@@ -80,13 +80,6 @@
     {% import _self as self %}
 
     {{ imagesFormatter.formatZeroRowImages(inscription, propertyName)|raw }}
-{%- endmacro -%}
-
-{%- macro format_inscription_images(inscription, propertyName) -%}
-
-    {% import _self as self %}
-
-    {{ imagesFormatter.formatInscriptionImages(inscription, propertyName)|raw }}
 {%- endmacro -%}
 
 {%- macro format_text_row(translationContext, labelTranslationKey, content) -%}

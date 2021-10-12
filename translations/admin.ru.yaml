@@ -256,8 +256,6 @@ form:
     section:
       common:
         label: Общие сведения
-      zeroRow:
-        label: «Нулевая строка»
       interpretations:
         label: Редактирование интерпретаций надписи
       zeroRowMaterialAspect:
@@ -266,12 +264,12 @@ form:
         label: Лингвистический аспект
       zeroRowHistoricalAspect:
         label: Исторические данные
+      zeroRowMedia:
+        label: Изображения
     fields:
       number: Номер
       conventionalDate: Условная дата
       carrier: Носитель
-      photos: Фото
-      drawings: Прориси
       comment: Комментарий
       zeroRow:
         origin: Происхождение надписи
@@ -308,6 +306,10 @@ form:
         nonStratigraphicalDateReferences: Внестратиграфическая дата (ссылки)
         historicalDate: «Историческая» дата
         historicalDateReferences: «Историческая» дата (ссылки)
+        photos: Фотографии (файлы)
+        photosReferences: Фотографии (ссылки)
+        drawings: Прориси (файлы)
+        drawingsReferences: Прориси (ссылки)
       interpretations: Интерпретации
   interpretation:
     tab:
@@ -319,6 +321,8 @@ form:
         label: Лингвистический аспект
       historicalAspect:
         label: Исторический аспект
+      media:
+        label: Медиа
     section:
       identification:
         label: Источник
@@ -328,6 +332,8 @@ form:
         label: Лингвистический аспект
       historicalAspect:
         label: Исторические данные
+      media:
+        label: Изображения и файлы
     fields:
       source: Библиографическая запись
       pageNumbersInSource: Номера страниц в публикации

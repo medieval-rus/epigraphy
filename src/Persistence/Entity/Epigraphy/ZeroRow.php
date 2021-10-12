@@ -381,6 +381,46 @@ class ZeroRow
      */
     private $historicalDateReferences;
 
+    /**
+     * @var Collection|File[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
+     * @ORM\JoinTable(name="zero_row_photos")
+     */
+    private $photos;
+
+    /**
+     * @var Collection|Interpretation[]
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
+     * @ORM\JoinTable(name="zero_row_photos_references")
+     */
+    private $photosReferences;
+
+    /**
+     * @var Collection|File[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Media\File", cascade={"persist"})
+     * @ORM\JoinTable(name="zero_row_drawings")
+     */
+    private $drawings;
+
+    /**
+     * @var Collection|Interpretation[]
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
+     * @ORM\JoinTable(name="zero_row_drawings_references")
+     */
+    private $drawingsReferences;
+
     public function __construct()
     {
         $this->originReferences = new ArrayCollection();
@@ -407,6 +447,10 @@ class ZeroRow
         $this->stratigraphicalDateReferences = new ArrayCollection();
         $this->nonStratigraphicalDateReferences = new ArrayCollection();
         $this->historicalDateReferences = new ArrayCollection();
+        $this->photos = new ArrayCollection();
+        $this->photosReferences = new ArrayCollection();
+        $this->drawings = new ArrayCollection();
+        $this->drawingsReferences = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -972,6 +1016,78 @@ class ZeroRow
     public function setHistoricalDateReferences(Collection $historicalDateReferences): self
     {
         $this->historicalDateReferences = $historicalDateReferences;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|File[]
+     */
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
+    }
+
+    /**
+     * @param Collection|File[] $photos
+     */
+    public function setPhotos(Collection $photos): self
+    {
+        $this->photos = $photos;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Interpretation[]
+     */
+    public function getPhotosReferences(): Collection
+    {
+        return $this->photosReferences;
+    }
+
+    /**
+     * @param Collection|Interpretation[] $photosReferences
+     */
+    public function setPhotosReferences(Collection $photosReferences): self
+    {
+        $this->photosReferences = $photosReferences;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|File[]
+     */
+    public function getDrawings(): Collection
+    {
+        return $this->drawings;
+    }
+
+    /**
+     * @param Collection|File[] $drawings
+     */
+    public function setDrawings(Collection $drawings): self
+    {
+        $this->drawings = $drawings;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Interpretation[]
+     */
+    public function getDrawingsReferences(): Collection
+    {
+        return $this->drawingsReferences;
+    }
+
+    /**
+     * @param Collection|Interpretation[] $drawingsReferences
+     */
+    public function setDrawingsReferences(Collection $drawingsReferences): self
+    {
+        $this->drawingsReferences = $drawingsReferences;
 
         return $this;
     }
