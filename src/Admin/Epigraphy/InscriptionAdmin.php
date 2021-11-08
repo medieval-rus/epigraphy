@@ -69,14 +69,23 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         $zeroRow = $inscription->getZeroRow();
         $interpretations = $inscription->getInterpretations();
 
-        foreach ($interpretations as $wrapper) {
-            if ($wrapper instanceof AdminInterpretationWrapper) {
+        $unwrappedInterpretations = [];
+
+        foreach ($interpretations as $index => $element) {
+            if ($element instanceof AdminInterpretationWrapper) {
+                $wrapper = $element;
                 $interpretation = $wrapper->toInterpretation();
+
+                $unwrappedInterpretations[$index] = $interpretation;
 
                 if (null === $interpretation->getId()) {
                     $wrapper->updateZeroRow($zeroRow);
                 }
             }
+        }
+
+        foreach ($unwrappedInterpretations as $index => $interpretation) {
+            $interpretations->set($index, $interpretation);
         }
     }
 

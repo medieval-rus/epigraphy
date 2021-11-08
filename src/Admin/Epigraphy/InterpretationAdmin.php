@@ -26,11 +26,14 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractEntityAdmin;
+use App\Admin\Epigraphy\Models\AdminInterpretationWrapper;
 use App\DataStorage\DataStorageManagerInterface;
-use App\Form\DataTransformer\InterpretationAdminTransformer;
+use App\Persistence\Entity\Epigraphy\Interpretation;
 use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Event\PreSetDataEvent;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormEvents;
 
 final class InterpretationAdmin extends AbstractEntityAdmin
 {
@@ -51,8 +54,28 @@ final class InterpretationAdmin extends AbstractEntityAdmin
         $this->dataStorageManager = $dataStorageManager;
     }
 
+    public function wrapInterpretation(PreSetDataEvent $event): void
+    {
+        if (($interpretation = $event->getData()) instanceof Interpretation &&
+            !$interpretation instanceof AdminInterpretationWrapper
+        ) {
+            $event->setData(new AdminInterpretationWrapper($interpretation));
+        }
+    }
+
     protected function configureFormFields(FormMapper $formMapper): void
     {
+        $formMapper
+            ->getFormBuilder()
+            ->getEventDispatcher()
+            ->addListener(FormEvents::PRE_SET_DATA, [$this, 'wrapInterpretation']);
+
+        $subject = $this->getSubject();
+
+        if ($subject instanceof AdminInterpretationWrapper) {
+            $this->setSubject($subject->toInterpretation());
+        }
+
         $formMapper
             ->tab($this->getTabLabel('identification'))
                 ->with($this->getSectionLabel('identification'))
@@ -233,7 +256,9 @@ final class InterpretationAdmin extends AbstractEntityAdmin
             ->end()
         ;
 
-        $formMapper->getFormBuilder()->addViewTransformer(new InterpretationAdminTransformer());
+        if ($subject instanceof AdminInterpretationWrapper) {
+            $this->setSubject($subject);
+        }
     }
 
     private function createLabeledZeroRowPartFormOptions(
