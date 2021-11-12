@@ -54,17 +54,24 @@ final class ImagesFormatter implements ImagesFormatterInterface
     {
         return implode(
             '<br>',
-            array_map(
-                [$this, 'formatImages'],
-                $this->extractor->extractFromZeroRowAsFiles($inscription, $propertyName)
+            array_filter(
+                array_map(
+                    [$this, 'formatImages'],
+                    $this->extractor->extractFromZeroRowAsFiles($inscription, $propertyName)
+                ),
+                fn (?string $content) => null !== $content
             )
         );
     }
 
-    private function formatImages(FilesActualValue $actualValue): string
+    private function formatImages(FilesActualValue $actualValue): ?string
     {
         $interpretation = $actualValue->getInterpretation();
         $files = $actualValue->getValue();
+
+        if (0 === \count($files)) {
+            return null;
+        }
 
         $formattedInterpretation = null;
         if (null !== $interpretation) {

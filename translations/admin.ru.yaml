@@ -405,7 +405,7 @@ form:
       year: Год публикации
       authors: Авторы работы
       formalNotation: Отображаемое значение (формальная запись)
-      mainFile: PDF-документ (работа целиком)
+      mainFile: PDF/DJVU-документ (работа целиком)
   author:
     section:
       data:

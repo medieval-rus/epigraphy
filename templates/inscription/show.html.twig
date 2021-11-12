@@ -34,6 +34,7 @@
             {{ self.format_text_row(translationContext, 'number', inscription.number) }}
             {{ self.format_text_row(translationContext, 'conventionalDate', inscription.conventionalDate) }}
             {{ self.format_text_row(translationContext, 'comment', inscription.comment) }}
+            {{ self.format_literature(translationContext, inscription) }}
             {{ self.format_carrier(translationContext, inscription) }}
             {{ self.format_text_row(translationContext, 'zeroRow.origin', self.format_zero_row(inscription, 'origin')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.placeOnCarrier', self.format_zero_row(inscription, 'placeOnCarrier')) }}
@@ -79,7 +80,7 @@
 
     {% import _self as self %}
 
-    {{ imagesFormatter.formatZeroRowImages(inscription, propertyName)|raw }}
+    {{- imagesFormatter.formatZeroRowImages(inscription, propertyName)|raw -}}
 {%- endmacro -%}
 
 {%- macro format_text_row(translationContext, labelTranslationKey, content) -%}
@@ -96,13 +97,13 @@
         {% set content = 'type.bool.false'|trans %}
     {% endif %}
 
-    {{ self.fill_row(self.translate_field_label(translationContext, labelTranslationKey), content|default('-')) }}
+    {{ self.fill_row(self.translate_field_label(translationContext, labelTranslationKey), content|trim|default('-')) }}
 {%- endmacro -%}
 
 {%- macro format_original_text_row(translationContext, labelTranslationKey, inscription) -%}
     {% import _self as self %}
 
-    {{ self.fill_row(self.get_original_text_row_th_content(translationContext, labelTranslationKey, inscription), self.get_original_text_row_td_content(translationContext, inscription)) }}
+    {{ self.fill_row(self.get_original_text_row_th_content(translationContext, labelTranslationKey, inscription), self.get_original_text_row_td_content(inscription)) }}
 {%- endmacro -%}
 
 {%- macro get_original_text_row_th_content(translationContext, labelTranslationKey, inscription) -%}
@@ -115,10 +116,10 @@
     {{ (self.translate_field_label(translationContext, labelTranslationKey) ~ legendLink)|raw }}
 {%- endmacro -%}
 
-{%- macro get_original_text_row_td_content(translationContext, inscription) -%}
+{%- macro get_original_text_row_td_content(inscription) -%}
     {% import _self as self %}
 
-    {{ self.format_zero_row(inscription, 'text', 'original-text')|default('-') }}
+    {{- self.format_zero_row(inscription, 'text', 'original-text')|default('-') -}}
 {%- endmacro -%}
 
 {%- macro translate_field_label(translationContext, labelTranslationKey) -%}
@@ -159,9 +160,24 @@
     </tr>
 {%- endmacro -%}
 
-{%- macro fill_row(thContent, tdContend) -%}
-    <tr>
-        <th scope="row">{{ thContent|raw }}</th>
-        <td>{{ tdContend|raw }}</td>
-    </tr>
+{%- macro format_literature(translationContext, inscription) -%}
+
+    {% import _self as self %}
+
+    {{ self.fill_row(self.translate_field_label(translationContext, 'literature'), self.get_literature_row_td_content(inscription)|default('-')) }}
+{%- endmacro -%}
+
+{%- macro get_literature_row_td_content(inscription) -%}
+    {% import _self as self %}
+
+    {{- inscription.interpretations|map(interpretation => interpretation.source.shortName)|join(', ') -}}
+{%- endmacro -%}
+
+{%- macro fill_row(thContent, tdContent) -%}
+    {% if tdContent != '-' %}
+        <tr>
+            <th scope="row">{{ thContent|raw }}</th>
+            <td>{{ tdContent|trim|raw }}</td>
+        </tr>
+    {% endif %}
 {%- endmacro -%}
