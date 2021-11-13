@@ -73,6 +73,9 @@ tabMenu:
   siteView: Посмотреть надпись на сайте
 
 list:
+  inscriptionList:
+    fields:
+      name: Название списка
   post:
     fields:
       id: Внутренний идентификатор
