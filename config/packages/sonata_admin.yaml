@@ -54,6 +54,7 @@ sonata_admin:
         label: menu.groups.content.label
         items:
           - admin.content.post
+          - admin.content.inscription_list
         roles: [ ROLE_ADMIN ]
       media:
         label_catalogue: admin
@@ -91,6 +92,13 @@ services:
   admin.content.post:
     class: App\Admin\Content\PostAdmin
     arguments: [null, App\Persistence\Entity\Content\Post, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.content.inscription_list:
+    class: App\Admin\Content\InscriptionListAdmin
+    arguments: [null, App\Persistence\Entity\Content\InscriptionList, null]
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:

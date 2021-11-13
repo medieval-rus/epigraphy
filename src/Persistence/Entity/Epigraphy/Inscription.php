@@ -73,6 +73,13 @@ class Inscription implements StringifiableEntityInterface
     private $comment;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_shown_on_site", type="boolean", options={"default": false})
+     */
+    private $isShownOnSite = false;
+
+    /**
      * @var ZeroRow|null
      *
      * @ORM\OneToOne(
@@ -97,8 +104,6 @@ class Inscription implements StringifiableEntityInterface
 
     public function __construct()
     {
-        $this->photos = new ArrayCollection();
-        $this->drawings = new ArrayCollection();
         $this->zeroRow = new ZeroRow();
         $this->interpretations = new ArrayCollection();
     }
@@ -155,6 +160,18 @@ class Inscription implements StringifiableEntityInterface
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getIsShownOnSite(): ?bool
+    {
+        return $this->isShownOnSite;
+    }
+
+    public function setIsShownOnSite(bool $isShownOnSite): self
+    {
+        $this->isShownOnSite = $isShownOnSite;
 
         return $this;
     }

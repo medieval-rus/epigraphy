@@ -50,6 +50,19 @@ final class ImagesFormatter implements ImagesFormatterInterface
         $this->translator = $translator;
     }
 
+    /**
+     * @return array|FilesActualValue[]
+     */
+    public function getZeroRowImages(Inscription $inscription, array $properties): array
+    {
+        return array_merge(
+            ...array_map(
+                fn (string $propertyName) => $this->extractor->extractFromZeroRowAsFiles($inscription, $propertyName),
+                $properties
+            )
+        );
+    }
+
     public function formatZeroRowImages(Inscription $inscription, string $propertyName): string
     {
         return implode(

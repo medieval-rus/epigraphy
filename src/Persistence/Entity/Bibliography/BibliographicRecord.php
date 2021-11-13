@@ -67,9 +67,9 @@ class BibliographicRecord
     private $formalNotation;
 
     /**
-     * @var int
+     * @var int|null
      *
-     * @ORM\Column(name="year", type="integer")
+     * @ORM\Column(name="year", type="integer", nullable=true)
      */
     private $year;
 
@@ -149,7 +149,7 @@ class BibliographicRecord
         return $this->year;
     }
 
-    public function setYear(int $year): self
+    public function setYear(?int $year): self
     {
         $this->year = $year;
 

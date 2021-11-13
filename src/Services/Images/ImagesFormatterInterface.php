@@ -25,9 +25,15 @@ declare(strict_types=1);
 
 namespace App\Services\Images;
 
+use App\Models\FilesActualValue;
 use App\Persistence\Entity\Epigraphy\Inscription;
 
 interface ImagesFormatterInterface
 {
+    /**
+     * @return array|FilesActualValue[]
+     */
+    public function getZeroRowImages(Inscription $inscription, array $properties): array;
+
     public function formatZeroRowImages(Inscription $inscription, string $propertyName): string;
 }

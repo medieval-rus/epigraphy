@@ -42,14 +42,46 @@ final class BibliographicRecordController extends AbstractController
      */
     public function list(EntityManagerInterface $entityManager, PostRepository $postRepository): Response
     {
+        $records = $entityManager
+            ->getRepository(BibliographicRecord::class)
+            ->findBy([], ['shortName' => 'ASC']);
+
+        $replaceJo = fn (string $input) => str_replace(['ё', 'Ё'], ['ея', 'Ея'], $input);
+
+        usort(
+            $records,
+            static function (BibliographicRecord $a, BibliographicRecord $b) use ($replaceJo): int {
+
+                $aShortName = $a->getShortName();
+                $bShortName = $b->getShortName();
+
+                $pattern = '/^[а-яёА-ЯЁ].*$/u';
+
+                $aIsCyrillic = 1 === preg_match($pattern, $aShortName);
+                $bIsCyrillic = 1 === preg_match($pattern, $bShortName);
+
+                if ($aIsCyrillic && !$bIsCyrillic) {
+                    return -1;
+                }
+
+                if (!$aIsCyrillic && $bIsCyrillic) {
+                    return 1;
+                }
+
+                if (!$aIsCyrillic && !$bIsCyrillic) {
+                    return strnatcmp($aShortName, $bShortName);
+                }
+
+                return strnatcmp(\call_user_func($replaceJo, $aShortName), \call_user_func($replaceJo, $bShortName));
+            }
+        );
+
         return $this->render(
             'bibliography/list.html.twig',
             [
                 'translationContext' => 'controller.bibliographic-record.list',
                 'assetsContext' => 'bibliographic-record/list',
-                'records' => $entityManager
-                    ->getRepository(BibliographicRecord::class)
-                    ->findBy([], ['shortName' => 'ASC']),
+                'records' => $records,
                 'post' => $postRepository->findBibliographyDescription(),
             ]
         );

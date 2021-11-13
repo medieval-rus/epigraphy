@@ -1,0 +1,63 @@
+/*
+ * This file is part of «Epigraphy of Medieval Rus» database.
+ *
+ * Copyright (c) National Research University Higher School of Economics
+ *
+ * «Epigraphy of Medieval Rus» database is free software:
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, version 3.
+ *
+ * «Epigraphy of Medieval Rus» database is distributed
+ * in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code. If you have not received
+ * a copy of the GNU General Public License along with
+ * «Epigraphy of Medieval Rus» database,
+ * see <http://www.gnu.org/licenses/>.
+ */
+
+@import '../base';
+
+.eomr-card-columns {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    -webkit-column-gap: 1.25rem;
+    -moz-column-gap: 1.25rem;
+    column-gap: 1.25rem;
+    orphans: 1;
+    widows: 1;
+
+    .eomr-card {
+        color: $body-color;
+        display: inline-block;
+        width: 100%;
+
+        > .eomr-card-body {
+            > .eomr-card-title {
+                font-weight: bold;
+            }
+
+            > .eomr-card-text {
+                > .eomr-additional-data-container {
+                    overflow: hidden;
+
+                    > .eomr-additional-data {
+                        display: inline-block;
+
+                        &.eomr-additional-data-left {
+                            float: left;
+                        }
+
+                        &.eomr-additional-data-right {
+                            float: right;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

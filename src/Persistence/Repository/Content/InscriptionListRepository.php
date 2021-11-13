@@ -25,44 +25,33 @@ declare(strict_types=1);
 
 namespace App\Persistence\Repository\Content;
 
-use App\Persistence\Entity\Content\Post;
+use App\Persistence\Entity\Content\InscriptionList;
+use App\Persistence\Entity\Epigraphy\Inscription;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 
-final class PostRepository extends ServiceEntityRepository
+final class InscriptionListRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Post::class);
+        parent::__construct($registry, InscriptionList::class);
     }
 
-    public function findAboutSite(): Post
+    /**
+     * @return Collection|Inscription[]
+     */
+    public function findFavoriteInscriptions(): Collection
     {
-        return $this->find(1);
-    }
+        $favoritesList = $this->find(1);
 
-    public function findNews(): Post
-    {
-        return $this->find(2);
-    }
+        if (null === $favoritesList) {
+            return new ArrayCollection();
+        }
 
-    public function findLegend(): Post
-    {
-        return $this->find(3);
-    }
-
-    public function findBibliographyDescription(): Post
-    {
-        return $this->find(4);
-    }
-
-    public function findIndex(): Post
-    {
-        return $this->find(5);
-    }
-
-    public function findDatabase(): Post
-    {
-        return $this->find(6);
+        return $favoritesList
+            ->getInscriptions()
+            ->filter(fn (Inscription $inscription): bool => $inscription->getIsShownOnSite());
     }
 }

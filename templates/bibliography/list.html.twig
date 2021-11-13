@@ -26,17 +26,38 @@
     {% import 'content/post.html.twig' as post_helper %}
     {% import _self as self %}
 
-    {{ post_helper.render_post_body(post.body) }}
+    {{ post_helper.render_post_body(post, false) }}
 
     {% for record in records %}
-        <p>{{ self.render_record(record) }}</p>
+        <p>{{ self.render_record(translationContext, record) }}</p>
     {% endfor %}
 {%- endblock -%}
 
-{%- macro render_record(bibliographicRecord) -%}
+{%- macro render_record(translationContext, bibliographicRecord) -%}
+
+    {% import _self as self %}
+
     <span>
         <span>{{- bibliographicRecord.shortName -}}</span>
+        {{- self.create_download_icon(translationContext, bibliographicRecord) -}}
+        {{- self.create_remark_if_pre_publication(translationContext, bibliographicRecord) -}}
         {{- ' — ' -}}
         <span>{{- bibliographicRecord.formalNotation -}}</span>
     </span>
+{%- endmacro -%}
+
+{%- macro create_download_icon(translationContext, bibliographicRecord) -%}
+    {%- if bibliographicRecord.mainFile is not null -%}
+        <a class="eomr-download-icon" href="{{ bibliographicRecord.mainFile.url }}">
+            {{- include('_download_icon.html.twig') -}}
+        </a>
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro create_remark_if_pre_publication(translationContext, bibliographicRecord) -%}
+    {%- if bibliographicRecord.year is null -%}
+        <span aria-label="{{ 'prePublicationRemark'|transWithContext(translationContext) }}" data-microtip-position="top" role="tooltip" >
+            <span class="eomr-bibliography-remark">*</span>
+        </span>
+    {%- endif -%}
 {%- endmacro -%}

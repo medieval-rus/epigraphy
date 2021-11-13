@@ -68,6 +68,10 @@ final class MenuBuilder
         ;
 
         $menu
+            ->addChild('page.menu.legend', ['route' => 'information__legend'])
+        ;
+
+        $menu
             ->addChild('page.menu.bibliography', ['route' => 'bibiliograpic_record__list'])
         ;
 

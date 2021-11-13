@@ -23,46 +23,25 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Content;
+namespace DoctrineMigrations;
 
-use App\Persistence\Entity\Content\Post;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
-final class PostRepository extends ServiceEntityRepository
+final class Version20211112162234 extends AbstractMigration
 {
-    public function __construct(ManagerRegistry $registry)
+    public function getDescription(): string
     {
-        parent::__construct($registry, Post::class);
+        return 'Bibliographic record: nullable year of publication.';
     }
 
-    public function findAboutSite(): Post
+    public function up(Schema $schema): void
     {
-        return $this->find(1);
+        $this->addSql('ALTER TABLE bibliography__bibliographic_record CHANGE year year INT DEFAULT NULL');
     }
 
-    public function findNews(): Post
+    public function down(Schema $schema): void
     {
-        return $this->find(2);
-    }
-
-    public function findLegend(): Post
-    {
-        return $this->find(3);
-    }
-
-    public function findBibliographyDescription(): Post
-    {
-        return $this->find(4);
-    }
-
-    public function findIndex(): Post
-    {
-        return $this->find(5);
-    }
-
-    public function findDatabase(): Post
-    {
-        return $this->find(6);
+        $this->addSql('ALTER TABLE bibliography__bibliographic_record CHANGE year year INT NOT NULL');
     }
 }

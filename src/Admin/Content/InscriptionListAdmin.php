@@ -23,46 +23,31 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Persistence\Repository\Content;
+namespace App\Admin\Content;
 
-use App\Persistence\Entity\Content\Post;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Admin\AbstractEntityAdmin;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Form\FormMapper;
 
-final class PostRepository extends ServiceEntityRepository
+final class InscriptionListAdmin extends AbstractEntityAdmin
 {
-    public function __construct(ManagerRegistry $registry)
+    protected $baseRouteName = 'content_inscription_list';
+
+    protected $baseRoutePattern = 'content/inscription-list';
+
+    protected function configureListFields(ListMapper $listMapper): void
     {
-        parent::__construct($registry, Post::class);
+        $listMapper
+            ->addIdentifier('name', null, $this->createLabeledListOptions('name'))
+        ;
     }
 
-    public function findAboutSite(): Post
+    protected function configureFormFields(FormMapper $formMapper): void
     {
-        return $this->find(1);
-    }
-
-    public function findNews(): Post
-    {
-        return $this->find(2);
-    }
-
-    public function findLegend(): Post
-    {
-        return $this->find(3);
-    }
-
-    public function findBibliographyDescription(): Post
-    {
-        return $this->find(4);
-    }
-
-    public function findIndex(): Post
-    {
-        return $this->find(5);
-    }
-
-    public function findDatabase(): Post
-    {
-        return $this->find(6);
+        $formMapper
+            ->add('name', null, $this->createLabeledFormOptions('name'))
+            ->add('description', null, $this->createLabeledFormOptions('description'))
+            ->add('inscriptions', null, $this->createLabeledManyToManyFormOptions('inscriptions'))
+        ;
     }
 }

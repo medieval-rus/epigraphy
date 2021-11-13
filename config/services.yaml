@@ -17,8 +17,10 @@
 # «Epigraphy of Medieval Rus» database,
 # see <http://www.gnu.org/licenses/>.
 
+
 parameters:
   locale: 'ru'
+  favorite_inscriptions_count: 6
 
 services:
   _defaults:

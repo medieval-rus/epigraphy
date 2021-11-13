@@ -118,6 +118,14 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                 ->setIsSortable(false)
                 ->setLabel('controller.inscription.list.table.column.carrier.origin1'),
             (new ColumnMetadata())
+                ->setName('carrier-origin2')
+                ->setValueExtractor(function (Inscription $inscription): string {
+                    return $inscription->getCarrier()->getOrigin2() ?? '';
+                })
+                ->setIsIdentifier(false)
+                ->setIsSortable(false)
+                ->setLabel('controller.inscription.list.table.column.carrier.origin2'),
+            (new ColumnMetadata())
                 ->setName('interpretation-contentCategories')
                 ->setValueExtractor(function (Inscription $inscription): string {
                     return $this->valueStringifier->stringify($inscription, 'contentCategories') ?? '-';

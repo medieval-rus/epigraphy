@@ -34,6 +34,8 @@ menu:
   paragraphs:
     post:
       label: Страницы
+    inscriptionList:
+      label: Списки надписей
     user:
       label: Пользователи
     carrier:
@@ -158,6 +160,11 @@ form:
     section:
       common:
         label: Страница
+  inscriptionList:
+    fields:
+      name: Название списка
+      description: Описание
+      inscriptions: Надписи в списке
   user:
     fields:
       id: Внутренний идентификатор
@@ -271,6 +278,7 @@ form:
       conventionalDate: Условная дата
       carrier: Носитель
       comment: Комментарий
+      isShownOnSite: Показывать надпись на сайте
       zeroRow:
         origin: Происхождение надписи
         originReferences: Происхождение надписи (ссылки)
@@ -430,6 +438,9 @@ form:
 post_list: Страницы
 post_create: Добавить новую страницу
 post_delete: Удалить страницу
+inscriptionList_list: Списки надписей
+inscriptionList_create: Создать список
+inscriptionList_delete: Удалить список
 user_list: Пользователи
 user_create: Добавить нового пользователя
 user_delete: Удалить пользователя

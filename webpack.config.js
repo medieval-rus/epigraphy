@@ -37,6 +37,7 @@ Encore
         config.corejs = 3;
     })
     .enableSassLoader()
+    .addStyleEntry('css/site/index/index', './assets/scss/pages/site/index/index.scss')
     .addStyleEntry('css/site/content/post', './assets/scss/pages/site/content/post.scss')
     .addStyleEntry('css/site/security/login', './assets/scss/pages/site/security/login.scss')
     .addStyleEntry('css/site/inscription/list', './assets/scss/pages/site/inscription/list.scss')

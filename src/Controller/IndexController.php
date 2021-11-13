@@ -25,46 +25,36 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Persistence\Entity\Epigraphy\Inscription;
+use App\Persistence\Repository\Content\InscriptionListRepository;
 use App\Persistence\Repository\Content\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Vyfony\Bundle\FilterableTableBundle\Table\TableInterface;
 
-/**
- * @Route("/inscription")
- */
-final class InscriptionController extends AbstractController
+final class IndexController extends AbstractController
 {
     /**
-     * @Route("/list", name="inscription__list", methods={"GET"})
+     * @Route("/", name="index")
      */
-    public function list(PostRepository $postRepository, TableInterface $filterableTable): Response
+    public function indexAction(PostRepository $postRepository, InscriptionListRepository $inscriptionListRepository): Response
     {
-        return $this->render(
-            'inscription/list.html.twig',
-            [
-                'translationContext' => 'controller.inscription.list',
-                'assetsContext' => 'inscription/list',
-                'filterForm' => $filterableTable->getFormView(),
-                'table' => $filterableTable->getTableMetadata(),
-                'post' => $postRepository->findDatabase(),
-            ]
-        );
-    }
+        $favoriteInscriptions = $inscriptionListRepository->findFavoriteInscriptions()->toArray();
 
-    /**
-     * @Route("/show/{id}", name="inscription__show", methods={"GET"})
-     */
-    public function show(Inscription $inscription): Response
-    {
+        shuffle($favoriteInscriptions);
+
+        $favoriteInscriptions = \array_slice(
+            $favoriteInscriptions,
+            0,
+            $this->getParameter('favorite_inscriptions_count')
+        );
+
         return $this->render(
-            'inscription/show.html.twig',
+            'index/index.html.twig',
             [
-                'translationContext' => 'controller.inscription.show',
-                'assetsContext' => 'inscription/show',
-                'inscription' => $inscription,
+                'translationContext' => 'controller.index.index',
+                'assetsContext' => 'index/index',
+                'inscriptions' => $favoriteInscriptions,
+                'post' => $postRepository->findIndex(),
             ]
         );
     }

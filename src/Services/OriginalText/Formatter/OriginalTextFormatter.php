@@ -72,7 +72,7 @@ final class OriginalTextFormatter implements OriginalTextFormatterInterface
         }
     }
 
-    private function formatLigatureTextPiece(LigatureTextPiece $textPiece)
+    private function formatLigatureTextPiece(LigatureTextPiece $textPiece): string
     {
         $text = nl2br($textPiece->getText());
 

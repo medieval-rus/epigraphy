@@ -17,9 +17,9 @@
 # «Epigraphy of Medieval Rus» database,
 # see <http://www.gnu.org/licenses/>.
 
-index:
+root:
   path: /
-  controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
   defaults:
-    route: inscription__list
+    _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
+    route: index
     permanent: true

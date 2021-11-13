@@ -20,7 +20,8 @@
  */
 
 @import '../base';
+@import '~microtip/microtip';
 
-.vyfony-bibliography-bibliographic-record-short-name {
-  font-weight: bold;
+.eomr-bibliography-remark {
+  cursor: pointer;
 }

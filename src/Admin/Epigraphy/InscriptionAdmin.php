@@ -108,6 +108,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add('conventionalDate', null, $this->createLabeledFormOptions('conventionalDate'))
                     ->add('carrier', null, $this->createLabeledFormOptions('carrier'))
                     ->add('comment', null, $this->createLabeledFormOptions('comment'))
+                    ->add('isShownOnSite', null, $this->createLabeledFormOptions('isShownOnSite'))
                 ->end()
             ->end()
             ->tab($this->getTabLabel('actualResearchInformation'))

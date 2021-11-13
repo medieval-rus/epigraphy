@@ -17,7 +17,13 @@
 # «Epigraphy of Medieval Rus» database,
 # see <http://www.gnu.org/licenses/>.
 
+
 controller:
+  index:
+    index:
+      title: Главная
+      favoriteInsritpion:
+        label: Надпись %id%
   security:
     login:
       title: Авторизация
@@ -29,6 +35,7 @@ controller:
   bibliographic-record:
     list:
       title: Библиография
+      prePublicationRemark: Публикация готовится к печати
   inscription:
     list:
       title: Список надписей
@@ -39,6 +46,7 @@ controller:
           carrier:
             category: Категория носителя
             origin1: Город, местность
+            origin2: Здание, раскоп
           interpretation:
             text: Текст
             content: Содержание
@@ -115,6 +123,7 @@ page:
     news: Новости
     bibliography: Библиография
     dataBase: База данных
+    legend: Условные обозначения
   footer: © 2019 – Национальный исследовательский университет «Высшая школа экономики»; Институт славяноведения Российской академии наук
 
 type:
@@ -126,3 +135,5 @@ originalText:
   ligature: Лигатура "%symbols%".
 image:
   source: Взято из работы %source%
+post:
+  admin: Редактировать запись в админке
