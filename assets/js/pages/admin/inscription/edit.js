@@ -28,14 +28,55 @@ const virtualKeyboardCoordinates = {
     left: 0,
 }
 $(() => {
+    createCheckboxes();
+    copyValuesFromZeroRowToInterpretation();
     forwardChangesFromInterpretationToZeroRow();
     forwardChangesFromZeroRowToInterpretation();
     enableVirtualKeyboards();
 });
 
+function createCheckboxes() {
+
+    $('body').find('[data-zero-row-part]').each((index, dom) => {
+
+        const element = $(dom);
+
+        const zeroRowFieldName = element.attr('data-zero-row-part');
+
+        const checkboxElement = $('<div/>')
+            .append(
+                $('<div/>')
+                    .addClass('form-group')
+                    .append(
+                        $('<div/>')
+                            .append(
+                                $('<div/>')
+                                    .addClass('checkbox')
+                                    .append(
+                                        $('<label/>')
+                                            .append(
+                                                $(`<input type="checkbox" data-zero-row-part-checkbox="${zeroRowFieldName}"/>`),
+                                                $('<span class="control-label__text">Часть нулевой строки</span>')
+                                            )
+                                    )
+                            )
+                    )
+            );
+
+        checkboxElement.insertAfter(element.parent().parent().parent());
+    });
+}
+
+function copyValuesFromZeroRowToInterpretation()
+{
+    $('body').find('[data-zero-row-references]').each((index, dom) => {
+        copySingleValueFromZeroRowToInterpretation(dom);
+    });
+}
+
 function forwardChangesFromInterpretationToZeroRow()
 {
-    $('body').on('change', '[data-zero-row-part]', (event) => {
+    $('body').on('change', '[data-zero-row-part-checkbox]', (event) => {
 
         const checkboxElement = $(event.target);
 
@@ -52,7 +93,7 @@ function forwardChangesFromInterpretationToZeroRow()
         if (!Number.isNaN(interpretationId)) {
             const isChecked = event.target.checked;
 
-            const zeroRowFieldName = checkboxElement.attr('data-zero-row-part');
+            const zeroRowFieldName = checkboxElement.attr('data-zero-row-part-checkbox');
 
             const inscriptionFormElement = interpretationElement.closest('form');
 
@@ -69,33 +110,34 @@ function forwardChangesFromInterpretationToZeroRow()
 function forwardChangesFromZeroRowToInterpretation()
 {
     $('[data-zero-row-references]').on('change', (event) => {
-
-        const selectDom = event.target;
-
-        const selectElement = $(selectDom);
-
-        const zeroRowFieldName = selectElement.attr('data-zero-row-references');
-
-        const inscriptionFormElement = selectElement.closest('form');
-
-        const interpretationsOptionsDom = selectDom.options;
-
-        for (let index = 0; index < interpretationsOptionsDom.length; index++) {
-            const interpretationOption = interpretationsOptionsDom[index];
-
-            const interpretationId = interpretationOption.value;
-            const isInterpretationSelected = interpretationOption.selected;
-
-            const interpretationElement = inscriptionFormElement
-                .find('[data-interpretation-id="' + interpretationId + '"]')
-                .parent().parent().parent().parent().parent().parent().parent();
-
-            const interpretationCheckboxElement = interpretationElement
-                .find('[data-zero-row-part="' + zeroRowFieldName + '"]');
-
-            interpretationCheckboxElement[0].checked = isInterpretationSelected;
-        }
+        copySingleValueFromZeroRowToInterpretation(event.target)
     });
+}
+
+function copySingleValueFromZeroRowToInterpretation(selectDom)
+{
+    const selectElement = $(selectDom);
+    const zeroRowFieldName = selectElement.attr('data-zero-row-references');
+
+    const inscriptionFormElement = selectElement.closest('form');
+
+    const interpretationsOptionsDom = selectDom.options;
+
+    for (let index = 0; index < interpretationsOptionsDom.length; index++) {
+        const interpretationOption = interpretationsOptionsDom[index];
+
+        const interpretationId = interpretationOption.value;
+        const isInterpretationSelected = interpretationOption.selected;
+
+        const interpretationElement = inscriptionFormElement
+            .find('[data-interpretation-id="' + interpretationId + '"]')
+            .parent().parent().parent().parent().parent().parent().parent();
+
+        const interpretationCheckboxElement = interpretationElement
+            .find('[data-zero-row-part-checkbox="' + zeroRowFieldName + '"]');
+
+        interpretationCheckboxElement[0].checked = isInterpretationSelected;
+    }
 }
 
 function enableVirtualKeyboards()

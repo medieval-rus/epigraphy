@@ -366,26 +366,6 @@ form:
       historicalDate: «Историческая» дата
       photos: Фото (файлы)
       drawings: Прориси (файлы)
-      isPartOfZeroRow:
-        origin: Часть нулевой строки
-        placeOnCarrier: Часть нулевой строки
-        writingTypes: Часть нулевой строки
-        writingMethods: Часть нулевой строки
-        preservationStates: Часть нулевой строки
-        materials: Часть нулевой строки
-        alphabets: Часть нулевой строки
-        text: Часть нулевой строки
-        textImages: Часть нулевой строки
-        transliteration: Часть нулевой строки
-        translation: Часть нулевой строки
-        contentCategories: Часть нулевой строки
-        content: Часть нулевой строки
-        dateInText: Часть нулевой строки
-        stratigraphicalDate: Часть нулевой строки
-        nonStratigraphicalDate: Часть нулевой строки
-        historicalDate: Часть нулевой строки
-        photos: Часть нулевой строки
-        drawings: Часть нулевой строки
   file:
     fields:
       id: Внутренний идентификатор

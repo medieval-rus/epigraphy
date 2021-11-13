@@ -26,9 +26,7 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractEntityAdmin;
-use App\Admin\Epigraphy\Models\AdminInterpretationWrapper;
 use App\DataStorage\DataStorageManagerInterface;
-use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Media\File;
 use Doctrine\ORM\EntityRepository;
@@ -58,35 +56,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         parent::__construct($code, $class, $baseControllerName);
 
         $this->dataStorageManager = $dataStorageManager;
-    }
-
-    /**
-     * @param Inscription $object
-     */
-    public function preUpdate(object $object): void
-    {
-        $inscription = $object;
-        $zeroRow = $inscription->getZeroRow();
-        $interpretations = $inscription->getInterpretations();
-
-        $unwrappedInterpretations = [];
-
-        foreach ($interpretations as $index => $element) {
-            if ($element instanceof AdminInterpretationWrapper) {
-                $wrapper = $element;
-                $interpretation = $wrapper->toInterpretation();
-
-                $unwrappedInterpretations[$index] = $interpretation;
-
-                if (null === $interpretation->getId()) {
-                    $wrapper->updateZeroRow($zeroRow);
-                }
-            }
-        }
-
-        foreach ($unwrappedInterpretations as $index => $interpretation) {
-            $interpretations->set($index, $interpretation);
-        }
     }
 
     protected function configureListFields(ListMapper $listMapper): void

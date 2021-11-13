@@ -51,7 +51,6 @@ final class BibliographicRecordController extends AbstractController
         usort(
             $records,
             static function (BibliographicRecord $a, BibliographicRecord $b) use ($replaceJo): int {
-
                 $aShortName = $a->getShortName();
                 $bShortName = $b->getShortName();
 
