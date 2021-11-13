@@ -169,7 +169,11 @@
 {%- macro get_literature_row_td_content(inscription) -%}
     {% import _self as self %}
 
-    {{- inscription.interpretations|map(interpretation => interpretation.source.shortName)|join(', ') -}}
+    {{- inscription.interpretations|map(interpretation => self.format_literature_item(interpretation))|join(', ')|raw -}}
+{%- endmacro -%}
+
+{%- macro format_literature_item(interpretation) -%}
+    <a href="{{ path("bibliographic_record__list") }}#{{ interpretation.source.shortName }}">{{ interpretation.source.shortName }}</a>
 {%- endmacro -%}
 
 {%- macro fill_row(thContent, tdContent) -%}

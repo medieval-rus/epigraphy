@@ -38,7 +38,7 @@ use Symfony\Component\Routing\Annotation\Route;
 final class BibliographicRecordController extends AbstractController
 {
     /**
-     * @Route("/list", name="bibiliograpic_record__list", methods={"GET"})
+     * @Route("/list", name="bibliographic_record__list", methods={"GET"})
      */
     public function list(EntityManagerInterface $entityManager, PostRepository $postRepository): Response
     {

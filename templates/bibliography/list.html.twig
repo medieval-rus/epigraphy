@@ -37,7 +37,7 @@
 
     {% import _self as self %}
 
-    <span>
+    <span id="{{ bibliographicRecord.shortName }}">
         <span>{{- bibliographicRecord.shortName -}}</span>
         {{- self.create_download_icon(translationContext, bibliographicRecord) -}}
         {{- self.create_remark_if_pre_publication(translationContext, bibliographicRecord) -}}

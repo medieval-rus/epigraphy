@@ -72,7 +72,7 @@ final class MenuBuilder
         ;
 
         $menu
-            ->addChild('page.menu.bibliography', ['route' => 'bibiliograpic_record__list'])
+            ->addChild('page.menu.bibliography', ['route' => 'bibliographic_record__list'])
         ;
 
         $menu
