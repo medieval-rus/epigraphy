@@ -52,7 +52,7 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
     public function format(StringActualValue $actualValue, string $formatType): string
     {
         $value = $actualValue->getValue();
-        $description = $actualValue->getDescription() ?? $this->translator->trans('actualValue.original');
+        $description = $actualValue->getDescription();
 
         switch ($formatType) {
             case self::FORMAT_TYPE_DEFAULT:
@@ -61,12 +61,17 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
 
             case self::FORMAT_TYPE_ORIGINAL_TEXT:
                 $formattedValue = $this->originalTextFormatter->format($this->originalTextParser->parse($value));
+
+                if (null === $description) {
+                    $description = $this->translator->trans('actualValue.original');
+                }
+
                 break;
 
             default:
                 throw new InvalidArgumentException(sprintf('Unknown value format type "%s"', $formatType));
         }
 
-        return sprintf('%s (%s)', $formattedValue, $description);
+        return null !== $description ? sprintf('%s (%s)', $formattedValue, $description) : $formattedValue;
     }
 }
