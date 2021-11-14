@@ -169,7 +169,7 @@
 {%- macro get_literature_row_td_content(inscription) -%}
     {% import _self as self %}
 
-    {{- inscription.interpretations|map(interpretation => interpretation.source)|sort((a, b) => bibliographicRecordComparer.Compare(a, b))|map(record => self.format_literature_item(record))|join(', ')|raw -}}
+    {{- inscription.interpretations|map(interpretation => interpretation.source)|sort((a, b) => bibliographicRecordComparer.CompareByYear(a, b))|map(record => self.format_literature_item(record))|join(', ')|raw -}}
 {%- endmacro -%}
 
 {%- macro format_literature_item(bibliographicRecord) -%}

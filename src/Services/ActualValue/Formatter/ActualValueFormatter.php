@@ -57,6 +57,7 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
         switch ($formatType) {
             case self::FORMAT_TYPE_DEFAULT:
                 $formattedValue = nl2br(htmlspecialchars($value));
+
                 break;
 
             case self::FORMAT_TYPE_ORIGINAL_TEXT:

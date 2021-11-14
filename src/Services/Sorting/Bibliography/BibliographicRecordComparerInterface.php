@@ -29,5 +29,7 @@ use App\Persistence\Entity\Bibliography\BibliographicRecord;
 
 interface BibliographicRecordComparerInterface
 {
-    public function Compare(BibliographicRecord $a, BibliographicRecord $b): int;
+    public function CompareByName(BibliographicRecord $a, BibliographicRecord $b): int;
+
+    public function CompareByYear(BibliographicRecord $a, BibliographicRecord $b): int;
 }

@@ -29,15 +29,15 @@ use App\Persistence\Entity\Bibliography\BibliographicRecord;
 
 final class BibliographicRecordComparer implements BibliographicRecordComparerInterface
 {
-    public function Compare(BibliographicRecord $a, BibliographicRecord $b): int
+    private const CyrillicNamePatter = '/^[а-яёА-ЯЁ].*$/u';
+
+    public function CompareByName(BibliographicRecord $a, BibliographicRecord $b): int
     {
         $aShortName = $a->getShortName();
         $bShortName = $b->getShortName();
 
-        $pattern = '/^[а-яёА-ЯЁ].*$/u';
-
-        $aIsCyrillic = 1 === preg_match($pattern, $aShortName);
-        $bIsCyrillic = 1 === preg_match($pattern, $bShortName);
+        $aIsCyrillic = 1 === preg_match(self::CyrillicNamePatter, $aShortName);
+        $bIsCyrillic = 1 === preg_match(self::CyrillicNamePatter, $bShortName);
 
         if ($aIsCyrillic && !$bIsCyrillic) {
             return -1;
@@ -52,6 +52,18 @@ final class BibliographicRecordComparer implements BibliographicRecordComparerIn
         }
 
         return strnatcmp($this->replaceJo($aShortName), $this->replaceJo($bShortName));
+    }
+
+    public function CompareByYear(BibliographicRecord $a, BibliographicRecord $b): int
+    {
+        $aYear = $a->getYear();
+        $bYear = $b->getYear();
+
+        if ($aYear === $bYear) {
+            return 0;
+        }
+
+        return $aYear > $bYear ? 1 : -1;
     }
 
     private function replaceJo(string $input): string

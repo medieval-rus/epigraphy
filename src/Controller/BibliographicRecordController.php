@@ -50,7 +50,7 @@ final class BibliographicRecordController extends AbstractController
             ->getRepository(BibliographicRecord::class)
             ->findBy([], ['shortName' => 'ASC']);
 
-        usort($records, [$comparer, 'Compare']);
+        usort($records, [$comparer, 'CompareByName']);
 
         return $this->render(
             'bibliography/list.html.twig',

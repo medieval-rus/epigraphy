@@ -63,8 +63,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_origin_references")
      */
@@ -82,8 +81,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_place_on_carrier_references")
      */
@@ -102,8 +100,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_writing_type_references")
      */
@@ -122,8 +119,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_writing_method_references")
      */
@@ -142,8 +138,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_preservation_state_references")
      */
@@ -162,8 +157,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_material_references")
      */
@@ -182,8 +176,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_alphabet_references")
      */
@@ -201,8 +194,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_text_references")
      */
@@ -221,8 +213,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_text_images_references")
      */
@@ -240,8 +231,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_transliteration_references")
      */
@@ -259,8 +249,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_translation_references")
      */
@@ -279,8 +268,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_content_category_references")
      */
@@ -298,8 +286,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_content_references")
      */
@@ -317,8 +304,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_date_in_text_references")
      */
@@ -336,8 +322,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_stratigraphical_date_references")
      */
@@ -355,8 +340,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_non_stratigraphical_date_references")
      */
@@ -374,8 +358,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_historical_date_references")
      */
@@ -394,8 +377,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_photos_references")
      */
@@ -414,8 +396,7 @@ class ZeroRow
      *
      * @ORM\ManyToMany(
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="zero_row_drawings_references")
      */
