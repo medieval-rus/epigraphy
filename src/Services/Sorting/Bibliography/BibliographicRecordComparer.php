@@ -63,6 +63,14 @@ final class BibliographicRecordComparer implements BibliographicRecordComparerIn
             return 0;
         }
 
+        if (null === $bYear) {
+            return 1;
+        }
+
+        if (null === $aYear) {
+            return -1;
+        }
+
         return $aYear > $bYear ? 1 : -1;
     }
 
