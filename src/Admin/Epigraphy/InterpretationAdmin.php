@@ -141,17 +141,13 @@ final class InterpretationAdmin extends AbstractEntityAdmin
         string $label,
         array $options = []
     ): array {
-        return $this->createLabeledFormOptions(
-            $label,
-            array_merge(
-                $options,
-                [
-                    'required' => false,
-                    'attr' => [
-                        'data-zero-row-part' => $label.'References',
-                    ],
-                ]
-            )
+        $options['attr'] = array_merge(
+            [
+                'data-zero-row-part' => $label.'References',
+            ],
+            \array_key_exists('attr', $options) ? $options['attr'] : []
         );
+
+        return $this->createLabeledFormOptions($label, array_merge(['required' => false], $options));
     }
 }
