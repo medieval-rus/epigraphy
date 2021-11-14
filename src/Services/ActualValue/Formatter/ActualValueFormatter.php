@@ -29,6 +29,7 @@ use App\Models\StringActualValue;
 use App\Services\OriginalText\Formatter\OriginalTextFormatterInterface;
 use App\Services\OriginalText\Parser\OriginalTextParserInterface;
 use InvalidArgumentException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ActualValueFormatter implements ActualValueFormatterInterface
 {
@@ -36,18 +37,22 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
 
     private OriginalTextFormatterInterface $originalTextFormatter;
 
+    private TranslatorInterface $translator;
+
     public function __construct(
         OriginalTextParserInterface $originalTextParser,
-        OriginalTextFormatterInterface $originalTextFormatter
+        OriginalTextFormatterInterface $originalTextFormatter,
+        TranslatorInterface $translator
     ) {
         $this->originalTextParser = $originalTextParser;
         $this->originalTextFormatter = $originalTextFormatter;
+        $this->translator = $translator;
     }
 
     public function format(StringActualValue $actualValue, string $formatType): string
     {
         $value = $actualValue->getValue();
-        $source = $actualValue->getDescription();
+        $description = $actualValue->getDescription() ?? $this->translator->trans('actualValue.original');
 
         switch ($formatType) {
             case self::FORMAT_TYPE_DEFAULT:
@@ -62,6 +67,6 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
                 throw new InvalidArgumentException(sprintf('Unknown value format type "%s"', $formatType));
         }
 
-        return null !== $source ? sprintf('%s (%s)', $formattedValue, $source) : $formattedValue;
+        return sprintf('%s (%s)', $formattedValue, $description);
     }
 }

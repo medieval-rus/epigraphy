@@ -135,5 +135,7 @@ originalText:
   ligature: Лигатура "%symbols%".
 image:
   source: Взято из работы %source%
+actualValue:
+  original: Текст выверен работающим над базой научным коллективом
 post:
   admin: Редактировать запись в админке

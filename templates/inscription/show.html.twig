@@ -33,7 +33,6 @@
         <tbody>
             {{ self.format_text_row(translationContext, 'number', inscription.number) }}
             {{ self.format_text_row(translationContext, 'conventionalDate', inscription.conventionalDate) }}
-            {{ self.format_text_row(translationContext, 'comment', inscription.comment) }}
             {{ self.format_literature(translationContext, inscription) }}
             {{ self.format_carrier(translationContext, inscription) }}
             {{ self.format_text_row(translationContext, 'zeroRow.origin', self.format_zero_row(inscription, 'origin')) }}
@@ -54,6 +53,7 @@
             {{ self.format_text_row(translationContext, 'zeroRow.stratigraphicalDate', self.format_zero_row(inscription, 'stratigraphicalDate')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.nonStratigraphicalDate', self.format_zero_row(inscription, 'nonStratigraphicalDate')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.historicalDate', self.format_zero_row(inscription, 'historicalDate')) }}
+            {{ self.format_text_row(translationContext, 'comment', inscription.comment) }}
         </tbody>
     </table>
     {% if is_granted('ROLE_ADMIN') %}
@@ -169,11 +169,11 @@
 {%- macro get_literature_row_td_content(inscription) -%}
     {% import _self as self %}
 
-    {{- inscription.interpretations|map(interpretation => self.format_literature_item(interpretation))|join(', ')|raw -}}
+    {{- inscription.interpretations|map(interpretation => interpretation.source)|sort((a, b) => bibliographicRecordComparer.Compare(a, b))|map(record => self.format_literature_item(record))|join(', ')|raw -}}
 {%- endmacro -%}
 
-{%- macro format_literature_item(interpretation) -%}
-    <a href="{{ path("bibliographic_record__list") }}#{{ interpretation.source.shortName }}">{{ interpretation.source.shortName }}</a>
+{%- macro format_literature_item(bibliographicRecord) -%}
+    <a href="{{ path("bibliographic_record__list") }}#{{ bibliographicRecord.shortName }}">{{ bibliographicRecord.shortName }}</a>
 {%- endmacro -%}
 
 {%- macro fill_row(thContent, tdContent) -%}

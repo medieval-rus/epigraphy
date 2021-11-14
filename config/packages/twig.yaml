@@ -26,6 +26,7 @@ twig:
     valueStringifier: '@App\Services\Stringifier\ValueStringifierInterface'
     imagesFormatter: '@App\Services\Images\ImagesFormatterInterface'
     thumbnailsGenerator: '@App\Services\Media\Thumbnails\ThumbnailsGeneratorInterface'
+    bibliographicRecordComparer: '@App\Services\Sorting\Bibliography\BibliographicRecordComparerInterface'
 
 when@test:
   twig:
