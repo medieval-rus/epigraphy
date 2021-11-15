@@ -50,7 +50,7 @@
         <div class="eomr-card card">
             <div class="eomr-card-body card-body">
                 <h4 class="eomr-card-title card-title">{{ 'favoriteInsritpion.label'|transWithContext(translationContext, {'%id%': inscription.id}) }}</h4>
-                <p class="eomr-card-text card-text">{{- valueStringifier.stringify(inscription, 'content')|raw -}}</p>
+                <p class="eomr-card-text card-text">{{- valueStringifier.stringify(inscription, 'description')|raw -}}</p>
                 <div class="eomr-card-text card-text">
                     <div class="eomr-additional-data-container small">
                         <div class="eomr-additional-data eomr-additional-data-left">{{- self.render_origin(inscription) -}}</div>
