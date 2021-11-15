@@ -188,14 +188,14 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         $this->createLabeledReferencesFormOptions('contentCategoriesReferences')
                     )
                     ->add(
-                        'zeroRow.content',
+                        'zeroRow.description',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.content', ['required' => false])
+                        $this->createLabeledFormOptions('zeroRow.description', ['required' => false])
                     )
                     ->add(
-                        'zeroRow.contentReferences',
+                        'zeroRow.descriptionReferences',
                         EntityType::class,
-                        $this->createLabeledReferencesFormOptions('contentReferences')
+                        $this->createLabeledReferencesFormOptions('descriptionReferences')
                     )
                 ->end()
                 ->with($this->getSectionLabel('zeroRowHistoricalAspect'), ['class' => 'col-md-6'])

@@ -85,7 +85,7 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                     ->add('transliteration', null, $this->createZeroRowPartOptions('transliteration'))
                     ->add('translation', null, $this->createZeroRowPartOptions('translation'))
                     ->add('contentCategories', null, $this->createZeroRowPartOptions('contentCategories'))
-                    ->add('content', null, $this->createZeroRowPartOptions('content'))
+                    ->add('description', null, $this->createZeroRowPartOptions('description'))
                 ->end()
             ->end()
             ->tab($this->getTabLabel('historicalAspect'))

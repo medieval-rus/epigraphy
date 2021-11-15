@@ -17,7 +17,6 @@
 # «Epigraphy of Medieval Rus» database,
 # see <http://www.gnu.org/licenses/>.
 
-
 controller:
   index:
     index:
@@ -49,7 +48,7 @@ controller:
             origin2: Здание, раскоп
           interpretation:
             text: Текст
-            content: Содержание
+            description: Содержание
             contentCategory: Категория по содержанию
         resultsCount: "Найдено надписей: count"
       filter:
@@ -57,13 +56,14 @@ controller:
           label: Колонка с данными
           option:
             text: Текст
-            content: Содержание
+            description: Содержание
         carrierType: Тип носителя
         carrierCategory: Категория носителя
         writingType: Разряд
         writingMethod: Способ нанесения
         preservationState: Состояние сохранности
         alphabet: Алфавит
+        text: Текст надписи
         disablePaginator: показать на одной странице
         resetButton: Сбросить фильтры
         submitButton: Искать
@@ -104,7 +104,7 @@ controller:
             transliteration: Транслитерация
             translation: Перевод
             contentCategories: Категория по содержанию
-            content: Содержание
+            description: Содержание
             dateInText: Дата в тексте
             stratigraphicalDate: Стратиграфическая дата
             nonStratigraphicalDate: Внестратиграфическая дата

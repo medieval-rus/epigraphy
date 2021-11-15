@@ -29,6 +29,7 @@ use App\FilterableTable\Filter\Parameter\AlphabetFilterParameter;
 use App\FilterableTable\Filter\Parameter\CarrierCategoryFilterParameter;
 use App\FilterableTable\Filter\Parameter\CarrierTypeFilterParameter;
 use App\FilterableTable\Filter\Parameter\PreservationStateFilterParameter;
+use App\FilterableTable\Filter\Parameter\TextFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingTypeFilterParameter;
 use App\Persistence\Entity\Epigraphy\Inscription;
@@ -62,6 +63,8 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
 
     private AlphabetFilterParameter $alphabetFilterParameter;
 
+    private TextFilterParameter $textFilterParameter;
+
     public function __construct(
         ValueStringifierInterface $valueStringifier,
         CarrierTypeFilterParameter $carrierTypeFilterParameter,
@@ -69,7 +72,8 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         WritingTypeFilterParameter $writingTypeFilterParameter,
         WritingMethodFilterParameter $writingMethodFilterParameter,
         PreservationStateFilterParameter $preservationStateFilterParameter,
-        AlphabetFilterParameter $alphabetFilterParameter
+        AlphabetFilterParameter $alphabetFilterParameter,
+        TextFilterParameter $textFilterParameter
     ) {
         $this->valueStringifier = $valueStringifier;
         $this->carrierTypeFilterParameter = $carrierTypeFilterParameter;
@@ -78,6 +82,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         $this->writingMethodFilterParameter = $writingMethodFilterParameter;
         $this->preservationStateFilterParameter = $preservationStateFilterParameter;
         $this->alphabetFilterParameter = $alphabetFilterParameter;
+        $this->textFilterParameter = $textFilterParameter;
     }
 
     public function createSubmitButtonOptions(): array
@@ -152,6 +157,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
             $this->writingMethodFilterParameter,
             $this->preservationStateFilterParameter,
             $this->alphabetFilterParameter,
+            $this->textFilterParameter,
         ];
     }
 
@@ -164,16 +170,16 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
             (new RadioColumnChoiceTableParameter())
                 ->addRadioOption(
                     (new RadioOption())
-                        ->setName('content')
-                        ->setLabel('controller.inscription.list.filter.dataColumn.option.content')
+                        ->setName('description')
+                        ->setLabel('controller.inscription.list.filter.dataColumn.option.description')
                         ->setColumnMetadata(
                             (new ColumnMetadata())
                                 ->setIsRaw(true)
-                                ->setName('interpretation-content')
+                                ->setName('interpretation-description')
                                 ->setValueExtractor(function (Inscription $inscription): string {
-                                    return $this->valueStringifier->stringify($inscription, 'content') ?? '-';
+                                    return $this->valueStringifier->stringify($inscription, 'description') ?? '-';
                                 })
-                                ->setLabel('controller.inscription.list.table.column.interpretation.content')
+                                ->setLabel('controller.inscription.list.table.column.interpretation.description')
                         )
                 )
                 ->addRadioOption(

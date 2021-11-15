@@ -277,9 +277,9 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(name="content", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="description", type="text", length=65535, nullable=true)
      */
-    private $content;
+    private $description;
 
     /**
      * @var Collection|Interpretation[]
@@ -288,9 +288,9 @@ class ZeroRow
      *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinTable(name="zero_row_content_references")
+     * @ORM\JoinTable(name="zero_row_description_references")
      */
-    private $contentReferences;
+    private $descriptionReferences;
 
     /**
      * @var string|null
@@ -423,7 +423,7 @@ class ZeroRow
         $this->translationReferences = new ArrayCollection();
         $this->contentCategories = new ArrayCollection();
         $this->contentCategoriesReferences = new ArrayCollection();
-        $this->contentReferences = new ArrayCollection();
+        $this->descriptionReferences = new ArrayCollection();
         $this->dateInTextReferences = new ArrayCollection();
         $this->stratigraphicalDateReferences = new ArrayCollection();
         $this->nonStratigraphicalDateReferences = new ArrayCollection();
@@ -851,14 +851,14 @@ class ZeroRow
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getDescription(): ?string
     {
-        return $this->content;
+        return $this->description;
     }
 
-    public function setContent(?string $content): self
+    public function setDescription(?string $description): self
     {
-        $this->content = $content;
+        $this->description = $description;
 
         return $this;
     }
@@ -866,17 +866,17 @@ class ZeroRow
     /**
      * @return Collection|Interpretation[]
      */
-    public function getContentReferences(): Collection
+    public function getDescriptionReferences(): Collection
     {
-        return $this->contentReferences;
+        return $this->descriptionReferences;
     }
 
     /**
-     * @param Collection|Interpretation[] $contentReferences
+     * @param Collection|Interpretation[] $descriptionReferences
      */
-    public function setContentReferences(Collection $contentReferences): self
+    public function setDescriptionReferences(Collection $descriptionReferences): self
     {
-        $this->contentReferences = $contentReferences;
+        $this->descriptionReferences = $descriptionReferences;
 
         return $this;
     }

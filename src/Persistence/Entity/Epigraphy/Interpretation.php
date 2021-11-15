@@ -189,9 +189,9 @@ class Interpretation implements StringifiableEntityInterface
     /**
      * @var string|null
      *
-     * @ORM\Column(name="content", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="description", type="text", length=65535, nullable=true)
      */
-    private $content;
+    private $description;
 
     /**
      * @var string|null
@@ -505,14 +505,14 @@ class Interpretation implements StringifiableEntityInterface
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getDescription(): ?string
     {
-        return $this->content;
+        return $this->description;
     }
 
-    public function setContent(?string $content): self
+    public function setDescription(?string $description): self
     {
-        $this->content = $content;
+        $this->description = $description;
 
         return $this;
     }

@@ -307,8 +307,8 @@ form:
         translationReferences: Перевод (ссылки)
         contentCategories: Категория по содержанию
         contentCategoriesReferences: Категория по содержанию (ссылки)
-        content: Содержание
-        contentReferences: Содержание (ссылки)
+        description: Содержание
+        descriptionReferences: Содержание (ссылки)
         dateInText: Дата в тексте
         dateInTextReferences: Дата в тексте (ссылки)
         stratigraphicalDate: Стратиграфическая дата
@@ -362,7 +362,7 @@ form:
       transliteration: Транслитерация
       translation: Перевод
       contentCategories: Категория по содержанию
-      content: Содержание
+      description: Содержание
       dateInText: Дата в тексте
       stratigraphicalDate: Стратиграфическая дата
       nonStratigraphicalDate: Внестратиграфическая дата
