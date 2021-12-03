@@ -34,7 +34,9 @@
 
     {% import _self as self %}
 
-    <div>{{ post.body|raw }}</div>
+    {% if post.body is not empty %}
+        <div>{{ post.body|raw }}</div>
+    {% endif %}
 
     {% if is_granted('ROLE_ADMIN') and renderLinkToAdminPanel ?? true %}
         <div class="container">

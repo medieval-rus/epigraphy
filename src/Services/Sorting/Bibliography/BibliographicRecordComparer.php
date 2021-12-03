@@ -31,7 +31,49 @@ final class BibliographicRecordComparer implements BibliographicRecordComparerIn
 {
     private const CyrillicNamePatter = '/^[а-яёА-ЯЁ].*$/u';
 
-    public function CompareByName(BibliographicRecord $a, BibliographicRecord $b): int
+    public function compareByName(BibliographicRecord $a, BibliographicRecord $b): int
+    {
+        $result = $this->compareByNameOnly($a, $b);
+
+        if (0 === $result) {
+            return $this->compareByYearOnly($a, $b);
+        }
+
+        return $result;
+    }
+
+    public function compareByYear(BibliographicRecord $a, BibliographicRecord $b): int
+    {
+        $result = $this->compareByYearOnly($a, $b);
+
+        if (0 === $result) {
+            return $this->compareByNameOnly($a, $b);
+        }
+
+        return $result;
+    }
+
+    private function compareByYearOnly(BibliographicRecord $a, BibliographicRecord $b): int
+    {
+        $aYear = $a->getYear();
+        $bYear = $b->getYear();
+
+        if ($aYear === $bYear) {
+            return 0;
+        }
+
+        if (null === $aYear) {
+            return 1;
+        }
+
+        if (null === $bYear) {
+            return -1;
+        }
+
+        return $aYear > $bYear ? 1 : -1;
+    }
+
+    private function compareByNameOnly(BibliographicRecord $a, BibliographicRecord $b): int
     {
         $aShortName = $a->getShortName();
         $bShortName = $b->getShortName();
@@ -47,31 +89,9 @@ final class BibliographicRecordComparer implements BibliographicRecordComparerIn
             return 1;
         }
 
-        if (!$aIsCyrillic && !$bIsCyrillic) {
-            return strnatcmp($aShortName, $bShortName);
-        }
-
-        return strnatcmp($this->replaceJo($aShortName), $this->replaceJo($bShortName));
-    }
-
-    public function CompareByYear(BibliographicRecord $a, BibliographicRecord $b): int
-    {
-        $aYear = $a->getYear();
-        $bYear = $b->getYear();
-
-        if ($aYear === $bYear) {
-            return 0;
-        }
-
-        if (null === $bYear) {
-            return -1;
-        }
-
-        if (null === $aYear) {
-            return 1;
-        }
-
-        return $aYear > $bYear ? 1 : -1;
+        return !$aIsCyrillic && !$bIsCyrillic
+            ? strnatcmp($aShortName, $bShortName)
+            : strnatcmp($this->replaceJo($aShortName), $this->replaceJo($bShortName));
     }
 
     private function replaceJo(string $input): string

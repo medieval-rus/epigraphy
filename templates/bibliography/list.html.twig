@@ -21,6 +21,8 @@
 
 {%- extends 'base.html.twig' -%}
 
+{%- block title -%}{{ post.title }}{%- endblock -%}
+
 {%- block page_content -%}
 
     {% import 'content/post.html.twig' as post_helper %}
@@ -56,8 +58,8 @@
 
 {%- macro create_remark_if_pre_publication(translationContext, bibliographicRecord) -%}
     {%- if bibliographicRecord.year is null -%}
-        <span aria-label="{{ 'prePublicationRemark'|transWithContext(translationContext) }}" data-microtip-position="top" role="tooltip" >
-            <span class="eomr-bibliography-remark">*</span>
+        <span aria-label="{{ 'bibliography.prePublicationRemark'|trans }}" data-microtip-position="top" role="tooltip" >
+            <span class="eomr-bibliography-remark">{{ 'bibliography.prePublicationMark'|trans }}</span>
         </span>
     {%- endif -%}
 {%- endmacro -%}

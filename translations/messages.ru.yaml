@@ -34,7 +34,6 @@ controller:
   bibliographic-record:
     list:
       title: Библиография
-      prePublicationRemark: Публикация готовится к печати
   inscription:
     list:
       title: Список надписей
@@ -139,3 +138,6 @@ actualValue:
   original: Текст выверен работающим над базой научным коллективом
 post:
   admin: Редактировать запись в админке
+bibliography:
+  prePublicationMark: '[Предв.]'
+  prePublicationRemark: Публикация готовится к печати

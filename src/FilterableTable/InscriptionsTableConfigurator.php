@@ -93,10 +93,13 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setName('carrier-category')
                 ->setValueExtractor(static function (Inscription $inscription): string {
+                    if (null === $carrier = $inscription->getCarrier()) {
+                        return '';
+                    }
+
                     return implode(
                         ', ',
-                        $inscription
-                            ->getCarrier()
+                        $carrier
                             ->getCategories()
                             ->map(
                                 static function (CarrierCategory $carrierCategory): string {
@@ -112,7 +115,11 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setName('carrier-origin1')
                 ->setValueExtractor(function (Inscription $inscription): string {
-                    return $inscription->getCarrier()->getOrigin1() ?? '';
+                    if (null === $carrier = $inscription->getCarrier()) {
+                        return '';
+                    }
+
+                    return $carrier->getOrigin1() ?? '';
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)
@@ -120,7 +127,11 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setName('carrier-origin2')
                 ->setValueExtractor(function (Inscription $inscription): string {
-                    return $inscription->getCarrier()->getOrigin2() ?? '';
+                    if (null === $carrier = $inscription->getCarrier()) {
+                        return '';
+                    }
+
+                    return $carrier->getOrigin2() ?? '';
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)
