@@ -35,6 +35,7 @@ use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\Form\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -56,6 +57,20 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         parent::__construct($code, $class, $baseControllerName);
 
         $this->dataStorageManager = $dataStorageManager;
+    }
+
+    protected function configureRoutes(RouteCollectionInterface $collection): void
+    {
+        $collection->add('clone', $this->getRouterIdParameter().'/clone');
+    }
+
+    protected function configureActionButtons(array $buttonList, string $action, ?object $object = null): array
+    {
+        if ('edit' === $action) {
+            $buttonList['clone'] = ['template' => 'admin/clone_button.html.twig'];
+        }
+
+        return $buttonList;
     }
 
     protected function configureListFields(ListMapper $listMapper): void
@@ -326,11 +341,12 @@ final class InscriptionAdmin extends AbstractEntityAdmin
             $admin = $this->isChild() ? $this->getParent() : $this;
 
             if ((null !== $inscription = $this->getSubject()) && (null !== ($inscriptionId = $inscription->getId()))) {
-                $menu->addChild('tabMenu.siteView', [
-                    'uri' => $admin->getRouteGenerator()->generate('inscription__show', [
-                        'id' => $inscriptionId,
-                    ]),
-                ]);
+                $menu->addChild(
+                    'tabMenu.inscription.viewOnSite',
+                    [
+                        'uri' => $admin->getRouteGenerator()->generate('inscription__show', ['id' => $inscriptionId]),
+                    ]
+                );
             }
         }
     }

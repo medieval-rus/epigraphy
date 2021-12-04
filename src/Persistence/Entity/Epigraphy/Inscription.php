@@ -113,6 +113,15 @@ class Inscription implements StringifiableEntityInterface
         return (string) $this->getId();
     }
 
+    public function __clone()
+    {
+        $this->id = null;
+        $this->number = null;
+        $this->isShownOnSite = false;
+        $this->zeroRow = new ZeroRow();
+        $this->interpretations = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

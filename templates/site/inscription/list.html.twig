@@ -19,12 +19,12 @@
  # see <http://www.gnu.org/licenses/>.
  #}
 
-{%- extends 'base.html.twig' -%}
+{%- extends 'site/base.html.twig' -%}
 
 {%- block page_content -%}
 
     {% import '@VyfonyFilterableTable/filterable_table.html.twig' as filterable_table %}
-    {% import 'content/post.html.twig' as post_helper %}
+    {% import 'site/content/post.html.twig' as post_helper %}
 
     {{ post_helper.render_post_body(post, false) }}
 

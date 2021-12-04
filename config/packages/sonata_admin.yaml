@@ -73,6 +73,8 @@ sonata_admin:
   options:
     use_icheck: false
     default_admin_route: edit
+  templates:
+    user_block: 'admin/user_block.html.twig'
   global_search:
     admin_route: edit
   breadcrumbs:
@@ -182,7 +184,7 @@ services:
     arguments:
       - null
       - App\Persistence\Entity\Epigraphy\Inscription
-      - null
+      - App\Controller\Admin\ExtendedCrudController
       - '@App\DataStorage\DataStorageManagerInterface'
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]

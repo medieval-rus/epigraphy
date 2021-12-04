@@ -38,7 +38,7 @@ final class InformationController extends AbstractController
     public function aboutSite(PostRepository $postRepository): Response
     {
         return $this->render(
-            'content/post.html.twig',
+            'site/content/post.html.twig',
             [
                 'translationContext' => 'controller.information.aboutSite',
                 'assetsContext' => 'content/post',
@@ -53,7 +53,7 @@ final class InformationController extends AbstractController
     public function news(PostRepository $postRepository): Response
     {
         return $this->render(
-            'content/post.html.twig',
+            'site/content/post.html.twig',
             [
                 'translationContext' => 'controller.information.news',
                 'assetsContext' => 'content/post',
@@ -68,7 +68,7 @@ final class InformationController extends AbstractController
     public function legend(PostRepository $postRepository): Response
     {
         return $this->render(
-            'content/post.html.twig',
+            'site/content/post.html.twig',
             [
                 'translationContext' => 'controller.information.legend',
                 'assetsContext' => 'content/post',

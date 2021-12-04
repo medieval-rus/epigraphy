@@ -43,7 +43,7 @@ final class InscriptionController extends AbstractController
     public function list(PostRepository $postRepository, TableInterface $filterableTable): Response
     {
         return $this->render(
-            'inscription/list.html.twig',
+            'site/inscription/list.html.twig',
             [
                 'translationContext' => 'controller.inscription.list',
                 'assetsContext' => 'inscription/list',
@@ -60,7 +60,7 @@ final class InscriptionController extends AbstractController
     public function show(Inscription $inscription): Response
     {
         return $this->render(
-            'inscription/show.html.twig',
+            'site/inscription/show.html.twig',
             [
                 'translationContext' => 'controller.inscription.show',
                 'assetsContext' => 'inscription/show',

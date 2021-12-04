@@ -19,13 +19,13 @@
  # see <http://www.gnu.org/licenses/>.
  #}
 
-{%- extends 'base.html.twig' -%}
+{%- extends 'site/base.html.twig' -%}
 
 {%- block title -%}{{ post.title }}{%- endblock -%}
 
 {%- block page_content -%}
 
-    {% import 'content/post.html.twig' as post_helper %}
+    {% import 'site/content/post.html.twig' as post_helper %}
     {% import _self as self %}
 
     {{ post_helper.render_post_body(post, false) }}
@@ -51,7 +51,7 @@
 {%- macro create_download_icon(translationContext, bibliographicRecord) -%}
     {%- if bibliographicRecord.mainFile is not null -%}
         <a class="eomr-download-icon" href="{{ bibliographicRecord.mainFile.url }}">
-            {{- include('_download_icon.html.twig') -}}
+            {{- include('site/_download_icon.html.twig') -}}
         </a>
     {%- endif -%}
 {%- endmacro -%}

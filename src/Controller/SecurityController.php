@@ -43,7 +43,7 @@ final class SecurityController extends AbstractController
         }
 
         return $this->render(
-            'security/login.html.twig',
+            'site/security/login.html.twig',
             [
                 'translationContext' => 'controller.security.login',
                 'assetsContext' => 'security/login',

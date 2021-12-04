@@ -69,9 +69,6 @@ menu:
     referencesList:
       label: Списки литературы
 
-tabMenu:
-  siteView: Посмотреть надпись на сайте
-
 list:
   inscriptionList:
     fields:
@@ -468,3 +465,16 @@ author_delete: Удалить автора
 referencesList_list: Списки литературы
 referencesList_create: Создать список
 referencesList_delete: Удалить список
+
+action:
+  clone:
+    label: Клонировать
+    flash: Элемент успешно клонирован.
+
+tabMenu:
+  inscription:
+    viewOnSite: Посмотреть надпись на сайте
+
+userMenu:
+  logout:
+    label: Выйти

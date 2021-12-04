@@ -53,7 +53,7 @@ final class BibliographicRecordController extends AbstractController
         usort($records, [$comparer, 'compareByName']);
 
         return $this->render(
-            'bibliography/list.html.twig',
+            'site/bibliography/list.html.twig',
             [
                 'translationContext' => 'controller.bibliographic-record.list',
                 'assetsContext' => 'bibliographic-record/list',

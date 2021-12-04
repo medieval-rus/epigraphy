@@ -49,7 +49,7 @@ final class IndexController extends AbstractController
         );
 
         return $this->render(
-            'index/index.html.twig',
+            'site/index/index.html.twig',
             [
                 'translationContext' => 'controller.index.index',
                 'assetsContext' => 'index/index',
