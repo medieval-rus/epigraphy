@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\FilterableTable\Filter\Parameter;
 
-use App\Persistence\Entity\Epigraphy\CarrierCategory;
+use App\Persistence\Entity\Epigraphy\Material;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -34,7 +34,7 @@ use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Expression
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
 
-final class CarrierCategoryFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
+final class MaterialFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
     private AliasFactoryInterface $aliasFactory;
 
@@ -45,7 +45,7 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
 
     public function getQueryParameterName(): string
     {
-        return 'carrier-category';
+        return 'material';
     }
 
     public function getType(): string
@@ -56,12 +56,12 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
     public function getOptions(EntityManager $entityManager): array
     {
         return [
-            'label' => 'controller.inscription.list.filter.carrierCategory',
+            'label' => 'controller.inscription.list.filter.material',
             'attr' => [
                 'class' => '',
                 'data-vyfony-filterable-table-filter-parameter' => true,
             ],
-            'class' => CarrierCategory::class,
+            'class' => Material::class,
             'choice_label' => 'name',
             'expanded' => false,
             'multiple' => true,
@@ -78,20 +78,31 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
             return null;
         }
 
-        $ids = $formData->map(fn (CarrierCategory $entity): int => $entity->getId())->toArray();
+        $ids = $formData->map(fn (Material $entity): int => $entity->getId())->toArray();
 
         $queryBuilder
             ->innerJoin(
-                $entityAlias.'.carrier',
-                $carrierAlias = $this->aliasFactory->createAlias(static::class, 'carrier')
+                $entityAlias.'.zeroRow',
+                $zeroRowAlias = $this->aliasFactory->createAlias(static::class, 'zero_row')
             )
-            ->innerJoin(
-                $carrierAlias.'.categories',
-                $carrierCategoryAlias = $this->createAlias()
+            ->leftJoin(
+                $zeroRowAlias.'.materialsReferences',
+                $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'references')
+            )
+            ->leftJoin(
+                $zeroRowAlias.'.materials',
+                $materialOfZeroRowAlias = $this->createAlias()
+            )
+            ->leftJoin(
+                $interpretationsAlias.'.materials',
+                $materialOfInterpretationAlias = $this->createAlias()
             )
         ;
 
-        return (string) $queryBuilder->expr()->in($carrierCategoryAlias.'.id', $ids);
+        return (string) $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->in($materialOfZeroRowAlias.'.id', $ids),
+            $queryBuilder->expr()->in($materialOfInterpretationAlias.'.id', $ids)
+        );
     }
 
     private function createQueryBuilder(): callable
@@ -107,6 +118,6 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
 
     private function createAlias(): string
     {
-        return $this->aliasFactory->createAlias(static::class, 'carrier_categories');
+        return $this->aliasFactory->createAlias(static::class, 'materials');
     }
 }

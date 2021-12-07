@@ -88,10 +88,7 @@ final class TextFilterParameter implements FilterParameterInterface, ExpressionB
         ;
 
         $queryBuilder->setParameter(
-            $parameterName = $this->parameterFactory->createParameter(
-                $entityAlias.'_text',
-                0
-            ),
+            $parameterName = $this->parameterFactory->createParameter($entityAlias.'_text', 0),
             '%'.mb_strtolower($filterValue).'%'
         );
 

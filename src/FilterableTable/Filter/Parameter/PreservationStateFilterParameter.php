@@ -74,17 +74,11 @@ final class PreservationStateFilterParameter implements FilterParameterInterface
      */
     public function buildWhereExpression(QueryBuilder $queryBuilder, $formData, string $entityAlias): ?string
     {
-        $preservationStates = $formData;
-
-        if (0 === \count($preservationStates)) {
+        if (0 === \count($formData)) {
             return null;
         }
 
-        $ids = [];
-
-        foreach ($preservationStates as $preservationState) {
-            $ids[] = $preservationState->getId();
-        }
+        $ids = $formData->map(fn (PreservationState $entity): int => $entity->getId())->toArray();
 
         $queryBuilder
             ->innerJoin(

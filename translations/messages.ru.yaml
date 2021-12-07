@@ -63,6 +63,10 @@ controller:
         preservationState: Состояние сохранности
         alphabet: Алфавит
         text: Текст надписи
+        material: Материал
+        contentCategory: Категория
+        author: Автор публикации
+        numberInSource: Номер в источнике
         disablePaginator: показать на одной странице
         resetButton: Сбросить фильтры
         submitButton: Искать

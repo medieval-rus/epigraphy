@@ -26,12 +26,15 @@ declare(strict_types=1);
 namespace App\FilterableTable;
 
 use App\FilterableTable\Filter\Parameter\AlphabetFilterParameter;
+use App\FilterableTable\Filter\Parameter\AuthorFilterParameter;
 use App\FilterableTable\Filter\Parameter\CarrierCategoryFilterParameter;
 use App\FilterableTable\Filter\Parameter\CarrierTypeFilterParameter;
+use App\FilterableTable\Filter\Parameter\ContentCategoryFilterParameter;
+use App\FilterableTable\Filter\Parameter\MaterialFilterParameter;
+use App\FilterableTable\Filter\Parameter\NumberInSourceFilterParameter;
 use App\FilterableTable\Filter\Parameter\PreservationStateFilterParameter;
 use App\FilterableTable\Filter\Parameter\TextFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
-use App\FilterableTable\Filter\Parameter\WritingTypeFilterParameter;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\ActualValue\Formatter\ActualValueFormatterInterface;
 use App\Services\Stringifier\ValueStringifierInterface;
@@ -50,39 +53,41 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
 final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
 {
     private ValueStringifierInterface $valueStringifier;
-
     private CarrierTypeFilterParameter $carrierTypeFilterParameter;
-
     private CarrierCategoryFilterParameter $carrierCategoryFilterParameter;
-
-    private WritingTypeFilterParameter $writingTypeFilterParameter;
-
     private WritingMethodFilterParameter $writingMethodFilterParameter;
-
     private PreservationStateFilterParameter $preservationStateFilterParameter;
-
     private AlphabetFilterParameter $alphabetFilterParameter;
-
     private TextFilterParameter $textFilterParameter;
+    private MaterialFilterParameter $materialFilterParameter;
+    private ContentCategoryFilterParameter $contentCategoryFilterParameter;
+    private AuthorFilterParameter $authorFilterParameter;
+    private NumberInSourceFilterParameter $numberInSourceFilterParameter;
 
     public function __construct(
         ValueStringifierInterface $valueStringifier,
         CarrierTypeFilterParameter $carrierTypeFilterParameter,
         CarrierCategoryFilterParameter $carrierCategoryFilterParameter,
-        WritingTypeFilterParameter $writingTypeFilterParameter,
         WritingMethodFilterParameter $writingMethodFilterParameter,
         PreservationStateFilterParameter $preservationStateFilterParameter,
         AlphabetFilterParameter $alphabetFilterParameter,
-        TextFilterParameter $textFilterParameter
+        TextFilterParameter $textFilterParameter,
+        MaterialFilterParameter $materialFilterParameter,
+        ContentCategoryFilterParameter $contentCategoryFilterParameter,
+        AuthorFilterParameter $authorFilterParameter,
+        NumberInSourceFilterParameter $numberInSourceFilterParameter
     ) {
         $this->valueStringifier = $valueStringifier;
         $this->carrierTypeFilterParameter = $carrierTypeFilterParameter;
         $this->carrierCategoryFilterParameter = $carrierCategoryFilterParameter;
-        $this->writingTypeFilterParameter = $writingTypeFilterParameter;
         $this->writingMethodFilterParameter = $writingMethodFilterParameter;
         $this->preservationStateFilterParameter = $preservationStateFilterParameter;
         $this->alphabetFilterParameter = $alphabetFilterParameter;
         $this->textFilterParameter = $textFilterParameter;
+        $this->materialFilterParameter = $materialFilterParameter;
+        $this->contentCategoryFilterParameter = $contentCategoryFilterParameter;
+        $this->authorFilterParameter = $authorFilterParameter;
+        $this->numberInSourceFilterParameter = $numberInSourceFilterParameter;
     }
 
     public function createSubmitButtonOptions(): array
@@ -153,10 +158,13 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         return [
             $this->carrierTypeFilterParameter,
             $this->carrierCategoryFilterParameter,
-            $this->writingTypeFilterParameter,
             $this->writingMethodFilterParameter,
             $this->preservationStateFilterParameter,
             $this->alphabetFilterParameter,
+            $this->materialFilterParameter,
+            $this->contentCategoryFilterParameter,
+            $this->authorFilterParameter,
+            $this->numberInSourceFilterParameter,
             $this->textFilterParameter,
         ];
     }

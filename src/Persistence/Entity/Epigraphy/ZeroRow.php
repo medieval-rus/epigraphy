@@ -434,6 +434,30 @@ class ZeroRow
         $this->drawingsReferences = new ArrayCollection();
     }
 
+    public function __clone()
+    {
+        $this->id = null;
+        $this->originReferences = new ArrayCollection();
+        $this->placeOnCarrierReferences = new ArrayCollection();
+        $this->writingTypesReferences = new ArrayCollection();
+        $this->writingMethodsReferences = new ArrayCollection();
+        $this->preservationStatesReferences = new ArrayCollection();
+        $this->materialsReferences = new ArrayCollection();
+        $this->alphabetsReferences = new ArrayCollection();
+        $this->textReferences = new ArrayCollection();
+        $this->textImagesReferences = new ArrayCollection();
+        $this->transliterationReferences = new ArrayCollection();
+        $this->translationReferences = new ArrayCollection();
+        $this->contentCategoriesReferences = new ArrayCollection();
+        $this->descriptionReferences = new ArrayCollection();
+        $this->dateInTextReferences = new ArrayCollection();
+        $this->stratigraphicalDateReferences = new ArrayCollection();
+        $this->nonStratigraphicalDateReferences = new ArrayCollection();
+        $this->historicalDateReferences = new ArrayCollection();
+        $this->photosReferences = new ArrayCollection();
+        $this->drawingsReferences = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

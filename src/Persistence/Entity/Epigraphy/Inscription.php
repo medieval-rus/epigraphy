@@ -118,8 +118,44 @@ class Inscription implements StringifiableEntityInterface
         $this->id = null;
         $this->number = null;
         $this->isShownOnSite = false;
-        $this->zeroRow = new ZeroRow();
+
+        $oldInterpretations = $this->interpretations;
         $this->interpretations = new ArrayCollection();
+
+        $clonesById = [];
+        foreach ($oldInterpretations as $oldInterpretation) {
+            $clonedInterpretation = clone $oldInterpretation;
+            $clonedInterpretation->setInscription($this);
+
+            $this->interpretations->add($clonedInterpretation);
+
+            $clonesById[$oldInterpretation->getId()] = $clonedInterpretation;
+        }
+
+        $oldZeroRow = $this->zeroRow;
+        $this->zeroRow = clone $this->zeroRow;
+
+        $f = fn (Interpretation $oldInterpretation): Interpretation => $clonesById[$oldInterpretation->getId()];
+
+        $this->zeroRow->setOriginReferences($oldZeroRow->getOriginReferences()->map($f));
+        $this->zeroRow->setPlaceOnCarrierReferences($oldZeroRow->getPlaceOnCarrierReferences()->map($f));
+        $this->zeroRow->setWritingTypesReferences($oldZeroRow->getWritingTypesReferences()->map($f));
+        $this->zeroRow->setWritingMethodsReferences($oldZeroRow->getWritingMethodsReferences()->map($f));
+        $this->zeroRow->setPreservationStatesReferences($oldZeroRow->getPreservationStatesReferences()->map($f));
+        $this->zeroRow->setMaterialsReferences($oldZeroRow->getMaterialsReferences()->map($f));
+        $this->zeroRow->setAlphabetsReferences($oldZeroRow->getAlphabetsReferences()->map($f));
+        $this->zeroRow->setTextReferences($oldZeroRow->getTextReferences()->map($f));
+        $this->zeroRow->setTextImagesReferences($oldZeroRow->getTextImagesReferences()->map($f));
+        $this->zeroRow->setTransliterationReferences($oldZeroRow->getTransliterationReferences()->map($f));
+        $this->zeroRow->setTranslationReferences($oldZeroRow->getTranslationReferences()->map($f));
+        $this->zeroRow->setContentCategoriesReferences($oldZeroRow->getContentCategoriesReferences()->map($f));
+        $this->zeroRow->setDescriptionReferences($oldZeroRow->getDescriptionReferences()->map($f));
+        $this->zeroRow->setDateInTextReferences($oldZeroRow->getDateInTextReferences()->map($f));
+        $this->zeroRow->setStratigraphicalDateReferences($oldZeroRow->getStratigraphicalDateReferences()->map($f));
+        $this->zeroRow->setNonStratigraphicalDateReferences($oldZeroRow->getNonStratigraphicalDateReferences()->map($f));
+        $this->zeroRow->setHistoricalDateReferences($oldZeroRow->getHistoricalDateReferences()->map($f));
+        $this->zeroRow->setPhotosReferences($oldZeroRow->getPhotosReferences()->map($f));
+        $this->zeroRow->setDrawingsReferences($oldZeroRow->getDrawingsReferences()->map($f));
     }
 
     public function getId(): ?int

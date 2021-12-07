@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\FilterableTable\Filter\Parameter;
 
-use App\Persistence\Entity\Epigraphy\CarrierCategory;
+use App\Persistence\Entity\Bibliography\Author;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -34,7 +34,7 @@ use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Expression
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
 
-final class CarrierCategoryFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
+final class AuthorFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
     private AliasFactoryInterface $aliasFactory;
 
@@ -45,7 +45,7 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
 
     public function getQueryParameterName(): string
     {
-        return 'carrier-category';
+        return 'author';
     }
 
     public function getType(): string
@@ -56,13 +56,13 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
     public function getOptions(EntityManager $entityManager): array
     {
         return [
-            'label' => 'controller.inscription.list.filter.carrierCategory',
+            'label' => 'controller.inscription.list.filter.author',
             'attr' => [
                 'class' => '',
                 'data-vyfony-filterable-table-filter-parameter' => true,
             ],
-            'class' => CarrierCategory::class,
-            'choice_label' => 'name',
+            'class' => Author::class,
+            'choice_label' => 'fullName',
             'expanded' => false,
             'multiple' => true,
             'query_builder' => $this->createQueryBuilder(),
@@ -78,20 +78,24 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
             return null;
         }
 
-        $ids = $formData->map(fn (CarrierCategory $entity): int => $entity->getId())->toArray();
+        $ids = $formData->map(fn (Author $entity): int => $entity->getId())->toArray();
 
         $queryBuilder
-            ->innerJoin(
-                $entityAlias.'.carrier',
-                $carrierAlias = $this->aliasFactory->createAlias(static::class, 'carrier')
+            ->leftJoin(
+                $entityAlias.'.interpretations',
+                $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'interpretations')
             )
             ->innerJoin(
-                $carrierAlias.'.categories',
-                $carrierCategoryAlias = $this->createAlias()
+                $interpretationsAlias.'.source',
+                $bibliographicRecordAlias = $this->aliasFactory->createAlias(static::class, 'source')
+            )
+            ->leftJoin(
+                $bibliographicRecordAlias.'.authors',
+                $authorsAlias = $this->createAlias()
             )
         ;
 
-        return (string) $queryBuilder->expr()->in($carrierCategoryAlias.'.id', $ids);
+        return (string) $queryBuilder->expr()->in($authorsAlias.'.id', $ids);
     }
 
     private function createQueryBuilder(): callable
@@ -101,12 +105,12 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
 
             return $repository
                 ->createQueryBuilder($entityAlias)
-                ->orderBy($entityAlias.'.name', 'ASC');
+                ->orderBy($entityAlias.'.fullName', 'ASC');
         };
     }
 
     private function createAlias(): string
     {
-        return $this->aliasFactory->createAlias(static::class, 'carrier_categories');
+        return $this->aliasFactory->createAlias(static::class, 'authors');
     }
 }

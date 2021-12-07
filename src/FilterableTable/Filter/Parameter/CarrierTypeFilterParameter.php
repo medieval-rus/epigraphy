@@ -74,17 +74,11 @@ final class CarrierTypeFilterParameter implements FilterParameterInterface, Expr
      */
     public function buildWhereExpression(QueryBuilder $queryBuilder, $formData, string $entityAlias): ?string
     {
-        $carrierTypes = $formData;
-
-        if (0 === \count($carrierTypes)) {
+        if (0 === \count($formData)) {
             return null;
         }
 
-        $ids = [];
-
-        foreach ($carrierTypes as $carrierType) {
-            $ids[] = $carrierType->getId();
-        }
+        $ids = $formData->map(fn (CarrierType $entity): int => $entity->getId())->toArray();
 
         $queryBuilder
             ->innerJoin(

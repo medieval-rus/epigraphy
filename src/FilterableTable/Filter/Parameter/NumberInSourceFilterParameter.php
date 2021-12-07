@@ -25,47 +25,43 @@ declare(strict_types=1);
 
 namespace App\FilterableTable\Filter\Parameter;
 
-use App\Persistence\Entity\Epigraphy\CarrierCategory;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\ExpressionBuilderInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
+use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Parameter\ParameterFactoryInterface;
 
-final class CarrierCategoryFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
+final class NumberInSourceFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
+    private ParameterFactoryInterface $parameterFactory;
     private AliasFactoryInterface $aliasFactory;
 
-    public function __construct(AliasFactoryInterface $aliasFactory)
+    public function __construct(ParameterFactoryInterface $parameterFactory, AliasFactoryInterface $aliasFactory)
     {
+        $this->parameterFactory = $parameterFactory;
         $this->aliasFactory = $aliasFactory;
     }
 
     public function getQueryParameterName(): string
     {
-        return 'carrier-category';
+        return 'number-in-source';
     }
 
     public function getType(): string
     {
-        return EntityType::class;
+        return TextType::class;
     }
 
     public function getOptions(EntityManager $entityManager): array
     {
         return [
-            'label' => 'controller.inscription.list.filter.carrierCategory',
+            'label' => 'controller.inscription.list.filter.numberInSource',
             'attr' => [
                 'class' => '',
                 'data-vyfony-filterable-table-filter-parameter' => true,
             ],
-            'class' => CarrierCategory::class,
-            'choice_label' => 'name',
-            'expanded' => false,
-            'multiple' => true,
-            'query_builder' => $this->createQueryBuilder(),
         ];
     }
 
@@ -74,39 +70,24 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
      */
     public function buildWhereExpression(QueryBuilder $queryBuilder, $formData, string $entityAlias): ?string
     {
-        if (0 === \count($formData)) {
+        $filterValue = $formData;
+
+        if (null === $filterValue) {
             return null;
         }
 
-        $ids = $formData->map(fn (CarrierCategory $entity): int => $entity->getId())->toArray();
-
         $queryBuilder
-            ->innerJoin(
-                $entityAlias.'.carrier',
-                $carrierAlias = $this->aliasFactory->createAlias(static::class, 'carrier')
-            )
-            ->innerJoin(
-                $carrierAlias.'.categories',
-                $carrierCategoryAlias = $this->createAlias()
+            ->leftJoin(
+                $entityAlias.'.interpretations',
+                $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'interpretations')
             )
         ;
 
-        return (string) $queryBuilder->expr()->in($carrierCategoryAlias.'.id', $ids);
-    }
+        $queryBuilder->setParameter(
+            $parameterName = $this->parameterFactory->createParameter($entityAlias.'_number_in_source', 0),
+            mb_strtolower($filterValue)
+        );
 
-    private function createQueryBuilder(): callable
-    {
-        return function (EntityRepository $repository): QueryBuilder {
-            $entityAlias = $this->createAlias();
-
-            return $repository
-                ->createQueryBuilder($entityAlias)
-                ->orderBy($entityAlias.'.name', 'ASC');
-        };
-    }
-
-    private function createAlias(): string
-    {
-        return $this->aliasFactory->createAlias(static::class, 'carrier_categories');
+        return (string) $queryBuilder->expr()->eq('LOWER('.$interpretationsAlias.'.numberInSource)', $parameterName);
     }
 }

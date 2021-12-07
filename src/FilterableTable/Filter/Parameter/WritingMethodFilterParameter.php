@@ -74,17 +74,11 @@ final class WritingMethodFilterParameter implements FilterParameterInterface, Ex
      */
     public function buildWhereExpression(QueryBuilder $queryBuilder, $formData, string $entityAlias): ?string
     {
-        $writingMethods = $formData;
-
-        if (0 === \count($writingMethods)) {
+        if (0 === \count($formData)) {
             return null;
         }
 
-        $ids = [];
-
-        foreach ($writingMethods as $writingMethod) {
-            $ids[] = $writingMethod->getId();
-        }
+        $ids = $formData->map(fn (WritingMethod $entity): int => $entity->getId())->toArray();
 
         $queryBuilder
             ->innerJoin(

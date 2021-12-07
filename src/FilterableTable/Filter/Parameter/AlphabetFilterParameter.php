@@ -74,17 +74,11 @@ final class AlphabetFilterParameter implements FilterParameterInterface, Express
      */
     public function buildWhereExpression(QueryBuilder $queryBuilder, $formData, string $entityAlias): ?string
     {
-        $alphabets = $formData;
-
-        if (0 === \count($alphabets)) {
+        if (0 === \count($formData)) {
             return null;
         }
 
-        $ids = [];
-
-        foreach ($alphabets as $alphabet) {
-            $ids[] = $alphabet->getId();
-        }
+        $ids = $formData->map(fn (Alphabet $entity): int => $entity->getId())->toArray();
 
         $queryBuilder
             ->innerJoin(
