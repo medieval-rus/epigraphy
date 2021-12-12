@@ -32,7 +32,10 @@
 
     <body>
         <nav class="navbar navbar-dark bg-dark flex-nowrap p-0 eomr-header">
-            <a class="navbar-brand col-12 eomr-navbar-brand" href="{{ path('index') }}">{{ 'page.label'|trans }}</a>
+            <div class="container-fluid">
+                <a class="navbar-brand eomr-navbar-brand" href="{{ path('index') }}">{{ 'page.label.left'|trans }}</a>
+                <span class="navbar-brand eomr-navbar-brand eomr-navbar-danger">{{ 'page.label.right'|trans }}</span>
+            </div>
         </nav>
 
         <div class="container-fluid">

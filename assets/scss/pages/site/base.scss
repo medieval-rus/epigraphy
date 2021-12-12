@@ -50,6 +50,11 @@ html {
       line-height: $headerHeight;
       padding-top: 0;
       padding-bottom: 0;
+
+      &.eomr-navbar-danger {
+        font-weight: bold;
+        color: #f44336;
+      }
     }
   }
 

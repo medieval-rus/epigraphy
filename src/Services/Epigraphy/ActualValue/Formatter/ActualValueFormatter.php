@@ -34,19 +34,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class ActualValueFormatter implements ActualValueFormatterInterface
 {
     private OriginalTextParserInterface $originalTextParser;
-
     private OriginalTextFormatterInterface $originalTextFormatter;
-
-    private TranslatorInterface $translator;
 
     public function __construct(
         OriginalTextParserInterface $originalTextParser,
-        OriginalTextFormatterInterface $originalTextFormatter,
-        TranslatorInterface $translator
+        OriginalTextFormatterInterface $originalTextFormatter
     ) {
         $this->originalTextParser = $originalTextParser;
         $this->originalTextFormatter = $originalTextFormatter;
-        $this->translator = $translator;
     }
 
     public function format(StringActualValue $actualValue, string $formatType): string
@@ -62,10 +57,6 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
 
             case self::FORMAT_TYPE_ORIGINAL_TEXT:
                 $formattedValue = $this->originalTextFormatter->format($this->originalTextParser->parse($value));
-
-                if (null === $description) {
-                    $description = $this->translator->trans('actualValue.original');
-                }
 
                 break;
 
