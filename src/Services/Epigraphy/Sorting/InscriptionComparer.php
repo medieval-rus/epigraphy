@@ -31,6 +31,10 @@ final class InscriptionComparer implements InscriptionComparerInterface
 {
     public function compare(Inscription $a, Inscription $b): int
     {
-        return $a->getId() > $b->getId();
+        if ($a->getId() === $b->getId()) {
+            return 0;
+        }
+
+        return $a->getId() > $b->getId() ? 1 : 0;
     }
 }
