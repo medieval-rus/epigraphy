@@ -23,11 +23,25 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\Rnc;
+namespace DoctrineMigrations;
 
-interface RncDataProviderInterface
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+final class Version20211212040020 extends AbstractMigration
 {
-    public function getMetadata(string $baseUrl, bool $onlyShownOnSite = false): array;
+    public function getDescription(): string
+    {
+        return 'Renamed RNC to corpus.';
+    }
 
-    public function getTexts(bool $onlyShownOnSite = false): array;
+    public function up(Schema $schema): void
+    {
+        $this->addSql('ALTER TABLE inscription CHANGE is_part_of_rnc is_part_of_corpus TINYINT(1) DEFAULT \'1\' NOT NULL');
+    }
+
+    public function down(Schema $schema): void
+    {
+        $this->addSql('ALTER TABLE inscription CHANGE is_part_of_corpus is_part_of_rnc TINYINT(1) DEFAULT \'1\' NOT NULL');
+    }
 }

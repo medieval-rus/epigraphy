@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\Api\V1;
 
-use App\Services\Rnc\RncDataProviderInterface;
+use App\Services\Corpus\CorpusDataProviderInterface;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,16 +34,16 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/v1/rnc")
+ * @Route("/v1/corpus")
  */
-final class RncController extends AbstractController
+final class CorpusController extends AbstractController
 {
     /**
-     * @Route("/metadata/", name="api__v1__rnc__metadata", methods={"GET"})
+     * @Route("/metadata/", name="api__v1__corpus__metadata", methods={"GET"})
      */
-    public function metadata(RncDataProviderInterface $rncDataProvider, Request $request): Response
+    public function metadata(CorpusDataProviderInterface $corpusDataProvider, Request $request): Response
     {
-        $metadata = $rncDataProvider->getMetadata($request->getSchemeAndHttpHost(), true);
+        $metadata = $corpusDataProvider->getMetadata($request->getSchemeAndHttpHost(), true);
 
         if ('true' === $request->query->get('csv')) {
             if (\count($metadata) > 0) {
@@ -69,7 +69,7 @@ final class RncController extends AbstractController
 
                 $disposition = $response->headers->makeDisposition(
                     ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                    sprintf('%s_rnc_metadata_%s.csv', $request->getHost(), (new DateTime())->format('Y-m-d-H-i-s'))
+                    sprintf('%s_corpus_metadata_%s.csv', $request->getHost(), (new DateTime())->format('Y-m-d-H-i-s'))
                 );
 
                 $response->headers->set('Content-Disposition', $disposition);
@@ -82,11 +82,11 @@ final class RncController extends AbstractController
     }
 
     /**
-     * @Route("/texts/", name="api__v1__rnc__texts", methods={"GET"})
+     * @Route("/texts/", name="api__v1__corpus__texts", methods={"GET"})
      */
-    public function texts(RncDataProviderInterface $rncDataProvider): Response
+    public function texts(CorpusDataProviderInterface $corpusDataProvider): Response
     {
-        $texts = $rncDataProvider->getTexts(true);
+        $texts = $corpusDataProvider->getTexts(true);
 
         $response = new Response();
 

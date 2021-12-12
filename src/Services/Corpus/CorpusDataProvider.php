@@ -23,7 +23,7 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\Rnc;
+namespace App\Services\Corpus;
 
 use App\Models\StringActualValue;
 use App\Persistence\Entity\Epigraphy\CarrierCategory;
@@ -38,7 +38,7 @@ use App\Services\Epigraphy\ActualValue\Extractor\ActualValueExtractorInterface;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-final class RncDataProvider implements RncDataProviderInterface
+final class CorpusDataProvider implements CorpusDataProviderInterface
 {
     private UrlGeneratorInterface $urlGenerator;
     private InscriptionRepository $inscriptionRepository;

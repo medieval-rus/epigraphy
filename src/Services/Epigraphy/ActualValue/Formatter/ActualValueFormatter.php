@@ -29,7 +29,6 @@ use App\Models\StringActualValue;
 use App\Services\Epigraphy\OriginalText\Formatter\OriginalTextFormatterInterface;
 use App\Services\Epigraphy\OriginalText\Parser\OriginalTextParserInterface;
 use InvalidArgumentException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ActualValueFormatter implements ActualValueFormatterInterface
 {

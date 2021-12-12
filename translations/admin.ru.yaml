@@ -279,7 +279,7 @@ form:
       carrier: Носитель
       comment: Комментарий
       isShownOnSite: Показывать надпись на сайте
-      isPartOfRnc: Часть НКРЯ
+      isPartOfCorpus: Часть корпуса
       zeroRow:
         origin: Происхождение надписи
         originReferences: Происхождение надписи (ссылки)

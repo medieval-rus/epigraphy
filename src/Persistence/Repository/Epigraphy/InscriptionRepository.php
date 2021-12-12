@@ -44,7 +44,7 @@ final class InscriptionRepository extends ServiceEntityRepository
     /**
      * @return Inscription[]
      */
-    public function findAllInConventionalOrder(bool $onlyShownOnSite = false, bool $onlyPartOfRnc = false): array
+    public function findAllInConventionalOrder(bool $onlyShownOnSite = false, bool $onlyPartOfCorpus = false): array
     {
         $criteria = [];
 
@@ -52,8 +52,8 @@ final class InscriptionRepository extends ServiceEntityRepository
             $criteria['isShownOnSite'] = true;
         }
 
-        if ($onlyPartOfRnc) {
-            $criteria['isPartOfRnc'] = true;
+        if ($onlyPartOfCorpus) {
+            $criteria['isPartOfCorpus'] = true;
         }
 
         $inscriptions = $this->findBy($criteria);

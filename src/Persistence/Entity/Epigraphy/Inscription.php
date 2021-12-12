@@ -82,9 +82,9 @@ class Inscription implements StringifiableEntityInterface
     /**
      * @var bool
      *
-     * @ORM\Column(name="is_part_of_rnc", type="boolean", options={"default": true})
+     * @ORM\Column(name="is_part_of_corpus", type="boolean", options={"default": true})
      */
-    private $isPartOfRnc;
+    private $isPartOfCorpus;
 
     /**
      * @var ZeroRow|null
@@ -112,7 +112,7 @@ class Inscription implements StringifiableEntityInterface
     public function __construct()
     {
         $this->isShownOnSite = false;
-        $this->isPartOfRnc = true;
+        $this->isPartOfCorpus = true;
         $this->zeroRow = new ZeroRow();
         $this->interpretations = new ArrayCollection();
     }
@@ -230,14 +230,14 @@ class Inscription implements StringifiableEntityInterface
         return $this;
     }
 
-    public function getIsPartOfRnc(): ?bool
+    public function getIsPartOfCorpus(): ?bool
     {
-        return $this->isPartOfRnc;
+        return $this->isPartOfCorpus;
     }
 
-    public function setIsPartOfRnc(bool $isPartOfRnc): self
+    public function setIsPartOfCorpus(bool $isPartOfCorpus): self
     {
-        $this->isPartOfRnc = $isPartOfRnc;
+        $this->isPartOfCorpus = $isPartOfCorpus;
 
         return $this;
     }
