@@ -67,6 +67,10 @@ services:
       - '../src/Persistence/Entity/'
       - '../src/Kernel.php'
 
+  App\Api\:
+    resource: '../src/Api/'
+    tags: ['controller.service_arguments']
+
   App\Controller\:
     resource: '../src/Controller/'
     tags: ['controller.service_arguments']
