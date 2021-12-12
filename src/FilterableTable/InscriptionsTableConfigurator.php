@@ -27,7 +27,7 @@ namespace App\FilterableTable;
 
 use App\Persistence\Entity\Epigraphy\CarrierCategory;
 use App\Persistence\Entity\Epigraphy\Inscription;
-use App\Services\Stringifier\ValueStringifierInterface;
+use App\Services\Epigraphy\Stringifier\ValueStringifierInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\FilterConfiguratorInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Routing\RouteConfiguration;
@@ -87,9 +87,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setName('number')
                 ->setLabel('controller.inscription.list.table.column.number')
-                ->setValueExtractor(static function (Inscription $inscription): string {
-                    return $inscription->getNumber() ?? '';
-                }),
+                ->setValueExtractor(static fn (Inscription $inscription): string => $inscription->getNumber() ?? ''),
             (new ColumnMetadata())
                 ->setName('carrier-category')
                 ->setValueExtractor(static function (Inscription $inscription): string {
@@ -101,11 +99,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                         ', ',
                         $carrier
                             ->getCategories()
-                            ->map(
-                                static function (CarrierCategory $carrierCategory): string {
-                                    return $carrierCategory->getName();
-                                }
-                            )
+                            ->map(static fn (CarrierCategory $carrierCategory): string => $carrierCategory->getName())
                             ->toArray()
                     );
                 })
@@ -114,7 +108,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                 ->setLabel('controller.inscription.list.table.column.carrier.category'),
             (new ColumnMetadata())
                 ->setName('carrier-origin1')
-                ->setValueExtractor(function (Inscription $inscription): string {
+                ->setValueExtractor(static function (Inscription $inscription): string {
                     if (null === $carrier = $inscription->getCarrier()) {
                         return '';
                     }
@@ -126,7 +120,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                 ->setLabel('controller.inscription.list.table.column.carrier.origin1'),
             (new ColumnMetadata())
                 ->setName('carrier-origin2')
-                ->setValueExtractor(function (Inscription $inscription): string {
+                ->setValueExtractor(static function (Inscription $inscription): string {
                     if (null === $carrier = $inscription->getCarrier()) {
                         return '';
                     }

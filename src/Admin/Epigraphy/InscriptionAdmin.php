@@ -93,6 +93,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add('carrier', null, $this->createLabeledFormOptions('carrier'))
                     ->add('comment', null, $this->createLabeledFormOptions('comment'))
                     ->add('isShownOnSite', null, $this->createLabeledFormOptions('isShownOnSite'))
+                    ->add('isPartOfRnc', null, $this->createLabeledFormOptions('isPartOfRnc'))
                 ->end()
             ->end()
             ->tab($this->getTabLabel('actualResearchInformation'))

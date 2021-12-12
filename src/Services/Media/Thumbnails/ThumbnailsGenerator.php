@@ -165,7 +165,10 @@ final class ThumbnailsGenerator implements ThumbnailsGeneratorInterface
                 sprintf(
                     'Unknown thumbnail preset key "%s". Known presets are: %s',
                     $presetKey,
-                    implode(', ', array_map(fn ($key) => sprintf('"%s"', $key), array_keys($this->thumbnailPresets)))
+                    implode(
+                        ', ',
+                        array_map(fn ($key): string => sprintf('"%s"', $key), array_keys($this->thumbnailPresets))
+                    )
                 )
             );
         }

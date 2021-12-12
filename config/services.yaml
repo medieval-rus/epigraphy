@@ -76,10 +76,10 @@ services:
     tags:
       - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
 
-  App\Services\OriginalText\Parser\OriginalTextParser:
+  App\Services\Epigraphy\OriginalText\Parser\OriginalTextParser:
     arguments:
       $rules:
-        - '@App\Services\OriginalText\Parser\Rules\LigatureRuleDefinition'
-        - '@App\Services\OriginalText\Parser\Rules\CommentRuleDefinition'
-        - '@App\Services\OriginalText\Parser\Rules\TextBreakRuleDefinition'
-        - '@App\Services\OriginalText\Parser\Rules\SuperscriptRuleDefinition'
+        - '@App\Services\Epigraphy\OriginalText\Parser\Rules\LigatureRuleDefinition'
+        - '@App\Services\Epigraphy\OriginalText\Parser\Rules\CommentRuleDefinition'
+        - '@App\Services\Epigraphy\OriginalText\Parser\Rules\TextBreakRuleDefinition'
+        - '@App\Services\Epigraphy\OriginalText\Parser\Rules\SuperscriptRuleDefinition'

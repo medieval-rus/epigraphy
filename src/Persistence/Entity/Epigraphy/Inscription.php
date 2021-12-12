@@ -77,7 +77,14 @@ class Inscription implements StringifiableEntityInterface
      *
      * @ORM\Column(name="is_shown_on_site", type="boolean", options={"default": false})
      */
-    private $isShownOnSite = false;
+    private $isShownOnSite;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_part_of_rnc", type="boolean", options={"default": true})
+     */
+    private $isPartOfRnc;
 
     /**
      * @var ZeroRow|null
@@ -104,6 +111,8 @@ class Inscription implements StringifiableEntityInterface
 
     public function __construct()
     {
+        $this->isShownOnSite = false;
+        $this->isPartOfRnc = true;
         $this->zeroRow = new ZeroRow();
         $this->interpretations = new ArrayCollection();
     }
@@ -217,6 +226,18 @@ class Inscription implements StringifiableEntityInterface
     public function setIsShownOnSite(bool $isShownOnSite): self
     {
         $this->isShownOnSite = $isShownOnSite;
+
+        return $this;
+    }
+
+    public function getIsPartOfRnc(): ?bool
+    {
+        return $this->isPartOfRnc;
+    }
+
+    public function setIsPartOfRnc(bool $isPartOfRnc): self
+    {
+        $this->isPartOfRnc = $isPartOfRnc;
 
         return $this;
     }

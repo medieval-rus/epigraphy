@@ -27,7 +27,7 @@ namespace App\Controller;
 
 use App\Persistence\Entity\Bibliography\BibliographicRecord;
 use App\Persistence\Repository\Content\PostRepository;
-use App\Services\Sorting\Bibliography\BibliographicRecordComparerInterface;
+use App\Services\Bibliography\Sorting\BibliographicRecordComparerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
