@@ -23,7 +23,7 @@
 <html lang="{{ app.request.locale }}">
     <head>
         <meta charset="utf-8">
-        <title>{% block title %}{{ 'title'|transWithContext(translationContext) }}{% endblock %} – {{ 'page.label'|trans }}</title>
+        <title>{% block title %}{{ 'title'|transWithContext(translationContext) }}{% endblock %} – {{ 'page.label.title'|trans }}</title>
 
         {% block stylesheets %}
             {{ encore_entry_link_tags('css/site/'~assetsContext) }}

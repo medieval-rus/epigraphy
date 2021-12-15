@@ -58,10 +58,7 @@ final class NumberInSourceFilterParameter implements FilterParameterInterface, E
     {
         return [
             'label' => 'controller.inscription.list.filter.numberInSource',
-            'attr' => [
-                'class' => '',
-                'data-vyfony-filterable-table-filter-parameter' => true,
-            ],
+            'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
         ];
     }
 

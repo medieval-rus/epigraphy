@@ -25,16 +25,20 @@ declare(strict_types=1);
 
 namespace App\FilterableTable\Filter\Parameter;
 
-use App\Persistence\Entity\Epigraphy\ContentCategory;
+use App\Persistence\Entity\Epigraphy\Carrier;
+use App\Persistence\Entity\Epigraphy\CarrierType;
+use App\Persistence\Entity\Epigraphy\Inscription;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\ExpressionBuilderInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
 
-final class ContentCategoryFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
+final class Origin1FilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
     private AliasFactoryInterface $aliasFactory;
 
@@ -45,30 +49,41 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
 
     public function getQueryParameterName(): string
     {
-        return 'content-category';
+        return 'origin1';
     }
 
     public function getType(): string
     {
-        return EntityType::class;
+        return ChoiceType::class;
     }
 
     public function getOptions(EntityManager $entityManager): array
     {
+        $queryBuilder = $entityManager
+            ->getRepository(Inscription::class)
+            ->createQueryBuilder('inscription')
+            ->setParameter(':isShownOnSite', true);
+
+        $choices = array_column(
+            $queryBuilder
+                ->innerJoin('inscription.carrier', 'carrier')
+                ->select('carrier.origin1')
+                ->where($queryBuilder->expr()->eq('inscription.isShownOnSite', ':isShownOnSite'))
+                ->andWhere($queryBuilder->expr()->isNotNull('carrier.origin1'))
+                ->distinct()
+                ->getQuery()
+                ->getArrayResult(),
+            'origin1'
+        );
+
+        natsort($choices);
+
         return [
-            'label' => 'controller.inscription.list.filter.contentCategory',
+            'label' => 'controller.inscription.list.filter.origin1',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
-            'class' => ContentCategory::class,
-            'choice_label' => 'name',
+            'choices' => array_combine($choices, $choices),
             'expanded' => false,
             'multiple' => true,
-            'query_builder' => function (EntityRepository $repository): QueryBuilder {
-                $entityAlias = $this->createAlias();
-
-                return $repository
-                    ->createQueryBuilder($entityAlias)
-                    ->orderBy($entityAlias.'.name', 'ASC');
-            },
         ];
     }
 
@@ -81,35 +96,13 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
             return null;
         }
 
-        $ids = $formData->map(fn (ContentCategory $entity): int => $entity->getId())->toArray();
-
         $queryBuilder
             ->innerJoin(
-                $entityAlias.'.zeroRow',
-                $zeroRowAlias = $this->aliasFactory->createAlias(static::class, 'zero_row')
-            )
-            ->leftJoin(
-                $zeroRowAlias.'.contentCategoriesReferences',
-                $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'references')
-            )
-            ->leftJoin(
-                $zeroRowAlias.'.contentCategories',
-                $contentCategoryOfZeroRowAlias = $this->createAlias()
-            )
-            ->leftJoin(
-                $interpretationsAlias.'.contentCategories',
-                $contentCategoryOfInterpretationAlias = $this->createAlias()
+                $entityAlias.'.carrier',
+                $carrierAlias = $this->aliasFactory->createAlias(static::class, 'carrier')
             )
         ;
 
-        return (string) $queryBuilder->expr()->orX(
-            $queryBuilder->expr()->in($contentCategoryOfZeroRowAlias.'.id', $ids),
-            $queryBuilder->expr()->in($contentCategoryOfInterpretationAlias.'.id', $ids)
-        );
-    }
-
-    private function createAlias(): string
-    {
-        return $this->aliasFactory->createAlias(static::class, 'content_categories');
+        return (string) $queryBuilder->expr()->in($carrierAlias.'.origin1', $formData);
     }
 }

@@ -57,15 +57,18 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
     {
         return [
             'label' => 'controller.inscription.list.filter.carrierCategory',
-            'attr' => [
-                'class' => '',
-                'data-vyfony-filterable-table-filter-parameter' => true,
-            ],
+            'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
             'class' => CarrierCategory::class,
             'choice_label' => 'name',
             'expanded' => false,
             'multiple' => true,
-            'query_builder' => $this->createQueryBuilder(),
+            'query_builder' => function (EntityRepository $repository): QueryBuilder {
+                $entityAlias = $this->createAlias();
+
+                return $repository
+                    ->createQueryBuilder($entityAlias)
+                    ->orderBy($entityAlias.'.name', 'ASC');
+            },
         ];
     }
 
@@ -92,17 +95,6 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
         ;
 
         return (string) $queryBuilder->expr()->in($carrierCategoryAlias.'.id', $ids);
-    }
-
-    private function createQueryBuilder(): callable
-    {
-        return function (EntityRepository $repository): QueryBuilder {
-            $entityAlias = $this->createAlias();
-
-            return $repository
-                ->createQueryBuilder($entityAlias)
-                ->orderBy($entityAlias.'.name', 'ASC');
-        };
     }
 
     private function createAlias(): string

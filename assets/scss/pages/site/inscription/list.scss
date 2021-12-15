@@ -67,8 +67,6 @@ main.eomr-main {
       }
     }
 
-
-
     th,
     td {
       &:nth-child(1),
@@ -96,6 +94,14 @@ main.eomr-main {
     .vyfony-filterable-table-bundle-button-form-group {
       padding-right: 15px;
       padding-left: 15px;
+    }
+
+    [data-vyfony-filterable-table-reset-button] {
+      display: none;
+    }
+
+    [data-vyfony-filterable-table-search-in-found-button] {
+      display: none;
     }
   }
 

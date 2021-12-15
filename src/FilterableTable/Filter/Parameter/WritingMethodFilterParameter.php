@@ -57,15 +57,18 @@ final class WritingMethodFilterParameter implements FilterParameterInterface, Ex
     {
         return [
             'label' => 'controller.inscription.list.filter.writingMethod',
-            'attr' => [
-                'class' => '',
-                'data-vyfony-filterable-table-filter-parameter' => true,
-            ],
+            'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
             'class' => WritingMethod::class,
             'choice_label' => 'name',
             'expanded' => false,
             'multiple' => true,
-            'query_builder' => $this->createQueryBuilder(),
+            'query_builder' => function (EntityRepository $repository): QueryBuilder {
+                $entityAlias = $this->createAlias();
+
+                return $repository
+                    ->createQueryBuilder($entityAlias)
+                    ->orderBy($entityAlias.'.name', 'ASC');
+            },
         ];
     }
 
@@ -103,17 +106,6 @@ final class WritingMethodFilterParameter implements FilterParameterInterface, Ex
             $queryBuilder->expr()->in($writingMethodOfZeroRowAlias.'.id', $ids),
             $queryBuilder->expr()->in($writingMethodOfInterpretationAlias.'.id', $ids)
         );
-    }
-
-    private function createQueryBuilder(): callable
-    {
-        return function (EntityRepository $repository): QueryBuilder {
-            $entityAlias = $this->createAlias();
-
-            return $repository
-                ->createQueryBuilder($entityAlias)
-                ->orderBy($entityAlias.'.name', 'ASC');
-        };
     }
 
     private function createAlias(): string

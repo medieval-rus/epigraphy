@@ -57,15 +57,18 @@ final class AuthorFilterParameter implements FilterParameterInterface, Expressio
     {
         return [
             'label' => 'controller.inscription.list.filter.author',
-            'attr' => [
-                'class' => '',
-                'data-vyfony-filterable-table-filter-parameter' => true,
-            ],
+            'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
             'class' => Author::class,
             'choice_label' => 'fullName',
             'expanded' => false,
             'multiple' => true,
-            'query_builder' => $this->createQueryBuilder(),
+            'query_builder' => function (EntityRepository $repository): QueryBuilder {
+                $entityAlias = $this->createAlias();
+
+                return $repository
+                    ->createQueryBuilder($entityAlias)
+                    ->orderBy($entityAlias.'.fullName', 'ASC');
+            },
         ];
     }
 
@@ -96,17 +99,6 @@ final class AuthorFilterParameter implements FilterParameterInterface, Expressio
         ;
 
         return (string) $queryBuilder->expr()->in($authorsAlias.'.id', $ids);
-    }
-
-    private function createQueryBuilder(): callable
-    {
-        return function (EntityRepository $repository): QueryBuilder {
-            $entityAlias = $this->createAlias();
-
-            return $repository
-                ->createQueryBuilder($entityAlias)
-                ->orderBy($entityAlias.'.fullName', 'ASC');
-        };
     }
 
     private function createAlias(): string
