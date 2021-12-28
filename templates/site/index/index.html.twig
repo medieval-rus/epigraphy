@@ -49,8 +49,8 @@
     <a href="{{ path('inscription__show', {'id': inscription.id}) }}">
         <div class="eomr-card card">
             <div class="eomr-card-body card-body">
-                <p class="eomr-card-text card-text">{{ inscription.carrier.categories|map(category => category.name)|join(', ') }}</p>
                 <p class="eomr-card-text card-text">{{- valueStringifier.stringify(inscription, 'description')|raw -}}</p>
+                <p class="eomr-card-text card-text">{{- inscription.carrier.categories|map(category => category.name)|join(', ') -}}</p>
                 <div class="eomr-card-text card-text">
                     <div class="eomr-additional-data-container small">
                         <div class="eomr-additional-data eomr-additional-data-left">{{- self.render_origin(inscription) -}}</div>

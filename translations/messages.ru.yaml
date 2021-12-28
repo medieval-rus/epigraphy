@@ -103,7 +103,6 @@ controller:
             preservationStates: Состояние сохранности
             alphabets: Алфавит
             text: Текст
-            textImages: Изображения текста
             transliteration: Транслитерация
             translation: Перевод
             contentCategories: Категория по содержанию

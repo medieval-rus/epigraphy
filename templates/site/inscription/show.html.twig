@@ -21,9 +21,7 @@
 
 {%- extends 'site/base.html.twig' -%}
 
-{% block title -%}
-    {{ parent() }} {{ inscription.id }}
-{%- endblock %}
+{% block page_title %}{% endblock %}
 
 {% block page_content %}
 
@@ -48,7 +46,6 @@
             {{ self.format_text_row(translationContext, 'zeroRow.alphabets', self.format_zero_row(inscription, 'alphabets')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.contentCategories', self.format_zero_row(inscription, 'contentCategories')) }}
             {{ self.format_original_text_row(translationContext, 'zeroRow.text', inscription) }}
-            {{ self.format_text_row(translationContext, 'zeroRow.textImages', self.format_zero_row_images(inscription, 'textImages')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_zero_row(inscription, 'translation')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.photos', self.format_zero_row_images(inscription, 'photos')) }}
