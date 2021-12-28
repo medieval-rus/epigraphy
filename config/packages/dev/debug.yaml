@@ -18,4 +18,4 @@
 # see <http://www.gnu.org/licenses/>.
 
 debug:
-  dump_destination: "tcp://%env(VAR_DUMPER_SERVER)%"
+  dump_destination: 'tcp://%env(VAR_DUMPER_SERVER)%'
