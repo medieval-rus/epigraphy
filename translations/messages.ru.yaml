@@ -63,8 +63,8 @@ controller:
         translation: Перевод
         material: Материал
         contentCategory: Категория
-        origin1: Город, местность
-        origin2: Здание, раскоп
+        origin1: Город / Местность
+        origin2: Здание / Раскоп
         author: Автор публикации
         numberInSource: Номер в источнике
         disablePaginator: показать на одной странице
