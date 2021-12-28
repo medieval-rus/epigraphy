@@ -32,7 +32,12 @@
     <table class="table table-bordered">
         <tbody>
             {{ self.format_text_row(translationContext, 'number', inscription.number) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.description', self.format_zero_row(inscription, 'description')) }}
             {{ self.format_text_row(translationContext, 'conventionalDate', inscription.conventionalDate) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.dateInText', self.format_zero_row(inscription, 'dateInText')) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.stratigraphicalDate', self.format_zero_row(inscription, 'stratigraphicalDate')) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.nonStratigraphicalDate', self.format_zero_row(inscription, 'nonStratigraphicalDate')) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.historicalDate', self.format_zero_row(inscription, 'historicalDate')) }}
             {{ self.format_literature(translationContext, inscription) }}
             {{ self.format_carrier(translationContext, inscription) }}
             {{ self.format_text_row(translationContext, 'zeroRow.origin', self.format_zero_row(inscription, 'origin')) }}
@@ -41,18 +46,13 @@
             {{ self.format_text_row(translationContext, 'zeroRow.preservationStates', self.format_zero_row(inscription, 'preservationStates')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.materials', self.format_zero_row(inscription, 'materials')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.alphabets', self.format_zero_row(inscription, 'alphabets')) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.contentCategories', self.format_zero_row(inscription, 'contentCategories')) }}
             {{ self.format_original_text_row(translationContext, 'zeroRow.text', inscription) }}
             {{ self.format_text_row(translationContext, 'zeroRow.textImages', self.format_zero_row_images(inscription, 'textImages')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_zero_row(inscription, 'translation')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.photos', self.format_zero_row_images(inscription, 'photos')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.drawings', self.format_zero_row_images(inscription, 'drawings')) }}
-            {{ self.format_text_row(translationContext, 'zeroRow.contentCategories', self.format_zero_row(inscription, 'contentCategories')) }}
-            {{ self.format_text_row(translationContext, 'zeroRow.description', self.format_zero_row(inscription, 'description')) }}
-            {{ self.format_text_row(translationContext, 'zeroRow.dateInText', self.format_zero_row(inscription, 'dateInText')) }}
-            {{ self.format_text_row(translationContext, 'zeroRow.stratigraphicalDate', self.format_zero_row(inscription, 'stratigraphicalDate')) }}
-            {{ self.format_text_row(translationContext, 'zeroRow.nonStratigraphicalDate', self.format_zero_row(inscription, 'nonStratigraphicalDate')) }}
-            {{ self.format_text_row(translationContext, 'zeroRow.historicalDate', self.format_zero_row(inscription, 'historicalDate')) }}
             {{ self.format_text_row(translationContext, 'comment', inscription.comment) }}
         </tbody>
     </table>
@@ -66,6 +66,7 @@
             </a>
         </div>
     {% endif %}
+    {{ include('site/inscription/_photoswipe_layout.html.twig') }}
 {% endblock %}
 
 {%- macro format_zero_row(inscription, propertyName, formatType = 'default') -%}
@@ -79,7 +80,36 @@
 
     {% import _self as self %}
 
-    {{- imagesFormatter.formatZeroRowImages(inscription, propertyName)|raw -}}
+    {% set actualFiles = actualValueExtractor.extractActualFiles(inscription, [propertyName]) %}
+
+    <div
+            class="gallery"
+            data-images-container="{{ propertyName }}"
+            itemscope
+            itemtype="http://schema.org/ImageGallery"
+    >
+        {%- for actualFile in actualFiles -%}
+
+            <figure
+                    itemprop="associatedMedia"
+                    itemscope
+                    itemtype="http://schema.org/ImageObject"
+                    data-download-url="{{ actualFile.file.url }}"
+            >
+                <a
+                        href="{{ thumbnailsGenerator.thumbnail(actualFile.file, 'large') }}"
+                        itemprop="contentUrl"
+                >
+                    <img
+                            src="{{ thumbnailsGenerator.thumbnail(actualFile.file, 'large') }}"
+                            itemprop="thumbnail"
+                            alt="{{ actualFile.description }}"
+                    />
+                </a>
+                <figcaption itemprop="caption description">{{ actualFile.description }}</figcaption>
+            </figure>
+        {%- endfor -%}
+    </div>
 {%- endmacro -%}
 
 {%- macro format_text_row(translationContext, labelTranslationKey, content) -%}

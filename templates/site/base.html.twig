@@ -52,7 +52,7 @@
                 </div>
 
                 <main role="main" class="col-8 eomr-main">
-                    <h1 class="border-bottom">{% block page_title %}{{ block('title') }}{% endblock %}</h1>
+                    {% block page_title %}<h1 class="border-bottom">{{ block('title') }}</h1>{% endblock %}
                     <div class="container pb-4">
                         {% block page_content %}{% endblock %}
                     </div>

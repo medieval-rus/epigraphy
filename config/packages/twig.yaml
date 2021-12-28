@@ -23,8 +23,8 @@ twig:
   strict_variables: '%kernel.debug%'
   exception_controller: null
   globals:
+    actualValueExtractor: '@App\Services\Epigraphy\ActualValue\Extractor\ActualValueExtractor'
     valueStringifier: '@App\Services\Epigraphy\Stringifier\ValueStringifierInterface'
-    imagesFormatter: '@App\Services\Epigraphy\Images\ImagesFormatterInterface'
     thumbnailsGenerator: '@App\Services\Media\Thumbnails\ThumbnailsGeneratorInterface'
     bibliographicRecordComparer: '@App\Services\Bibliography\Sorting\BibliographicRecordComparerInterface'
 

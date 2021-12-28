@@ -22,14 +22,47 @@
 @import '../base';
 @import '../../../src/original-text/original-text';
 @import '../../../src/spoiler/spoiler';
+@import '~photoswipe/dist/default-skin/default-skin.css';
+@import '~photoswipe/dist/photoswipe.css';
 
-.eomr-interpretation-label {
-  text-align: center;
-  background-color: $gray-300;
+.gallery {
+  width: 100%;
+  overflow-x: overlay;
+  white-space: nowrap;
+
+  figure {
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+
+    a {
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    figcaption {
+      display: none;
+    }
+  }
 }
 
-.eomr-images-image-link {
-  .eomr-images-image {
-    max-width: 100%;
+.pswp__button--arrow--left,
+.pswp__button--arrow--right {
+  height: 100% !important;
+  margin-top: 0 !important;
+  top: 0 !important;
+
+  &::before {
+    top: 50% !important;
   }
+}
+
+.pswp__top-bar {
+  z-index: 1551;
 }

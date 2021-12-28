@@ -27,6 +27,7 @@ namespace App\Models;
 
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Media\File;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class FilesActualValue
 {

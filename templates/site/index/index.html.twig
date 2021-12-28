@@ -59,10 +59,10 @@
                 </div>
             </div>
             {% set isImageDrawn = false %}
-            {% for filesActualValue in imagesFormatter.getZeroRowImages(inscription, ['photos', 'drawings']) %}
-                {% for file in filesActualValue.value %}
+            {% for actualImages in actualValueExtractor.extractActualFiles(inscription, ['photos', 'drawings']) %}
+                {% for actualImage in actualImages %}
                     {% if not isImageDrawn %}
-                        <img class="card-img-bottom img-fluid" src="{{ thumbnailsGenerator.thumbnail(file) }}" alt="{{ file.description }}">
+                        <img class="card-img-bottom img-fluid" src="{{ thumbnailsGenerator.thumbnail(actualImage.file) }}" alt="{{ actualImage.description }}">
                         {% set isImageDrawn = true %}
                     {% endif %}
                 {% endfor %}

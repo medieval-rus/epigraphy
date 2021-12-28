@@ -42,6 +42,7 @@ Encore
     .addStyleEntry('css/site/security/login', './assets/scss/pages/site/security/login.scss')
     .addStyleEntry('css/site/inscription/list', './assets/scss/pages/site/inscription/list.scss')
     .addStyleEntry('css/site/inscription/show', './assets/scss/pages/site/inscription/show.scss')
+    .addEntry('js/site/inscription/show', './assets/js/pages/site/inscription/show.js')
     .addStyleEntry('css/site/bibliographic-record/list', './assets/scss/pages/site/bibliographic-record/list.scss')
     .addStyleEntry('css/admin/inscription/edit', './assets/scss/pages/admin/inscription/edit.scss')
     .addEntry('js/admin/inscription/edit', './assets/js/pages/admin/inscription/edit.js')

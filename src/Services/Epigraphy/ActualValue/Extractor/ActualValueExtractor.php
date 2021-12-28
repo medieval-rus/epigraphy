@@ -26,20 +26,25 @@ declare(strict_types=1);
 namespace App\Services\Epigraphy\ActualValue\Extractor;
 
 use App\Models\FilesActualValue;
+use App\Models\InscriptionActualFile;
 use App\Models\StringActualValue;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
 use Doctrine\Common\Collections\Collection;
+use File;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ActualValueExtractor implements ActualValueExtractorInterface
 {
     private PropertyAccessorInterface $propertyAccessor;
+    private TranslatorInterface $translator;
 
-    public function __construct(PropertyAccessorInterface $propertyAccessor)
+    public function __construct(PropertyAccessorInterface $propertyAccessor, TranslatorInterface $translator)
     {
         $this->propertyAccessor = $propertyAccessor;
+        $this->translator = $translator;
     }
 
     /**
@@ -115,6 +120,56 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
         }
 
         return array_filter($allValues, [$this, 'isNotNull']);
+    }
+
+    /**
+     * @return InscriptionActualFile[]
+     */
+    public function extractActualFiles(Inscription $inscription, array $properties): array
+    {
+        $actualValues = array_merge(
+            ...array_map(
+                fn (string $propertyName): array => $this->extractFromZeroRowAsFiles($inscription, $propertyName),
+                $properties
+            )
+        );
+
+        $result = [];
+        foreach ($actualValues as $actualValue) {
+            $files = $actualValue->getValue();
+
+            if (0 === \count($files)) {
+                continue;
+            }
+
+            $formattedInterpretation = null;
+            if (null !== $actualValue->getInterpretation()) {
+                $formattedInterpretation = $this->translator->trans(
+                    'image.source',
+                    [
+                        '%source%' => $actualValue->getInterpretation()->getSource()->getShortName(),
+                    ]
+                );
+            }
+
+            foreach ($files as $file) {
+
+                $descriptionParts = [];
+                if (null !== $formattedInterpretation) {
+                    $descriptionParts[] = $formattedInterpretation;
+                }
+
+                if (null !== $file->getDescription()) {
+                    $descriptionParts[] = $file->getDescription();
+                }
+
+                $description = implode('; ', $descriptionParts);
+
+                $result[] = new InscriptionActualFile($file, $description);
+            }
+        }
+
+        return $result;
     }
 
     private function getStringValue($value): ?string
