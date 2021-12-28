@@ -76,8 +76,8 @@ controller:
       admin: Просмотреть надпись в админке
       legend: см. Условные обозначения
       carrierSpoiler:
-        open: Носитель (развернуть)
-        close: Носитель (свернуть)
+        open: Подробнее о носителе
+        close: Подробнее о носителе (свернуть)
       inscription:
         label:
           number: Номер
@@ -85,13 +85,12 @@ controller:
           comment: Комментарий
           literature: Литература
           carrier:
-            types: Тип носителя
             categories: Категория носителя
             origin1: Город, местность
             origin2: Здание, раскоп
             findCircumstances: Обстоятельства находки носителя
             characteristics: Характеристики носителя
-            individualName: Индивидуальное название носителя
+            individualName: Носитель
             storagePlace: Место хранения носителя
             inventoryNumber: Инвентарный номер носителя
             isInSitu: Носитель in situ?
@@ -105,7 +104,6 @@ controller:
             text: Текст
             transliteration: Транслитерация
             translation: Перевод
-            contentCategories: Категория по содержанию
             description: Содержание
             dateInText: Дата в тексте
             stratigraphicalDate: Стратиграфическая дата
