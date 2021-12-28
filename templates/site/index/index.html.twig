@@ -59,13 +59,11 @@
                 </div>
             </div>
             {% set isImageDrawn = false %}
-            {% for actualImages in actualValueExtractor.extractActualFiles(inscription, ['photos', 'drawings']) %}
-                {% for actualImage in actualImages %}
-                    {% if not isImageDrawn %}
-                        <img class="card-img-bottom img-fluid" src="{{ thumbnailsGenerator.thumbnail(actualImage.file) }}" alt="{{ actualImage.description }}">
-                        {% set isImageDrawn = true %}
-                    {% endif %}
-                {% endfor %}
+            {% for actualImage in actualValueExtractor.extractActualFiles(inscription, ['photos', 'drawings']) %}
+                {% if not isImageDrawn %}
+                    <img class="card-img-bottom img-fluid" src="{{ thumbnailsGenerator.thumbnail(actualImage.file) }}" alt="{{ actualImage.description }}">
+                    {% set isImageDrawn = true %}
+                {% endif %}
             {% endfor %}
         </div>
     </a>
