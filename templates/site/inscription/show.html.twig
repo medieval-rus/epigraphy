@@ -82,34 +82,34 @@
 
     {% set actualFiles = actualValueExtractor.extractActualFiles(inscription, [propertyName]) %}
 
-    <div
-            class="gallery"
-            data-images-container="{{ propertyName }}"
-            itemscope
-            itemtype="http://schema.org/ImageGallery"
-    >
-        {%- for actualFile in actualFiles -%}
+    {% if actualFiles is not empty %}
+        <div class="gallery"
+             data-images-container="{{ propertyName }}"
+             itemscope
+             itemtype="http://schema.org/ImageGallery"
+        >
+            {%- for actualFile in actualFiles -%}
 
-            <figure
-                    itemprop="associatedMedia"
-                    itemscope
-                    itemtype="http://schema.org/ImageObject"
-                    data-download-url="{{ actualFile.file.url }}"
-            >
-                <a
-                        href="{{ thumbnailsGenerator.thumbnail(actualFile.file, 'large') }}"
-                        itemprop="contentUrl"
+                <figure itemprop="associatedMedia"
+                        itemscope
+                        itemtype="http://schema.org/ImageObject"
+                        data-download-url="{{ actualFile.file.url }}"
                 >
-                    <img
-                            src="{{ thumbnailsGenerator.thumbnail(actualFile.file, 'large') }}"
-                            itemprop="thumbnail"
-                            alt="{{ actualFile.description }}"
-                    />
-                </a>
-                <figcaption itemprop="caption description">{{ actualFile.description }}</figcaption>
-            </figure>
-        {%- endfor -%}
-    </div>
+                    <a href="{{ thumbnailsGenerator.thumbnail(actualFile.file, 'large') }}"
+                       itemprop="contentUrl"
+                    >
+                        <img src="{{ thumbnailsGenerator.thumbnail(actualFile.file, 'large') }}"
+                             itemprop="thumbnail"
+                             alt="{{ actualFile.description }}"
+                        />
+                    </a>
+                    <figcaption itemprop="caption description">{{ actualFile.description }}</figcaption>
+                </figure>
+            {%- endfor -%}
+        </div>
+    {% else %}
+        {{- '-' -}}
+    {% endif %}
 {%- endmacro -%}
 
 {%- macro format_text_row(translationContext, labelTranslationKey, content) -%}

@@ -50,7 +50,7 @@
 
 {%- macro create_download_icon(translationContext, bibliographicRecord) -%}
     {%- if bibliographicRecord.mainFile is not null -%}
-        <a class="eomr-download-icon" href="{{ thumbnailsGenerator.thumbnail(bibliographicRecord.mainFile) }}">
+        <a class="eomr-download-icon" href="{{ thumbnailsGenerator.thumbnail(bibliographicRecord.mainFile, 'document') }}">
             {{- include('site/_download_icon.html.twig') -}}
         </a>
     {%- endif -%}
