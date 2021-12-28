@@ -33,9 +33,9 @@ use App\FilterableTable\Filter\Parameter\ContentCategoryFilterParameter;
 use App\FilterableTable\Filter\Parameter\MaterialFilterParameter;
 use App\FilterableTable\Filter\Parameter\NumberInSourceFilterParameter;
 use App\FilterableTable\Filter\Parameter\Origin1FilterParameter;
-use App\FilterableTable\Filter\Parameter\Origin2FilterParameter;
 use App\FilterableTable\Filter\Parameter\PreservationStateFilterParameter;
 use App\FilterableTable\Filter\Parameter\TextFilterParameter;
+use App\FilterableTable\Filter\Parameter\TranslationFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\Epigraphy\ActualValue\Formatter\ActualValueFormatterInterface;
@@ -66,7 +66,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     private AuthorFilterParameter $authorFilterParameter;
     private NumberInSourceFilterParameter $numberInSourceFilterParameter;
     private Origin1FilterParameter $origin1FilterParameter;
-    private Origin2FilterParameter $origin2FilterParameter;
+    private TranslationFilterParameter $translationFilterParameter;
 
     public function __construct(
         ValueStringifierInterface $valueStringifier,
@@ -81,7 +81,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         AuthorFilterParameter $authorFilterParameter,
         NumberInSourceFilterParameter $numberInSourceFilterParameter,
         Origin1FilterParameter $origin1FilterParameter,
-        Origin2FilterParameter $origin2FilterParameter
+        TranslationFilterParameter $translationFilterParameter
     ) {
         $this->valueStringifier = $valueStringifier;
         $this->carrierTypeFilterParameter = $carrierTypeFilterParameter;
@@ -95,7 +95,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         $this->authorFilterParameter = $authorFilterParameter;
         $this->numberInSourceFilterParameter = $numberInSourceFilterParameter;
         $this->origin1FilterParameter = $origin1FilterParameter;
-        $this->origin2FilterParameter = $origin2FilterParameter;
+        $this->translationFilterParameter = $translationFilterParameter;
     }
 
     public function createSubmitButtonOptions(): array
@@ -172,10 +172,10 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
             $this->materialFilterParameter,
             $this->contentCategoryFilterParameter,
             $this->origin1FilterParameter,
-            $this->origin2FilterParameter,
             $this->authorFilterParameter,
             $this->numberInSourceFilterParameter,
             $this->textFilterParameter,
+            $this->translationFilterParameter,
         ];
     }
 

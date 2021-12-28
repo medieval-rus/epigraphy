@@ -44,6 +44,9 @@ services:
           pattern: '/^bibliography_document_([a-z0-9-]+)( \(.+\))?\.([a-z0-9]+)$/u'
       $thumbnailsDirectory: '%env(THUMBNAILS_DIRECTORY)%'
       $thumbnailPresets:
+        document:
+          - media-types: ['application/pdf']
+            type: raw
         default:
           - media-types: ['image/jpeg', 'image/png', 'image/bmp']
             type: jpeg

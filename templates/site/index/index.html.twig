@@ -49,7 +49,7 @@
     <a href="{{ path('inscription__show', {'id': inscription.id}) }}">
         <div class="eomr-card card">
             <div class="eomr-card-body card-body">
-                <h4 class="eomr-card-title card-title">{{ 'favoriteInsritpion.label'|transWithContext(translationContext, {'%id%': inscription.id}) }}</h4>
+                <p class="eomr-card-text card-text">{{ inscription.carrier.categories|map(category => category.name)|join(', ') }}</p>
                 <p class="eomr-card-text card-text">{{- valueStringifier.stringify(inscription, 'description')|raw -}}</p>
                 <div class="eomr-card-text card-text">
                     <div class="eomr-additional-data-container small">

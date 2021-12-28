@@ -25,60 +25,40 @@ declare(strict_types=1);
 
 namespace App\FilterableTable\Filter\Parameter;
 
-use App\Persistence\Entity\Epigraphy\Inscription;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\ExpressionBuilderInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
+use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Parameter\ParameterFactoryInterface;
 
-final class Origin2FilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
+final class TranslationFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
+    private ParameterFactoryInterface $parameterFactory;
     private AliasFactoryInterface $aliasFactory;
 
-    public function __construct(AliasFactoryInterface $aliasFactory)
+    public function __construct(ParameterFactoryInterface $parameterFactory, AliasFactoryInterface $aliasFactory)
     {
+        $this->parameterFactory = $parameterFactory;
         $this->aliasFactory = $aliasFactory;
     }
 
     public function getQueryParameterName(): string
     {
-        return 'origin2';
+        return 'translation';
     }
 
     public function getType(): string
     {
-        return ChoiceType::class;
+        return TextType::class;
     }
 
     public function getOptions(EntityManager $entityManager): array
     {
-        $queryBuilder = $entityManager
-            ->getRepository(Inscription::class)
-            ->createQueryBuilder('inscription')
-            ->setParameter(':isShownOnSite', true);
-
-        $choices = array_column(
-            $queryBuilder
-                ->innerJoin('inscription.carrier', 'carrier')
-                ->select('carrier.origin2')
-                ->where($queryBuilder->expr()->eq('inscription.isShownOnSite', ':isShownOnSite'))
-                ->andWhere($queryBuilder->expr()->isNotNull('carrier.origin2'))
-                ->distinct()
-                ->getQuery()
-                ->getArrayResult(),
-            'origin2'
-        );
-
-        natsort($choices);
-
         return [
-            'label' => 'controller.inscription.list.filter.origin2',
+            'label' => 'controller.inscription.list.filter.translation',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
-            'choices' => array_combine($choices, $choices),
-            'expanded' => false,
-            'multiple' => true,
         ];
     }
 
@@ -87,17 +67,31 @@ final class Origin2FilterParameter implements FilterParameterInterface, Expressi
      */
     public function buildWhereExpression(QueryBuilder $queryBuilder, $formData, string $entityAlias): ?string
     {
-        if (0 === \count($formData)) {
+        $filterValue = $formData;
+
+        if (null === $filterValue) {
             return null;
         }
 
         $queryBuilder
             ->innerJoin(
-                $entityAlias.'.carrier',
-                $carrierAlias = $this->aliasFactory->createAlias(static::class, 'carrier')
+                $entityAlias.'.zeroRow',
+                $zeroRowAlias = $this->aliasFactory->createAlias(static::class, 'zero_row')
+            )
+            ->leftJoin(
+                $zeroRowAlias.'.translationReferences',
+                $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'references')
             )
         ;
 
-        return (string) $queryBuilder->expr()->in($carrierAlias.'.origin2', $formData);
+        $queryBuilder->setParameter(
+            $parameterName = $this->parameterFactory->createParameter($entityAlias.'_translation', 0),
+            '%'.mb_strtolower($filterValue).'%'
+        );
+
+        return (string) $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->like('LOWER('.$zeroRowAlias.'.translation)', $parameterName),
+            $queryBuilder->expr()->like('LOWER('.$interpretationsAlias.'.translation)', $parameterName)
+        );
     }
 }

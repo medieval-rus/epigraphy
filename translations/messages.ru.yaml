@@ -21,8 +21,6 @@ controller:
   index:
     index:
       title: Главная
-      favoriteInsritpion:
-        label: Надпись %id%
   security:
     login:
       title: Авторизация
@@ -39,8 +37,7 @@ controller:
       title: Список надписей
       table:
         column:
-          id: Id
-          number: Номер
+          id: ''
           carrier:
             category: Категория носителя
             origin1: Город, местность
@@ -49,7 +46,7 @@ controller:
             text: Текст
             description: Содержание
             contentCategory: Категория по содержанию
-        resultsCount: "Найдено надписей: count"
+        resultsCount: 'Найдено надписей: count'
       filter:
         dataColumn:
           label: Колонка с данными
@@ -63,6 +60,7 @@ controller:
         preservationState: Состояние сохранности
         alphabet: Алфавит
         text: Текст надписи
+        translation: Перевод
         material: Материал
         contentCategory: Категория
         origin1: Город, местность
