@@ -54,7 +54,7 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
         return 'list.'.$this->getEntityKey().'.fields.'.$fieldName;
     }
 
-    protected function createLabeledListOptions(string $fieldName, array $options = []): array
+    protected function createListOptions(string $fieldName, array $options = []): array
     {
         return array_merge(
             [
@@ -64,7 +64,7 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
         );
     }
 
-    protected function createLabeledFormOptions(string $fieldName, array $options = []): array
+    protected function createFormOptions(string $fieldName, array $options = []): array
     {
         return array_merge(
             [
@@ -74,9 +74,9 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
         );
     }
 
-    protected function createLabeledManyToManyFormOptions(string $fieldName, array $options = []): array
+    protected function createManyToManyFormOptions(string $fieldName, array $options = []): array
     {
-        return $this->createLabeledFormOptions(
+        return $this->createFormOptions(
             $fieldName,
             array_merge(
                 ['required' => false, 'multiple' => true],

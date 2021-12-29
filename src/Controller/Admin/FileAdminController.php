@@ -23,31 +23,34 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Admin\Content;
+namespace App\Controller\Admin;
 
-use App\Admin\AbstractEntityAdmin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Form\FormMapper;
+use App\Persistence\Entity\Media\File;
+use App\Services\Media\Thumbnails\ThumbnailsGeneratorInterface;
+use Sonata\AdminBundle\Controller\CRUDController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-final class InscriptionListAdmin extends AbstractEntityAdmin
+final class FileAdminController extends CRUDController
 {
-    protected $baseRouteName = 'content_inscription_list';
+    private ThumbnailsGeneratorInterface $thumbnailsGenerator;
 
-    protected $baseRoutePattern = 'content/inscription-list';
-
-    protected function configureListFields(ListMapper $listMapper): void
+    public function __construct(ThumbnailsGeneratorInterface $thumbnailsGenerator)
     {
-        $listMapper
-            ->addIdentifier('name', null, $this->createListOptions('name'))
-        ;
+        $this->thumbnailsGenerator = $thumbnailsGenerator;
     }
 
-    protected function configureFormFields(FormMapper $formMapper): void
+    public function regenerateThumbnailsAction(): Response
     {
-        $formMapper
-            ->add('name', null, $this->createFormOptions('name'))
-            ->add('description', null, $this->createFormOptions('description'))
-            ->add('inscriptions', null, $this->createManyToManyFormOptions('inscriptions'))
-        ;
+        /**
+         * @var $file File
+         */
+        $file = $this->admin->getSubject();
+
+        $this->thumbnailsGenerator->regenerateAll($file);
+
+        $this->addFlash('sonata_flash_success', $this->trans('action.regenerateThumbnails.flash'));
+
+        return new RedirectResponse($this->admin->generateObjectUrl('edit', $file));
     }
 }

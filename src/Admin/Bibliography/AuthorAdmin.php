@@ -38,7 +38,7 @@ final class AuthorAdmin extends AbstractEntityAdmin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('fullName', null, $this->createLabeledFormOptions('fullName'))
+            ->addIdentifier('fullName', null, $this->createFormOptions('fullName'))
         ;
     }
 
@@ -46,7 +46,7 @@ final class AuthorAdmin extends AbstractEntityAdmin
     {
         $formMapper
             ->with($this->getSectionLabel('data'))
-                ->add('fullName', null, $this->createLabeledFormOptions('fullName'))
+                ->add('fullName', null, $this->createFormOptions('fullName'))
             ->end()
         ;
     }

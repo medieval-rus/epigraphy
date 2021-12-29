@@ -41,9 +41,9 @@ final class ReferencesListItemAdmin extends AbstractEntityAdmin
             ->add(
                 'bibliographicRecord.shortName',
                 null,
-                $this->createLabeledFormOptions('bibliographicRecord', ['disabled' => true])
+                $this->createFormOptions('bibliographicRecord', ['disabled' => true])
             )
-            ->add('position', HiddenType::class, $this->createLabeledFormOptions('position'))
+            ->add('position', HiddenType::class, $this->createFormOptions('position'))
         ;
     }
 }

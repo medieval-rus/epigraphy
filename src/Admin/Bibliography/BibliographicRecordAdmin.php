@@ -52,9 +52,9 @@ final class BibliographicRecordAdmin extends AbstractEntityAdmin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('shortName', null, $this->createLabeledListOptions('shortName'))
-            ->add('title', null, $this->createLabeledListOptions('title'))
-            ->add('year', null, $this->createLabeledListOptions('year'))
+            ->addIdentifier('shortName', null, $this->createListOptions('shortName'))
+            ->add('title', null, $this->createListOptions('title'))
+            ->add('year', null, $this->createListOptions('year'))
         ;
     }
 
@@ -63,13 +63,13 @@ final class BibliographicRecordAdmin extends AbstractEntityAdmin
         $formMapper
             ->tab($this->getTabLabel('main'))
                 ->with($this->getSectionLabel('basicInformation'), ['class' => 'col-md-7'])
-                    ->add('shortName', null, $this->createLabeledFormOptions('shortName'))
-                    ->add('title', null, $this->createLabeledFormOptions('title'))
-                    ->add('year', null, $this->createLabeledFormOptions('year'))
-                    ->add('authors', null, $this->createLabeledManyToManyFormOptions('authors'))
+                    ->add('shortName', null, $this->createFormOptions('shortName'))
+                    ->add('title', null, $this->createFormOptions('title'))
+                    ->add('year', null, $this->createFormOptions('year'))
+                    ->add('authors', null, $this->createManyToManyFormOptions('authors'))
                 ->end()
                 ->with($this->getSectionLabel('details'), ['class' => 'col-md-5'])
-                    ->add('formalNotation', null, $this->createLabeledFormOptions('formalNotation'))
+                    ->add('formalNotation', null, $this->createFormOptions('formalNotation'))
                 ->end()
             ->end()
             ->tab($this->getTabLabel('media'))
@@ -77,7 +77,7 @@ final class BibliographicRecordAdmin extends AbstractEntityAdmin
                     ->add(
                         'mainFile',
                         null,
-                        $this->createLabeledFormOptions(
+                        $this->createFormOptions(
                             'mainFile',
                             [
                                 'choice_filter' => $this->dataStorageManager->getFolderFilter('bibliography_document'),

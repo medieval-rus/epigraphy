@@ -47,6 +47,7 @@ Encore
     .addStyleEntry('css/site/bibliographic-record/list', './assets/scss/pages/site/bibliographic-record/list.scss')
     .addStyleEntry('css/admin/inscription/edit', './assets/scss/pages/admin/inscription/edit.scss')
     .addEntry('js/admin/inscription/edit', './assets/js/pages/admin/inscription/edit.js')
+    .addStyleEntry('css/admin/media/file', './assets/scss/pages/admin/media/file.scss')
     .copyFiles({
         from: './assets/fonts',
         to: 'fonts/[path][name].[ext]',

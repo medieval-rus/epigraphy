@@ -43,26 +43,29 @@ services:
           id: '%env(OSF_BIBLIOGRAPHY_DOCUMENTS_FOLDER_ID)%'
           pattern: '/^bibliography_document_([a-z0-9-]+)( \(.+\))?\.([a-z0-9]+)$/u'
       $thumbnailsDirectory: '%kernel.project_dir%/public/thumbs'
-      $thumbnailPresets:
-        document:
-          - media-types: ['application/pdf']
-            type: raw
-        default:
-          - media-types: ['image/jpeg', 'image/png', 'image/bmp']
-            type: jpeg
-            extension: jpeg
-            quality: 70
-            max-dimension: 1200
-          - media-types: ['image/gif']
-            type: raw
-        large:
-          - media-types: ['image/jpeg', 'image/png', 'image/bmp']
-            type: jpeg
-            extension: jpeg
-            quality: 70
-            max-dimension: 6000
-          - media-types: ['image/gif']
-            type: raw
+      $thumbnailsPolicies:
+        - media-types: ['image/jpeg', 'image/png', 'image/bmp', 'image/x-ms-bmp', 'image/tiff']
+          presets:
+            default:
+              type: jpeg
+              extension: jpeg
+              quality: 70
+              max-dimension: 1200
+            large:
+              type: jpeg
+              extension: jpeg
+              quality: 70
+              max-dimension: 6000
+        - media-types: ['image/gif']
+          presets:
+            default:
+              type: raw
+            large:
+              type: raw
+        - media-types: ['application/pdf']
+          presets:
+            document:
+              type: raw
 
   App\:
     resource: '../src/'

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace App\Persistence\Entity\Media;
 
 use Doctrine\ORM\Mapping as ORM;
+use RuntimeException;
 
 /**
  * @ORM\Entity()
@@ -182,6 +183,36 @@ class File
         $this->metadata = $metadata;
 
         return $this;
+    }
+
+    public function getOsfFileId(): string
+    {
+        $metadata = $this->getMetadata() ?? [];
+
+        if (!\array_key_exists('osf', $metadata)) {
+            throw new RuntimeException(
+                sprintf('File with id "%s" does not contain OSF metadata', $this->id)
+            );
+        }
+
+        $osfMetadata = $metadata['osf'];
+
+        if (!\array_key_exists('id', $osfMetadata)) {
+            throw new RuntimeException(
+                sprintf('OSF metadata of file with id "%s" does not contain OSF file id', $this->id)
+            );
+        }
+
+        $id = $osfMetadata['id'];
+        $idParts = explode('/', $id);
+
+        if (2 !== \count($idParts)) {
+            throw new RuntimeException(
+                sprintf('OSF file id of file with id "%s" has unknown format: "%s" ', $this->id, $id)
+            );
+        }
+
+        return $idParts[1];
     }
 
     public function setOsfFileId(string $osfFileId): self

@@ -59,10 +59,10 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                         HiddenType::class,
                         ['attr' => ['data-interpretation-id' => $this->getSubject()->getId()]]
                     )
-                    ->add('source', null, $this->createLabeledFormOptions('source'))
-                    ->add('pageNumbersInSource', null, $this->createLabeledFormOptions('pageNumbersInSource'))
-                    ->add('numberInSource', null, $this->createLabeledFormOptions('numberInSource'))
-                    ->add('comment', null, $this->createLabeledFormOptions('comment'))
+                    ->add('source', null, $this->createFormOptions('source'))
+                    ->add('pageNumbersInSource', null, $this->createFormOptions('pageNumbersInSource'))
+                    ->add('numberInSource', null, $this->createFormOptions('numberInSource'))
+                    ->add('comment', null, $this->createFormOptions('comment'))
                 ->end()
             ->end()
             ->tab($this->getTabLabel('materialAspect'))
@@ -148,6 +148,6 @@ final class InterpretationAdmin extends AbstractEntityAdmin
             \array_key_exists('attr', $options) ? $options['attr'] : []
         );
 
-        return $this->createLabeledFormOptions($label, array_merge(['required' => false], $options));
+        return $this->createFormOptions($label, array_merge(['required' => false], $options));
     }
 }

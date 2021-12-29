@@ -76,10 +76,10 @@ final class InscriptionAdmin extends AbstractEntityAdmin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
-            ->addIdentifier('number', null, $this->createLabeledListOptions('number'))
-            ->add('carrier', null, $this->createLabeledListOptions('carrier'))
-            ->add('interpretations', null, $this->createLabeledListOptions('interpretations'))
+            ->addIdentifier('id', null, $this->createListOptions('id'))
+            ->addIdentifier('number', null, $this->createListOptions('number'))
+            ->add('carrier', null, $this->createListOptions('carrier'))
+            ->add('interpretations', null, $this->createListOptions('interpretations'))
         ;
     }
 
@@ -88,12 +88,12 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         $formMapper
             ->tab($this->getTabLabel('common'))
                 ->with($this->getSectionLabel('common'))
-                    ->add('number', null, $this->createLabeledFormOptions('number'))
-                    ->add('conventionalDate', null, $this->createLabeledFormOptions('conventionalDate'))
-                    ->add('carrier', null, $this->createLabeledFormOptions('carrier'))
-                    ->add('comment', null, $this->createLabeledFormOptions('comment'))
-                    ->add('isShownOnSite', null, $this->createLabeledFormOptions('isShownOnSite'))
-                    ->add('isPartOfCorpus', null, $this->createLabeledFormOptions('isPartOfCorpus'))
+                    ->add('number', null, $this->createFormOptions('number'))
+                    ->add('conventionalDate', null, $this->createFormOptions('conventionalDate'))
+                    ->add('carrier', null, $this->createFormOptions('carrier'))
+                    ->add('comment', null, $this->createFormOptions('comment'))
+                    ->add('isShownOnSite', null, $this->createFormOptions('isShownOnSite'))
+                    ->add('isPartOfCorpus', null, $this->createFormOptions('isPartOfCorpus'))
                 ->end()
             ->end()
             ->tab($this->getTabLabel('actualResearchInformation'))
@@ -101,7 +101,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.placeOnCarrier',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.placeOnCarrier', ['required' => false])
+                        $this->createFormOptions('zeroRow.placeOnCarrier', ['required' => false])
                     )
                     ->add(
                         'zeroRow.placeOnCarrierReferences',
@@ -111,7 +111,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.writingTypes',
                         ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.writingTypes')
+                        $this->createManyToManyFormOptions('zeroRow.writingTypes')
                     )
                     ->add(
                         'zeroRow.writingTypesReferences',
@@ -121,7 +121,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.writingMethods',
                         ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.writingMethods')
+                        $this->createManyToManyFormOptions('zeroRow.writingMethods')
                     )
                     ->add(
                         'zeroRow.writingMethodsReferences',
@@ -131,7 +131,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.preservationStates',
                         ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.preservationStates')
+                        $this->createManyToManyFormOptions('zeroRow.preservationStates')
                     )
                     ->add(
                         'zeroRow.preservationStatesReferences',
@@ -141,7 +141,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.materials',
                         ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.materials')
+                        $this->createManyToManyFormOptions('zeroRow.materials')
                     )
                     ->add(
                         'zeroRow.materialsReferences',
@@ -153,7 +153,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.alphabets',
                         ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.alphabets')
+                        $this->createManyToManyFormOptions('zeroRow.alphabets')
                     )
                     ->add(
                         'zeroRow.alphabetsReferences',
@@ -163,7 +163,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.text',
                         TextareaType::class,
-                        $this->createLabeledFormOptions(
+                        $this->createFormOptions(
                             'zeroRow.text',
                             ['required' => false, 'attr' => ['data-virtual-keyboard' => true]]
                         )
@@ -176,7 +176,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.transliteration',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.transliteration', ['required' => false])
+                        $this->createFormOptions('zeroRow.transliteration', ['required' => false])
                     )
                     ->add(
                         'zeroRow.transliterationReferences',
@@ -186,7 +186,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.translation',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.translation', ['required' => false])
+                        $this->createFormOptions('zeroRow.translation', ['required' => false])
                     )
                     ->add(
                         'zeroRow.translationReferences',
@@ -196,7 +196,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.contentCategories',
                         ModelType::class,
-                        $this->createLabeledManyToManyFormOptions('zeroRow.contentCategories')
+                        $this->createManyToManyFormOptions('zeroRow.contentCategories')
                     )
                     ->add(
                         'zeroRow.contentCategoriesReferences',
@@ -206,7 +206,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.description',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.description', ['required' => false])
+                        $this->createFormOptions('zeroRow.description', ['required' => false])
                     )
                     ->add(
                         'zeroRow.descriptionReferences',
@@ -218,7 +218,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.origin',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.origin', ['required' => false])
+                        $this->createFormOptions('zeroRow.origin', ['required' => false])
                     )
                     ->add(
                         'zeroRow.originReferences',
@@ -228,7 +228,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.dateInText',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.dateInText', ['required' => false])
+                        $this->createFormOptions('zeroRow.dateInText', ['required' => false])
                     )
                     ->add(
                         'zeroRow.dateInTextReferences',
@@ -238,7 +238,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.stratigraphicalDate',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.stratigraphicalDate', ['required' => false])
+                        $this->createFormOptions('zeroRow.stratigraphicalDate', ['required' => false])
                     )
                     ->add(
                         'zeroRow.stratigraphicalDateReferences',
@@ -248,7 +248,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.nonStratigraphicalDate',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.nonStratigraphicalDate', ['required' => false])
+                        $this->createFormOptions('zeroRow.nonStratigraphicalDate', ['required' => false])
                     )
                     ->add(
                         'zeroRow.nonStratigraphicalDateReferences',
@@ -258,7 +258,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.historicalDate',
                         TextareaType::class,
-                        $this->createLabeledFormOptions('zeroRow.historicalDate', ['required' => false])
+                        $this->createFormOptions('zeroRow.historicalDate', ['required' => false])
                     )
                     ->add(
                         'zeroRow.historicalDateReferences',
@@ -270,7 +270,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.photos',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
+                        $this->createManyToManyFormOptions(
                             'zeroRow.photos',
                             [
                                 'class' => File::class,
@@ -287,7 +287,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.drawings',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
+                        $this->createManyToManyFormOptions(
                             'zeroRow.drawings',
                             [
                                 'class' => File::class,
@@ -304,7 +304,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.textImages',
                         EntityType::class,
-                        $this->createLabeledManyToManyFormOptions(
+                        $this->createManyToManyFormOptions(
                             'zeroRow.textImages',
                             [
                                 'class' => File::class,
@@ -325,7 +325,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'interpretations',
                         CollectionType::class,
-                        $this->createLabeledFormOptions('interpretations', ['required' => false]),
+                        $this->createFormOptions('interpretations', ['required' => false]),
                         ['edit' => 'inline', 'admin_code' => 'admin.interpretation']
                     )
                 ->end()
@@ -358,7 +358,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
 
         $parentInscriptionId = null === $subject ? null : $subject->getId();
 
-        return $this->createLabeledManyToManyFormOptions(
+        return $this->createManyToManyFormOptions(
             'zeroRow.'.$fieldName,
             array_merge(
                 $options,

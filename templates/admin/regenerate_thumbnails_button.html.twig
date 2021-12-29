@@ -1,0 +1,40 @@
+{#
+# This file is part of «Epigraphy of Medieval Rus» database.
+#
+# Copyright (c) National Research University Higher School of Economics
+#
+# «Epigraphy of Medieval Rus» database is free software:
+# you can redistribute it and/or modify it under the terms of the
+# GNU General Public License as published by the Free Software Foundation, version 3.
+#
+# «Epigraphy of Medieval Rus» database is distributed
+# in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code. If you have not received
+# a copy of the GNU General Public License along with
+# «Epigraphy of Medieval Rus» database,
+# see <http://www.gnu.org/licenses/>.
+#}
+
+{% if object is not null and admin.id(object) is not null and admin.hasAccess('edit') %}
+    {% if admin.subClasses is empty %}
+        <li>
+            <a class="sonata-action-element" href="{{ admin.generateObjectUrl('regenerateThumbnails', object) }}">
+                <i class="fas fa-image" aria-hidden="true"></i>
+                {{ 'action.regenerateThumbnails.label'|trans({}, 'admin') }}
+            </a>
+        </li>
+    {% else %}
+        {% for subclass in admin.subclasses|keys %}
+            <li>
+                <a class="sonata-action-element" href="{{ admin.generateUrl('regenerateThumbnails', {'subclass': subclass}) }}">
+                    <i class="fas fa-image" aria-hidden="true"></i>
+                    {{ 'action.regenerateThumbnails.label'|trans({}, 'admin') }} {{ subclass|trans }}
+                </a>
+            </li>
+        {% endfor %}
+    {% endif %}
+{% endif %}

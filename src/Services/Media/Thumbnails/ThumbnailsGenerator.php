@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\Services\Media\Thumbnails;
 
+use App\Helper\StringHelper;
 use App\Persistence\Entity\Media\File;
 use Imagick;
 use Psr\Log\LoggerInterface;
@@ -38,30 +39,41 @@ final class ThumbnailsGenerator implements ThumbnailsGeneratorInterface
 
     private string $thumbnailsDirectory;
 
-    private array $thumbnailPresets;
+    private array $thumbnailsPolicies;
 
     private LoggerInterface $logger;
 
     public function __construct(
         HttpClientInterface $httpClient,
         string $thumbnailsDirectory,
-        array $thumbnailPresets,
+        array $thumbnailsPolicies,
         LoggerInterface $logger
     ) {
         $this->httpClient = $httpClient;
         $this->thumbnailsDirectory = $thumbnailsDirectory;
-        $this->thumbnailPresets = $thumbnailPresets;
+        $this->thumbnailsPolicies = $thumbnailsPolicies;
         $this->logger = $logger;
     }
 
     public function getThumbnail(File $file, string $presetKey = 'default'): string
     {
-        $this->validatePresetKey($presetKey);
-
-        $policy = $this->getPolicy($file, $presetKey);
+        $policy = $this->getPolicy($file);
 
         if (null !== $policy) {
-            $thumbnailFileName = $this->getThumbnailFileName($file, $presetKey, $policy);
+            $presets = $policy['presets'];
+
+            if (!\array_key_exists($presetKey, $presets)) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Cannot get thumbnail for file "%s": unknown thumbnail preset key "%s". Known presets are: %s',
+                        $file->getFileName(),
+                        $presetKey,
+                        implode(', ', array_map(fn ($key) => sprintf('"%s"', $key), array_keys($presets)))
+                    )
+                );
+            }
+
+            $thumbnailFileName = $this->getThumbnailFileName($file, $presetKey, $presets[$presetKey]);
 
             $pathToThumbnail = $this->getPathToThumbnail($thumbnailFileName);
 
@@ -78,7 +90,7 @@ final class ThumbnailsGenerator implements ThumbnailsGeneratorInterface
                 )
             );
         } else {
-            $this->logger->warning(
+            $this->logger->error(
                 sprintf(
                     'No policy found to handle thumbnails for file "%s" and preset key "%s"',
                     $file->getFileName(),
@@ -96,22 +108,49 @@ final class ThumbnailsGenerator implements ThumbnailsGeneratorInterface
             ->logger
             ->info(sprintf('[ThumbnailsGenerator] <generateAll> $file->getFileName() = "%s"', $file->getFileName()));
 
-        foreach ($this->thumbnailPresets as $presetKey => $preset) {
-            $this->generateThumbnail($file, $presetKey);
-        }
-    }
-
-    private function generateThumbnail(File $file, string $presetKey = 'default'): void
-    {
-        $this->validatePresetKey($presetKey);
-
-        $policy = $this->getPolicy($file, $presetKey);
+        $policy = $this->getPolicy($file);
 
         if (null === $policy) {
+            $this
+                ->logger
+                ->error(
+                    sprintf(
+                        '[ThumbnailsGenerator] <generateAll> Cannot find policy for file "%s"',
+                        $file->getFileName()
+                    )
+                );
+
             return;
         }
 
-        $thumbnailFileName = $this->getThumbnailFileName($file, $presetKey, $policy);
+        foreach ($policy['presets'] as $presetKey => $preset) {
+            $this->generateThumbnail($file, $presetKey, $preset);
+        }
+    }
+
+    public function regenerateAll(File $file): void
+    {
+        $this
+            ->logger
+            ->info(sprintf('[ThumbnailsGenerator] <regenerateAll> $file->getFileName() = "%s"', $file->getFileName()));
+
+        $this->ensureDirectoryExists();
+
+        $existingThumbnails = array_filter(
+            scandir($this->thumbnailsDirectory),
+            fn (string $item): bool => StringHelper::startsWith($item, $file->getFileName())
+        );
+
+        foreach ($existingThumbnails as $existingThumbnail) {
+            unlink($this->getPathToThumbnail($existingThumbnail));
+        }
+
+        $this->generateAll($file);
+    }
+
+    private function generateThumbnail(File $file, string $presetKey, array $preset): void
+    {
+        $thumbnailFileName = $this->getThumbnailFileName($file, $presetKey, $preset);
 
         $pathToThumbnail = $this->getPathToThumbnail($thumbnailFileName);
 
@@ -119,17 +158,15 @@ final class ThumbnailsGenerator implements ThumbnailsGeneratorInterface
             try {
                 $startTime = microtime(true);
 
-                switch ($policy['type']) {
+                switch ($preset['type']) {
                     case 'jpeg':
-                        $this->handleJpeg($file, $pathToThumbnail, $policy);
+                        $this->handleJpeg($file, $pathToThumbnail, $preset);
                         break;
-
                     case 'raw':
                         $this->handleRaw($file, $pathToThumbnail);
                         break;
-
                     default:
-                        throw $this->unknownPolicyException($policy['type']);
+                        throw $this->unknownPresetTypeException($preset['type']);
                 }
 
                 $endTime = microtime(true);
@@ -158,22 +195,6 @@ final class ThumbnailsGenerator implements ThumbnailsGeneratorInterface
         }
     }
 
-    private function validatePresetKey(string $presetKey): void
-    {
-        if (!\array_key_exists($presetKey, $this->thumbnailPresets)) {
-            throw new RuntimeException(
-                sprintf(
-                    'Unknown thumbnail preset key "%s". Known presets are: %s',
-                    $presetKey,
-                    implode(
-                        ', ',
-                        array_map(fn ($key): string => sprintf('"%s"', $key), array_keys($this->thumbnailPresets))
-                    )
-                )
-            );
-        }
-    }
-
     private function ensureDirectoryExists(): void
     {
         if (!file_exists($this->thumbnailsDirectory)) {
@@ -181,20 +202,7 @@ final class ThumbnailsGenerator implements ThumbnailsGeneratorInterface
         }
     }
 
-    private function getPolicy(File $file, string $presetKey): ?array
-    {
-        $preset = $this->thumbnailPresets[$presetKey];
-
-        foreach ($preset as $policy) {
-            if (\in_array($file->getMediaType(), $policy['media-types'], true)) {
-                return $policy;
-            }
-        }
-
-        return null;
-    }
-
-    private function handleJpeg(File $file, string $pathToThumbnail, array $policy): void
+    private function handleJpeg(File $file, string $pathToThumbnail, array $preset): void
     {
         try {
             $this->ensureDirectoryExists();
@@ -202,16 +210,16 @@ final class ThumbnailsGenerator implements ThumbnailsGeneratorInterface
             $imagick = new Imagick($file->getUrl());
 
             if ($imagick->getImageWidth() > $imagick->getImageHeight()) {
-                $thumbnailWidth = $policy['max-dimension'];
+                $thumbnailWidth = $preset['max-dimension'];
                 $thumbnailHeight = (int) ($thumbnailWidth / $imagick->getImageWidth() * $imagick->getImageHeight());
             } else {
-                $thumbnailHeight = $policy['max-dimension'];
+                $thumbnailHeight = $preset['max-dimension'];
                 $thumbnailWidth = (int) ($thumbnailHeight / $imagick->getImageHeight() * $imagick->getImageWidth());
             }
 
-            $imagick->setImageFormat($policy['extension']);
+            $imagick->setImageFormat($preset['extension']);
             $imagick->setImageCompression(Imagick::COMPRESSION_JPEG);
-            $imagick->setImageCompressionQuality($policy['quality']);
+            $imagick->setImageCompressionQuality($preset['quality']);
             $imagick->thumbnailImage($thumbnailWidth, $thumbnailHeight);
 
             $imagick->writeImage($pathToThumbnail);
@@ -230,20 +238,15 @@ final class ThumbnailsGenerator implements ThumbnailsGeneratorInterface
         file_put_contents($pathToThumbnail, $response->toStream());
     }
 
-    private function unknownPolicyException(string $policyType): RuntimeException
+    private function getThumbnailFileName(File $file, string $presetKey, array $preset): string
     {
-        return new RuntimeException(sprintf('Unknown policy type "%s".', $policyType));
-    }
-
-    private function getThumbnailFileName(File $file, string $presetKey, array $policy): string
-    {
-        switch ($policy['type']) {
+        switch ($preset['type']) {
             case 'jpeg':
-                return $file->getFileName().'_thumb-'.$presetKey.'.'.$policy['extension'];
+                return $file->getFileName().'_thumb-'.$presetKey.'.'.$preset['extension'];
             case 'raw':
                 return $file->getFileName();
             default:
-                throw $this->unknownPolicyException($policy['type']);
+                throw $this->unknownPresetTypeException($preset['type']);
         }
     }
 
@@ -255,5 +258,21 @@ final class ThumbnailsGenerator implements ThumbnailsGeneratorInterface
     private function getPathToThumbnail(string $thumbnailFileName): string
     {
         return $this->thumbnailsDirectory.\DIRECTORY_SEPARATOR.$thumbnailFileName;
+    }
+
+    private function getPolicy(File $file): ?array
+    {
+        foreach ($this->thumbnailsPolicies as $policy) {
+            if (\in_array($file->getMediaType(), $policy['media-types'], true)) {
+                return $policy;
+            }
+        }
+
+        return null;
+    }
+
+    private function unknownPresetTypeException(string $presetType): RuntimeException
+    {
+        return new RuntimeException(sprintf('Unknown preset type "%s".', $presetType));
     }
 }

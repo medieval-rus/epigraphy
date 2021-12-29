@@ -31,6 +31,8 @@ interface DataStorageManagerInterface
 {
     public function upload(File $file, string $fileName, string $pathToSource, string $mimeType): void;
 
+    public function delete(File $file): void;
+
     public function isFileNameValid(string $fileName): bool;
 
     public function getFolderFilter(string $folderKey): callable;

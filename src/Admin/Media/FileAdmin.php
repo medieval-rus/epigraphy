@@ -95,58 +95,89 @@ final class FileAdmin extends AbstractEntityAdmin
         );
     }
 
+    protected function configureBatchActions(array $actions): array
+    {
+        unset($actions['delete']);
+
+        return $actions;
+    }
+
+    protected function configureRoutes(RouteCollectionInterface $collection): void
+    {
+        $collection->add('regenerateThumbnails', $this->getRouterIdParameter().'/regenerate-thumbnails');
+    }
+
+    protected function configureActionButtons(array $buttonList, string $action, ?object $object = null): array
+    {
+        if ('edit' === $action) {
+            $buttonList['regenerateThumbnails'] = ['template' => 'admin/regenerate_thumbnails_button.html.twig'];
+        }
+
+        return $buttonList;
+    }
+
+    /**
+     * @param File $object
+     */
+    protected function postRemove(object $object): void
+    {
+        $this->dataStorageManager->delete($object);
+    }
+
     /**
      * @param File $object
      */
     protected function postPersist(object $object): void
     {
-        // todo: enable thumbnails generation
-//        $this->dispatcher->addListener(KernelEvents::TERMINATE, function () use ($object): void {
-//            $this->thumbnailsGenerator->generateAll($object);
-//        });
+        $this->dispatcher->addListener(KernelEvents::TERMINATE, function () use ($object): void {
+            $this->thumbnailsGenerator->generateAll($object);
+        });
     }
 
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
-            ->add('fileName', null, $this->createLabeledListOptions('fileName'))
-            ->add('mediaType', null, $this->createLabeledListOptions('mediaType'))
-            ->add('description', null, $this->createLabeledListOptions('description'))
+            ->addIdentifier('id', null, $this->createListOptions('id'))
+            ->add('fileName', null, $this->createListOptions('fileName'))
+            ->add('mediaType', null, $this->createListOptions('mediaType'))
+            ->add('description', null, $this->createListOptions('description'))
         ;
     }
 
     protected function configureFormFields(FormMapper $formMapper): void
     {
-        if ($this->isEditForm()) {
+        if ($this->isCurrentRoute('edit')) {
             $this->buildEditForm($formMapper);
-        } else {
+        } elseif ($this->isCurrentRoute('create')) {
             $this->buildCreateForm($formMapper);
         }
     }
 
-    protected function configureRoutes(RouteCollectionInterface $collection): void
-    {
-        $collection->remove('delete');
-    }
-
     private function buildEditForm(FormMapper $formMapper): void
     {
-        $formMapper->add('fileName', null, $this->createLabeledFormOptions('fileName', ['disabled' => true]));
-        $formMapper->add('mediaType', null, $this->createLabeledFormOptions('mediaType', ['disabled' => true]));
-        $formMapper->add('url', null, $this->createLabeledFormOptions('url', ['disabled' => true]));
-        $formMapper->add('description', null, $this->createLabeledFormOptions('description'));
-        $formMapper->add(
-            'binaryContent',
-            FileType::class,
-            $this->createLabeledFormOptions(
-                'binaryContent',
-                [
-                    'required' => false,
-                    'disabled' => true,
-                ]
-            )
-        );
+        /**
+         * @var $file File
+         */
+        $file = $this->getSubject();
+
+        $contentOptions = [
+            'required' => false,
+            'disabled' => true,
+        ];
+
+        if ($this->isImage($file)) {
+            $contentOptions['help'] = sprintf(
+                '<img src="%s" class="eomr-image-preview"/>',
+                $this->thumbnailsGenerator->getThumbnail($file)
+            );
+            $contentOptions['help_html'] = true;
+        }
+
+        $formMapper->add('binaryContent', FileType::class, $this->createFormOptions('binaryContent', $contentOptions));
+        $formMapper->add('fileName', null, $this->createFormOptions('fileName', ['disabled' => true]));
+        $formMapper->add('mediaType', null, $this->createFormOptions('mediaType', ['disabled' => true]));
+        $formMapper->add('url', null, $this->createFormOptions('url', ['disabled' => true]));
+        $formMapper->add('description', null, $this->createFormOptions('description'));
     }
 
     private function buildCreateForm(FormMapper $formMapper): void
@@ -155,7 +186,7 @@ final class FileAdmin extends AbstractEntityAdmin
             ->add(
                 'binaryContent',
                 FileType::class,
-                $this->createLabeledFormOptions(
+                $this->createFormOptions(
                     'binaryContent',
                     [
                         'required' => true,
@@ -236,17 +267,15 @@ final class FileAdmin extends AbstractEntityAdmin
                     ]
                 )
             )
-            ->add('description', null, $this->createLabeledFormOptions('description'));
+            ->add('description', null, $this->createFormOptions('description'));
     }
 
-    private function isEditForm(): bool
+    private function isImage(File $file): bool
     {
-        $file = $this->hasSubject() ? $this->getSubject() : $this->getNewInstance();
-
-        if (!$file instanceof File) {
-            throw new RuntimeException('%s error: subject is not instance of %s', __CLASS__, File::class);
-        }
-
-        return null !== $file->getId();
+        return \in_array(
+            $file->getMediaType(),
+            ['image/gif', 'image/jpeg', 'image/png', 'image/bmp', 'image/x-ms-bmp', 'image/tiff'],
+            true
+        );
     }
 }

@@ -72,10 +72,10 @@ final class UserAdmin extends AbstractEntityAdmin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
-            ->add('username', null, $this->createLabeledListOptions('username'))
-            ->add('fullName', null, $this->createLabeledListOptions('fullName'))
-            ->add('roles', null, $this->createLabeledListOptions('roles'))
+            ->addIdentifier('id', null, $this->createListOptions('id'))
+            ->add('username', null, $this->createListOptions('username'))
+            ->add('fullName', null, $this->createListOptions('fullName'))
+            ->add('roles', null, $this->createListOptions('roles'))
         ;
     }
 
@@ -87,17 +87,17 @@ final class UserAdmin extends AbstractEntityAdmin
 
         if ($isEditForm) {
             $formMapper
-                ->add('id', null, $this->createLabeledFormOptions('id', ['required' => true, 'disabled' => true]))
+                ->add('id', null, $this->createFormOptions('id', ['required' => true, 'disabled' => true]))
             ;
         }
 
         $formMapper
-            ->add('username', null, $this->createLabeledFormOptions('username', ['required' => true]))
-            ->add('fullName', null, $this->createLabeledFormOptions('fullName', ['required' => true]))
+            ->add('username', null, $this->createFormOptions('username', ['required' => true]))
+            ->add('fullName', null, $this->createFormOptions('fullName', ['required' => true]))
             ->add(
                 'roles',
                 ChoiceType::class,
-                $this->createLabeledFormOptions(
+                $this->createFormOptions(
                     'roles',
                     [
                         'required' => true,
@@ -113,7 +113,7 @@ final class UserAdmin extends AbstractEntityAdmin
             ->add(
                 'plainPassword',
                 TextType::class,
-                $this->createLabeledFormOptions('plainPassword', ['required' => !$isEditForm])
+                $this->createFormOptions('plainPassword', ['required' => !$isEditForm])
             )
         ;
 

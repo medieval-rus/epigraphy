@@ -65,7 +65,7 @@ final class DataStorageManager implements DataStorageManagerInterface
                     implode(
                         ', ',
                         array_map(
-                            fn ($folderData): string => sprintf('"%s"', $folderData['pattern']),
+                            fn (array $folderData): string => sprintf('"%s"', $folderData['pattern']),
                             $this->osfFolders
                         )
                     )
@@ -87,6 +87,13 @@ final class DataStorageManager implements DataStorageManagerInterface
         $file->setUrl($url);
         $file->setHash($hash);
         $file->setOsfFileId((string) $id);
+    }
+
+    public function delete(File $file): void
+    {
+        $deleteUrl = $this->osfConnector->getDeleteUrl($file->getOsfFileId());
+
+        $this->osfConnector->deleteFile($deleteUrl);
     }
 
     public function isFileNameValid(string $fileName): bool

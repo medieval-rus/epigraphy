@@ -471,6 +471,9 @@ action:
   clone:
     label: Клонировать
     flash: Элемент успешно клонирован.
+  regenerateThumbnails:
+    label: Сгенерировать превью
+    flash: Превью успешно сгенерированы.
 
 tabMenu:
   inscription:

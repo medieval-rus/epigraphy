@@ -39,7 +39,7 @@ final class ReferencesListAdmin extends AbstractEntityAdmin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('name', null, $this->createLabeledListOptions('name'))
+            ->addIdentifier('name', null, $this->createListOptions('name'))
         ;
     }
 
@@ -47,13 +47,13 @@ final class ReferencesListAdmin extends AbstractEntityAdmin
     {
         $formMapper
             ->with($this->getSectionLabel('information'))
-                ->add('name', null, $this->createLabeledFormOptions('name'))
-                ->add('description', null, $this->createLabeledFormOptions('description'))
-                ->add('items', null, $this->createLabeledManyToManyFormOptions('items'))
+                ->add('name', null, $this->createFormOptions('name'))
+                ->add('description', null, $this->createFormOptions('description'))
+                ->add('items', null, $this->createManyToManyFormOptions('items'))
                 ->add(
                     'items',
                     CollectionType::class,
-                    $this->createLabeledFormOptions('items', ['required' => false]),
+                    $this->createFormOptions('items', ['required' => false]),
                     [
                         'edit' => 'inline',
                         'inline' => 'table',

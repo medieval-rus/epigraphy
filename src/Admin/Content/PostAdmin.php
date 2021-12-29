@@ -38,8 +38,8 @@ final class PostAdmin extends AbstractEntityAdmin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
-            ->add('title', null, $this->createLabeledListOptions('title'))
+            ->addIdentifier('id', null, $this->createListOptions('id'))
+            ->add('title', null, $this->createListOptions('title'))
         ;
     }
 
@@ -47,8 +47,8 @@ final class PostAdmin extends AbstractEntityAdmin
     {
         $formMapper
             ->with($this->getSectionLabel('common'))
-                ->add('title', null, $this->createLabeledFormOptions('title'))
-                ->add('body', null, $this->createLabeledFormOptions('body'))
+                ->add('title', null, $this->createFormOptions('title'))
+                ->add('body', null, $this->createFormOptions('body'))
             ->end()
         ;
     }

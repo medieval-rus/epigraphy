@@ -32,4 +32,6 @@ interface ThumbnailsGeneratorInterface
     public function getThumbnail(File $file, string $presetKey = 'default'): string;
 
     public function generateAll(File $file): void;
+
+    public function regenerateAll(File $file): void;
 }

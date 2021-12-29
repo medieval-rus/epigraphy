@@ -42,8 +42,8 @@ abstract class AbstractNamedEntityAdmin extends AbstractEntityAdmin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
-            ->add('name', null, $this->createLabeledListOptions('name'))
+            ->addIdentifier('id', null, $this->createListOptions('id'))
+            ->add('name', null, $this->createListOptions('name'))
         ;
     }
 
@@ -51,7 +51,7 @@ abstract class AbstractNamedEntityAdmin extends AbstractEntityAdmin
     {
         $formMapper
             ->with($this->getSectionLabel('name'))
-                ->add('name', null, $this->createLabeledFormOptions('name'))
+                ->add('name', null, $this->createFormOptions('name'))
             ->end()
         ;
     }

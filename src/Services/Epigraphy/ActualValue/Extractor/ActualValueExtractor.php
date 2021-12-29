@@ -32,7 +32,6 @@ use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
 use Doctrine\Common\Collections\Collection;
-use File;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -153,7 +152,6 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
             }
 
             foreach ($files as $file) {
-
                 $descriptionParts = [];
                 if (null !== $formattedInterpretation) {
                     $descriptionParts[] = $formattedInterpretation;

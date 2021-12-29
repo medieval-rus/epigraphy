@@ -62,9 +62,18 @@ final class OsfConnector implements OsfConnectorInterface
     {
         $this->logger->info(sprintf('[OsfConnector] <getUploadUrl> $folderId = "%s"', $folderId));
 
-        $folderData = $this->getFolderData($folderId);
+        $folderData = $this->getFileOrFolderData($folderId);
 
         return $folderData['links']['upload'];
+    }
+
+    public function getDeleteUrl(string $fileId): string
+    {
+        $this->logger->info(sprintf('[OsfConnector] <getDeleteUrl> $fileId = "%s"', $fileId));
+
+        $folderData = $this->getFileOrFolderData($fileId);
+
+        return $folderData['links']['delete'];
     }
 
     public function uploadFile(string $folderUploadUrl, string $fileName, string $pathToFile): array
@@ -108,11 +117,18 @@ final class OsfConnector implements OsfConnectorInterface
         ];
     }
 
-    private function getFolderData(string $folderId): array
+    public function deleteFile(string $fileDeleteUrl): void
     {
-        $this->logger->info(sprintf('[OsfConnector] <getFolderData> $folderId = "%s"', $folderId));
+        $this->logger->info(sprintf('[OsfConnector] <deleteFile> $fileDeleteUrl = "%s"', $fileDeleteUrl));
 
-        $url = $this->osfEndpoint.'/v2/files/'.$folderId.'/';
+        $this->sendRequest('DELETE', $fileDeleteUrl, Response::HTTP_NO_CONTENT);
+    }
+
+    private function getFileOrFolderData(string $objectId): array
+    {
+        $this->logger->info(sprintf('[OsfConnector] <getFileOrFolderData> $objectId = "%s"', $objectId));
+
+        $url = $this->osfEndpoint.'/v2/files/'.$objectId.'/';
 
         $response = $this->sendRequest('GET', $url, Response::HTTP_OK);
 
@@ -125,7 +141,7 @@ final class OsfConnector implements OsfConnectorInterface
         int $expectedStatusCode,
         array $queryParameters = [],
         array $options = []
-    ): array {
+    ): ?array {
         $this->logger->info(
             sprintf(
                 '[OsfConnector] <sendRequest> '.
@@ -142,7 +158,7 @@ final class OsfConnector implements OsfConnectorInterface
 
         $fullUrl = $url.UrlHelper::formatQueryParameters($queryParameters);
 
-        $stopwatchKey = 'osf_request_'.$fullUrl;
+        $stopwatchKey = 'osf_request_'.$fullUrl.'_'.uniqid();
 
         $this->stopwatch->start($stopwatchKey);
 
@@ -159,7 +175,8 @@ final class OsfConnector implements OsfConnectorInterface
 
         $this->logger->info(
             sprintf(
-                '[OsfConnector] <sendRequest> Request to "%s" completed in %d ms',
+                '[OsfConnector] <sendRequest> %s Request to "%s" completed in %d ms',
+                $method,
                 $fullUrl,
                 $stopwatchResult->getDuration()
             )
@@ -169,6 +186,10 @@ final class OsfConnector implements OsfConnectorInterface
             throw new RuntimeException(
                 sprintf('%s Request to "%s" failed with status code "%d": %s', $method, $fullUrl, $statusCode, $content)
             );
+        }
+
+        if (Response::HTTP_NO_CONTENT === $statusCode) {
+            return null;
         }
 
         return (array) json_decode($content, true, 512, \JSON_THROW_ON_ERROR);

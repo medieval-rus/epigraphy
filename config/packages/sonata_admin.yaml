@@ -84,6 +84,7 @@ sonata_admin:
       - 'build/js/admin/inscription/edit.js'
     extra_stylesheets:
       - 'build/css/admin/inscription/edit.css'
+      - 'build/css/admin/media/file.css'
 
 sonata_block:
   blocks:
@@ -206,7 +207,7 @@ services:
     arguments:
       - null
       - App\Persistence\Entity\Media\File
-      - null
+      - App\Controller\Admin\FileAdminController
       - '@App\Persistence\Repository\Media\FileRepository'
       - '@App\DataStorage\DataStorageManagerInterface'
       - '@App\Services\Media\Thumbnails\ThumbnailsGeneratorInterface'

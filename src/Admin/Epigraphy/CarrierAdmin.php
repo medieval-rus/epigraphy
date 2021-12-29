@@ -39,11 +39,11 @@ final class CarrierAdmin extends AbstractEntityAdmin
     protected function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('id', null, $this->createLabeledListOptions('id'))
-            ->add('origin1', null, $this->createLabeledListOptions('origin1'))
-            ->add('origin2', null, $this->createLabeledListOptions('origin2'))
-            ->add('individualName', null, $this->createLabeledListOptions('individualName'))
-            ->add('storagePlace', null, $this->createLabeledListOptions('storagePlace'))
+            ->addIdentifier('id', null, $this->createListOptions('id'))
+            ->add('origin1', null, $this->createListOptions('origin1'))
+            ->add('origin2', null, $this->createListOptions('origin2'))
+            ->add('individualName', null, $this->createListOptions('individualName'))
+            ->add('storagePlace', null, $this->createListOptions('storagePlace'))
         ;
     }
 
@@ -52,31 +52,31 @@ final class CarrierAdmin extends AbstractEntityAdmin
         $formMapper
             ->tab($this->getTabLabel('identification'))
                 ->with($this->getSectionLabel('identification'))
-                    ->add('individualName', null, $this->createLabeledFormOptions('individualName'))
+                    ->add('individualName', null, $this->createFormOptions('individualName'))
                 ->end()
             ->end()
             ->tab($this->getTabLabel('classification'))
                 ->with($this->getSectionLabel('classification'))
-                    ->add('types', null, $this->createLabeledManyToManyFormOptions('types'))
-                    ->add('categories', null, $this->createLabeledManyToManyFormOptions('categories'))
+                    ->add('types', null, $this->createManyToManyFormOptions('types'))
+                    ->add('categories', null, $this->createManyToManyFormOptions('categories'))
                 ->end()
             ->end()
             ->tab($this->getTabLabel('origin'))
                 ->with($this->getSectionLabel('origin'))
-                    ->add('origin1', null, $this->createLabeledFormOptions('origin1'))
-                    ->add('origin2', null, $this->createLabeledFormOptions('origin2'))
-                    ->add('findCircumstances', null, $this->createLabeledFormOptions('findCircumstances'))
-                    ->add('characteristics', null, $this->createLabeledFormOptions('characteristics'))
+                    ->add('origin1', null, $this->createFormOptions('origin1'))
+                    ->add('origin2', null, $this->createFormOptions('origin2'))
+                    ->add('findCircumstances', null, $this->createFormOptions('findCircumstances'))
+                    ->add('characteristics', null, $this->createFormOptions('characteristics'))
                 ->end()
             ->end()
             ->tab($this->getTabLabel('preservation'))
                 ->with($this->getSectionLabel('preservation'))
-                    ->add('storagePlace', null, $this->createLabeledFormOptions('storagePlace'))
-                    ->add('inventoryNumber', null, $this->createLabeledFormOptions('inventoryNumber'))
+                    ->add('storagePlace', null, $this->createFormOptions('storagePlace'))
+                    ->add('inventoryNumber', null, $this->createFormOptions('inventoryNumber'))
                     ->add(
                         'isInSitu',
                         CheckboxType::class,
-                        $this->createLabeledFormOptions('isInSitu', ['required' => false])
+                        $this->createFormOptions('isInSitu', ['required' => false])
                     )
                 ->end()
             ->end()
