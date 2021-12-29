@@ -88,8 +88,8 @@ list:
       id: Id
       types: Тип
       categories: Категория
-      origin1: Город, местность
-      origin2: Здание, раскоп
+      origin1: Город / Местность
+      origin2: Здание / Раскоп
       findCircumstances: Обстоятельства находки
       characteristics: Характеристики носителя
       individualName: Индивидуальное название
@@ -196,8 +196,8 @@ form:
       number: Номер
       types: Тип носителя
       categories: Категория носителя
-      origin1: Город, местность
-      origin2: Здание, раскоп
+      origin1: Город / Местность
+      origin2: Здание / Раскоп
       findCircumstances: Обстоятельства находки
       characteristics: Характеристики носителя
       individualName: Индивидуальное название носителя

@@ -40,8 +40,8 @@ controller:
           id: ''
           carrier:
             category: Категория носителя
-            origin1: Город, местность
-            origin2: Здание, раскоп
+            origin1: Город / Местность
+            origin2: Здание / Раскоп
           interpretation:
             text: Текст
             description: Содержание
@@ -63,8 +63,8 @@ controller:
         translation: Перевод
         material: Материал
         contentCategory: Категория
-        origin1: Город, местность
-        origin2: Здание, раскоп
+        origin1: Город / Местность
+        origin2: Здание / Раскоп
         author: Автор публикации
         numberInSource: Номер в источнике
         disablePaginator: показать на одной странице
@@ -86,8 +86,8 @@ controller:
           literature: Литература
           carrier:
             categories: Категория носителя
-            origin1: Город, местность
-            origin2: Здание, раскоп
+            origin1: Город / Местность
+            origin2: Здание / Раскоп
             findCircumstances: Обстоятельства находки носителя
             characteristics: Характеристики носителя
             individualName: Носитель
