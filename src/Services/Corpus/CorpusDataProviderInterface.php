@@ -30,4 +30,6 @@ interface CorpusDataProviderInterface
     public function getMetadata(string $baseUrl, bool $onlyShownOnSite = false): array;
 
     public function getTexts(bool $onlyShownOnSite = false): array;
+
+    public function getStatistics(bool $onlyShownOnSite = false): array;
 }

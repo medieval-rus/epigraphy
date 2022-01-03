@@ -70,6 +70,61 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         );
     }
 
+    public function getStatistics(bool $onlyShownOnSite = false): array
+    {
+        $texts = $this->getTexts($onlyShownOnSite);
+
+        return [
+            'documentsCount' => \count($texts),
+            'piecesCount' => array_sum(
+                array_map(
+                    fn (string $text): int => 1 + substr_count(
+                        str_replace(
+                            "\n",
+                            ' ',
+                            str_replace(
+                                "⸗\n",
+                                '',
+                                str_replace(
+                                    "\r\n",
+                                    "\n",
+                                    $text
+                                )
+                            )
+                        ),
+                        ' '
+                    ),
+                    array_filter(
+                        array_map(
+                            function (array $inscriptionTextData): ?string {
+                                $textsOfInscription = $inscriptionTextData['texts'];
+
+                                $zeroRowText = current(
+                                    array_filter(
+                                        $textsOfInscription,
+                                        fn (array $textData): bool => null === $textData['interpretation']
+                                    )
+                                );
+
+                                if (false !== $zeroRowText) {
+                                    return $zeroRowText['text'];
+                                }
+
+                                if (\count($textsOfInscription) > 0) {
+                                    return $textsOfInscription[0]['text'];
+                                }
+
+                                return null;
+                            },
+                            $texts
+                        ),
+                        fn (?string $text): bool => null !== $text && mb_strlen($text) > 0
+                    )
+                )
+            ),
+        ];
+    }
+
     private function getMetadataRow(Inscription $inscription, string $baseUrl): array
     {
         return [

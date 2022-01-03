@@ -95,6 +95,20 @@ final class CorpusController extends AbstractController
         return $response;
     }
 
+    /**
+     * @Route("/statistics/", name="api__v1__corpus__statistics", methods={"GET"})
+     */
+    public function statistics(CorpusDataProviderInterface $corpusDataProvider): Response
+    {
+        $statistics = $corpusDataProvider->getStatistics(true);
+
+        $response = new Response();
+
+        $response->setContent($this->toJson($statistics));
+
+        return $response;
+    }
+
     private function toJson(array $array): string
     {
         return json_encode($array, \JSON_UNESCAPED_UNICODE | \JSON_PRETTY_PRINT);

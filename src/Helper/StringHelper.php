@@ -27,24 +27,6 @@ namespace App\Helper;
 
 abstract class StringHelper
 {
-    public static function emptyIfNull(?string $nullableString): string
-    {
-        if (null === $nullableString) {
-            return '';
-        }
-
-        return $nullableString;
-    }
-
-    public static function nullIfEmpty(string $string): ?string
-    {
-        if ('' === $string) {
-            return null;
-        }
-
-        return $string;
-    }
-
     public static function removeFromStart(string $string, string $search): string
     {
         if (self::startsWith($string, $search)) {
@@ -89,10 +71,5 @@ abstract class StringHelper
     public static function endsWith(string $string, string $search): bool
     {
         return strpos($string, $search) === \strlen($string) - \strlen($search);
-    }
-
-    public static function isLowercased(string $string): bool
-    {
-        return mb_strtolower($string) === $string;
     }
 }
