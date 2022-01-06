@@ -233,7 +233,7 @@ final class ThumbnailsGenerator implements ThumbnailsGeneratorInterface
 
     private function handleRaw(File $file, string $pathToThumbnail): void
     {
-        $response = $this->httpClient->request('GET', $file->getUrl());
+        $response = $this->httpClient->request('GET', $file->getUrl(), ['timeout' => 60]);
 
         file_put_contents($pathToThumbnail, $response->toStream());
     }
