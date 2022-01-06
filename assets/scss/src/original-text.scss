@@ -19,51 +19,36 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-@import '../base';
-@import '../../../src/original-text';
-@import '../../../src/spoiler';
-@import '../../../src/information-box';
-@import '~photoswipe/dist/default-skin/default-skin.css';
-@import '~photoswipe/dist/photoswipe.css';
+@import 'fonts/monomachus';
+@import '~microtip/microtip';
 
-.gallery {
-  width: 100%;
-  overflow-x: overlay;
-  white-space: nowrap;
+.eomr-text-wrapper {
+  line-height: 1.25;
 
-  figure {
+  .eomr-text-piece-ligature {
+    @extend .eomr-text-piece-original;
+    border-bottom: 1px dotted #000;
+  }
+
+  .eomr-text-piece-comment {
+    font-family: monospace;
+  }
+
+  .eomr-text-piece-original {
+    font-family: 'Monomachus';
+  }
+
+  .eomr-text-piece-superscripted {
+    @extend .eomr-text-piece-original;
+    font-size: 75%;
     display: inline-block;
-    width: 100%;
-    margin: 0;
-
-    &:not(:last-child) {
-      margin-right: 5px;
-    }
-
-    a {
-      img {
-        width: 100%;
-        height: auto;
-      }
-    }
-
-    figcaption {
-      display: none;
-    }
+    top: -.75em;
+    position: relative;
+    line-height: 0;
+    vertical-align: baseline;
   }
-}
 
-.pswp__button--arrow--left,
-.pswp__button--arrow--right {
-  height: 100% !important;
-  margin-top: 0 !important;
-  top: 0 !important;
-
-  &::before {
-    top: 50% !important;
+  .eomr-text-piece-text-break {
+    font-family: monospace;
   }
-}
-
-.pswp__top-bar {
-  z-index: 1551;
 }

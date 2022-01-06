@@ -20,7 +20,7 @@
  */
 
 @import '../base';
-@import '../../../src/original-text/original-text';
+@import '../../../src/original-text';
 @import '~select2/dist/css/select2.min.css';
 
 @mixin sorted-column($isAsc){

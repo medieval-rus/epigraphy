@@ -19,36 +19,23 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-@import '../fonts/monomachus';
-@import '~microtip/microtip';
+@import '~bootstrap/scss/bootstrap';
 
-.eomr-text-wrapper {
-  line-height: 1.25;
+.eomr-information-box {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 4px;
+    vertical-align: top;
+    text-transform: uppercase;
+    margin: 1px;
 
-  .eomr-text-piece-ligature {
-    @extend .eomr-text-piece-original;
-    border-bottom: 1px dotted #000;
-  }
+    &__info {
+        color: $white;
+        background-color: $blue;
+    }
 
-  .eomr-text-piece-comment {
-    font-family: monospace;
-  }
-
-  .eomr-text-piece-original {
-    font-family: 'Monomachus';
-  }
-
-  .eomr-text-piece-superscripted {
-    @extend .eomr-text-piece-original;
-    font-size: 75%;
-    display: inline-block;
-    top: -.75em;
-    position: relative;
-    line-height: 0;
-    vertical-align: baseline;
-  }
-
-  .eomr-text-piece-text-break {
-    font-family: monospace;
-  }
+    &__warning {
+        color: $white;
+        background-color: $red;
+    }
 }

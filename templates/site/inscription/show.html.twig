@@ -21,7 +21,13 @@
 
 {%- extends 'site/base.html.twig' -%}
 
-{% block page_title %}{% endblock %}
+{% block page_title %}
+    {%- if is_granted('ROLE_ADMIN') and not inscription.isShownOnSite -%}
+        <span class="eomr-information-box eomr-information-box__warning">
+            {{- 'noPublication'|transWithContext(translationContext) -}}
+        </span>
+    {%- endif -%}
+{% endblock %}
 
 {% block page_content %}
 

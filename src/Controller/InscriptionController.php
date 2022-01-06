@@ -59,7 +59,7 @@ final class InscriptionController extends AbstractController
      */
     public function show(Inscription $inscription): Response
     {
-        if (!$inscription->getIsShownOnSite()) {
+        if (!$inscription->getIsShownOnSite() && !$this->isGranted('ROLE_ADMIN')) {
             throw $this->createNotFoundException();
         }
 

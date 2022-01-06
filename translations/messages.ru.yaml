@@ -78,6 +78,7 @@ controller:
       carrierSpoiler:
         open: Подробнее о носителе
         close: Подробнее о носителе (свернуть)
+      noPublication: надпись не видна пользователям сайта
       inscription:
         label:
           number: Номер
