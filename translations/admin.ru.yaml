@@ -384,8 +384,8 @@ form:
     section:
       basicInformation:
         label: Основная информация
-      details:
-        label: Детали библиографической записи
+      filters:
+        label: Данные для поиска
       media:
         label: Изображения и файлы
     fields:
