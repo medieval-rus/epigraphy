@@ -46,6 +46,7 @@ use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterPara
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Table\RadioColumnChoiceTableParameter;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Table\RadioOption\RadioOption;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\Table\TableParameterInterface;
+use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Restriction\BooleanPropertyFilterRestriction;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Restriction\FilterRestrictionInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Sorting\CustomSortConfigurationInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Sorting\DbSortConfiguration;
@@ -155,7 +156,11 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
      */
     protected function createFilterRestrictions(): array
     {
-        return [];
+        return [
+            (new BooleanPropertyFilterRestriction())
+                ->setName('isShownOnSite')
+                ->setValue(true),
+        ];
     }
 
     /**

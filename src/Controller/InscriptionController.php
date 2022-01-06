@@ -59,6 +59,10 @@ final class InscriptionController extends AbstractController
      */
     public function show(Inscription $inscription): Response
     {
+        if (!$inscription->getIsShownOnSite()) {
+            throw $this->createNotFoundException();
+        }
+
         return $this->render(
             'site/inscription/show.html.twig',
             [
