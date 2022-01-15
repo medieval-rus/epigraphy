@@ -24,7 +24,11 @@ import 'select2';
 
 $(document).ready(() => {
 
+    initializeFilters();
+});
+
+function initializeFilters() {
     $('.vyfony-filterable-table-bundle-form-group select[multiple="multiple"]').select2({
         language: $('html').prop('lang')
     });
-});
+}

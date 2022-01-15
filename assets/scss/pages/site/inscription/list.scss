@@ -44,7 +44,7 @@
 }
 
 main.eomr-main {
-  table {
+  table[data-vyfony-filterable-table] {
     th[data-vyfony-filterable-table-sortable] {
       cursor: pointer;
       position: relative;
@@ -88,8 +88,54 @@ main.eomr-main {
   }
 
   form {
+    > div {
+      max-width: calc(100% + 30px);
+    }
     .vyfony-filterable-table-bundle-form-group {
       @extend .col-4;
+      margin-bottom: 10px;
+
+      label {
+        margin-bottom: 0;
+      }
+
+      .select2-container {
+        width: 100% !important;
+
+        .select2-selection--multiple {
+          padding-top: 1px;
+
+          .select2-selection__choice {
+            max-width: calc(100% - 5px);
+            margin-top: 0;
+            line-height: 18px;
+
+            button.select2-selection__choice__remove {
+              font-family: Arial, Helvetica, sans-serif;
+            }
+          }
+
+          .select2-search--inline {
+            .select2-search__field {
+              margin-top: 0;
+              margin-bottom: 1px;
+            }
+          }
+        }
+      }
+
+      input[type=text][data-vyfony-filterable-table-filter-parameter] {
+        height: 32px;
+        border: 1px solid #aaaaaa;
+        border-radius: 4px;
+        padding: 5px;
+
+        &:focus {
+          border: solid #000000 1px;
+          outline: 0;
+          box-shadow: none;
+        }
+      }
     }
 
     .vyfony-filterable-table-bundle-button-form-group {
