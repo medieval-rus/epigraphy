@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace App\Persistence\Entity\Epigraphy;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity()
@@ -47,6 +49,28 @@ class Material implements NamedEntityInterface
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     private $name;
+    
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="is_super_material", type="boolean", nullable=true)
+     */
+    private $isSuperMaterial;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Material", mappedBy="supermaterial")
+     */
+    private $submaterials;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Material", inversedBy="submaterials")
+     * @ORM\JoinColumn(name="supermaterial_id", referencedColumnName="id")
+     */
+    private $supermaterial;
+
+    public function __construct() {
+        $this->submaterials = new ArrayCollection();
+    }
 
     public function __toString(): string
     {
@@ -68,5 +92,34 @@ class Material implements NamedEntityInterface
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getSupermaterial(): ?self
+    {
+        return $this->supermaterial;
+    }
+
+    public function setSupermaterial(?self $supermaterial): self
+    {
+        $this->supermaterial = $supermaterial;
+
+        return $this;
+    }
+
+    public function getSubmaterials(): PersistentCollection
+    {
+        return $this->submaterials;
+    }
+
+    public function setIsSuperMaterial(?bool $isSuperMaterial): self
+    {
+        $this->isSuperMaterial = $isSuperMaterial;
+
+        return $this;
+    }
+    
+    public function getIsSuperMaterial(): ?bool
+    {
+        return $this->isSuperMaterial;
     }
 }

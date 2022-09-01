@@ -55,6 +55,23 @@ final class InscriptionController extends AbstractController
     }
 
     /**
+     * @Route("/longlist", name="inscription__longlist", methods={"GET"})
+     */
+    public function longlist(PostRepository $postRepository, TableInterface $filterableTable): Response
+    {
+        return $this->render(
+            'site/inscription/list.html.twig', 
+            [
+                'translationContext' => 'controller.inscription.list',
+                'assetsContext' => 'inscription/list',
+                'filterForm' => $filterableTable->getFormView(),
+                'table' => $filterableTable->getTableMetadata(),
+                'post' => $postRepository->findDatabase()
+            ]
+        );
+    }
+
+    /**
      * @Route("/show/{id}", name="inscription__show", methods={"GET"})
      */
     public function show(Inscription $inscription): Response

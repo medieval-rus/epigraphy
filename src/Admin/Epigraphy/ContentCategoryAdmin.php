@@ -26,10 +26,32 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractNamedEntityAdmin;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Persistence\Entity\Epigraphy\ContentCategory;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 
 final class ContentCategoryAdmin extends AbstractNamedEntityAdmin
 {
     protected $baseRouteName = 'epigraphy_content_category';
 
     protected $baseRoutePattern = 'epigraphy/content-category';
+
+    protected function configureFormFields(FormMapper $formMapper): void
+    {
+        $formMapper
+            ->add('name', null, $this->createFormOptions('name'))
+            ->add(
+                'supercategory',
+                EntityType::class,
+                $this->createFilteredEntityOptions('supercategory', ContentCategory::class, 'isSuperCategory')
+            )
+            ->add(
+                'isSuperCategory', 
+                CheckboxType::class, 
+                $this->createFormOptions('isSuperCategory', ['required' => false])
+            )
+        ;
+    }
 }

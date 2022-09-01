@@ -49,7 +49,7 @@ menu:
     contentCategory:
       label: Категории по содержанию
     material:
-      label: Материалы
+      label: Категории материалов
     preservationState:
       label: Состояния сохранности
     writingMethod:
@@ -96,6 +96,8 @@ list:
       storagePlace: Место хранения
       inventoryNumber: Инвентарный номер
       isInSitu: In situ
+      supercarrier: Верхняя категория
+      isSuperCarrier: Является верхней категорией
   carrierType:
     fields:
       id: Внутренний идентификатор
@@ -104,6 +106,8 @@ list:
     fields:
       id: Внутренний идентификатор
       name: Название
+      supercategory: Верхняя категория
+      isSuperCategory: Является верхней категорией
   alphabet:
     fields:
       id: Внутренний идентификатор
@@ -112,10 +116,14 @@ list:
     fields:
       id: Внутренний идентификатор
       name: Название
+      supercategory: Верхняя категория
+      isSuperCategory: Является верхней категорией
   material:
     fields:
       id: Внутренний идентификатор
       name: Название
+      supermaterial: Верхняя категория
+      isSuperMaterial: Является верхней категорией
   preservationState:
     fields:
       id: Внутренний идентификатор
@@ -128,6 +136,8 @@ list:
     fields:
       id: Внутренний идентификатор
       name: Название
+      supermethod: Тип
+      isSuperMethod: Является типом
   inscription:
     fields:
       id: Внутренний идентификатор
@@ -196,6 +206,8 @@ form:
       number: Номер
       types: Тип носителя
       categories: Категория носителя
+      supercarrier: Надноситель
+      isSuperCarrier: Является надносителем
       origin1: Город / Местность
       origin2: Здание / Раскоп
       findCircumstances: Обстоятельства находки
@@ -207,15 +219,17 @@ form:
   carrierType:
     section:
       name:
-        label: Название типа носителя
+        label: Название вида носителя
     fields:
       name: Название
   carrierCategory:
     section:
       name:
-        label: Название категории носителя
+        label: Название
     fields:
       name: Название
+      supercategory: Верхняя категория
+      isSuperCategory: Является верхней категорией
   alphabet:
     section:
       name:
@@ -225,15 +239,19 @@ form:
   contentCategory:
     section:
       name:
-        label: Название категории по содержанию
+        label: Название типа/подтипа по содержанию
     fields:
       name: Название
+      supercategory: Верхняя категория
+      isSuperCategory: Является верхней категорией
   material:
     section:
       name:
-        label: Название материала
+        label: Название типа/подтипа материала
     fields:
       name: Название
+      supermaterial: Верхняя категория
+      isSuperMaterial: Является верхней категорией
   preservationState:
     section:
       name:
@@ -249,9 +267,15 @@ form:
   writingMethod:
     section:
       name:
-        label: Название способа нанесения
+        label: Название типа/подтипа нанесения
+      supermethod:
+        label: Тип
+      isSuperMethod:
+        label: Является типом
     fields:
       name: Название
+      supermethod: Верхняя категория
+      isSuperMethod: Является верхней категорией
   inscription:
     tab:
       common:
@@ -287,12 +311,12 @@ form:
         placeOnCarrierReferences: Расположение на носителе (ссылки)
         writingTypes: Разряд по Франклину
         writingTypesReferences: Разряд по Франклину (ссылки)
-        writingMethods: Способ нанесения
-        writingMethodsReferences: Способ нанесения (ссылки)
+        writingMethods: Категории способа нанесения
+        writingMethodsReferences: Категории способа нанесения (ссылки)
         preservationStates: Состояние сохранности
         preservationStatesReferences: Состояние сохранности (ссылки)
-        materials: Материалы
-        materialsReferences: Материалы (ссылки)
+        materials: Категории материалов
+        materialsReferences: Категории материалов (ссылки)
         alphabets: Алфавит
         alphabetsReferences: Алфавит (ссылки)
         text: Текст
@@ -351,9 +375,9 @@ form:
       origin: Происхождение надписи
       placeOnCarrier: Расположение на носителе
       writingTypes: Разряд по Франклину
-      writingMethods: Способ нанесения
+      writingMethods: Категории способа нанесения
       preservationStates: Состояние сохранности
-      materials: Материалы
+      materials: Категории материалов
       alphabets: Алфавит
       text: Текст
       textImages: Изображения текста (файлы)
@@ -440,7 +464,7 @@ alphabet_delete: Удалить алфавит
 contentCategory_list: Категории по содержанию
 contentCategory_create: Добавить новую категорию по содержанию
 contentCategory_delete: Удалить категорию по содержанию
-material_list: Материалы
+material_list: Категории материалов
 material_create: Добавить новый материал
 material_delete: Удалить материал
 preservationState_list: Состояния сохранности
@@ -450,8 +474,8 @@ writingType_list: Разряды
 writingType_create: Добавить новый разряд
 writingType_delete: Удалить разряд
 writingMethod_list: Способы нанесения
-writingMethod_create: Добавить новый способ нанесения
-writingMethod_delete: Удалить способ нанесения
+writingMethod_create: Добавить новый Категории способа нанесения
+writingMethod_delete: Удалить Категории способа нанесения
 inscription_list: Надписи
 inscription_create: Добавить новую надпись
 inscription_delete: Удалить надпись

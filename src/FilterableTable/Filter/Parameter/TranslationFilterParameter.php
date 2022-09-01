@@ -58,7 +58,10 @@ final class TranslationFilterParameter implements FilterParameterInterface, Expr
     {
         return [
             'label' => 'controller.inscription.list.filter.translation',
-            'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
+            'attr' => [
+                'data-vyfony-filterable-table-filter-parameter' => true,
+                'data-important' => true
+            ],
         ];
     }
 

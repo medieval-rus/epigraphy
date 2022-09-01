@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace App\Persistence\Entity\Epigraphy;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity()
@@ -48,6 +50,28 @@ class CarrierCategory implements NamedEntityInterface
      */
     private $name;
 
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="is_super_category", type="boolean", nullable=true)
+     */
+    private $isSuperCategory;
+
+    /**
+     * @ORM\OneToMany(targetEntity="CarrierCategory", mappedBy="supercategory")
+     */
+    private $subcategories;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CarrierCategory", inversedBy="subcategories")
+     * @ORM\JoinColumn(name="supercategory_id", referencedColumnName="id")
+     */
+    private $supercategory;
+
+    public function __construct() {
+        $this->subcategories = new ArrayCollection();
+    }
+
     public function __toString(): string
     {
         return (string) $this->getName();
@@ -68,5 +92,34 @@ class CarrierCategory implements NamedEntityInterface
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getSupercategory(): ?self
+    {
+        return $this->supercategory;
+    }
+
+    public function getSubcategories(): PersistentCollection
+    {
+        return $this->subcategories;
+    }
+
+    public function setSupercategory(self $superid): self
+    {
+        $this->supercategory = $superid;
+
+        return $this;
+    }
+
+    public function setIsSuperCategory(?bool $isSuperCategory): self
+    {
+        $this->isSuperCategory = $isSuperCategory;
+
+        return $this;
+    }
+
+    public function getIsSuperCategory(): ?bool
+    {
+        return $this->isSuperCategory;
     }
 }

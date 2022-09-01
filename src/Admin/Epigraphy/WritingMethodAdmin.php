@@ -26,10 +26,32 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractNamedEntityAdmin;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Persistence\Entity\Epigraphy\WritingMethod;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 
 final class WritingMethodAdmin extends AbstractNamedEntityAdmin
 {
     protected $baseRouteName = 'epigraphy_writing_method';
 
     protected $baseRoutePattern = 'epigraphy/writing-method';
+
+    protected function configureFormFields(FormMapper $formMapper): void
+    {
+        $formMapper
+            ->add('name', null, $this->createFormOptions('name'))
+            ->add(
+                'supermethod',
+                EntityType::class,
+                $this->createFilteredEntityOptions('supermethod', WritingMethod::class, 'isSuperMethod')
+            )
+            ->add(
+                'isSuperMethod', 
+                CheckboxType::class, 
+                $this->createFormOptions('isSuperMethod', ['required' => false])
+            )
+        ;
+    }
 }

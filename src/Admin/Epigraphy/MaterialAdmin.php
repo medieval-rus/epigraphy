@@ -26,10 +26,32 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractNamedEntityAdmin;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Persistence\Entity\Epigraphy\Material;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 
 final class MaterialAdmin extends AbstractNamedEntityAdmin
 {
     protected $baseRouteName = 'epigraphy_material';
 
     protected $baseRoutePattern = 'epigraphy/material';
+
+    protected function configureFormFields(FormMapper $formMapper): void
+    {
+        $formMapper
+            ->add('name', null, $this->createFormOptions('name'))
+            ->add(
+                'supermaterial',
+                EntityType::class, 
+                $this->createFilteredEntityOptions('supermaterial', Material::class, 'isSuperMaterial')
+            )
+            ->add(
+                'isSuperMaterial',
+                CheckboxType::class,
+                $this->createFormOptions('isSuperMaterial', ['required' => false])
+            )
+        ;
+    }
 }

@@ -28,6 +28,9 @@
 /public/bundles/
 /var/
 /vendor/
+composer
+dockerfile
+docker-compose.yml
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###

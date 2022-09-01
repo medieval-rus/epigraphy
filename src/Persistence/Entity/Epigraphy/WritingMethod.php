@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Epigraphy;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity()
@@ -47,6 +49,28 @@ class WritingMethod implements NamedEntityInterface
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     private $name;
+    
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="is_super_method", type="boolean", nullable=true)
+     */
+    private $isSuperMethod;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="WritingMethod", mappedBy="supermethod")
+     */
+    private $submethods;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="WritingMethod", inversedBy="submethods")
+     * @ORM\JoinColumn(name="supermethod_id", referencedColumnName="id")
+     */
+    private $supermethod;
+
+    public function __construct() {
+        $this->submethods = new ArrayCollection();
+    }
 
     public function __toString(): string
     {
@@ -68,5 +92,34 @@ class WritingMethod implements NamedEntityInterface
         $this->name = $name;
 
         return $this;
+    }    
+
+    public function getSupermethod(): ?self
+    {
+        return $this->supermethod;
     }
-}
+
+    public function setSupermethod(?self $supermethod): self
+    {
+        $this->supermethod = $supermethod;
+
+        return $this;
+    }
+
+    public function getSubmethods(): PersistentCollection
+    {
+        return $this->submethods;
+    }
+
+    public function setIsSuperMethod(?bool $isSuperMethod): self
+    {
+        $this->isSuperMethod = $isSuperMethod;
+
+        return $this;
+    }
+    
+    public function getIsSuperMethod(): ?bool
+    {
+        return $this->isSuperMethod;
+    }
+    }
