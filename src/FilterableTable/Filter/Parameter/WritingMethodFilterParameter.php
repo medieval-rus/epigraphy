@@ -58,6 +58,11 @@ final class WritingMethodFilterParameter implements FilterParameterInterface, Ex
         return [
             'label' => 'controller.inscription.list.filter.writingMethod',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
+            'choice_attr' => function($choice, $key, $value) {
+                return [
+                    'data-super' => $choice->getSupermethod() ? $choice->getSupermethod()->getId() : 0
+                ];
+            },
             'class' => WritingMethod::class,
             'choice_label' => 'name',
             'expanded' => false,
@@ -67,6 +72,7 @@ final class WritingMethodFilterParameter implements FilterParameterInterface, Ex
 
                 return $repository
                     ->createQueryBuilder($entityAlias)
+                    ->where($entityAlias.'.isSuperMethod != true')
                     ->orderBy($entityAlias.'.name', 'ASC');
             },
         ];

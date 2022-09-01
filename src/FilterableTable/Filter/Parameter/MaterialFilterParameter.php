@@ -58,6 +58,11 @@ final class MaterialFilterParameter implements FilterParameterInterface, Express
         return [
             'label' => 'controller.inscription.list.filter.material',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
+            'choice_attr' => function($choice, $key, $value) {
+                return [
+                    'data-super' => $choice->getSupermaterial() ? $choice->getSupermaterial()->getId() : 0
+                ];
+            },
             'class' => Material::class,
             'choice_label' => 'name',
             'expanded' => false,
@@ -67,6 +72,7 @@ final class MaterialFilterParameter implements FilterParameterInterface, Express
 
                 return $repository
                     ->createQueryBuilder($entityAlias)
+                    ->where($entityAlias.'.isSuperMaterial != true')
                     ->orderBy($entityAlias.'.name', 'ASC');
             },
         ];

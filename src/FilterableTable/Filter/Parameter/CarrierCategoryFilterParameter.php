@@ -30,6 +30,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\ExpressionBuilderInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
@@ -58,6 +59,11 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
         return [
             'label' => 'controller.inscription.list.filter.carrierCategory',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
+            'choice_attr' => function($choice, $key, $value) {
+                return [
+                    'data-super' => $choice->getSupercategory() ? $choice->getSupercategory()->getId() : 0
+                ];
+            },
             'class' => CarrierCategory::class,
             'choice_label' => 'name',
             'expanded' => false,
@@ -67,6 +73,7 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
 
                 return $repository
                     ->createQueryBuilder($entityAlias)
+                    ->where($entityAlias.'.isSuperCategory != true')
                     ->orderBy($entityAlias.'.name', 'ASC');
             },
         ];

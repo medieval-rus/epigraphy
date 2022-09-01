@@ -28,6 +28,7 @@ namespace App\Persistence\Entity\Epigraphy;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity()
@@ -115,8 +116,27 @@ class Carrier implements StringifiableEntityInterface
      */
     private $isInSitu;
 
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="is_super_carrier", type="boolean", nullable=true)
+     */
+    private $isSuperCarrier;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Carrier", mappedBy="supercarrier")
+     */
+    private $subcarriers;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Carrier", inversedBy="subcarriers")
+     * @ORM\JoinColumn(name="supercarrier_id", referencedColumnName="id")
+     */
+    private $supercarrier;
+
     public function __construct()
     {
+        $this->subcarriers = new ArrayCollection();
         $this->types = new ArrayCollection();
         $this->categories = new ArrayCollection();
     }
@@ -265,5 +285,34 @@ class Carrier implements StringifiableEntityInterface
         $this->isInSitu = $isInSitu;
 
         return $this;
+    }
+
+    public function getSupercarrier(): ?self
+    {
+        return $this->supercarrier;
+    }
+
+    public function setSupercarrier(?self $supercarrier): self
+    {
+        $this->supercarrier = $supercarrier;
+
+        return $this;
+    }
+
+    public function getSubcarriers(): ?self
+    {
+        return $this->subcarriers;
+    }
+
+    public function setIsSuperCarrier(?bool $isSuperCarrier): self
+    {
+        $this->isSuperCarrier = $isSuperCarrier;
+
+        return $this;
+    }
+
+    public function getIsSuperCarrier(): ?bool
+    {
+        return $this->isSuperCarrier;
     }
 }

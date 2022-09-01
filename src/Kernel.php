@@ -50,4 +50,15 @@ class Kernel extends BaseKernel
 
         $routes->import('../config/routes.yaml');
     }
+
+    public function getCacheDir()
+    {
+        // for docker performance
+        if ($this->getEnvironment() === 'test' || $this->getEnvironment() === 'dev') {
+            return '/tmp/'.$this->environment;
+        } else {
+            return $this->getProjectDir().'/var/cache/'.$this->environment;
+        }
+
+    }
 }

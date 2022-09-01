@@ -33,8 +33,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\ExpressionBuilderInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
+use Doctrine\ORM\PersistentCollection;
 
-final class ContentCategoryFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
+final class SuperContentCategoryFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
     private AliasFactoryInterface $aliasFactory;
 
@@ -45,7 +46,7 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
 
     public function getQueryParameterName(): string
     {
-        return 'content-category';
+        return 'super-content-category';
     }
 
     public function getType(): string
@@ -56,23 +57,19 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
     public function getOptions(EntityManager $entityManager): array
     {
         return [
-            'label' => 'controller.inscription.list.filter.contentCategory',
+            'label' => 'controller.inscription.list.filter.superContentCategory',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
-            'choice_attr' => function($choice, $key, $value) {
-                return [
-                    'data-super' => $choice->getSupercategory() ? $choice->getSupercategory()->getId() : 0
-                ];
-            },
             'class' => ContentCategory::class,
             'choice_label' => 'name',
             'expanded' => false,
-            'multiple' => true,
+            'multiple' => false,
+            'required'   => false,
             'query_builder' => function (EntityRepository $repository): QueryBuilder {
                 $entityAlias = $this->createAlias();
 
                 return $repository
                     ->createQueryBuilder($entityAlias)
-                    ->where($entityAlias.'.isSuperCategory != true')
+                    ->where($entityAlias.'.isSuperCategory = true')
                     ->orderBy($entityAlias.'.name', 'ASC');
             },
         ];
@@ -83,11 +80,19 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
      */
     public function buildWhereExpression(QueryBuilder $queryBuilder, $formData, string $entityAlias): ?string
     {
-        if (0 === \count($formData)) {
+        // if (0 === \count($formData)) {
+        //     return null;
+        // }
+        if (is_null($formData)) {
             return null;
         }
 
-        $ids = $formData->map(fn (ContentCategory $entity): int => $entity->getId())->toArray();
+        // $objs = $formData->map(fn (ContentCategory $entity): array => $entity->getSubcategories()->toArray())->toArray();
+        // $ready_objs = array_merge(...$objs);
+        // $ids = array_map(fn (ContentCategory $entity): int => $entity->getId(), $ready_objs);
+        $ready_objs = $formData->getSubcategories()->toArray();
+        $ids = array_map(fn (ContentCategory $entity): int => $entity->getId(), $ready_objs);
+        array_push($ids, $formData->getId());        
 
         $queryBuilder
             ->innerJoin(

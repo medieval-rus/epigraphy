@@ -26,10 +26,32 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractNamedEntityAdmin;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Persistence\Entity\Epigraphy\CarrierCategory;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 
 final class CarrierCategoryAdmin extends AbstractNamedEntityAdmin
 {
     protected $baseRouteName = 'epigraphy_carrier_category';
 
     protected $baseRoutePattern = 'epigraphy/carrier-category';
+
+    protected function configureFormFields(FormMapper $formMapper): void
+    {
+        $formMapper
+            ->add('name', null, $this->createFormOptions('name'))
+            ->add(
+                'supercategory',
+                EntityType::class, 
+                $this->createFilteredEntityOptions('supercategory', CarrierCategory::class, 'isSuperCategory')
+            )
+            ->add(
+                'isSuperCategory',
+                CheckboxType::class,
+                $this->createFormOptions('isSuperCategory', ['required' => false])
+            )
+        ;
+    }
 }

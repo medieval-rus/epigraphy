@@ -54,15 +54,15 @@ controller:
             text: Текст
             description: Содержание
         carrierType: Тип носителя
-        carrierCategory: Категория носителя
+        carrierCategory: Подкатегория носителя
         writingType: Разряд
-        writingMethod: Способ нанесения
+        writingMethod: Подкатегория способа нанесения
         preservationState: Состояние сохранности
         alphabet: Алфавит
         text: Текст надписи
         translation: Перевод
-        material: Материал
-        contentCategory: Категория
+        material: Подкатегория материала
+        contentCategory: Подкатегория содержания
         origin1: Город / Местность
         origin2: Здание / Раскоп
         author: Автор публикации
@@ -71,6 +71,10 @@ controller:
         resetButton: Сбросить фильтры
         submitButton: Искать
         searchInFoundButton: Искать в найденном
+        superWritingMethod: Категория способа нанесения
+        superMaterial: Категория материала
+        superCarrierCategory: Категория носителя
+        superContentCategory: Категория содержания
     show:
       title: Надпись
       admin: Просмотреть надпись в админке

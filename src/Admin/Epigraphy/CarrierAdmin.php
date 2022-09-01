@@ -29,6 +29,9 @@ use App\Admin\AbstractEntityAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Persistence\Entity\Epigraphy\Carrier;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 
 final class CarrierAdmin extends AbstractEntityAdmin
 {
@@ -44,6 +47,7 @@ final class CarrierAdmin extends AbstractEntityAdmin
             ->add('origin2', null, $this->createListOptions('origin2'))
             ->add('individualName', null, $this->createListOptions('individualName'))
             ->add('storagePlace', null, $this->createListOptions('storagePlace'))
+            ->add('supercarrier', null, $this->createListOptions('supercarrier'))
         ;
     }
 
@@ -57,8 +61,19 @@ final class CarrierAdmin extends AbstractEntityAdmin
             ->end()
             ->tab($this->getTabLabel('classification'))
                 ->with($this->getSectionLabel('classification'))
-                    ->add('types', null, $this->createManyToManyFormOptions('types'))
+                    // types are to be removed from the database
+                    // ->add('types', null, $this->createManyToManyFormOptions('types'))
                     ->add('categories', null, $this->createManyToManyFormOptions('categories'))
+                    ->add(
+                        'supercarrier',
+                        EntityType::class,
+                        $this->createFilteredEntityOptions('supercarrier', Carrier::class, 'isSuperCarrier') 
+                    )
+                    ->add(
+                        'isSuperCarrier',
+                        CheckboxType::class,
+                        $this->createFormOptions('isSuperCarrier', ['required' => false])
+                    )
                 ->end()
             ->end()
             ->tab($this->getTabLabel('origin'))

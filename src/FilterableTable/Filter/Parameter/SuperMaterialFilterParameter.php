@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace App\FilterableTable\Filter\Parameter;
 
-use App\Persistence\Entity\Epigraphy\ContentCategory;
+use App\Persistence\Entity\Epigraphy\Material;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -33,8 +33,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\ExpressionBuilderInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
+use Doctrine\ORM\PersistentCollection;
 
-final class ContentCategoryFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
+final class SuperMaterialFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
     private AliasFactoryInterface $aliasFactory;
 
@@ -45,7 +46,7 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
 
     public function getQueryParameterName(): string
     {
-        return 'content-category';
+        return 'super-material';
     }
 
     public function getType(): string
@@ -56,23 +57,19 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
     public function getOptions(EntityManager $entityManager): array
     {
         return [
-            'label' => 'controller.inscription.list.filter.contentCategory',
+            'label' => 'controller.inscription.list.filter.superMaterial',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
-            'choice_attr' => function($choice, $key, $value) {
-                return [
-                    'data-super' => $choice->getSupercategory() ? $choice->getSupercategory()->getId() : 0
-                ];
-            },
-            'class' => ContentCategory::class,
+            'class' => Material::class,
             'choice_label' => 'name',
             'expanded' => false,
-            'multiple' => true,
+            'multiple' => false,
+            'required'   => false,
             'query_builder' => function (EntityRepository $repository): QueryBuilder {
                 $entityAlias = $this->createAlias();
 
                 return $repository
                     ->createQueryBuilder($entityAlias)
-                    ->where($entityAlias.'.isSuperCategory != true')
+                    ->where($entityAlias.'.isSuperMaterial = true')
                     ->orderBy($entityAlias.'.name', 'ASC');
             },
         ];
@@ -83,11 +80,19 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
      */
     public function buildWhereExpression(QueryBuilder $queryBuilder, $formData, string $entityAlias): ?string
     {
-        if (0 === \count($formData)) {
+        // if (0 === \count($formData)) {
+        //     return null;
+        // }
+        if (is_null($formData)) {
             return null;
         }
 
-        $ids = $formData->map(fn (ContentCategory $entity): int => $entity->getId())->toArray();
+        // $objs = $formData->map(fn (Material $entity): array => $entity->getSubmaterials()->toArray())->toArray();
+        // $ready_objs = array_merge(...$objs);
+        // $ids = array_map(fn (Material $entity): int => $entity->getId(), $ready_objs);
+        $ready_objs = $formData->getSubmaterials()->toArray();
+        $ids = array_map(fn (Material $entity): int => $entity->getId(), $ready_objs);
+        array_push($ids, $formData->getId());
 
         $queryBuilder
             ->innerJoin(
@@ -95,27 +100,27 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
                 $zeroRowAlias = $this->aliasFactory->createAlias(static::class, 'zero_row')
             )
             ->leftJoin(
-                $zeroRowAlias.'.contentCategoriesReferences',
+                $zeroRowAlias.'.materialsReferences',
                 $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'references')
             )
             ->leftJoin(
-                $zeroRowAlias.'.contentCategories',
-                $contentCategoryOfZeroRowAlias = $this->createAlias()
+                $zeroRowAlias.'.materials',
+                $materialOfZeroRowAlias = $this->createAlias()
             )
             ->leftJoin(
-                $interpretationsAlias.'.contentCategories',
-                $contentCategoryOfInterpretationAlias = $this->createAlias()
+                $interpretationsAlias.'.materials',
+                $materialOfInterpretationAlias = $this->createAlias()
             )
         ;
 
         return (string) $queryBuilder->expr()->orX(
-            $queryBuilder->expr()->in($contentCategoryOfZeroRowAlias.'.id', $ids),
-            $queryBuilder->expr()->in($contentCategoryOfInterpretationAlias.'.id', $ids)
+            $queryBuilder->expr()->in($materialOfZeroRowAlias.'.id', $ids),
+            $queryBuilder->expr()->in($materialOfInterpretationAlias.'.id', $ids)
         );
     }
 
     private function createAlias(): string
     {
-        return $this->aliasFactory->createAlias(static::class, 'content_categories');
+        return $this->aliasFactory->createAlias(static::class, 'materials');
     }
 }

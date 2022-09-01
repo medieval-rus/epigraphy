@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace App\Persistence\Entity\Epigraphy;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity()
@@ -47,6 +49,28 @@ class ContentCategory implements NamedEntityInterface
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     private $name;
+    
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="is_super_category", type="boolean", nullable=true)
+     */
+    private $isSuperCategory;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="ContentCategory", mappedBy="supercategory")
+     */
+    private $subcategories;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ContentCategory", inversedBy="subcategories")
+     * @ORM\JoinColumn(name="supercategory_id", referencedColumnName="id")
+     */
+    private $supercategory;
+
+    public function __construct() {
+        $this->subcategories = new ArrayCollection();
+    }
 
     public function __toString(): string
     {
@@ -68,5 +92,34 @@ class ContentCategory implements NamedEntityInterface
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getSupercategory(): ?self
+    {
+        return $this->supercategory;
+    }
+
+    public function setSupercategory(?self $supercategory): self
+    {
+        $this->supercategory = $supercategory;
+
+        return $this;
+    }
+
+    public function getSubcategories(): PersistentCollection
+    {
+        return $this->subcategories;
+    }
+
+    public function setIsSuperCategory(?bool $isSuperCategory): self
+    {
+        $this->isSuperCategory = $isSuperCategory;
+
+        return $this;
+    }
+    
+    public function getIsSuperCategory(): ?bool
+    {
+        return $this->isSuperCategory;
     }
 }

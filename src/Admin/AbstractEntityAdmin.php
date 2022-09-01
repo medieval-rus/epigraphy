@@ -27,6 +27,7 @@ namespace App\Admin;
 
 use ReflectionClass;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Doctrine\ORM\EntityRepository;
 
 abstract class AbstractEntityAdmin extends AbstractAdmin
 {
@@ -82,6 +83,20 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
                 ['required' => false, 'multiple' => true],
                 $options
             )
+        );
+    }
+
+    protected function createFilteredEntityOptions(string $fieldName, string $class, string $param, string $value = 'true'): array
+    {
+        return $this->createFormOptions(
+            $fieldName,
+            array_merge([
+                'class' => $class,
+                'required' => false,
+                'query_builder' => function (EntityRepository $er) use ($param, $value) {
+                    return $er->createQueryBuilder('c')->where('c.'.$param.' = '.$value);
+                }
+            ])
         );
     }
 
