@@ -136,8 +136,8 @@ list:
     fields:
       id: Внутренний идентификатор
       name: Название
-      supermethod: Тип
-      isSuperMethod: Является типом
+      supermethod: Верхняя категория
+      isSuperMethod: Является верхней категорией
   inscription:
     fields:
       id: Внутренний идентификатор
@@ -219,7 +219,7 @@ form:
   carrierType:
     section:
       name:
-        label: Название вида носителя
+        label: Название типа носителя
     fields:
       name: Название
   carrierCategory:
@@ -239,7 +239,7 @@ form:
   contentCategory:
     section:
       name:
-        label: Название типа/подтипа по содержанию
+        label: Название категории по содержанию
     fields:
       name: Название
       supercategory: Верхняя категория
@@ -247,7 +247,7 @@ form:
   material:
     section:
       name:
-        label: Название типа/подтипа материала
+        label: Название категории материала
     fields:
       name: Название
       supermaterial: Верхняя категория
@@ -267,11 +267,11 @@ form:
   writingMethod:
     section:
       name:
-        label: Название типа/подтипа нанесения
+        label: Название категории способа нанесения
       supermethod:
         label: Тип
       isSuperMethod:
-        label: Является типом
+        label: Является верхней категорией
     fields:
       name: Название
       supermethod: Верхняя категория
