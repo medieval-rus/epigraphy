@@ -87,7 +87,7 @@ list:
     fields:
       id: Id
       types: Тип
-      categories: Категория
+      categories: Подкатегория носителей
       origin1: Город / Местность
       origin2: Здание / Раскоп
       findCircumstances: Обстоятельства находки
@@ -96,8 +96,8 @@ list:
       storagePlace: Место хранения
       inventoryNumber: Инвентарный номер
       isInSitu: In situ
-      supercarrier: Верхняя категория
-      isSuperCarrier: Является верхней категорией
+      supercarrier: Надноситель
+      isSuperCarrier: Является надносителем
   carrierType:
     fields:
       id: Внутренний идентификатор
@@ -205,7 +205,7 @@ form:
       id: Внутренний идентификатор
       number: Номер
       types: Тип носителя
-      categories: Категория носителя
+      categories: Подкатегория носителя
       supercarrier: Надноситель
       isSuperCarrier: Является надносителем
       origin1: Город / Местность
@@ -225,11 +225,11 @@ form:
   carrierCategory:
     section:
       name:
-        label: Название
+        label: Название категории носителя
     fields:
       name: Название
-      supercategory: Верхняя категория
-      isSuperCategory: Является верхней категорией
+      supercategory: Категория
+      isSuperCategory: Является категорией
   alphabet:
     section:
       name:
@@ -242,16 +242,16 @@ form:
         label: Название категории по содержанию
     fields:
       name: Название
-      supercategory: Верхняя категория
-      isSuperCategory: Является верхней категорией
+      supercategory: Категория
+      isSuperCategory: Является категорией
   material:
     section:
       name:
         label: Название категории материала
     fields:
       name: Название
-      supermaterial: Верхняя категория
-      isSuperMaterial: Является верхней категорией
+      supermaterial: Категория
+      isSuperMaterial: Является категорией
   preservationState:
     section:
       name:
@@ -268,14 +268,10 @@ form:
     section:
       name:
         label: Название категории способа нанесения
-      supermethod:
-        label: Тип
-      isSuperMethod:
-        label: Является верхней категорией
     fields:
       name: Название
-      supermethod: Верхняя категория
-      isSuperMethod: Является верхней категорией
+      supermethod: Категория
+      isSuperMethod: Является категорией
   inscription:
     tab:
       common:
@@ -311,12 +307,12 @@ form:
         placeOnCarrierReferences: Расположение на носителе (ссылки)
         writingTypes: Разряд по Франклину
         writingTypesReferences: Разряд по Франклину (ссылки)
-        writingMethods: Категории способа нанесения
-        writingMethodsReferences: Категории способа нанесения (ссылки)
+        writingMethods: Категории / подкатегории способа нанесения
+        writingMethodsReferences: Категории / подкатегории способа нанесения (ссылки)
         preservationStates: Состояние сохранности
         preservationStatesReferences: Состояние сохранности (ссылки)
-        materials: Категории материалов
-        materialsReferences: Категории материалов (ссылки)
+        materials: Категории / подкатегории материалов
+        materialsReferences: Категории / подкатегории материалов (ссылки)
         alphabets: Алфавит
         alphabetsReferences: Алфавит (ссылки)
         text: Текст
@@ -327,8 +323,8 @@ form:
         transliterationReferences: Транслитерация (ссылки)
         translation: Перевод
         translationReferences: Перевод (ссылки)
-        contentCategories: Категория по содержанию
-        contentCategoriesReferences: Категория по содержанию (ссылки)
+        contentCategories: Категории / подкатегории по содержанию
+        contentCategoriesReferences: Категории / подкатегории по содержанию (ссылки)
         description: Содержание
         descriptionReferences: Содержание (ссылки)
         dateInText: Дата в тексте
@@ -375,15 +371,15 @@ form:
       origin: Происхождение надписи
       placeOnCarrier: Расположение на носителе
       writingTypes: Разряд по Франклину
-      writingMethods: Категории способа нанесения
+      writingMethods: Подкатегория способа нанесения
       preservationStates: Состояние сохранности
-      materials: Категории материалов
+      materials: Подкатегория материалов
       alphabets: Алфавит
       text: Текст
       textImages: Изображения текста (файлы)
       transliteration: Транслитерация
       translation: Перевод
-      contentCategories: Категория по содержанию
+      contentCategories: Подкатегория содержания
       description: Содержание
       dateInText: Дата в тексте
       stratigraphicalDate: Стратиграфическая дата
@@ -455,16 +451,16 @@ carrier_delete: Удалить носитель
 carrierType_list: Типы носителей
 carrierType_create: Добавить новый тип носителя
 carrierType_delete: Удалить тип носителя
-carrierCategory_list: Категории носителей
+carrierCategory_list: Категории / подкатегории носителей
 carrierCategory_create: Добавить новую категорию носителя
 carrierCategory_delete: Удалить категорию носителя
 alphabet_list: Алфавиты
 alphabet_create: Добавить новый алфавит
 alphabet_delete: Удалить алфавит
-contentCategory_list: Категории по содержанию
+contentCategory_list: Категории / подкатегории по содержанию
 contentCategory_create: Добавить новую категорию по содержанию
 contentCategory_delete: Удалить категорию по содержанию
-material_list: Категории материалов
+material_list: Категории / подкатегории материалов
 material_create: Добавить новый материал
 material_delete: Удалить материал
 preservationState_list: Состояния сохранности
@@ -474,8 +470,8 @@ writingType_list: Разряды
 writingType_create: Добавить новый разряд
 writingType_delete: Удалить разряд
 writingMethod_list: Способы нанесения
-writingMethod_create: Добавить новый Категории способа нанесения
-writingMethod_delete: Удалить Категории способа нанесения
+writingMethod_create: Добавить новую категорию способа нанесения
+writingMethod_delete: Удалить категорию способа нанесения
 inscription_list: Надписи
 inscription_create: Добавить новую надпись
 inscription_delete: Удалить надпись

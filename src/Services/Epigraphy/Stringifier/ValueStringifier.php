@@ -49,14 +49,42 @@ final class ValueStringifier implements ValueStringifierInterface
         string $propertyName,
         string $formatType = ActualValueFormatterInterface::FORMAT_TYPE_DEFAULT
     ): ?string {
-        $result = implode(
-            '<br />',
-            array_map(
-                fn (StringActualValue $actualValue): string => $this->formatter->format($actualValue, $formatType),
-                $this->extractor->extractFromZeroRowAsStrings($inscription, $propertyName)
-            )
+        
+        $map_result = array_map(
+            fn (StringActualValue $actualValue): string => $this->formatter->format($actualValue, $formatType),
+            $this->extractor->extractFromZeroRowAsStrings($inscription, $propertyName)
         );
+        if (
+                count($map_result) > 1 && # add collapse to text and translation
+                ($formatType === ActualValueFormatterInterface::FORMAT_TYPE_ORIGINAL_TEXT || 
+                $formatType === ActualValueFormatterInterface::FORMAT_TYPE_TRANSLATION)
+            ) {
+            $pre_result = $this->addCollapseUtils($map_result, $propertyName);
+        } else {
+            $pre_result = $map_result;
+        }
+        $result = implode('<br />', $pre_result);
 
         return '' === $result ? null : $result;
+    }
+
+    public function addCollapseUtils(array $values, string $propertyName): array {
+        return [
+            ...array_slice($values, 0, 1),
+            "<div class='collapse' id='collapse_".$propertyName."'>",
+            ...array_slice($values, 1),
+            "</div>",
+            '<button 
+                class="btn btn-secondary" 
+                id="btn-collapse_'.$propertyName.'"
+                type="button"
+                data-toggle="collapse" 
+                data-target="#collapse_'.$propertyName.'"
+                aria-expanded="false" 
+                aria-controls="collapse_'.$propertyName.'" 
+                style="display: block;">
+                Показать / скрыть доп. интерпретации
+            </button>'
+        ];
     }
 }

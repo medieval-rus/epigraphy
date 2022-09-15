@@ -44,7 +44,8 @@
             {{ self.format_literature(translationContext, inscription) }}
             {{ self.format_original_text_row(translationContext, 'zeroRow.text', inscription) }}
             {{ self.format_text_row(translationContext, 'zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
-            {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_zero_row(inscription, 'translation')) }}
+            {# {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_zero_row(inscription, 'translation')) }} #}
+            {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_translation(inscription)) }}
             {{ self.format_text_row(translationContext, 'zeroRow.photos', self.format_zero_row_images(inscription, 'photos')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.drawings', self.format_zero_row_images(inscription, 'drawings')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.alphabets', self.format_zero_row(inscription, 'alphabets')) }}
@@ -213,4 +214,10 @@
             <td>{{ tdContent|trim|raw }}</td>
         </tr>
     {% endif %}
+{%- endmacro -%}
+
+{%- macro format_translation(inscription) -%}
+    {% import _self as self %}
+
+    {{- self.format_zero_row(inscription, 'translation', 'translation')|default('-') -}}
 {%- endmacro -%}

@@ -106,6 +106,7 @@ class Inscription implements StringifiableEntityInterface
      *     mappedBy="inscription",
      *     orphanRemoval=true
      * )
+     * @ORM\OrderBy({"source" = "ASC"})
      */
     private $interpretations;
 

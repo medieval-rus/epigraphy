@@ -143,6 +143,14 @@ main.eomr-main {
       padding-left: 15px;
     }
 
+    .vyfony-filterable-table-bundle-form-group {
+      display: none;
+    }
+
+    .vyfony-filterable-table-bundle-form-group:nth-of-type(n + 15) {
+      display: block;
+    }
+
     [data-vyfony-filterable-table-reset-button] {
       display: none;
     }
@@ -156,36 +164,4 @@ main.eomr-main {
     margin-left: auto;
     margin-right: auto;
   }
-}
-
-form.row::before {
-    content: "Данные о носителе";
-    font-weight: bold;
-    font-size: large;
-    display: block;
-    padding-bottom: 10px;
-}
-
-.form-group.vyfony-filterable-table-bundle-form-group:nth-of-type(6)::after {
-    content: "Данные о надписи";
-    position: relative;
-    padding-top: 16px;
-    left: calc(-100% - 30px);
-    font-weight: bold;
-    font-size: large;
-    display: block;
-}
-
-label[for="carrier-category"]::after,
-label[for="material"]::after, 
-label[for="writing-method"]::after, 
-label[for="content-category"]::after {
-  content: ": подкатегория";
-  font-weight: lighter;
-  color: #778899;
-}
-label[for|="super"]::after {
-  content: ": категория";
-  font-weight: lighter;
-  color: #778899;
 }

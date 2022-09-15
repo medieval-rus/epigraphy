@@ -1,0 +1,48 @@
+{#
+ # This file is part of «Epigraphy of Medieval Rus» database.
+ #
+ # Copyright (c) National Research University Higher School of Economics
+ #
+ # «Epigraphy of Medieval Rus» database is free software:
+ # you can redistribute it and/or modify it under the terms of the
+ # GNU General Public License as published by the Free Software Foundation, version 3.
+ #
+ # «Epigraphy of Medieval Rus» database is distributed
+ # in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ # the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ # See the GNU General Public License for more details.
+ #
+ # For the full copyright and license information, please view the LICENSE
+ # file that was distributed with this source code. If you have not received
+ # a copy of the GNU General Public License along with
+ # «Epigraphy of Medieval Rus» database,
+ # see <http://www.gnu.org/licenses/>.
+ #}
+
+{%- extends 'site/base.html.twig' -%}
+
+{%- block page_content -%}
+
+    {% import '@VyfonyFilterableTable/filterable_table.html.twig' as filterable_table %}
+    {% import 'site/content/post.html.twig' as post_helper %}
+
+    <a class="btn btn-primary" href="/epigraphy/inscription/longlist" style='float: right;'>
+        Расширенный поиск
+    </a>
+
+    {{ post_helper.render_post_body(post, false) }}
+
+    {{ filterable_table.render_filter(filterForm) }}
+
+    <div class="row">
+        {{ filterable_table.render_table(table) }}
+    </div>
+
+    <div class="row">
+        {{ filterable_table.render_paginator(table) }}
+    </div>
+
+    <div class="row">
+        {{ filterable_table.render_checkbox_handlers(table) }}
+    </div>
+{%- endblock -%}

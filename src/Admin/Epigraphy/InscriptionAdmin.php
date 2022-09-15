@@ -326,7 +326,16 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         'interpretations',
                         CollectionType::class,
                         $this->createFormOptions('interpretations', ['required' => false]),
-                        ['edit' => 'inline', 'admin_code' => 'admin.interpretation']
+                        [
+                            'edit' => 'inline',
+                            'admin_code' => 'admin.interpretation',
+                            'query_builder' => function (EntityRepository $entityRepository) {
+                                return $entityRepository
+                                    ->createQueryBuilder('interp')
+                                    ->leftJoin('interp.source', 'src')
+                                    ->orderBy('src.year', 'DESC');
+                            }
+                        ]
                     )
                 ->end()
             ->end()
@@ -367,9 +376,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     'query_builder' => static function (EntityRepository $entityRepository) use ($parentInscriptionId) {
                         return $entityRepository
                             ->createQueryBuilder('interpretation')
+                            ->innerJoin('interpretation.source', 'src')
                             ->where('interpretation.inscription IS NOT NULL')
                             ->where('interpretation.inscription = :inscriptionId')
-                            ->setParameter(':inscriptionId', $parentInscriptionId);
+                            ->setParameter(':inscriptionId', $parentInscriptionId)
+                            ->orderBy('src.year', 'DESC');
                     },
                     'attr' => [
                         'data-zero-row-references' => $fieldName,

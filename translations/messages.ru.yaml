@@ -54,15 +54,15 @@ controller:
             text: Текст
             description: Содержание
         carrierType: Тип носителя
-        carrierCategory: Подкатегория носителя
+        carrierCategory: "Носитель"
         writingType: Разряд
-        writingMethod: Подкатегория способа нанесения
+        writingMethod: "Способ нанесения"
         preservationState: Состояние сохранности
         alphabet: Алфавит
         text: Текст надписи
         translation: Перевод
-        material: Подкатегория материала
-        contentCategory: Подкатегория содержания
+        material: "Материал"
+        contentCategory: "Содержание"
         origin1: Город / Местность
         origin2: Здание / Раскоп
         author: Автор публикации
@@ -71,10 +71,10 @@ controller:
         resetButton: Сбросить фильтры
         submitButton: Искать
         searchInFoundButton: Искать в найденном
-        superWritingMethod: Категория способа нанесения
-        superMaterial: Категория материала
-        superCarrierCategory: Категория носителя
-        superContentCategory: Категория содержания
+        superWritingMethod: "Способ нанесения"
+        superMaterial: "Материал"
+        superCarrierCategory: "Носитель"
+        superContentCategory: "Содержание"
     show:
       title: Надпись
       admin: Просмотреть надпись в админке
@@ -132,7 +132,7 @@ page:
     bibliography: Библиография
     dataBase: База данных
     legend: Условные обозначения
-  footer: © 2019 – Национальный исследовательский университет «Высшая школа экономики»; Институт славяноведения Российской академии наук
+  footer: © 2019 – Национальный исследовательский университет «Высшая школа экономики»
 
 type:
   bool:
