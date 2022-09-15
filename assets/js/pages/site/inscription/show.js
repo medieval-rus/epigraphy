@@ -20,6 +20,7 @@
  */
 
 import $ from 'jquery';
+import 'bootstrap';
 import PhotoSwipe from 'photoswipe/dist/photoswipe';
 import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default';
 

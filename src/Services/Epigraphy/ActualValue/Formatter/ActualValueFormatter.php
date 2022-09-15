@@ -58,6 +58,11 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
                 $formattedValue = $this->originalTextFormatter->format($this->originalTextParser->parse($value));
 
                 break;
+            
+            case self::FORMAT_TYPE_TRANSLATION:
+                $formattedValue = nl2br(htmlspecialchars($value));
+                
+                break;
 
             default:
                 throw new InvalidArgumentException(sprintf('Unknown value format type "%s"', $formatType));

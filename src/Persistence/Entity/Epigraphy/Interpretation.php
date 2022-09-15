@@ -71,6 +71,7 @@ class Interpretation implements StringifiableEntityInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Persistence\Entity\Bibliography\BibliographicRecord", cascade={"persist"})
      * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=false)
+     * @ORM\OrderBy({"year" = "DESC"})
      */
     private $source;
 

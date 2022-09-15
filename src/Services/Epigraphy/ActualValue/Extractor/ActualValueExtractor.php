@@ -70,6 +70,8 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
 
         $references = $this->propertyAccessor->getValue($zeroRow, $propertyName.'References')->toArray();
 
+        usort($references, fn(Interpretation $a, Interpretation $b) =>  $b->getSource()->getYear() - $a->getSource()->getYear());
+
         $referenceValues = array_map($referenceValueFormatter, $references);
 
         $zeroRowValue = $this->getStringValue($this->propertyAccessor->getValue($zeroRow, $propertyName));

@@ -36,6 +36,7 @@ use App\FilterableTable\Filter\Parameter\MaterialFilterParameter;
 use App\FilterableTable\Filter\Parameter\SuperMaterialFilterParameter;
 use App\FilterableTable\Filter\Parameter\NumberInSourceFilterParameter;
 use App\FilterableTable\Filter\Parameter\Origin1FilterParameter;
+use App\FilterableTable\Filter\Parameter\Origin2FilterParameter;
 use App\FilterableTable\Filter\Parameter\PreservationStateFilterParameter;
 use App\FilterableTable\Filter\Parameter\TextFilterParameter;
 use App\FilterableTable\Filter\Parameter\TranslationFilterParameter;
@@ -75,6 +76,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     private AuthorFilterParameter $authorFilterParameter;
     private NumberInSourceFilterParameter $numberInSourceFilterParameter;
     private Origin1FilterParameter $origin1FilterParameter;
+    private Origin2FilterParameter $origin2FilterParameter;
     private TranslationFilterParameter $translationFilterParameter;
 
     public function __construct(
@@ -94,25 +96,16 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         AuthorFilterParameter $authorFilterParameter,
         NumberInSourceFilterParameter $numberInSourceFilterParameter,
         Origin1FilterParameter $origin1FilterParameter,
+        Origin2FilterParameter $origin2FilterParameter,
         TranslationFilterParameter $translationFilterParameter
     ) {
-        $this->valueStringifier = $valueStringifier;
-        $this->carrierTypeFilterParameter = $carrierTypeFilterParameter;
-        $this->carrierCategoryFilterParameter = $carrierCategoryFilterParameter;
-        $this->superCarrierCategoryFilterParameter = $superCarrierCategoryFilterParameter;
-        $this->writingMethodFilterParameter = $writingMethodFilterParameter;
-        $this->superWritingMethodFilterParameter = $superWritingMethodFilterParameter;
-        $this->preservationStateFilterParameter = $preservationStateFilterParameter;
-        $this->alphabetFilterParameter = $alphabetFilterParameter;
-        $this->textFilterParameter = $textFilterParameter;
-        $this->materialFilterParameter = $materialFilterParameter;
-        $this->superMaterialFilterParameter = $superMaterialFilterParameter;
-        $this->contentCategoryFilterParameter = $contentCategoryFilterParameter;
-        $this->superContentCategoryFilterParameter = $superContentCategoryFilterParameter;
-        $this->authorFilterParameter = $authorFilterParameter;
-        $this->numberInSourceFilterParameter = $numberInSourceFilterParameter;
-        $this->origin1FilterParameter = $origin1FilterParameter;
-        $this->translationFilterParameter = $translationFilterParameter;
+        $args = func_get_args();
+        $reflection_method = new \ReflectionMethod($this, '__construct');
+        $parameters = $reflection_method->getParameters();
+
+        for ($idx = 0; $idx < count($args); $idx++) {
+            $this->{$parameters[$idx]->name} = $args[$idx];
+        }
     }
 
     public function createSubmitButtonOptions(): array
@@ -186,23 +179,23 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     {
         return [
             // типология носителя
+            $this->superCarrierCategoryFilterParameter,
+            $this->carrierCategoryFilterParameter,            
             $this->superMaterialFilterParameter,
             $this->materialFilterParameter,
-            $this->superCarrierCategoryFilterParameter,
-            $this->carrierCategoryFilterParameter,
-            $this->carrierTypeFilterParameter,
             $this->origin1FilterParameter,
+            $this->origin2FilterParameter,
             // типология надписи
             $this->superWritingMethodFilterParameter,    
             $this->writingMethodFilterParameter,
             $this->superContentCategoryFilterParameter,
             $this->contentCategoryFilterParameter,
-            $this->preservationStateFilterParameter,
             $this->alphabetFilterParameter,
-            $this->textFilterParameter,
-            $this->translationFilterParameter,
+            $this->preservationStateFilterParameter,
             $this->authorFilterParameter,
             $this->numberInSourceFilterParameter,
+            $this->textFilterParameter,
+            $this->translationFilterParameter,
         ];
     }
 

@@ -1,7 +1,3 @@
-<?php
-
-declare(strict_types=1);
-
 /*
  * This file is part of «Epigraphy of Medieval Rus» database.
  *
@@ -23,15 +19,15 @@ declare(strict_types=1);
  * see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Services\Epigraphy\ActualValue\Formatter;
+import $ from 'jquery';
+import 'select2';
 
-use App\Models\StringActualValue;
+$(document).ready(() => {
+    initializeFilters();
+});
 
-interface ActualValueFormatterInterface
-{
-    public const FORMAT_TYPE_DEFAULT = 'default';
-    public const FORMAT_TYPE_ORIGINAL_TEXT = 'original-text';
-    public const FORMAT_TYPE_TRANSLATION = 'translation';
-
-    public function format(StringActualValue $actualValue, string $formatType): string;
+function initializeFilters() {
+    $('.vyfony-filterable-table-bundle-form-group select[multiple="multiple"]').select2({
+        language: $('html').prop('lang')
+    });
 }
