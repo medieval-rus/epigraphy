@@ -62,7 +62,7 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
 
             return new StringActualValue(
                 $value,
-                $interpretation->getSource()->getShortName()
+                $this->getInterpretationRef($interpretation)
             );
         };
 
@@ -202,6 +202,22 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
         }
 
         return (string) $value;
+    }
+
+    private function getInterpretationRef($interpretation): string 
+    {
+        if (null === $interpretation->getPageNumbersInSource()) {
+            return $interpretation
+                ->getSource()
+                ->getShortName();
+        } else {
+            return $interpretation
+                ->getSource()
+                ->getShortName().
+                ", с. ".
+                $interpretation
+                ->getPageNumbersInSource();
+        }           
     }
 
     private function isNotNull($formattedValue): bool
