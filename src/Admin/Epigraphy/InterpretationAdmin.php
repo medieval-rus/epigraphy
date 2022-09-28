@@ -92,7 +92,6 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                 ->with($this->getSectionLabel('historicalAspect'))
                     ->add('origin', null, $this->createZeroRowPartOptions('origin'))
                     ->add('dateInText', null, $this->createZeroRowPartOptions('dateInText'))
-                    ->add('stratigraphicalDate', null, $this->createZeroRowPartOptions('stratigraphicalDate'))
                     ->add('nonStratigraphicalDate', null, $this->createZeroRowPartOptions('nonStratigraphicalDate'))
                     ->add('historicalDate', null, $this->createZeroRowPartOptions('historicalDate'))
                 ->end()

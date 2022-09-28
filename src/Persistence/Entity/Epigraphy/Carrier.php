@@ -110,6 +110,13 @@ class Carrier implements StringifiableEntityInterface
     private $inventoryNumber;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(name="stratigraphical_date", type="text", length=65535, nullable=true)
+     */
+    private $stratigraphicalDate;
+
+    /**
      * @var bool|null
      *
      * @ORM\Column(name="is_in_situ", type="boolean", nullable=true)
@@ -299,7 +306,7 @@ class Carrier implements StringifiableEntityInterface
         return $this;
     }
 
-    public function getSubcarriers(): ?self
+    public function getSubcarriers(): PersistentCollection
     {
         return $this->subcarriers;
     }
@@ -314,5 +321,17 @@ class Carrier implements StringifiableEntityInterface
     public function getIsSuperCarrier(): ?bool
     {
         return $this->isSuperCarrier;
+    }
+
+    public function getStratigraphicalDate(): ?string
+    {
+        return $this->stratigraphicalDate;
+    }
+
+    public function setStratigraphicalDate(?string $stratigraphicalDate): self
+    {
+        $this->stratigraphicalDate = $stratigraphicalDate;
+
+        return $this;
     }
 }

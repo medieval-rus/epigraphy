@@ -54,7 +54,6 @@
             {{ self.format_text_row(translationContext, 'zeroRow.placeOnCarrier', self.format_zero_row(inscription, 'placeOnCarrier')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.origin', self.format_zero_row(inscription, 'origin')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.preservationStates', self.format_zero_row(inscription, 'preservationStates')) }}
-            {{ self.format_text_row(translationContext, 'zeroRow.stratigraphicalDate', self.format_zero_row(inscription, 'stratigraphicalDate')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.nonStratigraphicalDate', self.format_zero_row(inscription, 'nonStratigraphicalDate')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.dateInText', self.format_zero_row(inscription, 'dateInText')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.historicalDate', self.format_zero_row(inscription, 'historicalDate')) }}
@@ -181,6 +180,7 @@
                                 {{ self.format_text_row(translationContext, 'carrier.isInSitu', inscription.carrier.isInSitu) }}
                                 {{ self.format_text_row(translationContext, 'carrier.storagePlace', inscription.carrier.storagePlace) }}
                                 {{ self.format_text_row(translationContext, 'carrier.inventoryNumber', inscription.carrier.inventoryNumber) }}
+                                {{ self.format_text_row(translationContext, 'carrier.stratigraphicalDate', inscription.carrier.stratigraphicalDate) }}
                             </tbody>
                         </table>
                     </div>

@@ -208,6 +208,7 @@ form:
       categories: Подкатегория носителя
       supercarrier: Надноситель
       isSuperCarrier: Является надносителем
+      stratigraphicalDate: Стратиграфическая дата
       origin1: Город / Местность
       origin2: Здание / Раскоп
       findCircumstances: Обстоятельства находки
@@ -329,8 +330,6 @@ form:
         descriptionReferences: Содержание (ссылки)
         dateInText: Дата в тексте
         dateInTextReferences: Дата в тексте (ссылки)
-        stratigraphicalDate: Стратиграфическая дата
-        stratigraphicalDateReferences: Стратиграфическая дата (ссылки)
         nonStratigraphicalDate: Внестратиграфическая дата
         nonStratigraphicalDateReferences: Внестратиграфическая дата (ссылки)
         historicalDate: «Историческая» дата
@@ -382,7 +381,6 @@ form:
       contentCategories: Подкатегория содержания
       description: Содержание
       dateInText: Дата в тексте
-      stratigraphicalDate: Стратиграфическая дата
       nonStratigraphicalDate: Внестратиграфическая дата
       historicalDate: «Историческая» дата
       photos: Фото (файлы)

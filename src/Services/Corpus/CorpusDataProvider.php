@@ -172,7 +172,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
                     ->getContentCategories()
                     ->map(fn (ContentCategory $contentCategory): string => $contentCategory->getName())
             ),
-            'stratigraphical_date' => $inscription->getZeroRow()->getStratigraphicalDate(),
+            'stratigraphical_date' => $inscription->getCarrier()->getStratigraphicalDate(),
             'non_stratigraphical_date' => $inscription->getZeroRow()->getNonStratigraphicalDate(),
             'conventional_date' => $inscription->getConventionalDate(),
             'description' => $inscription->getZeroRow()->getDescription(),
