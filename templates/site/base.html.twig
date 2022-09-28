@@ -51,18 +51,15 @@
                     {% endblock %}
                 </div>
 
-                <main role="main" class="col-7 eomr-main">
+                <main role="main" class="col-8 eomr-main">
                     {% block page_title %}<h1 class="border-bottom">{{ block('title') }}</h1>{% endblock %}
                     <div class="container pb-4">
                         {% block page_content %}{% endblock %}
                     </div>
                 </main>
 
-                <div class="col-3 sidebar eomr-sidebar">
+                <div class="col-2 sidebar eomr-sidebar">
                     {% block right_sidebar_content %}{% endblock %}
-                    <script async src="https://cse.google.com/cse.js?cx=3115d54ca05a049e8">
-                    </script>
-                    <div class="gcse-search"></div>
                 </div>
             </div>
         </div>
