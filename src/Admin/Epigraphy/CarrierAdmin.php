@@ -81,6 +81,7 @@ final class CarrierAdmin extends AbstractEntityAdmin
                     ->add('origin1', null, $this->createFormOptions('origin1'))
                     ->add('origin2', null, $this->createFormOptions('origin2'))
                     ->add('findCircumstances', null, $this->createFormOptions('findCircumstances'))
+                    ->add('stratigraphicalDate', null, $this->createFormOptions('stratigraphicalDate'))
                     ->add('characteristics', null, $this->createFormOptions('characteristics'))
                 ->end()
             ->end()

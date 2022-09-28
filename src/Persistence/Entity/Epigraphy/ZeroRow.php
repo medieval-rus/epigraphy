@@ -313,24 +313,6 @@ class ZeroRow
     /**
      * @var string|null
      *
-     * @ORM\Column(name="stratigraphical_date", type="text", length=65535, nullable=true)
-     */
-    private $stratigraphicalDate;
-
-    /**
-     * @var Collection|Interpretation[]
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinTable(name="zero_row_stratigraphical_date_references")
-     */
-    private $stratigraphicalDateReferences;
-
-    /**
-     * @var string|null
-     *
      * @ORM\Column(name="non_stratigraphical_date", type="text", length=65535, nullable=true)
      */
     private $nonStratigraphicalDate;
@@ -931,36 +913,6 @@ class ZeroRow
     public function setDateInTextReferences(Collection $dateInTextReferences): self
     {
         $this->dateInTextReferences = $dateInTextReferences;
-
-        return $this;
-    }
-
-    public function getStratigraphicalDate(): ?string
-    {
-        return $this->stratigraphicalDate;
-    }
-
-    public function setStratigraphicalDate(?string $stratigraphicalDate): self
-    {
-        $this->stratigraphicalDate = $stratigraphicalDate;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Interpretation[]
-     */
-    public function getStratigraphicalDateReferences(): Collection
-    {
-        return $this->stratigraphicalDateReferences;
-    }
-
-    /**
-     * @param Collection|Interpretation[] $stratigraphicalDateReferences
-     */
-    public function setStratigraphicalDateReferences(Collection $stratigraphicalDateReferences): self
-    {
-        $this->stratigraphicalDateReferences = $stratigraphicalDateReferences;
 
         return $this;
     }

@@ -94,6 +94,7 @@ controller:
             origin1: Город / Местность
             origin2: Здание / Раскоп
             findCircumstances: Обстоятельства находки носителя
+            stratigraphicalDate: Стратиграфическая дата
             characteristics: Характеристики носителя
             individualName: Носитель
             storagePlace: Место хранения носителя
@@ -111,7 +112,6 @@ controller:
             translation: Перевод
             description: Содержание
             dateInText: Дата в тексте
-            stratigraphicalDate: Стратиграфическая дата
             nonStratigraphicalDate: Внестратиграфическая дата
             historicalDate: «Историческая» дата
             comment: Комментарий (разночтения с источником)

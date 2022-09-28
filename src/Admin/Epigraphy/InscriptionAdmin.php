@@ -236,16 +236,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         $this->createLabeledReferencesFormOptions('dateInTextReferences')
                     )
                     ->add(
-                        'zeroRow.stratigraphicalDate',
-                        TextareaType::class,
-                        $this->createFormOptions('zeroRow.stratigraphicalDate', ['required' => false])
-                    )
-                    ->add(
-                        'zeroRow.stratigraphicalDateReferences',
-                        EntityType::class,
-                        $this->createLabeledReferencesFormOptions('stratigraphicalDateReferences')
-                    )
-                    ->add(
                         'zeroRow.nonStratigraphicalDate',
                         TextareaType::class,
                         $this->createFormOptions('zeroRow.nonStratigraphicalDate', ['required' => false])

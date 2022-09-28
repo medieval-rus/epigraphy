@@ -204,13 +204,6 @@ class Interpretation implements StringifiableEntityInterface
     /**
      * @var string|null
      *
-     * @ORM\Column(name="stratigraphical_date", type="text", length=65535, nullable=true)
-     */
-    private $stratigraphicalDate;
-
-    /**
-     * @var string|null
-     *
      * @ORM\Column(name="non_stratigraphical_date", type="text", length=65535, nullable=true)
      */
     private $nonStratigraphicalDate;
@@ -531,18 +524,6 @@ class Interpretation implements StringifiableEntityInterface
     public function setDateInText(?string $dateInText): self
     {
         $this->dateInText = $dateInText;
-
-        return $this;
-    }
-
-    public function getStratigraphicalDate(): ?string
-    {
-        return $this->stratigraphicalDate;
-    }
-
-    public function setStratigraphicalDate(?string $stratigraphicalDate): self
-    {
-        $this->stratigraphicalDate = $stratigraphicalDate;
 
         return $this;
     }
