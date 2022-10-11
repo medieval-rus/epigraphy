@@ -28,6 +28,7 @@ namespace App\FilterableTable;
 use App\Persistence\Entity\Epigraphy\CarrierCategory;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\Epigraphy\Stringifier\ValueStringifierInterface;
+use App\Services\Epigraphy\ActualValue\Formatter\ActualValueFormatterInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\FilterConfiguratorInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Routing\RouteConfiguration;
@@ -35,6 +36,7 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Checkbox\CheckboxHandlerInterface;
 use Vyfony\Bundle\FilterableTableBundle\Table\Configurator\AbstractTableConfigurator;
 use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadata;
 use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadataInterface;
+
 
 final class InscriptionsTableConfigurator extends AbstractTableConfigurator
 {
@@ -128,13 +130,23 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                 ->setIsSortable(false)
                 ->setLabel('controller.inscription.list.table.column.carrier.origin2'),
             (new ColumnMetadata())
-                ->setName('interpretation-contentCategories')
+                ->setIsRaw(true)
+                ->setName('interpretation-description')
                 ->setValueExtractor(function (Inscription $inscription): string {
-                    return $this->valueStringifier->stringify($inscription, 'contentCategories') ?? '-';
+                    return $this->valueStringifier->stringify($inscription, 'description') ?? '-';
                 })
-                ->setIsIdentifier(false)
-                ->setIsSortable(false)
-                ->setLabel('controller.inscription.list.table.column.interpretation.contentCategory'),
+                ->setLabel('controller.inscription.list.table.column.interpretation.description'),
+            (new ColumnMetadata())
+                ->setIsRaw(true)
+                ->setName('interpretation-text')
+                ->setValueExtractor(function (Inscription $inscription): string {
+                    return $this->valueStringifier->stringify(
+                        $inscription,
+                        'text',
+                        ActualValueFormatterInterface::FORMAT_TYPE_ORIGINAL_TEXT
+                    ) ?? '-';
+                })
+                ->setLabel('controller.inscription.list.table.column.interpretation.text'),            
         ];
     }
 

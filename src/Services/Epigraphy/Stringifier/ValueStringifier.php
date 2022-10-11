@@ -83,7 +83,7 @@ final class ValueStringifier implements ValueStringifierInterface
                 aria-expanded="false" 
                 aria-controls="collapse_'.$propertyName.'" 
                 style="display: block;">
-                Показать / скрыть доп. интерпретации
+                Доп. интерпретации
             </button>'
         ];
     }

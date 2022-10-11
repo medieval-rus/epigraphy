@@ -19,9 +19,13 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
+@import './common';
 @import '../base';
 @import '../../../src/original-text';
 @import '~select2/dist/css/select2.min.css';
+@import '~jquery-ui/themes/base/theme';
+@import '~jquery-ui/themes/base/draggable';
+@import '~simple-keyboard/build/css/index';
 
 @mixin sorted-column($isAsc){
   &:after {

@@ -204,43 +204,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
      */
     protected function createTableParameters(): array
     {
-        return [
-            (new RadioColumnChoiceTableParameter())
-                ->addRadioOption(
-                    (new RadioOption())
-                        ->setName('description')
-                        ->setLabel('controller.inscription.list.filter.dataColumn.option.description')
-                        ->setColumnMetadata(
-                            (new ColumnMetadata())
-                                ->setIsRaw(true)
-                                ->setName('interpretation-description')
-                                ->setValueExtractor(function (Inscription $inscription): string {
-                                    return $this->valueStringifier->stringify($inscription, 'description') ?? '-';
-                                })
-                                ->setLabel('controller.inscription.list.table.column.interpretation.description')
-                        )
-                )
-                ->addRadioOption(
-                    (new RadioOption())
-                        ->setName('text')
-                        ->setLabel('controller.inscription.list.filter.dataColumn.option.text')
-                        ->setColumnMetadata(
-                            (new ColumnMetadata())
-                                ->setIsRaw(true)
-                                ->setName('interpretation-text')
-                                ->setValueExtractor(function (Inscription $inscription): string {
-                                    return $this->valueStringifier->stringify(
-                                        $inscription,
-                                        'text',
-                                        ActualValueFormatterInterface::FORMAT_TYPE_ORIGINAL_TEXT
-                                    ) ?? '-';
-                                })
-                                ->setLabel('controller.inscription.list.table.column.interpretation.text')
-                        )
-                )
-                ->setQueryParameterName('dataColumn')
-                ->setLabel('controller.inscription.list.filter.dataColumn.label'),
-        ];
+        return [];
     }
 
     protected function createDbSortConfiguration(): ?DbSortConfigurationInterface
