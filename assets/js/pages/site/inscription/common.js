@@ -9,8 +9,8 @@ export function initializeFilters() {
 }
 
 export const virtualKeyboardCoordinates = {
-    top: 150,
-    left: 0,
+    top: 30,
+    right: 30,
 }
 
 export function enableVirtualKeyboards()
@@ -27,7 +27,7 @@ export function initializeVirtualKeyboard(index, targetInputDom)
     targetInputElement.on('focus', () => {
         virtualKeyboardWrapper
             .css('top', virtualKeyboardCoordinates.top + 'px')
-            .css('left', virtualKeyboardCoordinates.left + 'px')
+            .css('right', virtualKeyboardCoordinates.right + 'px')
             .show();
     });
 
@@ -63,9 +63,9 @@ export function createVirtualKeyboard(index, targetInputElement)
         stop: (event, ui) => {
             const position = ui.helper.position();
 
-            if (isNumber(position.top) && isNumber(position.left)) {
+            if (isNumber(position.top) && isNumber(position.right)) {
                 virtualKeyboardCoordinates.top = position.top;
-                virtualKeyboardCoordinates.left = position.left;
+                virtualKeyboardCoordinates.right = position.right;
             }
         }
     });
