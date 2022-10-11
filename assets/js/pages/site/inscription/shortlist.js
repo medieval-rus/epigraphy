@@ -20,14 +20,11 @@
  */
 
 import $ from 'jquery';
+import 'bootstrap';
 import 'select2';
+import * as common from './common';
 
-$(document).ready(() => {
-    initializeFilters();
+$(window).on('load', () => {
+    common.initializeFilters();
+    common.enableVirtualKeyboards();
 });
-
-function initializeFilters() {
-    $('.vyfony-filterable-table-bundle-form-group select[multiple="multiple"]').select2({
-        language: $('html').prop('lang')
-    });
-}

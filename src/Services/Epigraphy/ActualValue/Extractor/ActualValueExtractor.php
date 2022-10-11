@@ -213,10 +213,7 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
         } else {
             return $interpretation
                 ->getSource()
-                ->getShortName().
-                ", с. ".
-                $interpretation
-                ->getPageNumbersInSource();
+                ->getShortName();
         }           
     }
 

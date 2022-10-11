@@ -20,7 +20,9 @@
  */
 
 import $ from 'jquery';
+import 'bootstrap';
 import 'select2';
+import * as common from './common';
 
 window.superFilters = { // mapping of parent and child categories
     "super-carrier-category": {"subfilter": "carrier-category", "cache": []},
@@ -29,17 +31,11 @@ window.superFilters = { // mapping of parent and child categories
     "super-material": {"subfilter": "material", "cache": []}
 }
 
-$(document).ready(() => {
-
-    initializeFilters();
+$(window).on('load', () => {
+    common.initializeFilters();
     setUpdateListeners();
+    common.enableVirtualKeyboards();
 });
-
-function initializeFilters() {
-    $('.vyfony-filterable-table-bundle-form-group select[multiple="multiple"]').select2({
-        language: $('html').prop('lang')
-    });
-}
 
 function setUpdateListeners() {
     function updateSubfilters(event) { // update child categories on parent category choice

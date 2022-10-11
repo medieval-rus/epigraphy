@@ -60,7 +60,8 @@ final class TextFilterParameter implements FilterParameterInterface, ExpressionB
             'label' => 'controller.inscription.list.filter.text',
             'attr' => [
                 'data-vyfony-filterable-table-filter-parameter' => true,
-                'data-important' => true
+                'data-important' => true,
+                'data-virtual-keyboard' => true
             ],
         ];
     }
