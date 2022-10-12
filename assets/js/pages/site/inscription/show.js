@@ -20,6 +20,7 @@
  */
 
 import $ from 'jquery';
+import 'popper.js/dist/popper.min';
 import 'bootstrap';
 import PhotoSwipe from 'photoswipe/dist/photoswipe';
 import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default';
@@ -224,4 +225,7 @@ $(window).on('load', () => {
     }
 
     initPhotoSwipeFromDom('[data-images-container]');
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 });
