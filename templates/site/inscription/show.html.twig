@@ -200,11 +200,14 @@
 {%- macro get_literature_row_td_content(inscription) -%}
     {% import _self as self %}
 
-    {{- inscription.interpretations|map(interpretation => interpretation.source)|sort((a, b) => bibliographicRecordComparer.CompareByYear(a, b))|map(record => self.format_literature_item(record))|join('<br/>')|raw -}}
+    {{- inscription.interpretations|map(interpretation => {'pages': interpretation.PageNumbersInSource, 'source': interpretation.source})|sort((a, b) => bibliographicRecordComparer.CompareByYear(a.source, b.source))|map(record => self.format_literature_item(record))|join('<br/>')|raw -}}
 {%- endmacro -%}
 
-{%- macro format_literature_item(bibliographicRecord) -%}
-    <a href="{{ path("bibliographic_record__list") }}#{{ bibliographicRecord.shortName }}">{{ bibliographicRecord.formalNotation }}</a>
+{%- macro format_literature_item(record) -%}
+    {% set bibliographicRecord = record.source %}
+    <a href="{{ path("bibliographic_record__list") }}#{{ bibliographicRecord.shortName }}"
+    data-toggle="tooltip" data-placement="top" 
+    title="{{ bibliographicRecord.formalNotation }}">{{ bibliographicRecord.shortName }} с. {{ record.pages|default("?") }}</a>
 {%- endmacro -%}
 
 {%- macro fill_row(thContent, tdContent) -%}
