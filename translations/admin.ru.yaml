@@ -32,6 +32,12 @@ menu:
     bibliography:
       label: Библиография
   paragraphs:
+    city:
+      label: Населенный пункт
+    river:
+      label: Водный объект
+    discoverySite:
+      label: Место находки
     post:
       label: Страницы
     inscriptionList:
@@ -182,6 +188,30 @@ form:
       fullName: Полное имя
       roles: Роли
       plainPassword: Новый пароль
+  discoverySite:
+    fields:
+      name: Название
+      nameAliases: Альтернативные названия    
+      rivers: Водное окружение
+      cities: Населенный пункт
+      comments: Комментарий
+      latitude: Широта
+      longitude: Долгота
+      isOutsideCity: Вне населенного пункта
+      isOutsideRiver: Вне водного объекта
+  river:
+    fields:
+      name: Название
+      nameAliases: Альтернативные названия
+      type: Тип
+      superriver: "Приток реки:"
+  city:
+    fields:
+      name: Название
+      nameAliases: Альтернативные названия
+      type: Тип
+      country: Страна
+      region: Регион
   carrier:
     tab:
       identification:
@@ -212,8 +242,14 @@ form:
       origin1: Город / Местность
       origin2: Здание / Раскоп
       findCircumstances: Обстоятельства находки
+      carrierHistory: История носителя
       characteristics: Характеристики носителя
       individualName: Индивидуальное название носителя
+      discoverySite: Место находки
+      quadrat: Квадрат
+      plastLevel: Пласт
+      yarusLevel: Ярус
+      depth: Глубина
       storagePlace: Место хранения
       inventoryNumber: Инвентарный номер
       isInSitu: In situ

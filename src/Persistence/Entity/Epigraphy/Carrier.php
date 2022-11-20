@@ -29,6 +29,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * @ORM\Entity()
@@ -80,6 +81,49 @@ class Carrier implements StringifiableEntityInterface
      * @ORM\Column(name="find_circumstances", type="text", length=65535, nullable=true)
      */
     private $findCircumstances;
+
+    /**
+     * @var Collection|DiscoverySite[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\DiscoverySite", cascade={"persist"})
+     * @ORM\JoinTable(name="carrier_discovery_site")
+     */
+    private $discoverySite;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="carrier_history", type="text", length=65535, nullable=true)
+     */
+    private $carrierHistory;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="quadrat", type="integer", nullable=true)
+     */
+    private $quadrat;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="plast_level", type="simple_array", nullable=true)
+     */
+    public $plastLevel;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="yarus_level", type="simple_array", nullable=true)
+     */
+    public $yarusLevel;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="depth", type="integer", nullable=true)
+     */
+    private $depth;
 
     /**
      * @var string|null
@@ -146,6 +190,9 @@ class Carrier implements StringifiableEntityInterface
         $this->subcarriers = new ArrayCollection();
         $this->types = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->discoverySite = new ArrayCollection();
+        $this->plastLevel = array();
+        $this->yarusLevel = array();
     }
 
     public function __toString(): string
@@ -231,6 +278,82 @@ class Carrier implements StringifiableEntityInterface
     {
         $this->findCircumstances = $findCircumstances;
 
+        return $this;
+    }
+
+    /**
+     * @return Collection|DiscoverySite[]
+     */
+    public function getDiscoverySite(): Collection
+    {
+        return $this->discoverySite;
+    }
+
+    public function setDiscoverySite(Collection $discoverySite): self
+    {
+        $this->discoverySite = $discoverySite;
+        return $this;
+    }
+
+    public function getCarrierHistory(): ?string
+    {
+        return $this->carrierHistory;
+    }
+
+    public function setCarrierHistory(?string $carrierHistory): self
+    {
+        $this->carrierHistory = $carrierHistory;
+
+        return $this;
+    }
+
+    public function getQuadrat(): ?int
+    {
+        return $this->quadrat;
+    }
+    
+    public function setQuadrat(?int $quadrat): self
+    {
+        $this->quadrat = $quadrat;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPlastLevel(): array
+    {
+        return $this->plastLevel;
+    }
+
+    public function setPlastLevel(?array $plastLevel): self
+    {
+        $this->plastLevel = $plastLevel ?: array();
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getYarusLevel(): array
+    {
+        return $this->yarusLevel;
+    }
+
+    public function setYarusLevel(?array $yarusLevel): self
+    {
+        $this->yarusLevel = $yarusLevel ?: array();
+        return $this;
+    }
+
+    public function getDepth(): ?int
+    {
+        return $this->depth;
+    }
+    
+    public function setDepth(?int $depth): self
+    {
+        $this->depth = $depth;
         return $this;
     }
 
