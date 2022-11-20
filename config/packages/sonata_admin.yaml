@@ -46,8 +46,10 @@ sonata_admin:
         label: menu.groups.carriers.label
         items:
           - admin.carrier
-          - admin.carrier_type
           - admin.carrier_category
+          - admin.city
+          - admin.river
+          - admin.discovery_site
         roles: [ ROLE_ADMIN ]
       content:
         label_catalogue: admin
@@ -120,13 +122,6 @@ services:
   admin.carrier:
     class: App\Admin\Epigraphy\CarrierAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\Carrier, null]
-    calls:
-      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
-    tags:
-      - { name: sonata.admin, manager_type: orm }
-  admin.carrier_type:
-    class: App\Admin\Epigraphy\CarrierTypeAdmin
-    arguments: [null, App\Persistence\Entity\Epigraphy\CarrierType, null]
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:
@@ -244,6 +239,27 @@ services:
   admin.bibliography.references_list.item:
     class: App\Admin\Bibliography\ReferencesListItemAdmin
     arguments: [null, App\Persistence\Entity\Bibliography\ReferencesListItem, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.river:
+    class: App\Admin\Epigraphy\RiverAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\River, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.city:
+    class: App\Admin\Epigraphy\CityAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\City, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  admin.discovery_site:
+    class: App\Admin\Epigraphy\DiscoverySiteAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\DiscoverySite, null]
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:

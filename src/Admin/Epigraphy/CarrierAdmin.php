@@ -26,11 +26,13 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractEntityAdmin;
+use App\Persistence\Entity\Epigraphy\Carrier;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use App\Persistence\Entity\Epigraphy\Carrier;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Doctrine\ORM\EntityRepository;
 
 final class CarrierAdmin extends AbstractEntityAdmin
@@ -78,11 +80,41 @@ final class CarrierAdmin extends AbstractEntityAdmin
             ->end()
             ->tab($this->getTabLabel('origin'))
                 ->with($this->getSectionLabel('origin'))
-                    ->add('origin1', null, $this->createFormOptions('origin1'))
-                    ->add('origin2', null, $this->createFormOptions('origin2'))
-                    ->add('findCircumstances', null, $this->createFormOptions('findCircumstances'))
-                    ->add('stratigraphicalDate', null, $this->createFormOptions('stratigraphicalDate'))
                     ->add('characteristics', null, $this->createFormOptions('characteristics'))
+                    ->add('stratigraphicalDate', null, $this->createFormOptions('stratigraphicalDate'))
+                    ->add('findCircumstances', null, $this->createFormOptions('findCircumstances'))
+                    ->add('carrierHistory', null, $this->createFormOptions('carrierHistory', ['required' => false]))
+                    ->add('discoverySite', null, $this->createManyToManyFormOptions('discoverySite'))
+                    ->add('quadrat', null, $this->createFormOptions('quadrat', ['required' => false]))
+                    ->add(
+                        'plastLevel',
+                        CollectionType::class,
+                        $this->createFormOptions(
+                            'plastLevel',
+                            [
+                                'entry_type' => TextType::class,
+                                'allow_add' => true,
+                                'allow_delete' => true,
+                                'delete_empty' => true,
+                                'required' => false
+                            ]                        
+                        )
+                    )
+                    ->add(
+                        'yarusLevel',
+                        CollectionType::class,
+                        $this->createFormOptions(
+                            'yarusLevel',
+                            [
+                                'entry_type' => TextType::class,
+                                'allow_add' => true,
+                                'allow_delete' => true,
+                                'delete_empty' => true,
+                                'required' => false
+                            ]
+                        )
+                    )
+                    ->add('depth', null, $this->createFormOptions('depth', ['required' => false]))
                 ->end()
             ->end()
             ->tab($this->getTabLabel('preservation'))
