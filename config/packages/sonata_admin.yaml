@@ -37,8 +37,10 @@ sonata_admin:
           - admin.alphabet
           - admin.content_category
           - admin.material
-          - admin.preservation_state
-          - admin.writing_type
+          # убрали состояние сохранности
+          # - admin.preservation_state
+          # убрали разряд по франклину
+          # - admin.writing_type
           - admin.writing_method
         roles: [ ROLE_ADMIN ]
       carriers:
@@ -50,6 +52,7 @@ sonata_admin:
           - admin.city
           - admin.river
           - admin.discovery_site
+          - admin.storage_site
         roles: [ ROLE_ADMIN ]
       content:
         label_catalogue: admin
@@ -70,7 +73,8 @@ sonata_admin:
         items:
           - admin.bibliography.bibliographic_record
           - admin.bibliography.author
-          - admin.bibliography.references_list
+          # Убрали списки литературы
+          # - admin.bibliography.references_list
         roles: [ ROLE_ADMIN ]
   options:
     use_icheck: false
@@ -260,6 +264,30 @@ services:
   admin.discovery_site:
     class: App\Admin\Epigraphy\DiscoverySiteAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\DiscoverySite, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  # тип водного объекта
+  admin.river_type:
+    class: class: App\Admin\Epigraphy\RiverTypeAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\RiverType, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  # страна
+  admin.country:
+    class: class: App\Admin\Epigraphy\CountryAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\Country, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  # место хранения
+  admin.storage_site: App\Admin\Epigraphy\StorageSiteAdmin
+    class: 
+    arguments: [null, App\Persistence\Entity\Epigraphy\StorageSite, null]
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:

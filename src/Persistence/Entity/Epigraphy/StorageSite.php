@@ -28,12 +28,11 @@ namespace App\Persistence\Entity\Epigraphy;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity()
  */
-class River implements NamedEntityInterface
+class StorageSite implements NamedEntityInterface
 {
     /**
      * @var int
@@ -45,39 +44,38 @@ class River implements NamedEntityInterface
     private $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     private $name;
 
     /**
-     * @var array
-     * 
+     * @var array|string[]
+     *
      * @ORM\Column(name="name_aliases", type="simple_array", nullable=true)
      */
     private $nameAliases;
 
     /**
-     * @var null|RiverType
+     * @var Collection|City[]
      *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\RiverType", cascade={"persist"})
-     * @ORM\JoinTable(name="river__river_type")
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\City", cascade={"persist"})
+     * @ORM\JoinTable(name="storage_site_city")
      */
-    private $type;
+    private $cities;
 
     /**
-     * @ORM\OneToMany(targetEntity="River", mappedBy="superriver")
+     * @var string|null
+     *
+     * @ORM\Column(name="comments", type="string", nullable=true)
      */
-    private $subrivers;
+    private $comments;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="River", inversedBy="subrivers")
-     * @ORM\JoinColumn(name="superriver_id", referencedColumnName="id")
-     */
-    private $superriver;
-
-    public function __construct() {
+    public function __construct()
+    {
+        $this->cities = new ArrayCollection();
         $this->nameAliases = array();
-        $this->subrivers = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -90,7 +88,7 @@ class River implements NamedEntityInterface
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -98,6 +96,7 @@ class River implements NamedEntityInterface
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -112,35 +111,29 @@ class River implements NamedEntityInterface
         return $this;
     }
 
+    public function getComments(): ?string
+    {
+        return $this->comments;
+    }
+
+    public function setComments(?string $comments): self
+    {
+        $this->comments = $comments;
+
+        return $this;
+    }
+
     /**
-     * @return null|RiverType
+     * @return Collection|City[]
      */
-    public function getType(): ?RiverType
+    public function getCities(): Collection
     {
-        return $this->type;
+        return $this->cities;
     }
 
-    public function setType(?RiverType $type): self
+    public function setCities(Collection $city): self
     {
-        $this->type = $type;
+        $this->cities = $city;
         return $this;
-    }
-
-    public function getSuperriver(): ?self
-    {
-        return $this->superriver;
-    }
-
-    public function setSuperriver(?self $superriver): self
-    {
-        $this->superriver = $superriver;
-
-        return $this;
-    }
-
-    public function getSubrivers(): PersistentCollection
-    {
-        return $this->subrivers;
     }
 }
-

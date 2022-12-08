@@ -86,16 +86,17 @@ controller:
       inscription:
         label:
           number: Номер
-          conventionalDate: Условная дата
+          conventionalDate: Датировка
           comment: Комментарий
           literature: Литература
           carrier:
-            categories: Категория носителя
+            categories: Категория / подкатегория носителя
             origin1: Город / Местность
             origin2: Здание / Раскоп
             findCircumstances: Обстоятельства находки носителя
             stratigraphicalDate: Стратиграфическая дата
             characteristics: Характеристики носителя
+            archaeology: Археологическая локализация
             individualName: Носитель
             storagePlace: Место хранения носителя
             inventoryNumber: Инвентарный номер носителя
@@ -112,7 +113,7 @@ controller:
             translation: Перевод
             description: Содержание
             dateInText: Дата в тексте
-            nonStratigraphicalDate: Внестратиграфическая дата
+            nonStratigraphicalDate: Датировка по палеографии и языку
             historicalDate: «Историческая» дата
             comment: Комментарий (разночтения с источником)
             materials: Материалы

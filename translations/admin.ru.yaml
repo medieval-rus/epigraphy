@@ -99,49 +99,48 @@ list:
       findCircumstances: Обстоятельства находки
       characteristics: Характеристики носителя
       individualName: Индивидуальное название
-      storagePlace: Место хранения
+      # место хранения обновили
+      storageSite: Место хранения
       inventoryNumber: Инвентарный номер
       isInSitu: In situ
-      supercarrier: Надноситель
-      isSuperCarrier: Является надносителем
+      supercarrier: Носитель верхнего уровня
+      # заменили пласт / ярус / квадрат
+      archaeology: Археологическая локализация
+      isSuperCarrier: Является носителем верхнего уровня
   carrierType:
-    fields:
+    fields: &id-and-name
       id: Внутренний идентификатор
       name: Название
   carrierCategory:
     fields:
-      id: Внутренний идентификатор
-      name: Название
+      <<: *id-and-name
       supercategory: Верхняя категория
       isSuperCategory: Является верхней категорией
+  river:
+    fields: *id-and-name
+  city:
+    fields: *id-and-name
+  discoverySite:
+    fields: *id-and-name
   alphabet:
-    fields:
-      id: Внутренний идентификатор
-      name: Название
+    fields: *id-and-name
   contentCategory:
     fields:
-      id: Внутренний идентификатор
-      name: Название
+      <<: *id-and-name
       supercategory: Верхняя категория
       isSuperCategory: Является верхней категорией
   material:
     fields:
-      id: Внутренний идентификатор
-      name: Название
+      <<: *id-and-name
       supermaterial: Верхняя категория
       isSuperMaterial: Является верхней категорией
   preservationState:
-    fields:
-      id: Внутренний идентификатор
-      name: Название
+    fields: *id-and-name
   writingType:
-    fields:
-      id: Внутренний идентификатор
-      name: Название
+    fields: *id-and-name
   writingMethod:
     fields:
-      id: Внутренний идентификатор
-      name: Название
+      <<: *id-and-name
       supermethod: Верхняя категория
       isSuperMethod: Является верхней категорией
   inscription:
@@ -152,8 +151,7 @@ list:
       interpretations: Интерпретации
   file:
     fields:
-      id: Внутренний идентификатор
-      fileName: Имя файла
+      <<: *id-and-name
       mediaType: Тип
       description: Описание
   bibliographicRecord:
@@ -235,9 +233,9 @@ form:
       id: Внутренний идентификатор
       number: Номер
       types: Тип носителя
-      categories: Подкатегория носителя
-      supercarrier: Надноситель
-      isSuperCarrier: Является надносителем
+      categories: Категория / подкатегория носителя
+      supercarrier: Носитель верхнего уровня
+      isSuperCarrier: Является носителем верхнего уровня
       stratigraphicalDate: Стратиграфическая дата
       origin1: Город / Местность
       origin2: Здание / Раскоп
@@ -246,11 +244,10 @@ form:
       characteristics: Характеристики носителя
       individualName: Индивидуальное название носителя
       discoverySite: Место находки
-      quadrat: Квадрат
-      plastLevel: Пласт
-      yarusLevel: Ярус
-      depth: Глубина
-      storagePlace: Место хранения
+      # заменили квадрат / ярус / раскоп / глубина
+      archaeology: Археологическая локализация
+      # место хранения обновили
+      storageSite: Место хранения
       inventoryNumber: Инвентарный номер
       isInSitu: In situ
   carrierType:
@@ -332,7 +329,7 @@ form:
         label: Изображения
     fields:
       number: Номер
-      conventionalDate: Условная дата
+      conventionalDate: Датировка
       carrier: Носитель
       comment: Комментарий
       isShownOnSite: Показывать надпись на сайте
@@ -366,8 +363,8 @@ form:
         descriptionReferences: Содержание (ссылки)
         dateInText: Дата в тексте
         dateInTextReferences: Дата в тексте (ссылки)
-        nonStratigraphicalDate: Внестратиграфическая дата
-        nonStratigraphicalDateReferences: Внестратиграфическая дата (ссылки)
+        nonStratigraphicalDate: Датировка по палеографии и языку
+        nonStratigraphicalDateReferences: Датировка по палеографии и языку (ссылки)
         historicalDate: «Историческая» дата
         historicalDateReferences: «Историческая» дата (ссылки)
         photos: Фотографии (файлы)
@@ -376,7 +373,7 @@ form:
         drawingsReferences: Прориси (ссылки)
       interpretations: Интерпретации
   interpretation:
-    tab:
+    tab: &interpretation-fields
       identification:
         label: Идентификациионные данные
       materialAspect:
@@ -388,14 +385,7 @@ form:
       media:
         label: Медиа
     section:
-      identification:
-        label: Источник
-      materialAspect:
-        label: Материальный аспект
-      linguisticAspect:
-        label: Лингвистический аспект
-      historicalAspect:
-        label: Исторические данные
+      <<: *interpretation-fields
       media:
         label: Изображения и файлы
     fields:
@@ -417,7 +407,7 @@ form:
       contentCategories: Подкатегория содержания
       description: Содержание
       dateInText: Дата в тексте
-      nonStratigraphicalDate: Внестратиграфическая дата
+      nonStratigraphicalDate: Датировка по палеографии и языку
       historicalDate: «Историческая» дата
       photos: Фото (файлы)
       drawings: Прориси (файлы)

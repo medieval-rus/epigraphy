@@ -25,23 +25,16 @@ declare(strict_types=1);
 
 namespace App\Admin\Epigraphy;
 
-use App\Admin\AbstractNamedEntityAdmin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use App\Persistence\Entity\Epigraphy\River;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Admin\AbstractNamedEntityAdmin;
 
-final class RiverAdmin extends AbstractNamedEntityAdmin
+final class StorageSiteAdmin extends AbstractNamedEntityAdmin
 {
-    protected $baseRouteName = 'epigraphy_river';
+    protected $baseRouteName = 'epigraphy_storage_site';
 
-    protected $baseRoutePattern = 'epigraphy/river';
+    protected $baseRoutePattern = 'epigraphy/storage-site';
 
-    protected function configureFormFields(FormMapper $formMapper): void
-    {
+    protected function configureFormFields(FormMapper $formMapper) {
         $formMapper
             ->add('name', null, $this->createFormOptions('name'))
             ->add(
@@ -58,13 +51,8 @@ final class RiverAdmin extends AbstractNamedEntityAdmin
                     ]
                 )
             )
-            // изменили на many to many
-            ->add('type', null, $this->createManyToManyOptions('type'))
-            ->add(
-                'superriver',
-                EntityType::class,
-                $this->createFilteredEntityOptions('superriver', River::class, 'type') 
-            )
+            ->add('cities', null, $this->createManyToManyFormOptions('cities'))
+            ->add('comments', null, $this->createFormOptions('comments', ['required' => false]))
         ;
     }
 }

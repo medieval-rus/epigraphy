@@ -88,7 +88,8 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         $formMapper
             ->tab($this->getTabLabel('common'))
                 ->with($this->getSectionLabel('common'))
-                    ->add('number', null, $this->createFormOptions('number'))
+                    // убрали номер
+                    // ->add('number', null, $this->createFormOptions('number'))
                     ->add('conventionalDate', null, $this->createFormOptions('conventionalDate'))
                     ->add('carrier', null, $this->createFormOptions('carrier'))
                     ->add('comment', null, $this->createFormOptions('comment'))
@@ -108,16 +109,17 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('placeOnCarrierReferences')
                     )
-                    ->add(
-                        'zeroRow.writingTypes',
-                        ModelType::class,
-                        $this->createManyToManyFormOptions('zeroRow.writingTypes')
-                    )
-                    ->add(
-                        'zeroRow.writingTypesReferences',
-                        EntityType::class,
-                        $this->createLabeledReferencesFormOptions('writingTypesReferences')
-                    )
+                    // Убрали разряды по Франклину
+                    // ->add(
+                    //     'zeroRow.writingTypes',
+                    //     ModelType::class,
+                    //     $this->createManyToManyFormOptions('zeroRow.writingTypes')
+                    // )
+                    // ->add(
+                    //     'zeroRow.writingTypesReferences',
+                    //     EntityType::class,
+                    //     $this->createLabeledReferencesFormOptions('writingTypesReferences')
+                    // )
                     ->add(
                         'zeroRow.writingMethods',
                         ModelType::class,
@@ -215,16 +217,17 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     )
                 ->end()
                 ->with($this->getSectionLabel('zeroRowHistoricalAspect'), ['class' => 'col-md-6'])
-                    ->add(
-                        'zeroRow.origin',
-                        TextareaType::class,
-                        $this->createFormOptions('zeroRow.origin', ['required' => false])
-                    )
-                    ->add(
-                        'zeroRow.originReferences',
-                        EntityType::class,
-                        $this->createLabeledReferencesFormOptions('originReferences')
-                    )
+                    // убрали происхождение надписи
+                    // ->add(
+                    //     'zeroRow.origin',
+                    //     TextareaType::class,
+                    //     $this->createFormOptions('zeroRow.origin', ['required' => false])
+                    // )
+                    // ->add(
+                    //     'zeroRow.originReferences',
+                    //     EntityType::class,
+                    //     $this->createLabeledReferencesFormOptions('originReferences')
+                    // )
                     ->add(
                         'zeroRow.dateInText',
                         TextareaType::class,
@@ -291,23 +294,24 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('drawingsReferences')
                     )
-                    ->add(
-                        'zeroRow.textImages',
-                        EntityType::class,
-                        $this->createManyToManyFormOptions(
-                            'zeroRow.textImages',
-                            [
-                                'class' => File::class,
-                                'choice_filter' => $this->dataStorageManager->getFolderFilter('text'),
-                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
-                            ]
-                        )
-                    )
-                    ->add(
-                        'zeroRow.textImagesReferences',
-                        EntityType::class,
-                        $this->createLabeledReferencesFormOptions('textImagesReferences')
-                    )
+                    // Убрали изображение текста
+                    // ->add(
+                    //     'zeroRow.textImages',
+                    //     EntityType::class,
+                    //     $this->createManyToManyFormOptions(
+                    //         'zeroRow.textImages',
+                    //         [
+                    //             'class' => File::class,
+                    //             'choice_filter' => $this->dataStorageManager->getFolderFilter('text'),
+                    //             'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                    //         ]
+                    //     )
+                    // )
+                    // ->add(
+                    //     'zeroRow.textImagesReferences',
+                    //     EntityType::class,
+                    //     $this->createLabeledReferencesFormOptions('textImagesReferences')
+                    // )
                 ->end()
             ->end()
             ->tab($this->getTabLabel('interpretations'))
