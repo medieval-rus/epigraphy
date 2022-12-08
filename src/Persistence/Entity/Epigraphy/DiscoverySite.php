@@ -95,16 +95,16 @@ class DiscoverySite implements NamedEntityInterface
     private $comments;
 
     /**
-     * @var int|null
+     * @var float|null
      *
-     * @ORM\Column(name="latitude", type="integer", nullable=true)
+     * @ORM\Column(name="latitude", type="float", nullable=true)
      */
     private $latitude;
 
     /**
-     * @var int|null
+     * @var float|null
      *
-     * @ORM\Column(name="longitude", type="integer", nullable=true)
+     * @ORM\Column(name="longitude", type="float", nullable=true)
      */
     private $longitude;
 
@@ -150,24 +150,24 @@ class DiscoverySite implements NamedEntityInterface
         return $this;
     }
 
-    public function getLatitude(): ?int
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
 
-    public function setLatitude(int $latitude): self
+    public function setLatitude(float $latitude): self
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function getLongitude(): ?int
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }
 
-    public function setLongitude(int $longitude): self
+    public function setLongitude(float $longitude): self
     {
         $this->longitude = $longitude;
 
