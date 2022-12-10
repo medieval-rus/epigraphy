@@ -63,7 +63,7 @@ final class RiverAdmin extends AbstractNamedEntityAdmin
             ->add(
                 'superriver',
                 EntityType::class,
-                $this->createFilteredEntityOptions('superriver', River::class, 'type') 
+                $this->createEntityOptions('superriver', River::class) 
             )
         ;
     }
