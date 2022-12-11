@@ -190,7 +190,7 @@ form:
     fields:
       name: Название
       nameAliases: Альтернативные названия    
-      rivers: Водное окружение
+      rivers: Ближайшие водные объекты
       cities: Населенный пункт
       comments: Комментарий
       latitude: Широта
@@ -437,7 +437,7 @@ form:
       title: Наименование работы
       year: Год публикации
       authors: Авторы работы
-      formalNotation: Отображаемое значение (формальная запись)
+      formalNotation: Полное библиографическое описание
       mainFile: PDF/DJVU-документ (работа целиком)
   author:
     section:
