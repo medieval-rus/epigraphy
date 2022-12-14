@@ -270,7 +270,7 @@ services:
       - { name: sonata.admin, manager_type: orm }
   # тип водного объекта
   admin.river_type:
-    class: class: App\Admin\Epigraphy\RiverTypeAdmin
+    class: App\Admin\Epigraphy\RiverTypeAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\RiverType, null]
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
@@ -278,15 +278,15 @@ services:
       - { name: sonata.admin, manager_type: orm }
   # страна
   admin.country:
-    class: class: App\Admin\Epigraphy\CountryAdmin
+    class: App\Admin\Epigraphy\CountryAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\Country, null]
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:
       - { name: sonata.admin, manager_type: orm }
   # место хранения
-  admin.storage_site: App\Admin\Epigraphy\StorageSiteAdmin
-    class: 
+  admin.storage_site:
+    class: App\Admin\Epigraphy\StorageSiteAdmin 
     arguments: [null, App\Persistence\Entity\Epigraphy\StorageSite, null]
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]

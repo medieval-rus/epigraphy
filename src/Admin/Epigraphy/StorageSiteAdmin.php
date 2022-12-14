@@ -34,7 +34,8 @@ final class StorageSiteAdmin extends AbstractNamedEntityAdmin
 
     protected $baseRoutePattern = 'epigraphy/storage-site';
 
-    protected function configureFormFields(FormMapper $formMapper) {
+    protected function configureFormFields(FormMapper $formMapper): void 
+    {
         $formMapper
             ->add('name', null, $this->createFormOptions('name'))
             ->add(

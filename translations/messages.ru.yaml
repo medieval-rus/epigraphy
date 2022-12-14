@@ -101,6 +101,7 @@ controller:
             storagePlace: Место хранения носителя
             inventoryNumber: Инвентарный номер носителя
             isInSitu: Носитель in situ?
+            materials: Материалы
           zeroRow:
             origin: Происхождение надписи
             placeOnCarrier: Расположение на носителе

@@ -106,7 +106,6 @@ class DiscoverySite implements NamedEntityInterface
         $this->rivers = new ArrayCollection();
         $this->cities = new ArrayCollection();
         $this->nameAliases = array();
-        $this->isOutsideRiver = false;
         $this->isOutsideCity = false;
     }
 
