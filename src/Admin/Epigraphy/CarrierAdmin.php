@@ -56,18 +56,7 @@ final class CarrierAdmin extends AbstractEntityAdmin
     protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
-            // убрали табы
-            // ->tab($this->getTabLabel('identification'))
-            //     ->with($this->getSectionLabel('identification'))
-            //         ->add('individualName', null, $this->createFormOptions('individualName'))
-            //     ->end()
-            // ->end()
             ->add('individualName', null, $this->createFormOptions('individualName'))
-            // убрали табы
-            // ->tab($this->getTabLabel('classification'))
-            //     ->with($this->getSectionLabel('classification'))
-            //     ->end()
-            // ->end()
             ->add('categories', null, $this->createManyToManyFormOptions('categories'))
             ->add(
                 'supercarrier',
@@ -79,22 +68,18 @@ final class CarrierAdmin extends AbstractEntityAdmin
                 CheckboxType::class,
                 $this->createFormOptions('isSuperCarrier', ['required' => false])
             )
-            // убрали табы
-            // ->tab($this->getTabLabel('origin'))
-            //     ->with($this->getSectionLabel('origin'))
-            //     ->end()
-            // ->end()
             ->add('characteristics', null, $this->createFormOptions('characteristics'))
             ->add('stratigraphicalDate', null, $this->createFormOptions('stratigraphicalDate'))
             ->add('findCircumstances', null, $this->createFormOptions('findCircumstances'))
             ->add('carrierHistory', null, $this->createFormOptions('carrierHistory', ['required' => false]))
             ->add('discoverySite', null, $this->createManyToManyFormOptions('discoverySite'))
-            // убрали табы
-            // ->tab($this->getTabLabel('preservation'))
-            //     ->with($this->getSectionLabel('preservation'))
-            //     ->end()
-            // ->end()
+            // археология
+            ->add('archaeology', null, $this->createFormOptions('archaeology', ['required' => false]))
+            // предыдущие места хранения
+            ->add('previousStorage', null, $this->createFormOptions('previousStorage', ['required' => false]))
             ->add('storageSite', null, $this->createManyToManyFormOptions('storageSite'))
+            // локализация в месте хранения
+            ->add('storageLocalization', null, $this->createFormOptions('storageLocalization', ['required' => false]))
             ->add('inventoryNumber', null, $this->createFormOptions('inventoryNumber'))
             // убрали in situ
             // ->add(
@@ -102,39 +87,6 @@ final class CarrierAdmin extends AbstractEntityAdmin
             //     CheckboxType::class,
             //     $this->createFormOptions('isInSitu', ['required' => false])
             // )
-            // убрали пласт, квадрат и т.п.
-            // ->add('quadrat', null, $this->createFormOptions('quadrat', ['required' => false]))
-            // ->add(
-            //     'plastLevel',
-            //     CollectionType::class,
-            //     $this->createFormOptions(
-            //         'plastLevel',
-            //         [
-            //             'entry_type' => TextType::class,
-            //             'allow_add' => true,
-            //             'allow_delete' => true,
-            //             'delete_empty' => true,
-            //             'required' => false
-            //         ]                        
-            //     )
-            // )
-            // ->add(
-            //     'yarusLevel',
-            //     CollectionType::class,
-            //     $this->createFormOptions(
-            //         'yarusLevel',
-            //         [
-            //             'entry_type' => TextType::class,
-            //             'allow_add' => true,
-            //             'allow_delete' => true,
-            //             'delete_empty' => true,
-            //             'required' => false
-            //         ]
-            //     )
-            // )
-            // ->add('depth', null, $this->createFormOptions('depth', ['required' => false]))
-            // types are to be removed from the database
-            // ->add('types', null, $this->createManyToManyFormOptions('types'))
         ;
     }
 }

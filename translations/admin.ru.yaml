@@ -250,6 +250,8 @@ form:
       storageSite: Место хранения
       # добавили локализацию
       storageLocalization: Локализация в месте хранения
+      # добавили материал
+      materialDescription: Описание материала
       inventoryNumber: Инвентарный номер
       isInSitu: In situ
   carrierType:

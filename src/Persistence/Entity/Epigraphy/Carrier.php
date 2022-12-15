@@ -169,9 +169,32 @@ class Carrier implements StringifiableEntityInterface
     /**
      * @var string|null
      * 
+     * @ORM\Column(name="previous_storage", type="text", length=65535, nullable=true)
+     */
+    private $previousStorage;
+
+    /**
+     * @var string|null
+     * 
      * @ORM\Column(name="storage_localization", type="text", length=65535, nullable=true)
      */
     private $storageLocalization;
+
+    /**
+     * @var string|null
+     * 
+     * @ORM\Column(name="material_description", type="text", length=65535, nullable=true)
+     */
+    private $materialDescription;
+
+
+    /**
+     * @var Collection|Material[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Material", cascade={"persist"})
+     * @ORM\JoinTable(name="carrier_material")
+     */
+    private $materials;
 
     public function __construct()
     {
@@ -180,8 +203,7 @@ class Carrier implements StringifiableEntityInterface
         $this->categories = new ArrayCollection();
         $this->discoverySite = new ArrayCollection();
         $this->storageSite = new ArrayCollection();
-        $this->plastLevel = array();
-        $this->yarusLevel = array();
+        $this->materials = new ArrayCollection();
         $this->isSuperCarrier = true;
     }
 
@@ -421,6 +443,48 @@ class Carrier implements StringifiableEntityInterface
     public function setStorageLocalization(?string $storageLocalization): self
     {
         $this->storageLocalization = $storageLocalization;
+
+        return $this;
+    }
+
+    public function getMaterialDescription(): ?string
+    {
+        return $this->materialDescription;
+    }
+
+    public function setMaterialDescription(?string $materialDescription): self
+    {
+        $this->materialDescription = $materialDescription;
+
+        return $this;
+    }
+
+    public function getPreviousStorage(): ?string
+    {
+        return $this->previousStorage;
+    }
+
+    public function setPreviousStorage(?string $previousStorage): self
+    {
+        $this->previousStorage = $previousStorage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Material[]
+     */
+    public function getMaterials(): Collection
+    {
+        return $this->materials;
+    }
+
+    /**
+     * @param Collection|Material[] $materials
+     */
+    public function setMaterials(Collection $materials): self
+    {
+        $this->materials = $materials;
 
         return $this;
     }
