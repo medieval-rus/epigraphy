@@ -166,6 +166,13 @@ class Carrier implements StringifiableEntityInterface
      */
     private $supercarrier;
 
+    /**
+     * @var string|null
+     * 
+     * @ORM\Column(name="storage_localization", type="text", length=65535, nullable=true)
+     */
+    private $storageLocalization;
+
     public function __construct()
     {
         $this->subcarriers = new ArrayCollection();
@@ -402,6 +409,18 @@ class Carrier implements StringifiableEntityInterface
     public function setStratigraphicalDate(?string $stratigraphicalDate): self
     {
         $this->stratigraphicalDate = $stratigraphicalDate;
+
+        return $this;
+    }
+
+    public function getStorageLocalization(): ?string
+    {
+        return $this->storageLocalization;
+    }
+
+    public function setStorageLocalization(?string $storageLocalization): self
+    {
+        $this->storageLocalization = $storageLocalization;
 
         return $this;
     }

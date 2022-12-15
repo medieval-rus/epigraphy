@@ -248,6 +248,8 @@ form:
       archaeology: Археологическая локализация
       # место хранения обновили
       storageSite: Место хранения
+      # добавили локализацию
+      storageLocalization: Локализация в месте хранения
       inventoryNumber: Инвентарный номер
       isInSitu: In situ
   carrierType:
