@@ -72,24 +72,7 @@ final class CityAdmin extends AbstractNamedEntityAdmin
                     ]
                 )
             )
-            ->add(
-                'country',
-                ChoiceType::class,
-                $this->createFormOptions(
-                    'country',
-                    [
-                        'required' => false,
-                        'choices' => [
-                            'Россия' => 'Россия',
-                            'Украина' => 'Украина',
-                            'Белоруссия' => 'Белоруссия',
-                            'Италия' => 'Италия',
-                            'Франция' => 'Франция',
-                            'Турция' => 'Турция',
-                        ]
-                    ]
-                )
-            )
+            ->add('country', null, $this->createManyToManyFormOptions('country'))
             ->add('region', null, $this->createFormOptions('region'))
         ;
     }

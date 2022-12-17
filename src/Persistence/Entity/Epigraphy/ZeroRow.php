@@ -240,6 +240,42 @@ class ZeroRow
     /**
      * @var string|null
      *
+     * @ORM\Column(name="reconstruction", type="text", length=65535, nullable=true)
+     */
+    private $reconstruction;
+
+    /**
+     * @var Collection|Interpretation[]
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinTable(name="zero_row_reconstruction_references")
+     */
+    private $reconstructionReferences;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="normalization", type="text", length=65535, nullable=true)
+     */
+    private $normalization;
+
+    /**
+     * @var Collection|Interpretation[]
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinTable(name="zero_row_normalization_references")
+     */
+    private $normalizationReferences;
+
+    /**
+     * @var string|null
+     *
      * @ORM\Column(name="translation", type="text", length=65535, nullable=true)
      */
     private $translation;
@@ -402,6 +438,8 @@ class ZeroRow
         $this->textImages = new ArrayCollection();
         $this->textImagesReferences = new ArrayCollection();
         $this->transliterationReferences = new ArrayCollection();
+        $this->reconstructionReferences = new ArrayCollection();
+        $this->normalizationReferences = new ArrayCollection();
         $this->translationReferences = new ArrayCollection();
         $this->contentCategories = new ArrayCollection();
         $this->contentCategoriesReferences = new ArrayCollection();
@@ -787,6 +825,66 @@ class ZeroRow
     public function setTransliterationReferences(Collection $transliterationReferences): self
     {
         $this->transliterationReferences = $transliterationReferences;
+
+        return $this;
+    }
+
+    public function getReconstruction(): ?string
+    {
+        return $this->reconstruction;
+    }
+
+    public function setReconstruction(?string $reconstruction): self
+    {
+        $this->reconstruction = $reconstruction;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Interpretation[]
+     */
+    public function getReconstructionReferences(): Collection
+    {
+        return $this->reconstructionReferences;
+    }
+
+    /**
+     * @param Collection|Interpretation[]
+     */
+    public function setReconstructionReferences(Collection $reconstructionReferences): self
+    {
+        $this->reconstructionReferencenormalizations = $reconstructionReferences;
+
+        return $this;
+    }
+
+    public function getNormalization(): ?string
+    {
+        return $this->normalization;
+    }
+
+    public function setNormalization(?string $normalization): self
+    {
+        $this->normalization = $normalization;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Interpretation[]
+     */
+    public function getNormalizationReferences(): Collection
+    {
+        return $this->normalizationReferences;
+    }
+
+    /**
+     * @param Collection|Interpretation[]
+     */
+    public function setNormalizationReferences(Collection $normalizationReferences): self
+    {
+        $this->normalizationReferences = $normalizationReferences;
 
         return $this;
     }

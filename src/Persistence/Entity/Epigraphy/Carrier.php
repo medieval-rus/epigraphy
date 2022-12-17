@@ -118,6 +118,13 @@ class Carrier implements StringifiableEntityInterface
      */
     private $individualName;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="storage_place", type="string", length=255, nullable=true)
+     */
+    private $storagePlace;
+
     // TODO: вписать в миграцию перенос данных
     /**
      * @var Collection|StorageSite[]
@@ -352,6 +359,18 @@ class Carrier implements StringifiableEntityInterface
     {
         $this->individualName = $individualName;
 
+        return $this;
+    }
+
+    public function getStoragePlace(): ?string
+    {
+        return $this->storagePlace;
+    }
+
+    public function setStoragePlace(?string $storagePlace): self
+    {
+        $this->storagePlace = $storagePlace;
+        
         return $this;
     }
 

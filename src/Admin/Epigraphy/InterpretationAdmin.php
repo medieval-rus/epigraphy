@@ -52,86 +52,78 @@ final class InterpretationAdmin extends AbstractEntityAdmin
     protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
-            ->tab($this->getTabLabel('identification'))
-                ->with($this->getSectionLabel('identification'))
-                    ->add(
-                        'id',
-                        HiddenType::class,
-                        ['attr' => ['data-interpretation-id' => $this->getSubject()->getId()]]
-                    )
-                    ->add('source', null, $this->createFormOptions('source'))
-                    ->add('pageNumbersInSource', null, $this->createFormOptions('pageNumbersInSource'))
-                    ->add('numberInSource', null, $this->createFormOptions('numberInSource'))
-                    ->add('comment', null, $this->createFormOptions('comment'))
-                ->end()
+            ->with($this->getSectionLabel('identification'), ['class' => 'col-md-6'])
+                ->add(
+                    'id',
+                    HiddenType::class,
+                    ['attr' => ['data-interpretation-id' => $this->getSubject()->getId()]]
+                )
+                ->add('source', null, $this->createFormOptions('source'))
+                ->add('pageNumbersInSource', null, $this->createFormOptions('pageNumbersInSource'))
+                ->add('numberInSource', null, $this->createFormOptions('numberInSource'))
+                ->add('comment', null, $this->createFormOptions('comment'))
             ->end()
-            ->tab($this->getTabLabel('materialAspect'))
-                ->with($this->getSectionLabel('materialAspect'))
-                    ->add('placeOnCarrier', null, $this->createZeroRowPartOptions('placeOnCarrier'))
-                    ->add('writingTypes', null, $this->createZeroRowPartOptions('writingTypes'))
-                    ->add('writingMethods', null, $this->createZeroRowPartOptions('writingMethods'))
-                    ->add('preservationStates', null, $this->createZeroRowPartOptions('preservationStates'))
-                    ->add('materials', null, $this->createZeroRowPartOptions('materials'))
-                ->end()
+            ->with($this->getSectionLabel('materialAspect'), ['class' => 'col-md-6'])
+                ->add('placeOnCarrier', null, $this->createZeroRowPartOptions('placeOnCarrier'))
+                // ->add('writingTypes', null, $this->createZeroRowPartOptions('writingTypes'))
+                ->add('writingMethods', null, $this->createZeroRowPartOptions('writingMethods'))
+                ->add('preservationStates', null, $this->createZeroRowPartOptions('preservationStates'))
+                // ->add('materials', null, $this->createZeroRowPartOptions('materials'))
             ->end()
-            ->tab($this->getTabLabel('linguisticAspect'))
-                ->with($this->getSectionLabel('linguisticAspect'))
-                    ->add('alphabets', null, $this->createZeroRowPartOptions('alphabets'))
-                    ->add(
-                        'text',
-                        null,
-                        $this->createZeroRowPartOptions('text', ['attr' => ['data-virtual-keyboard' => true]])
-                    )
-                    ->add('transliteration', null, $this->createZeroRowPartOptions('transliteration'))
-                    ->add('translation', null, $this->createZeroRowPartOptions('translation'))
-                    ->add('contentCategories', null, $this->createZeroRowPartOptions('contentCategories'))
-                    ->add('description', null, $this->createZeroRowPartOptions('description'))
-                ->end()
+            ->with($this->getSectionLabel('linguisticAspect'), ['class' => 'col-md-6'])
+                ->add('alphabets', null, $this->createZeroRowPartOptions('alphabets'))
+                ->add(
+                    'text',
+                    null,
+                    $this->createZeroRowPartOptions('text', ['attr' => ['data-virtual-keyboard' => true]])
+                )
+                ->add('transliteration', null, $this->createZeroRowPartOptions('transliteration'))
+                ->add('reconstruction', null, $this->createZeroRowPartOptions('reconstruction'))
+                ->add('normalization', null, $this->createZeroRowPartOptions('normalization'))
+                ->add('translation', null, $this->createZeroRowPartOptions('translation'))
+                ->add('contentCategories', null, $this->createZeroRowPartOptions('contentCategories'))
+                ->add('description', null, $this->createZeroRowPartOptions('description'))
             ->end()
-            ->tab($this->getTabLabel('historicalAspect'))
-                ->with($this->getSectionLabel('historicalAspect'))
-                    ->add('origin', null, $this->createZeroRowPartOptions('origin'))
-                    ->add('dateInText', null, $this->createZeroRowPartOptions('dateInText'))
-                    ->add('nonStratigraphicalDate', null, $this->createZeroRowPartOptions('nonStratigraphicalDate'))
-                    ->add('historicalDate', null, $this->createZeroRowPartOptions('historicalDate'))
-                ->end()
+            ->with($this->getSectionLabel('historicalAspect'), ['class' => 'col-md-6'])
+                ->add('origin', null, $this->createZeroRowPartOptions('origin'))
+                ->add('dateInText', null, $this->createZeroRowPartOptions('dateInText'))
+                ->add('nonStratigraphicalDate', null, $this->createZeroRowPartOptions('nonStratigraphicalDate'))
+                ->add('historicalDate', null, $this->createZeroRowPartOptions('historicalDate'))
             ->end()
-            ->tab($this->getTabLabel('media'))
-                ->with($this->getSectionLabel('media'))
-                    ->add(
+            ->with($this->getSectionLabel('media'), ['class' => 'col-md-6'])
+                ->add(
+                    'photos',
+                    null,
+                    $this->createZeroRowPartOptions(
                         'photos',
-                        null,
-                        $this->createZeroRowPartOptions(
-                            'photos',
-                            [
-                                'choice_filter' => $this->dataStorageManager->getFolderFilter('photo'),
-                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
-                            ]
-                        )
+                        [
+                            'choice_filter' => $this->dataStorageManager->getFolderFilter('photo'),
+                            'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                        ]
                     )
-                    ->add(
+                )
+                ->add(
+                    'drawings',
+                    null,
+                    $this->createZeroRowPartOptions(
                         'drawings',
-                        null,
-                        $this->createZeroRowPartOptions(
-                            'drawings',
-                            [
-                                'choice_filter' => $this->dataStorageManager->getFolderFilter('drawing'),
-                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
-                            ]
-                        )
+                        [
+                            'choice_filter' => $this->dataStorageManager->getFolderFilter('drawing'),
+                            'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                        ]
                     )
-                    ->add(
+                )
+                ->add(
+                    'textImages',
+                    null,
+                    $this->createZeroRowPartOptions(
                         'textImages',
-                        null,
-                        $this->createZeroRowPartOptions(
-                            'textImages',
-                            [
-                                'choice_filter' => $this->dataStorageManager->getFolderFilter('text'),
-                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
-                            ]
-                        )
+                        [
+                            'choice_filter' => $this->dataStorageManager->getFolderFilter('text'),
+                            'query_builder' => $this->dataStorageManager->getQueryBuilder(),
+                        ]
                     )
-                ->end()
+                )
             ->end()
         ;
     }

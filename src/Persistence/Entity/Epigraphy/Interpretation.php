@@ -175,6 +175,20 @@ class Interpretation implements StringifiableEntityInterface
     /**
      * @var string|null
      *
+     * @ORM\Column(name="reconstruction", type="text", length=65535, nullable=true)
+     */
+    private $reconstruction;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="normalization", type="text", length=65535, nullable=true)
+     */
+    private $normalization;
+
+    /**
+     * @var string|null
+     *
      * @ORM\Column(name="translation", type="text", length=65535, nullable=true)
      */
     private $translation;
@@ -470,6 +484,30 @@ class Interpretation implements StringifiableEntityInterface
     public function setTransliteration(?string $transliteration): self
     {
         $this->transliteration = $transliteration;
+
+        return $this;
+    }
+
+    public function getReconstruction(): ?string
+    {
+        return $this->reconstruction;
+    }
+
+    public function setReconstruction(?string $reconstruction): self
+    {
+        $this->reconstruction = $reconstruction;
+
+        return $this;
+    }
+
+    public function getNormalization(): ?string
+    {
+        return $this->normalization;
+    }
+
+    public function setNormalization(?string $normalization): self
+    {
+        $this->normalization = $normalization;
 
         return $this;
     }

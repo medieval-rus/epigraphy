@@ -64,9 +64,10 @@ class City implements NamedEntityInterface
     private $type;
 
     /**
-     * @var string|null
+     * @var Collection|Country[]
      *
-     * @ORM\Column(name="country", type="string", length=255, nullable=true)
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Country", cascade={"persist"})
+     * @ORM\JoinTable(name="city_country")
      */
     private $country;
 
@@ -79,6 +80,7 @@ class City implements NamedEntityInterface
 
     public function __construct() {
         $this->nameAliases = array();
+        $this->country = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -137,12 +139,15 @@ class City implements NamedEntityInterface
         return $this;
     }
 
-    public function getCountry(): ?string
+    /**
+     * @return Collection|Country[]
+     */
+    public function getCountry(): Collection
     {
         return $this->country;
     }
 
-    public function setCountry(string $country): self
+    public function setCountry(Collection $country): self
     {
         $this->country = $country;
 

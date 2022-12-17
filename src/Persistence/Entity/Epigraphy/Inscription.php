@@ -68,6 +68,13 @@ class Inscription implements StringifiableEntityInterface
     /**
      * @var string|null
      *
+     * @ORM\Column(name="date_explanation", type="text", length=65535, nullable=true)
+     */
+    private $dateExplanation;
+
+    /**
+     * @var string|null
+     *
      * @ORM\Column(name="comment", type="text", length=65535, nullable=true)
      */
     private $comment;
@@ -113,7 +120,7 @@ class Inscription implements StringifiableEntityInterface
     public function __construct()
     {
         $this->isShownOnSite = false;
-        $this->isPartOfCorpus = true;
+        $this->isPartOfCorpus = false;
         $this->zeroRow = new ZeroRow();
         $this->interpretations = new ArrayCollection();
     }
@@ -203,6 +210,18 @@ class Inscription implements StringifiableEntityInterface
     public function setConventionalDate(?string $conventionalDate): self
     {
         $this->conventionalDate = $conventionalDate;
+
+        return $this;
+    }
+
+    public function getDateExplanation(): ?string
+    {
+        return $this->dateExplanation;
+    }
+
+    public function setDateExplanation(?string $dateExplanation): self
+    {
+        $this->dateExplanation = $dateExplanation;
 
         return $this;
     }

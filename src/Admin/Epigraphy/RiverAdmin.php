@@ -59,7 +59,7 @@ final class RiverAdmin extends AbstractNamedEntityAdmin
                 )
             )
             // изменили на many to many
-            ->add('type', null, $this->createManyToManyOptions('type'))
+            ->add('type', null, $this->createManyToManyFormOptions('type'))
             ->add(
                 'superriver',
                 EntityType::class,

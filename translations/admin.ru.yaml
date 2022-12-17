@@ -20,24 +20,28 @@
 menu:
   groups:
     content:
-      label: Контент
+      label: Отображение на сайте
     security:
       label: Безопасность
     inscriptions:
-      label: Надписи
+      label: Надпись
     carriers:
-      label: Носители
-    media:
-      label: Медиа
+      label: Носитель
     bibliography:
-      label: Библиография
+      label: Библиография и медиа
   paragraphs:
     city:
-      label: Населенный пункт
+      label: Населенные пункты
+    country:
+      label: Страны
     river:
-      label: Водный объект
+      label: Водные объекты
+    riverType:
+      label: Типы водных объектов
     discoverySite:
-      label: Место находки
+      label: Места находки
+    storageSite:
+      label: Места хранения
     post:
       label: Страницы
     inscriptionList:
@@ -59,7 +63,7 @@ menu:
     preservationState:
       label: Состояния сохранности
     writingMethod:
-      label: Способы нанесения
+      label: Категории способов нанесения
     writingType:
       label: Разряды
     inscription:
@@ -197,12 +201,30 @@ form:
       latitude: Широта
       longitude: Долгота
       isOutsideCity: Вне населенного пункта
+  storageSite:
+    fields:
+      name: Название
+      nameAliases: Альтернативные названия
+      cities: Населенный пункт
+      comments: Комментарий
   river:
     fields:
       name: Название
       nameAliases: Альтернативные названия
       type: Тип
       superriver: "Приток реки:"
+  riverType:
+    fields:
+      name: Название
+    section:
+      name:
+        label: Название типа водного объекта
+  country:
+    fields:
+      name: Название
+    section:
+      name:
+        label: Название страны
   city:
     fields:
       name: Название
@@ -211,24 +233,6 @@ form:
       country: Страна
       region: Регион
   carrier:
-    tab:
-      identification:
-        label: Идентификациионные данные
-      classification:
-        label: Классификационные данные
-      origin:
-        label: Происхождение
-      preservation:
-        label: Сохранность
-    section:
-      identification:
-        label: Данные для идентификации носителя
-      classification:
-        label: Тип и категория
-      origin:
-        label: Происхождение и обстоятельства находки
-      preservation:
-        label: Данные о хранении
     fields:
       id: Внутренний идентификатор
       number: Номер
@@ -250,6 +254,7 @@ form:
       storageSite: Место хранения
       # добавили локализацию
       storageLocalization: Локализация в месте хранения
+      previousStorage: Прежние места хранения
       # добавили материал
       materialDescription: Описание материала
       inventoryNumber: Инвентарный номер
@@ -326,14 +331,15 @@ form:
       zeroRowMaterialAspect:
         label: Материальный аспект
       zeroRowLinguisticAspect:
-        label: Лингвистический аспект
+        label: Информация о тексте
       zeroRowHistoricalAspect:
-        label: Исторические данные
+        label: Датировка
       zeroRowMedia:
-        label: Изображения
+        label: Файлы
     fields:
       number: Номер
       conventionalDate: Датировка
+      dateExplanation: Обоснование датировки
       carrier: Носитель
       comment: Комментарий
       isShownOnSite: Показывать надпись на сайте
@@ -359,6 +365,10 @@ form:
         textImagesReferences: Изображения текста (ссылки)
         transliteration: Транслитерация
         transliterationReferences: Транслитерация (ссылки)
+        reconstruction: Реконструкция
+        reconstructionReferences: Реконструкция (ссылки)
+        normalization: Нормализация
+        normalizationReferences: Нормализация (ссылки)
         translation: Перевод
         translationReferences: Перевод (ссылки)
         contentCategories: Категории / подкатегории по содержанию
@@ -383,20 +393,20 @@ form:
       materialAspect:
         label: Материальный аспект
       linguisticAspect:
-        label: Лингвистический аспект
+        label: Информация о тексте
       historicalAspect:
-        label: Исторический аспект
+        label: Датировка
       media:
-        label: Медиа
+        label: Файлы
     section:
       <<: *interpretation-fields
       media:
         label: Изображения и файлы
     fields:
-      source: Библиографическая запись
+      source: Публикация
       pageNumbersInSource: Номера страниц в публикации
-      numberInSource: Номер в источнике
-      comment: Комментарий к источнику
+      numberInSource: Номер в публикации
+      comment: Комментарий к публикации
       origin: Происхождение надписи
       placeOnCarrier: Расположение на носителе
       writingTypes: Разряд по Франклину
@@ -407,6 +417,8 @@ form:
       text: Текст
       textImages: Изображения текста (файлы)
       transliteration: Транслитерация
+      reconstruction: Реконструкция
+      normalization: Нормализация
       translation: Перевод
       contentCategories: Подкатегория содержания
       description: Содержание

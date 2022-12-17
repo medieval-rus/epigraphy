@@ -27,6 +27,9 @@ namespace App\Admin\Epigraphy;
 
 use Sonata\AdminBundle\Form\FormMapper;
 use App\Admin\AbstractNamedEntityAdmin;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 
 final class StorageSiteAdmin extends AbstractNamedEntityAdmin
 {

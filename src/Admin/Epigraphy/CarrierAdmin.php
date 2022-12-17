@@ -48,7 +48,6 @@ final class CarrierAdmin extends AbstractEntityAdmin
             ->add('origin1', null, $this->createListOptions('origin1'))
             ->add('origin2', null, $this->createListOptions('origin2'))
             ->add('individualName', null, $this->createListOptions('individualName'))
-            ->add('storagePlace', null, $this->createListOptions('storagePlace'))
             ->add('supercarrier', null, $this->createListOptions('supercarrier'))
         ;
     }
