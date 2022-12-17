@@ -81,13 +81,6 @@ class DiscoverySite implements NamedEntityInterface
     private $isOutsideCity;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="is_outside_river", type="boolean", options={"default": false})
-     */
-    private $isOutsideRiver;
-
-    /**
      * @var string|null
      *
      * @ORM\Column(name="comments", type="string", nullable=true)
@@ -113,7 +106,6 @@ class DiscoverySite implements NamedEntityInterface
         $this->rivers = new ArrayCollection();
         $this->cities = new ArrayCollection();
         $this->nameAliases = array();
-        $this->isOutsideRiver = false;
         $this->isOutsideCity = false;
     }
 
@@ -211,18 +203,6 @@ class DiscoverySite implements NamedEntityInterface
     public function setCities(Collection $city): self
     {
         $this->cities = $city;
-        return $this;
-    }
-
-    public function getIsOutsideRiver(): ?bool
-    {
-        return $this->isOutsideRiver;
-    }
-
-    public function setIsOutsideRiver(bool $isOutsideRiver): self
-    {
-        $this->isOutsideRiver = $isOutsideRiver;
-
         return $this;
     }
 

@@ -48,7 +48,6 @@ final class CarrierAdmin extends AbstractEntityAdmin
             ->add('origin1', null, $this->createListOptions('origin1'))
             ->add('origin2', null, $this->createListOptions('origin2'))
             ->add('individualName', null, $this->createListOptions('individualName'))
-            ->add('storagePlace', null, $this->createListOptions('storagePlace'))
             ->add('supercarrier', null, $this->createListOptions('supercarrier'))
         ;
     }
@@ -56,78 +55,37 @@ final class CarrierAdmin extends AbstractEntityAdmin
     protected function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
-            ->tab($this->getTabLabel('identification'))
-                ->with($this->getSectionLabel('identification'))
-                    ->add('individualName', null, $this->createFormOptions('individualName'))
-                ->end()
-            ->end()
-            ->tab($this->getTabLabel('classification'))
-                ->with($this->getSectionLabel('classification'))
-                    // types are to be removed from the database
-                    // ->add('types', null, $this->createManyToManyFormOptions('types'))
-                    ->add('categories', null, $this->createManyToManyFormOptions('categories'))
-                    ->add(
-                        'supercarrier',
-                        EntityType::class,
-                        $this->createFilteredEntityOptions('supercarrier', Carrier::class, 'isSuperCarrier') 
-                    )
-                    ->add(
-                        'isSuperCarrier',
-                        CheckboxType::class,
-                        $this->createFormOptions('isSuperCarrier', ['required' => false])
-                    )
-                ->end()
-            ->end()
-            ->tab($this->getTabLabel('origin'))
-                ->with($this->getSectionLabel('origin'))
-                    ->add('characteristics', null, $this->createFormOptions('characteristics'))
-                    ->add('stratigraphicalDate', null, $this->createFormOptions('stratigraphicalDate'))
-                    ->add('findCircumstances', null, $this->createFormOptions('findCircumstances'))
-                    ->add('carrierHistory', null, $this->createFormOptions('carrierHistory', ['required' => false]))
-                    ->add('discoverySite', null, $this->createManyToManyFormOptions('discoverySite'))
-                    ->add('quadrat', null, $this->createFormOptions('quadrat', ['required' => false]))
-                    ->add(
-                        'plastLevel',
-                        CollectionType::class,
-                        $this->createFormOptions(
-                            'plastLevel',
-                            [
-                                'entry_type' => TextType::class,
-                                'allow_add' => true,
-                                'allow_delete' => true,
-                                'delete_empty' => true,
-                                'required' => false
-                            ]                        
-                        )
-                    )
-                    ->add(
-                        'yarusLevel',
-                        CollectionType::class,
-                        $this->createFormOptions(
-                            'yarusLevel',
-                            [
-                                'entry_type' => TextType::class,
-                                'allow_add' => true,
-                                'allow_delete' => true,
-                                'delete_empty' => true,
-                                'required' => false
-                            ]
-                        )
-                    )
-                    ->add('depth', null, $this->createFormOptions('depth', ['required' => false]))
-                ->end()
-            ->end()
-            ->tab($this->getTabLabel('preservation'))
-                ->with($this->getSectionLabel('preservation'))
-                    ->add('storagePlace', null, $this->createFormOptions('storagePlace'))
-                    ->add('inventoryNumber', null, $this->createFormOptions('inventoryNumber'))
-                    ->add(
-                        'isInSitu',
-                        CheckboxType::class,
-                        $this->createFormOptions('isInSitu', ['required' => false])
-                    )
-                ->end()
-            ->end()
+            ->add('individualName', null, $this->createFormOptions('individualName'))
+            ->add('categories', null, $this->createManyToManyFormOptions('categories'))
+            ->add(
+                'supercarrier',
+                EntityType::class,
+                $this->createFilteredEntityOptions('supercarrier', Carrier::class, 'isSuperCarrier') 
+            )
+            ->add(
+                'isSuperCarrier',
+                CheckboxType::class,
+                $this->createFormOptions('isSuperCarrier', ['required' => false])
+            )
+            ->add('characteristics', null, $this->createFormOptions('characteristics'))
+            ->add('stratigraphicalDate', null, $this->createFormOptions('stratigraphicalDate'))
+            ->add('findCircumstances', null, $this->createFormOptions('findCircumstances'))
+            ->add('carrierHistory', null, $this->createFormOptions('carrierHistory', ['required' => false]))
+            ->add('discoverySite', null, $this->createManyToManyFormOptions('discoverySite'))
+            // археология
+            ->add('archaeology', null, $this->createFormOptions('archaeology', ['required' => false]))
+            // предыдущие места хранения
+            ->add('previousStorage', null, $this->createFormOptions('previousStorage', ['required' => false]))
+            ->add('storageSite', null, $this->createManyToManyFormOptions('storageSite'))
+            // локализация в месте хранения
+            ->add('storageLocalization', null, $this->createFormOptions('storageLocalization', ['required' => false]))
+            ->add('inventoryNumber', null, $this->createFormOptions('inventoryNumber'))
+            // убрали in situ
+            // ->add(
+            //     'isInSitu',
+            //     CheckboxType::class,
+            //     $this->createFormOptions('isInSitu', ['required' => false])
+            // )
         ;
     }
 }

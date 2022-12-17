@@ -26,14 +26,13 @@ declare(strict_types=1);
 namespace App\Persistence\Entity\Epigraphy;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\PersistentCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity()
  */
-class City implements NamedEntityInterface
+class StorageSite implements NamedEntityInterface
 {
     /**
      * @var int
@@ -45,42 +44,38 @@ class City implements NamedEntityInterface
     private $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     private $name;
 
     /**
-     * @var array
-     * 
+     * @var array|string[]
+     *
      * @ORM\Column(name="name_aliases", type="simple_array", nullable=true)
      */
     private $nameAliases;
 
     /**
-     * @var string|null
+     * @var Collection|City[]
      *
-     * @ORM\Column(name="type", type="string", length=255, nullable=true)
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\City", cascade={"persist"})
+     * @ORM\JoinTable(name="storage_site_city")
      */
-    private $type;
-
-    /**
-     * @var Collection|Country[]
-     *
-     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Country", cascade={"persist"})
-     * @ORM\JoinTable(name="city_country")
-     */
-    private $country;
+    private $cities;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="region", type="string", length=255, nullable=true)
+     * @ORM\Column(name="comments", type="string", nullable=true)
      */
-    private $region;
+    private $comments;
 
-    public function __construct() {
+    public function __construct()
+    {
+        $this->cities = new ArrayCollection();
         $this->nameAliases = array();
-        $this->country = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -93,7 +88,7 @@ class City implements NamedEntityInterface
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -101,6 +96,7 @@ class City implements NamedEntityInterface
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -115,43 +111,29 @@ class City implements NamedEntityInterface
         return $this;
     }
 
-    public function getType(): ?string
+    public function getComments(): ?string
     {
-        return $this->type;
+        return $this->comments;
     }
 
-    public function setType(string $type): self
+    public function setComments(?string $comments): self
     {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function getRegion(): ?string
-    {
-        return $this->region;
-    }
-
-    public function setRegion(string $region): self
-    {
-        $this->region = $region;
+        $this->comments = $comments;
 
         return $this;
     }
 
     /**
-     * @return Collection|Country[]
+     * @return Collection|City[]
      */
-    public function getCountry(): Collection
+    public function getCities(): Collection
     {
-        return $this->country;
+        return $this->cities;
     }
 
-    public function setCountry(Collection $country): self
+    public function setCities(Collection $city): self
     {
-        $this->country = $country;
-
+        $this->cities = $city;
         return $this;
     }
 }
-

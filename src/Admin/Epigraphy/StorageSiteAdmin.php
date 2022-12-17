@@ -25,20 +25,19 @@ declare(strict_types=1);
 
 namespace App\Admin\Epigraphy;
 
-use App\Admin\AbstractNamedEntityAdmin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use App\Admin\AbstractNamedEntityAdmin;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-final class CityAdmin extends AbstractNamedEntityAdmin
+
+final class StorageSiteAdmin extends AbstractNamedEntityAdmin
 {
-    protected $baseRouteName = 'epigraphy_city';
+    protected $baseRouteName = 'epigraphy_storage_site';
 
-    protected $baseRoutePattern = 'epigraphy/city';
+    protected $baseRoutePattern = 'epigraphy/storage-site';
 
-    protected function configureFormFields(FormMapper $formMapper): void
+    protected function configureFormFields(FormMapper $formMapper): void 
     {
         $formMapper
             ->add('name', null, $this->createFormOptions('name'))
@@ -56,24 +55,8 @@ final class CityAdmin extends AbstractNamedEntityAdmin
                     ]
                 )
             )
-            ->add(
-                'type',
-                ChoiceType::class,
-                $this->createFormOptions(
-                    'type',
-                    [
-                        'required' => false,
-                        'choices' => [
-                            'Город' => 'Город',
-                            'Поселок' => 'Поселок',
-                            'Село' => 'Село',
-                            'Деревня' => 'Деревня',
-                        ]
-                    ]
-                )
-            )
-            ->add('country', null, $this->createManyToManyFormOptions('country'))
-            ->add('region', null, $this->createFormOptions('region'))
+            ->add('cities', null, $this->createManyToManyFormOptions('cities'))
+            ->add('comments', null, $this->createFormOptions('comments', ['required' => false]))
         ;
     }
 }

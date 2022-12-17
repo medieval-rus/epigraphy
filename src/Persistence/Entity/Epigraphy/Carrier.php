@@ -98,32 +98,11 @@ class Carrier implements StringifiableEntityInterface
     private $carrierHistory;
 
     /**
-     * @var int|null
-     *
-     * @ORM\Column(name="quadrat", type="integer", nullable=true)
-     */
-    private $quadrat;
-
-    /**
      * @var string
      *
-     * @ORM\Column(name="plast_level", type="simple_array", nullable=true)
+     * @ORM\Column(name="archaeology", type="text", length=65535, nullable=true)
      */
-    public $plastLevel;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="yarus_level", type="simple_array", nullable=true)
-     */
-    public $yarusLevel;
-
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="depth", type="integer", nullable=true)
-     */
-    private $depth;
+    public $archaeology;
 
     /**
      * @var string|null
@@ -145,6 +124,15 @@ class Carrier implements StringifiableEntityInterface
      * @ORM\Column(name="storage_place", type="string", length=255, nullable=true)
      */
     private $storagePlace;
+
+    // TODO: вписать в миграцию перенос данных
+    /**
+     * @var Collection|StorageSite[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\StorageSite", cascade={"persist"})
+     * @ORM\JoinTable(name="carrier_storage_site")
+     */
+    private $storageSite;
 
     /**
      * @var string|null
@@ -185,14 +173,45 @@ class Carrier implements StringifiableEntityInterface
      */
     private $supercarrier;
 
+    /**
+     * @var string|null
+     * 
+     * @ORM\Column(name="previous_storage", type="text", length=65535, nullable=true)
+     */
+    private $previousStorage;
+
+    /**
+     * @var string|null
+     * 
+     * @ORM\Column(name="storage_localization", type="text", length=65535, nullable=true)
+     */
+    private $storageLocalization;
+
+    /**
+     * @var string|null
+     * 
+     * @ORM\Column(name="material_description", type="text", length=65535, nullable=true)
+     */
+    private $materialDescription;
+
+
+    /**
+     * @var Collection|Material[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\Material", cascade={"persist"})
+     * @ORM\JoinTable(name="carrier_material")
+     */
+    private $materials;
+
     public function __construct()
     {
         $this->subcarriers = new ArrayCollection();
         $this->types = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->discoverySite = new ArrayCollection();
-        $this->plastLevel = array();
-        $this->yarusLevel = array();
+        $this->storageSite = new ArrayCollection();
+        $this->materials = new ArrayCollection();
+        $this->isSuperCarrier = true;
     }
 
     public function __toString(): string
@@ -307,53 +326,15 @@ class Carrier implements StringifiableEntityInterface
         return $this;
     }
 
-    public function getQuadrat(): ?int
+    public function getArchaeology(): ?string
     {
-        return $this->quadrat;
-    }
-    
-    public function setQuadrat(?int $quadrat): self
-    {
-        $this->quadrat = $quadrat;
-        return $this;
+        return $this->archaeology;
     }
 
-    /**
-     * @return array
-     */
-    public function getPlastLevel(): array
+    public function setArchaeology(?string $archaeology): self
     {
-        return $this->plastLevel;
-    }
+        $this->archaeology = $archaeology;
 
-    public function setPlastLevel(?array $plastLevel): self
-    {
-        $this->plastLevel = $plastLevel ?: array();
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getYarusLevel(): array
-    {
-        return $this->yarusLevel;
-    }
-
-    public function setYarusLevel(?array $yarusLevel): self
-    {
-        $this->yarusLevel = $yarusLevel ?: array();
-        return $this;
-    }
-
-    public function getDepth(): ?int
-    {
-        return $this->depth;
-    }
-    
-    public function setDepth(?int $depth): self
-    {
-        $this->depth = $depth;
         return $this;
     }
 
@@ -389,6 +370,21 @@ class Carrier implements StringifiableEntityInterface
     public function setStoragePlace(?string $storagePlace): self
     {
         $this->storagePlace = $storagePlace;
+        
+        return $this;
+    }
+
+    /**
+     * @return Collection|StorageSite[]
+     */
+    public function getStorageSite(): Collection
+    {
+        return $this->storageSite;
+    }
+
+    public function setStorageSite(Collection $storageSite): self
+    {
+        $this->storageSite = $storageSite;
 
         return $this;
     }
@@ -454,6 +450,60 @@ class Carrier implements StringifiableEntityInterface
     public function setStratigraphicalDate(?string $stratigraphicalDate): self
     {
         $this->stratigraphicalDate = $stratigraphicalDate;
+
+        return $this;
+    }
+
+    public function getStorageLocalization(): ?string
+    {
+        return $this->storageLocalization;
+    }
+
+    public function setStorageLocalization(?string $storageLocalization): self
+    {
+        $this->storageLocalization = $storageLocalization;
+
+        return $this;
+    }
+
+    public function getMaterialDescription(): ?string
+    {
+        return $this->materialDescription;
+    }
+
+    public function setMaterialDescription(?string $materialDescription): self
+    {
+        $this->materialDescription = $materialDescription;
+
+        return $this;
+    }
+
+    public function getPreviousStorage(): ?string
+    {
+        return $this->previousStorage;
+    }
+
+    public function setPreviousStorage(?string $previousStorage): self
+    {
+        $this->previousStorage = $previousStorage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Material[]
+     */
+    public function getMaterials(): Collection
+    {
+        return $this->materials;
+    }
+
+    /**
+     * @param Collection|Material[] $materials
+     */
+    public function setMaterials(Collection $materials): self
+    {
+        $this->materials = $materials;
 
         return $this;
     }

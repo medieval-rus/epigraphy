@@ -86,6 +86,19 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
         );
     }
 
+    protected function createEntityOptions(string $fieldName, string $class) {
+        return $this->createFormOptions(
+            $fieldName,
+            array_merge([
+                'class' => $class,
+                'required' => false,
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('c');
+                }
+            ])
+        );
+    }
+
     protected function createFilteredEntityOptions(string $fieldName, string $class, string $param, string $value = 'true'): array
     {
         return $this->createFormOptions(

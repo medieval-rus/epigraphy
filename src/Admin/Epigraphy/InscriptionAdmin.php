@@ -88,7 +88,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         $formMapper
             ->tab($this->getTabLabel('common'))
                 ->with($this->getSectionLabel('common'))
-                    ->add('number', null, $this->createFormOptions('number'))
                     ->add('conventionalDate', null, $this->createFormOptions('conventionalDate'))
                     ->add('carrier', null, $this->createFormOptions('carrier'))
                     ->add('comment', null, $this->createFormOptions('comment'))
@@ -107,16 +106,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         'zeroRow.placeOnCarrierReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('placeOnCarrierReferences')
-                    )
-                    ->add(
-                        'zeroRow.writingTypes',
-                        ModelType::class,
-                        $this->createManyToManyFormOptions('zeroRow.writingTypes')
-                    )
-                    ->add(
-                        'zeroRow.writingTypesReferences',
-                        EntityType::class,
-                        $this->createLabeledReferencesFormOptions('writingTypesReferences')
                     )
                     ->add(
                         'zeroRow.writingMethods',
@@ -138,16 +127,17 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('preservationStatesReferences')
                     )
-                    ->add(
-                        'zeroRow.materials',
-                        ModelType::class,
-                        $this->createManyToManyFormOptions('zeroRow.materials')
-                    )
-                    ->add(
-                        'zeroRow.materialsReferences',
-                        EntityType::class,
-                        $this->createLabeledReferencesFormOptions('materialsReferences')
-                    )
+                    // убрали материал из надписи
+                    // ->add(
+                    //     'zeroRow.materials',
+                    //     ModelType::class,
+                    //     $this->createManyToManyFormOptions('zeroRow.materials')
+                    // )
+                    // ->add(
+                    //     'zeroRow.materialsReferences',
+                    //     EntityType::class,
+                    //     $this->createLabeledReferencesFormOptions('materialsReferences')
+                    // )
                 ->end()
                 ->with($this->getSectionLabel('zeroRowLinguisticAspect'), ['class' => 'col-md-6'])
                     ->add(
@@ -184,6 +174,26 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         $this->createLabeledReferencesFormOptions('transliterationReferences')
                     )
                     ->add(
+                        'zeroRow.reconstruction',
+                        TextareaType::class,
+                        $this->createFormOptions('zeroRow.reconstruction', ['required' => false])
+                    )
+                    ->add(
+                        'zeroRow.reconstructionReferences',
+                        EntityType::class,
+                        $this->createLabeledReferencesFormOptions('reconstructionReferences')
+                    )
+                    ->add(
+                        'zeroRow.normalization',
+                        TextareaType::class,
+                        $this->createFormOptions('zeroRow.normalization', ['required' => false])
+                    )
+                    ->add(
+                        'zeroRow.normalizationReferences',
+                        EntityType::class,
+                        $this->createLabeledReferencesFormOptions('normalizationReferences')
+                    )
+                    ->add(
                         'zeroRow.translation',
                         TextareaType::class,
                         $this->createFormOptions('zeroRow.translation', ['required' => false])
@@ -215,16 +225,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     )
                 ->end()
                 ->with($this->getSectionLabel('zeroRowHistoricalAspect'), ['class' => 'col-md-6'])
-                    ->add(
-                        'zeroRow.origin',
-                        TextareaType::class,
-                        $this->createFormOptions('zeroRow.origin', ['required' => false])
-                    )
-                    ->add(
-                        'zeroRow.originReferences',
-                        EntityType::class,
-                        $this->createLabeledReferencesFormOptions('originReferences')
-                    )
                     ->add(
                         'zeroRow.dateInText',
                         TextareaType::class,
@@ -290,23 +290,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         'zeroRow.drawingsReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('drawingsReferences')
-                    )
-                    ->add(
-                        'zeroRow.textImages',
-                        EntityType::class,
-                        $this->createManyToManyFormOptions(
-                            'zeroRow.textImages',
-                            [
-                                'class' => File::class,
-                                'choice_filter' => $this->dataStorageManager->getFolderFilter('text'),
-                                'query_builder' => $this->dataStorageManager->getQueryBuilder(),
-                            ]
-                        )
-                    )
-                    ->add(
-                        'zeroRow.textImagesReferences',
-                        EntityType::class,
-                        $this->createLabeledReferencesFormOptions('textImagesReferences')
                     )
                 ->end()
             ->end()

@@ -29,40 +29,28 @@ sonata_admin:
         items:
           - admin.user
         roles: [ ROLE_SUPER_ADMIN ]
-      inscriptions:
-        label_catalogue: admin
-        label: menu.groups.inscriptions.label
-        items:
-          - admin.inscription
-          - admin.alphabet
-          - admin.content_category
-          - admin.material
-          - admin.preservation_state
-          - admin.writing_type
-          - admin.writing_method
-        roles: [ ROLE_ADMIN ]
       carriers:
         label_catalogue: admin
         label: menu.groups.carriers.label
         items:
           - admin.carrier
           - admin.carrier_category
-          - admin.city
-          - admin.river
+          - admin.material
           - admin.discovery_site
+          - admin.city
+          - admin.country
+          - admin.river
+          - admin.river_type
+          - admin.storage_site
         roles: [ ROLE_ADMIN ]
-      content:
+      inscriptions:
         label_catalogue: admin
-        label: menu.groups.content.label
+        label: menu.groups.inscriptions.label
         items:
-          - admin.content.post
-          - admin.content.inscription_list
-        roles: [ ROLE_ADMIN ]
-      media:
-        label_catalogue: admin
-        label: menu.groups.media.label
-        items:
-          - admin.media.file
+          - admin.inscription
+          - admin.content_category
+          - admin.writing_method
+          - admin.alphabet
         roles: [ ROLE_ADMIN ]
       bibliography:
         label_catalogue: admin
@@ -70,7 +58,16 @@ sonata_admin:
         items:
           - admin.bibliography.bibliographic_record
           - admin.bibliography.author
-          - admin.bibliography.references_list
+          - admin.media.file
+          # Убрали списки литературы
+          # - admin.bibliography.references_list
+        roles: [ ROLE_ADMIN ]
+      content:
+        label_catalogue: admin
+        label: menu.groups.content.label
+        items:
+          - admin.content.post
+          - admin.content.inscription_list
         roles: [ ROLE_ADMIN ]
   options:
     use_icheck: false
@@ -260,6 +257,30 @@ services:
   admin.discovery_site:
     class: App\Admin\Epigraphy\DiscoverySiteAdmin
     arguments: [null, App\Persistence\Entity\Epigraphy\DiscoverySite, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  # тип водного объекта
+  admin.river_type:
+    class: App\Admin\Epigraphy\RiverTypeAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\RiverType, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  # страна
+  admin.country:
+    class: App\Admin\Epigraphy\CountryAdmin
+    arguments: [null, App\Persistence\Entity\Epigraphy\Country, null]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm }
+  # место хранения
+  admin.storage_site:
+    class: App\Admin\Epigraphy\StorageSiteAdmin 
+    arguments: [null, App\Persistence\Entity\Epigraphy\StorageSite, null]
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:

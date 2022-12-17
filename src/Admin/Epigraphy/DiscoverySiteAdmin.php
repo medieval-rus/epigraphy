@@ -66,10 +66,6 @@ final class DiscoverySiteAdmin extends AbstractNamedEntityAdmin
                 CheckboxType::class,
                 $this->createFormOptions('isOutsideCity', ['required' => false])
             )
-            ->add('isOutsideRiver',
-                CheckboxType::class,
-                $this->createFormOptions('isOutsideRiver', ['required' => false])
-            )
         ;
     }
 }

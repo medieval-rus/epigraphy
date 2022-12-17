@@ -58,27 +58,12 @@ final class RiverAdmin extends AbstractNamedEntityAdmin
                     ]
                 )
             )
-            ->add(
-                'type',
-                ChoiceType::class,
-                $this->createFormOptions(
-                    'type',
-                    [
-                        'required' => false,
-                        'choices' => [
-                            'Река' => 'Река',
-                            'Ручей' => 'Ручей',
-                            'Озеро' => 'Озеро',
-                            'Пруд' => 'Пруд',
-                            'Море' => 'Море'
-                        ]
-                    ]
-                )
-            )
+            // изменили на many to many
+            ->add('type', null, $this->createManyToManyFormOptions('type'))
             ->add(
                 'superriver',
                 EntityType::class,
-                $this->createFilteredEntityOptions('superriver', River::class, 'type') 
+                $this->createEntityOptions('superriver', River::class) 
             )
         ;
     }

@@ -56,7 +56,7 @@ function createCheckboxes() {
                                         $('<label/>')
                                             .append(
                                                 $(`<input type="checkbox" data-zero-row-part-checkbox="${zeroRowFieldName}"/>`),
-                                                $('<span class="control-label__text">Часть нулевой строки</span>')
+                                                $('<span class="control-label__text">Часть актуальной информации</span>')
                                             )
                                     )
                             )

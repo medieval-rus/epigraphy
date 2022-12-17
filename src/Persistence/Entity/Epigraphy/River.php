@@ -27,8 +27,8 @@ namespace App\Persistence\Entity\Epigraphy;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity()
@@ -57,9 +57,10 @@ class River implements NamedEntityInterface
     private $nameAliases;
 
     /**
-     * @var string|null
+     * @var null|RiverType
      *
-     * @ORM\Column(name="type", type="string", length=255, nullable=true)
+     * @ORM\ManyToMany(targetEntity="App\Persistence\Entity\Epigraphy\RiverType", cascade={"persist"})
+     * @ORM\JoinTable(name="river__river_type")
      */
     private $type;
 
@@ -111,15 +112,17 @@ class River implements NamedEntityInterface
         return $this;
     }
 
-    public function getType(): ?string
+    /**
+     * @return null|RiverType
+     */
+    public function getType(): ?RiverType
     {
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(?RiverType $type): self
     {
         $this->type = $type;
-
         return $this;
     }
 
