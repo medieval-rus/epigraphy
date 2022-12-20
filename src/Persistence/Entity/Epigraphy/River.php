@@ -77,6 +77,7 @@ class River implements NamedEntityInterface
 
     public function __construct() {
         $this->nameAliases = array();
+        $this->type = new ArrayCollection();
         $this->subrivers = new ArrayCollection();
     }
 
@@ -113,14 +114,14 @@ class River implements NamedEntityInterface
     }
 
     /**
-     * @return null|RiverType
+     * @return Collection
      */
-    public function getType(): ?RiverType
+    public function getType(): Collection
     {
         return $this->type;
     }
 
-    public function setType(?RiverType $type): self
+    public function setType(Collection $type): self
     {
         $this->type = $type;
         return $this;
