@@ -125,7 +125,6 @@ class Carrier implements StringifiableEntityInterface
      */
     private $storagePlace;
 
-    // TODO: вписать в миграцию перенос данных
     /**
      * @var Collection|StorageSite[]
      *
