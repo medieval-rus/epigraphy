@@ -53,6 +53,8 @@ controller:
           option:
             text: Текст
             description: Содержание
+        discoverySite: Место находки
+        city: Населённый пункт
         carrierType: Тип носителя
         carrierCategory: "Носитель"
         writingType: Разряд
@@ -93,6 +95,8 @@ controller:
             categories: Категория / подкатегория носителя
             origin1: Город / Местность
             origin2: Здание / Раскоп
+            storageSite: Место хранения носителя
+            discoverySite: Место находки носителя
             findCircumstances: Обстоятельства находки носителя
             stratigraphicalDate: Стратиграфическая дата
             characteristics: Характеристики носителя

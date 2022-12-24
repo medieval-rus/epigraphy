@@ -182,6 +182,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
                     'id' => $inscription->getId(),
                 ]
             ),
+            '__num__' => $inscription->getId(),
         ];
     }
 

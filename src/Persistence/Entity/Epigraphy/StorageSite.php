@@ -80,7 +80,12 @@ class StorageSite implements NamedEntityInterface
 
     public function __toString(): string
     {
-        return (string) $this->getName();
+        return sprintf(
+            '%s; %s; (id: %s)',
+            (string) $this->getName(),
+            implode(', ', $this->getCities()->toArray()),
+            (string) $this->getId()
+        );
     }
 
     public function getId(): ?int
