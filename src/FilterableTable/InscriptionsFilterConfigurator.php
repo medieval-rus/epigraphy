@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace App\FilterableTable;
 
+use App\FilterableTable\Filter\Parameter\CityFilterParameter;
+use App\FilterableTable\Filter\Parameter\DiscoverySiteFilterParameter;
 use App\FilterableTable\Filter\Parameter\AlphabetFilterParameter;
 use App\FilterableTable\Filter\Parameter\AuthorFilterParameter;
 use App\FilterableTable\Filter\Parameter\CarrierCategoryFilterParameter;
@@ -78,6 +80,8 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     private Origin1FilterParameter $origin1FilterParameter;
     private Origin2FilterParameter $origin2FilterParameter;
     private TranslationFilterParameter $translationFilterParameter;
+    private CityFilterParameter $cityFilterParameter;
+    private DiscoverySiteFilterParameter $discoverySiteFilterParameter;
 
     public function __construct(
         ValueStringifierInterface $valueStringifier,
@@ -97,7 +101,9 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         NumberInSourceFilterParameter $numberInSourceFilterParameter,
         Origin1FilterParameter $origin1FilterParameter,
         Origin2FilterParameter $origin2FilterParameter,
-        TranslationFilterParameter $translationFilterParameter
+        TranslationFilterParameter $translationFilterParameter,
+        DiscoverySiteFilterParameter $discoverySiteFilterParameter,
+        CityFilterParameter $cityFilterParameter
     ) {
         $args = func_get_args();
         $reflection_method = new \ReflectionMethod($this, '__construct');
@@ -185,6 +191,8 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
             $this->materialFilterParameter,
             $this->origin1FilterParameter,
             $this->origin2FilterParameter,
+            $this->cityFilterParameter,
+            $this->discoverySiteFilterParameter,
             // типология надписи
             $this->superWritingMethodFilterParameter,    
             $this->writingMethodFilterParameter,

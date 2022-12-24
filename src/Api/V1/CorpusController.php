@@ -55,13 +55,17 @@ final class CorpusController extends AbstractController
                     implode(
                         "\r\n",
                         array_map(
-                            fn (array $row): string => implode(
-                                $columnSeparator,
-                                array_map(
-                                    fn (?string $cell): string => str_replace($columnSeparator, ',', ($cell ?? '')),
-                                    $row
-                                )
-                            ),
+                            function (array $row) use ($columnSeparator): string {
+                                $row = array_values($row);
+                                $row[] = "";
+                                return implode(
+                                    $columnSeparator,
+                                    array_map(
+                                        fn (?string $cell): string => str_replace($columnSeparator, ',', ($cell ?? '')),
+                                        $row
+                                    )
+                                );
+                            },
                             $metadata
                         )
                     )

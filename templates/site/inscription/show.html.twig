@@ -175,10 +175,12 @@
                         <table class="table table-bordered">
                             <tbody>
                                 {{ self.format_text_row(translationContext, 'carrier.origin2', inscription.carrier.origin2) }}
+                                {{ self.format_text_row(translationContext, 'carrier.discoverySite', inscription.carrier.discoverySite) }}
+                                {{ self.format_text_row(translationContext, 'carrier.storageSite', inscription.carrier.storageSite) }}                                
+                                {# {{ self.format_text_row(translationContext, 'carrier.isInSitu', inscription.carrier.isInSitu) }} #}
+                                {# {{ self.format_text_row(translationContext, 'carrier.storagePlace', inscription.carrier.storagePlace) }} #}
                                 {{ self.format_text_row(translationContext, 'carrier.findCircumstances', inscription.carrier.findCircumstances) }}
                                 {{ self.format_text_row(translationContext, 'carrier.characteristics', inscription.carrier.characteristics) }}
-                                {{ self.format_text_row(translationContext, 'carrier.isInSitu', inscription.carrier.isInSitu) }}
-                                {{ self.format_text_row(translationContext, 'carrier.storagePlace', inscription.carrier.storagePlace) }}
                                 {{ self.format_text_row(translationContext, 'carrier.inventoryNumber', inscription.carrier.inventoryNumber) }}
                                 {{ self.format_text_row(translationContext, 'carrier.stratigraphicalDate', inscription.carrier.stratigraphicalDate) }}
                             </tbody>
