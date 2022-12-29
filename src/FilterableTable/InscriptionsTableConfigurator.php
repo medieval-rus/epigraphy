@@ -106,29 +106,45 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                 ->setIsSortable(false)
                 ->setLabel('controller.inscription.list.table.column.carrier.category'),
             (new ColumnMetadata())
-                ->setName('carrier-origin1')
-                ->setValueExtractor(static function (Inscription $inscription): string {
+                ->setName('carrier-city')
+                ->setValueExtractor(static function (Inscription $inscription) {
+                    // on no carrier: skip
                     if (null === $carrier = $inscription->getCarrier()) {
                         return '';
                     }
-
-                    return $carrier->getOrigin1() ?? '';
+                    $discoverySite = $carrier->getDiscoverySite();
+                    // on no discovery site: skip
+                    if (count($discoverySite) === 0) {
+                        return '';
+                    }
+                    $cities = $discoverySite->toArray()[0]->getCities();
+                    // on no cities: skip
+                    if (count($cities) === 0) {
+                        return '';
+                    }
+                    // return main name
+                    return $cities->toArray()[0]->getName() ?? '';
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)
-                ->setLabel('controller.inscription.list.table.column.carrier.origin1'),
+                ->setLabel('controller.inscription.list.table.column.carrier.city'),
             (new ColumnMetadata())
-                ->setName('carrier-origin2')
-                ->setValueExtractor(static function (Inscription $inscription): string {
+                ->setName('carrier-discovery-site')
+                ->setValueExtractor(static function (Inscription $inscription) {
+                    // on no carrier: skip
                     if (null === $carrier = $inscription->getCarrier()) {
                         return '';
                     }
-
-                    return $carrier->getOrigin2() ?? '';
+                    $discoverySite = $carrier->getDiscoverySite();
+                    // on no discovery site: skip
+                    if (count($discoverySite) === 0) {
+                        return '';
+                    }
+                    return $discoverySite->toArray()[0]->getName() ?? '';
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)
-                ->setLabel('controller.inscription.list.table.column.carrier.origin2'),
+                ->setLabel('controller.inscription.list.table.column.carrier.discoverySite'),
             (new ColumnMetadata())
                 ->setIsRaw(true)
                 ->setName('interpretation-description')
