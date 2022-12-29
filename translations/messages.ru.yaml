@@ -40,6 +40,8 @@ controller:
           id: ''
           carrier:
             category: Категория носителя
+            city: Населённый пункт
+            discoverySite: Место находки
             origin1: Город / Местность
             origin2: Здание / Раскоп
           interpretation:
