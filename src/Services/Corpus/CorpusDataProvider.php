@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace App\Services\Corpus;
 
 use App\Models\StringActualValue;
+use App\Persistence\Entity\Epigraphy\DiscoverySite;
+use App\Persistence\Entity\Epigraphy\Alphabet;
 use App\Persistence\Entity\Epigraphy\CarrierCategory;
 use App\Persistence\Entity\Epigraphy\CarrierType;
 use App\Persistence\Entity\Epigraphy\ContentCategory;
@@ -128,54 +130,80 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
     private function getMetadataRow(Inscription $inscription, string $baseUrl): array
     {
         return [
-            'id' => $inscription->getId(),
-            'number' => $inscription->getNumber(),
-            'header' => sprintf('Надпись %s', $inscription->getId()),
-            'subcorp' => 'epigraphy',
-            'tagging' => 'manual',
-            'carrier_name' => $inscription->getCarrier()->getIndividualName(),
-            'carrier_origin1' => $inscription->getCarrier()->getOrigin1(),
-            'carrier_origin2' => $inscription->getCarrier()->getOrigin2(),
-            'carrier_type' => $this->join(
-                $inscription
-                    ->getCarrier()
-                    ->getTypes()
-                    ->map(fn (CarrierType $carrierType): string => $carrierType->getName())
-            ),
-            'carrier_category' => $this->join(
-                $inscription
-                    ->getCarrier()
-                    ->getCategories()
-                    ->map(fn (CarrierCategory $carrierCategory): string => $carrierCategory->getName())
-            ),
-            'writing_method' => $this->join(
+            'path' => $this->getPath($inscription),
+            // 'number' => $inscription->getNumber(),
+            'header' => $inscription->getZeroRow()->getDescription(),
+            'category' => $this->join(
                 $inscription
                     ->getZeroRow()
-                    ->getWritingMethods()
-                    ->map(fn (WritingMethod $writingMethod): string => $writingMethod->getName())
+                    ->getContentCategories()
+                    ->map(function (ContentCategory $contentCategory): string {
+                        $super = $contentCategory->getSuperCategory();
+                        return $super ? $super->getName() : $contentCategory->getName();
+                    })
             ),
-            'preservation_state' => $this->join(
-                $inscription
-                    ->getZeroRow()
-                    ->getPreservationStates()
-                    ->map(fn (PreservationState $preservationState): string => $preservationState->getName())
-            ),
-            'material' => $this->join(
-                $inscription
-                    ->getZeroRow()
-                    ->getMaterials()
-                    ->map(fn (Material $material): string => $material->getName())
-            ),
-            'content_category' => $this->join(
+            'genre' => $this->join(
                 $inscription
                     ->getZeroRow()
                     ->getContentCategories()
                     ->map(fn (ContentCategory $contentCategory): string => $contentCategory->getName())
             ),
-            'stratigraphical_date' => $inscription->getCarrier()->getStratigraphicalDate(),
-            'non_stratigraphical_date' => $inscription->getZeroRow()->getNonStratigraphicalDate(),
-            'conventional_date' => $inscription->getConventionalDate(),
-            'description' => $inscription->getZeroRow()->getDescription(),
+            'alphabet' => $this->join(
+                $inscription
+                    ->getZeroRow()
+                    ->getAlphabets()
+                    ->map(function (Alphabet $alphabet): string {
+                        return $alphabet->getName();
+                    })
+            ),
+            'town' => $this->join(
+                $inscription
+                    ->getCarrier()
+                    ->getDiscoverySite()
+                    ->map(function (DiscoverySite $discoverySite): string {
+                        if (count($discoverySite->getCities()) != 0) {
+                            return $discoverySite->getCities()[0]->getName(); 
+                        }
+                        return '';
+                    })
+            ),
+            'carrier' => $inscription->getCarrier()->getIndividualName(),
+            'cat_carrier' => $this->join(
+                $inscription
+                    ->getCarrier()
+                    ->getCategories()
+                    ->map(function (CarrierCategory $carrierCategory): string {
+                        $super = $carrierCategory->getSuperCategory();
+                        return $super ? $super->getName() : $carrierCategory->getName();
+                    })
+            ),
+            'material' => $this->join(
+                $inscription
+                    ->getZeroRow()
+                    ->getMaterials()
+                    ->map(function (Material $material): string {
+                        $super = $material->getSuperMaterial();
+                        return $super ? $super->getName() : $material->getName();
+                    })
+            ),
+            'technique' => $this->join(
+                $inscription
+                    ->getZeroRow()
+                    ->getWritingMethods()
+                    ->map(function (WritingMethod $writingMethod): string {
+                        $super = $writingMethod->getSuperMethod();
+                        return $super ? $super->getName() : $writingMethod->getName();
+                    })
+            ),
+            'state_of_preservation' => $this->join(
+                $inscription
+                    ->getZeroRow()
+                    ->getPreservationStates()
+                    ->map(fn (PreservationState $preservationState): string => $preservationState->getName())
+            ),
+            'created' => $inscription->getConventionalDate(),
+            'subcorp' => 'epigraphica',
+            'tagging' => 'manual',
             'link' => $baseUrl.$this->urlGenerator->generate(
                 'inscription__show',
                 [
@@ -188,16 +216,44 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
 
     private function getText(Inscription $inscription): array
     {
+        $alphabet = $inscription->getZeroRow()->getAlphabets()[0];
+        $alphabet_name = $alphabet ? $alphabet->getName() : "кириллица";
+        switch ($alphabet_name) {
+            case 'глаголица':
+                return [
+                    'number' => $inscription->getId(),
+                    'texts' => array_map(
+                        [$this, 'formatTextValue'],
+                        $this->actualValueExtractor->extractFromZeroRowAsStrings($inscription, 'transliteration')
+                    ),
+                ];
+                break;
+            default:
+                return [
+                    'number' => $inscription->getId(),
+                    'texts' => array_map(
+                        [$this, 'formatTextValue'],
+                        $this->actualValueExtractor->extractFromZeroRowAsStrings($inscription, 'text')
+                    ),
+                ];
+                break;
+        }
+    }
+
+    public function formatTextValue(StringActualValue $value): array {
+        $text_value = $value->getValue();
+        $new_text_value = str_replace('/im./', '', $text_value);
+        $new_text_value = str_replace('оу', 'ѹ', $new_text_value);
+        $new_text_value = str_replace('Оу', 'Ѹ', $new_text_value);
         return [
-            'number' => $inscription->getId(),
-            'texts' => array_map(
-                fn (StringActualValue $value): array => [
-                    'interpretation' => $value->getDescription(),
-                    'text' => $value->getValue(),
-                ],
-                $this->actualValueExtractor->extractFromZeroRowAsStrings($inscription, 'text')
-            ),
+            // 'interpretation' => $value->getDescription(),
+            'text' => $new_text_value,
         ];
+    }
+
+    private function getPath(Inscription $inscription): string {
+        $id = (string) $inscription->getId();
+        return str_pad($id, 5, "0", STR_PAD_LEFT);
     }
 
     private function join(Collection $collection): string

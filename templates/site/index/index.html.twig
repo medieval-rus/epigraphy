@@ -73,7 +73,15 @@
     {% import _self as self %}
 
     {% if inscription.carrier is not null %}
-        {{- inscription.carrier.origin1 ?? inscription.carrier.origin2 -}}
+        {# {{- inscription.carrier.origin1 ?? inscription.carrier.origin2 -}} #}
+        {% if inscription.carrier.discoverySite is not empty %}
+            
+            {% set cities = inscription.carrier.discoverySite[0].cities %}
+            
+            {% if cities is not empty %}
+                {{- cities|map(city => city.name)|join(', ') -}}
+            {% endif %}
+        {% endif %}
     {% endif %}
 {%- endmacro -%}
 
