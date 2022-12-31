@@ -127,17 +127,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('preservationStatesReferences')
                     )
-                    // убрали материал из надписи
-                    // ->add(
-                    //     'zeroRow.materials',
-                    //     ModelType::class,
-                    //     $this->createManyToManyFormOptions('zeroRow.materials')
-                    // )
-                    // ->add(
-                    //     'zeroRow.materialsReferences',
-                    //     EntityType::class,
-                    //     $this->createLabeledReferencesFormOptions('materialsReferences')
-                    // )
                 ->end()
                 ->with($this->getSectionLabel('zeroRowLinguisticAspect'), ['class' => 'col-md-6'])
                     ->add(
