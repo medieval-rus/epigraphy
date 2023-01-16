@@ -68,6 +68,8 @@ final class CarrierAdmin extends AbstractEntityAdmin
                 $this->createFormOptions('isSuperCarrier', ['required' => false])
             )
             ->add('characteristics', null, $this->createFormOptions('characteristics'))
+            ->add('materials', null, $this->createManyToManyFormOptions('materials'))
+            ->add('materialDescription', null, $this->createFormOptions('materialDescription'))
             ->add('stratigraphicalDate', null, $this->createFormOptions('stratigraphicalDate'))
             ->add('findCircumstances', null, $this->createFormOptions('findCircumstances'))
             ->add('carrierHistory', null, $this->createFormOptions('carrierHistory', ['required' => false]))
