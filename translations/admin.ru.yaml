@@ -256,6 +256,7 @@ form:
       storageLocalization: Локализация в месте хранения
       previousStorage: Прежние места хранения
       # добавили материал
+      materials: Материал
       materialDescription: Описание материала
       inventoryNumber: Инвентарный номер
       isInSitu: In situ
