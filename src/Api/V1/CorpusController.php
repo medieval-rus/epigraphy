@@ -177,7 +177,7 @@ final class CorpusController extends AbstractController
         ];
 
         $xmlItems = array_map(
-            function (array $item) use ($xmlEncoder) {
+            function (array $item) use ($xmlEncoder, $context) {
                 $encoded_item = $xmlEncoder->encode($item, 'xml', $context);
                 return $encoded_item;
             },
