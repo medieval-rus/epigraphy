@@ -32,6 +32,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
 
 /**
  * @Route("/v1/corpus")
@@ -47,30 +49,15 @@ final class CorpusController extends AbstractController
 
         if ('true' === $request->query->get('csv')) {
             if (\count($metadata) > 0) {
-                array_unshift($metadata, array_keys($metadata[0]));
-
-                $columnSeparator = ';';
-
-                $response = new Response(
-                    implode(
-                        "\r\n",
-                        array_map(
-                            function (array $row) use ($columnSeparator): string {
-                                $row = array_values($row);
-                                $row[] = "";
-                                return implode(
-                                    $columnSeparator,
-                                    array_map(
-                                        fn (?string $cell): string => str_replace($columnSeparator, ',', ($cell ?? '')),
-                                        $row
-                                    )
-                                );
-                            },
-                            $metadata
-                        )
-                    )
-                );
-
+                $context = [
+                    'csv_delimiter' => ',',
+                    'csv_end_of_line' => "\r\n",
+                    'csv_enclosure' => '"',
+                    'csv_escape_char' => '\\',
+                ];
+                $encoder = new CsvEncoder();
+                $content = $encoder->encode($metadata, 'csv', $context);
+                $response = new Response($content);
                 $disposition = $response->headers->makeDisposition(
                     ResponseHeaderBag::DISPOSITION_ATTACHMENT,
                     sprintf('%s_corpus_metadata_%s.csv', $request->getHost(), (new DateTime())->format('Y-m-d-H-i-s'))
@@ -86,15 +73,76 @@ final class CorpusController extends AbstractController
     }
 
     /**
-     * @Route("/texts/", name="api__v1__corpus__texts", methods={"GET"})
+     * @Route("/plain-texts/", name="api__v1__corpus__plain__texts", methods={"GET"})
      */
-    public function texts(CorpusDataProviderInterface $corpusDataProvider): Response
+    public function plainTexts(CorpusDataProviderInterface $corpusDataProvider, Request $request): Response
     {
-        $texts = $corpusDataProvider->getTexts(true);
+        $texts = $corpusDataProvider->getPlainFormattedTexts(true);
+
+        $joinedTexts = implode("\n", $texts);
 
         $response = new Response();
 
-        $response->setContent($this->toJson($texts));
+        $response->setContent($joinedTexts);
+
+        if ('true' === $request->query->get('as-file')) {
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                sprintf('%s_corpus_texts_%s.txt', $request->getHost(), (new DateTime())->format('Y-m-d-H-i-s'))
+            );
+
+            $response->headers->set('Content-Disposition', $disposition);            
+        }
+
+        return $response;
+    }
+
+
+    /**
+     * @Route("/xml-texts/", name="api__v1__corpus__xml__texts", methods={"GET"})
+     */
+    public function xmlTexts(CorpusDataProviderInterface $corpusDataProvider, Request $request): Response
+    {
+        $texts = $corpusDataProvider->getXmlFormattedTexts(true);
+
+        $response = new Response();
+
+        $response->setContent($this->toXml($texts));
+
+        if ('true' === $request->query->get('as-file')) {
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                sprintf('%s_corpus_texts_%s.xml', $request->getHost(), (new DateTime())->format('Y-m-d-H-i-s'))
+            );
+
+            $response->headers->set('Content-Disposition', $disposition);            
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route("/texts/", name="api__v1__corpus__texts", methods={"GET"})
+     */
+    public function texts(CorpusDataProviderInterface $corpusDataProvider, Request $request): Response
+    {
+        $texts = $corpusDataProvider->getTexts(true);
+        $new_texts = array_map(
+            fn (array $item) => ['number' => $item['number'], 'texts' => $item['texts']],
+            $texts
+        );
+
+        $response = new Response();
+
+        $response->setContent($this->toJson($new_texts));
+
+        if ('true' === $request->query->get('as-file')) {
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                sprintf('%s_corpus_texts_%s.json', $request->getHost(), (new DateTime())->format('Y-m-d-H-i-s'))
+            );
+            $response->headers->set('Content-Disposition', $disposition);
+        }
 
         return $response;
     }
@@ -116,5 +164,29 @@ final class CorpusController extends AbstractController
     private function toJson(array $array): string
     {
         return json_encode($array, \JSON_UNESCAPED_UNICODE | \JSON_PRETTY_PRINT);
+    }
+
+    private function toXml(array $array): string
+    {
+        $xmlEncoder = new XmlEncoder();
+        $context = [
+            'xml_root_node_name' => 'html',
+            'xml_version' => '1.0',
+            'xml_encoding' => 'utf-8',
+            XmlEncoder::ENCODER_IGNORED_NODE_TYPES => [\XML_COMMENT_NODE, \XML_CDATA_SECTION_NODE]
+        ];
+
+        $xmlItems = array_map(
+            function (array $item) use ($xmlEncoder) {
+                $encoded_item = $xmlEncoder->encode($item, 'xml', $context);
+                return $encoded_item;
+            },
+            $array
+        );
+        $xmlString = implode("", $xmlItems);
+        $xmlString = preg_replace('/⸗/', '<lbr/>', $xmlString); // kostyl
+        $xmlString = preg_replace('/item/', 'line', $xmlString); // kostyl
+        $xmlString = preg_replace('/key/', 'id', $xmlString); // kostyl
+        return $xmlString;
     }
 }

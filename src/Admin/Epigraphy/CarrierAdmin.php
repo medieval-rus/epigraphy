@@ -45,8 +45,7 @@ final class CarrierAdmin extends AbstractEntityAdmin
     {
         $listMapper
             ->addIdentifier('id', null, $this->createListOptions('id'))
-            ->add('origin1', null, $this->createListOptions('origin1'))
-            ->add('origin2', null, $this->createListOptions('origin2'))
+            ->add('discoverySite', null, $this->createListOptions('discoverySite'))
             ->add('individualName', null, $this->createListOptions('individualName'))
             ->add('supercarrier', null, $this->createListOptions('supercarrier'))
         ;
@@ -68,6 +67,8 @@ final class CarrierAdmin extends AbstractEntityAdmin
                 $this->createFormOptions('isSuperCarrier', ['required' => false])
             )
             ->add('characteristics', null, $this->createFormOptions('characteristics'))
+            ->add('materials', null, $this->createManyToManyFormOptions('materials'))
+            ->add('materialDescription', null, $this->createFormOptions('materialDescription'))
             ->add('stratigraphicalDate', null, $this->createFormOptions('stratigraphicalDate'))
             ->add('findCircumstances', null, $this->createFormOptions('findCircumstances'))
             ->add('carrierHistory', null, $this->createFormOptions('carrierHistory', ['required' => false]))

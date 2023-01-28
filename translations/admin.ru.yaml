@@ -100,6 +100,8 @@ list:
       categories: Подкатегория носителей
       origin1: Город / Местность
       origin2: Здание / Раскоп
+      cities: Населённый пункт
+      discoverySite: Место находки
       findCircumstances: Обстоятельства находки
       characteristics: Характеристики носителя
       individualName: Индивидуальное название

@@ -56,6 +56,14 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         $this->actualValueExtractor = $actualValueExtractor;
     }
 
+    /**
+     * Returns an array of metadata of all the inscriptions, 
+     * where each item of the array is an array of the metadata of a single inscription. 
+     * 
+     * The metadata includes information such as the inscription's ID, 
+     * its discovery site, its alphabet, etc.
+     * 
+     */
     public function getMetadata(string $baseUrl, bool $onlyShownOnSite = false): array
     {
         return array_map(
@@ -64,11 +72,71 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         );
     }
 
+    /**
+     * Returns an array of texts of all the inscriptions, 
+     * where each item of the array is an array of the texts of a single inscription.
+     * 
+     */
     public function getTexts(bool $onlyShownOnSite = false): array
     {
         return array_map(
             fn (Inscription $inscription): array => $this->getText($inscription),
             $this->inscriptionRepository->findAllInConventionalOrder($onlyShownOnSite, true)
+        );
+    }
+
+    /**
+     * Returns an array of plain formatted texts of all the inscriptions, 
+     * where each item of the array is a string containing the plain formatted text 
+     * of a single inscription.
+     * 
+     */
+    public function getPlainFormattedTexts(bool $onlyShownOnSite = true): array
+    {
+        $inscriptions = $this->inscriptionRepository->findAllInConventionalOrder($onlyShownOnSite, true);
+        $newTexts = array_map(
+            function (Inscription $item): string {
+                $textValue = $this->getText($item);
+                $text = $textValue['texts'][0]['text'] ?? '';
+                $textArray = preg_split(
+                    '/\r\n/', $text
+                );
+                $newText = '';
+                foreach ($textArray as $key => $value) {
+                    $newText = $newText.(string)($key + 1)." ".$value."\n";
+                }
+                return $this->getPath($item)."\n\n".$newText;
+            },
+            $inscriptions
+        );
+        
+        return $newTexts;
+    }
+
+    public function getXmlFormattedTexts(bool $onlyShownOnSite = false): array
+    {
+        $texts = $this->getTexts($onlyShownOnSite);
+        return array_map(
+            function (array $item): array {
+                $text = $item['texts'][0]['text'] ?? '';
+                $textArray = preg_split(
+                    '/\r\n/', $text
+                );
+                $translation = $item['translations'] ? $item['translations'][0] : '';
+                $structured_item = [
+                    'header' => ['#' => ''],
+                    'body' => [
+                        'para' => [
+                            'se' => [
+                                ['@lang' => 'orv', '#' => $textArray], 
+                                ['@lang' => 'rus', '#' => $translation]
+                            ]
+                        ]
+                    ],
+                ];
+                return $structured_item;
+            },
+            $texts
         );
     }
 
@@ -127,12 +195,15 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         ];
     }
 
+    /**
+     *  Returns the metadata of a single inscription as an array
+     */
     private function getMetadataRow(Inscription $inscription, string $baseUrl): array
     {
         return [
             'path' => $this->getPath($inscription),
             // 'number' => $inscription->getNumber(),
-            'header' => $inscription->getZeroRow()->getDescription(),
+            'header' => $this->formatDescription($inscription->getZeroRow()->getDescription()),
             'category' => $this->join(
                 $inscription
                     ->getZeroRow()
@@ -214,10 +285,22 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         ];
     }
 
+    /**
+     * Returns the text of a single inscription as an array.
+     */
     private function getText(Inscription $inscription): array
     {
         $alphabet = $inscription->getZeroRow()->getAlphabets()[0];
         $alphabet_name = $alphabet ? $alphabet->getName() : "кириллица";
+        $translations = array_values(
+            array_filter([
+                $inscription->getZeroRow()->getTranslation(),
+                ...$inscription->getZeroRow()->getTranslationReferences()->map(
+                    fn ($item) => $item->getTranslation()
+                )
+            ])
+        );
+        $formattedTranslations = array_map([$this, 'formatTranslation'], $translations);
         switch ($alphabet_name) {
             case 'глаголица':
                 return [
@@ -226,6 +309,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
                         [$this, 'formatTextValue'],
                         $this->actualValueExtractor->extractFromZeroRowAsStrings($inscription, 'transliteration')
                     ),
+                    'translations' => $formattedTranslations,
                 ];
                 break;
             default:
@@ -235,22 +319,52 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
                         [$this, 'formatTextValue'],
                         $this->actualValueExtractor->extractFromZeroRowAsStrings($inscription, 'text')
                     ),
+                    'translations' => $formattedTranslations,
                 ];
                 break;
         }
     }
 
-    public function formatTextValue(StringActualValue $value): array {
+    public function formatTextValue(StringActualValue $value): array
+    {
         $text_value = $value->getValue();
         $new_text_value = str_replace('/im./', '', $text_value);
+        $new_text_value = str_replace('|im.|', '', $new_text_value);
         $new_text_value = str_replace('оу', 'ѹ', $new_text_value);
         $new_text_value = str_replace('Оу', 'Ѹ', $new_text_value);
+        $new_text_value = preg_replace('/<.+?>\r\n/', '', $new_text_value);
         return [
             // 'interpretation' => $value->getDescription(),
             'text' => $new_text_value,
         ];
     }
 
+    public function formatTranslation(?string $translation): ?string
+    {
+        if ($translation === null) {
+            return $translation;
+        }
+        $newTranslation = preg_replace("/[‘‛']/", "", $translation);
+        return $newTranslation;
+    }
+
+    public function formatDescription(?string $description): ?string
+    {
+        if ($description === null) {
+            return $description;
+        }
+        $descriptionArray = preg_split('/\r{0,1}\n{0,1}<.+?>\r{0,1}\n/', $description);
+        if (count($descriptionArray) > 1) {
+            array_shift($descriptionArray);
+        }
+
+        $newDescription = implode(' | ', $descriptionArray);
+        return $newDescription;
+    }
+
+    /**
+     * Returns the path of a single inscription as a string.
+     */
     private function getPath(Inscription $inscription): string {
         $id = (string) $inscription->getId();
         return str_pad($id, 5, "0", STR_PAD_LEFT);
