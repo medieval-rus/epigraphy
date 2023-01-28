@@ -45,8 +45,7 @@ final class CarrierAdmin extends AbstractEntityAdmin
     {
         $listMapper
             ->addIdentifier('id', null, $this->createListOptions('id'))
-            ->add('origin1', null, $this->createListOptions('origin1'))
-            ->add('origin2', null, $this->createListOptions('origin2'))
+            ->add('discoverySite', null, $this->createListOptions('discoverySite'))
             ->add('individualName', null, $this->createListOptions('individualName'))
             ->add('supercarrier', null, $this->createListOptions('supercarrier'))
         ;

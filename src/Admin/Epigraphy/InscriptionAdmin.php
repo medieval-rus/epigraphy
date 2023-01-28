@@ -88,6 +88,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         $formMapper
             ->tab($this->getTabLabel('common'))
                 ->with($this->getSectionLabel('common'))
+                    ->add('id', null, $this->createFormOptions('id'))
                     ->add('conventionalDate', null, $this->createFormOptions('conventionalDate'))
                     ->add('carrier', null, $this->createFormOptions('carrier'))
                     ->add('comment', null, $this->createFormOptions('comment'))
