@@ -272,7 +272,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
                     ->getPreservationStates()
                     ->map(fn (PreservationState $preservationState): string => $preservationState->getName())
             ),
-            'created' => $inscription->getConventionalDate(),
+            'created' => $this->formatCreatedAt($inscription->getConventionalDate()),
             'subcorp' => 'epigraphica',
             'tagging' => 'manual',
             'link' => $baseUrl.$this->urlGenerator->generate(
@@ -337,6 +337,16 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
             // 'interpretation' => $value->getDescription(),
             'text' => $new_text_value,
         ];
+    }
+
+    public function formatCreatedAt(?string $createdAt): ?string
+    {
+        if ($createdAt === null) {
+            return null;
+        }
+        $newCreatedAt = preg_replace('/[\[\]]/', '', $createdAt);
+        $newCreatedAt = preg_replace('/–/', '-', $newCreatedAt);
+        return $newCreatedAt;
     }
 
     public function formatTranslation(?string $translation): ?string
