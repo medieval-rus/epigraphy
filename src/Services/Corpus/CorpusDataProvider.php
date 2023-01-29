@@ -301,28 +301,24 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
             ])
         );
         $formattedTranslations = array_map([$this, 'formatTranslation'], $translations);
-        switch ($alphabet_name) {
-            case 'глаголица':
-                return [
-                    'number' => $inscription->getId(),
-                    'texts' => array_map(
-                        [$this, 'formatTextValue'],
-                        $this->actualValueExtractor->extractFromZeroRowAsStrings($inscription, 'transliteration')
-                    ),
-                    'translations' => $formattedTranslations,
-                ];
-                break;
-            default:
-                return [
-                    'number' => $inscription->getId(),
-                    'texts' => array_map(
-                        [$this, 'formatTextValue'],
-                        $this->actualValueExtractor->extractFromZeroRowAsStrings($inscription, 'text')
-                    ),
-                    'translations' => $formattedTranslations,
-                ];
-                break;
+        $reconstruction = $inscription->getZeroRow()->getReconstruction();
+        if ($reconstruction !== null) {
+            $textPropName = 'reconstruction';
+        } else {
+            if ($alphabet_name === 'глаголица') {
+                $textPropName = 'transliteration';
+            } else {
+                $textPropName = 'text';
+            }
         }
+        return [
+            'number' => $inscription->getId(),
+            'texts' => array_map(
+                [$this, 'formatTextValue'],
+                $this->actualValueExtractor->extractFromZeroRowAsStrings($inscription, $textPropName)
+            ),
+            'translations' => $formattedTranslations,
+        ];
     }
 
     public function formatTextValue(StringActualValue $value): array
