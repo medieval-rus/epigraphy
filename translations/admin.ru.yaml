@@ -391,7 +391,7 @@ form:
   interpretation:
     tab: &interpretation-fields
       identification:
-        label: Идентификациионные данные
+        label: Идентификационные данные
       materialAspect:
         label: Материальный аспект
       linguisticAspect:
