@@ -180,7 +180,7 @@ class Inscription implements StringifiableEntityInterface
         return $this->id;
     }
 
-    public function setId(?int $id):
+    public function setId(?int $id): self
     {
         if ($id === null) {
             return $this;
