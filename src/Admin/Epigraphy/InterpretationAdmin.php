@@ -29,6 +29,7 @@ use App\Admin\AbstractEntityAdmin;
 use App\DataStorage\DataStorageManagerInterface;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 final class InterpretationAdmin extends AbstractEntityAdmin
 {
@@ -61,10 +62,10 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                 ->add('source', null, $this->createFormOptions('source'))
                 ->add('pageNumbersInSource', null, $this->createFormOptions('pageNumbersInSource'))
                 ->add('numberInSource', null, $this->createFormOptions('numberInSource'))
-                ->add('comment', null, $this->createFormOptions('comment'))
+                ->add('comment', CKEditorType::class, $this->createFormOptions('comment', ['autoload' => false, 'required' => false]))
             ->end()
             ->with($this->getSectionLabel('materialAspect'), ['class' => 'col-md-6'])
-                ->add('placeOnCarrier', null, $this->createZeroRowPartOptions('placeOnCarrier'))
+                ->add('placeOnCarrier', CKEditorType::class, $this->createZeroRowPartOptions('placeOnCarrier', ['autoload' => false]))
                 // ->add('writingTypes', null, $this->createZeroRowPartOptions('writingTypes'))
                 ->add('writingMethods', null, $this->createZeroRowPartOptions('writingMethods'))
                 ->add('preservationStates', null, $this->createZeroRowPartOptions('preservationStates'))
@@ -72,23 +73,19 @@ final class InterpretationAdmin extends AbstractEntityAdmin
             ->end()
             ->with($this->getSectionLabel('linguisticAspect'), ['class' => 'col-md-6'])
                 ->add('alphabets', null, $this->createZeroRowPartOptions('alphabets'))
-                ->add(
-                    'text',
-                    null,
-                    $this->createZeroRowPartOptions('text', ['attr' => ['data-virtual-keyboard' => true]])
-                )
-                ->add('transliteration', null, $this->createZeroRowPartOptions('transliteration'))
-                ->add('reconstruction', null, $this->createZeroRowPartOptions('reconstruction'))
-                ->add('normalization', null, $this->createZeroRowPartOptions('normalization'))
-                ->add('translation', null, $this->createZeroRowPartOptions('translation'))
+                ->add('text', CKEditorType::class, $this->createZeroRowPartOptions('text', ['autoload' => false]))
+                ->add('transliteration', CKEditorType::class, $this->createZeroRowPartOptions('transliteration', ['autoload' => false]))
+                ->add('reconstruction', CKEditorType::class, $this->createZeroRowPartOptions('reconstruction', ['autoload' => false]))
+                ->add('normalization', CKEditorType::class, $this->createZeroRowPartOptions('normalization', ['autoload' => false]))
+                ->add('translation', CKEditorType::class, $this->createZeroRowPartOptions('translation', ['autoload' => false]))
                 ->add('contentCategories', null, $this->createZeroRowPartOptions('contentCategories'))
-                ->add('description', null, $this->createZeroRowPartOptions('description'))
+                ->add('description', CKEditorType::class, $this->createZeroRowPartOptions('description', ['autoload' => false]))
             ->end()
             ->with($this->getSectionLabel('historicalAspect'), ['class' => 'col-md-6'])
-                ->add('origin', null, $this->createZeroRowPartOptions('origin'))
-                ->add('dateInText', null, $this->createZeroRowPartOptions('dateInText'))
-                ->add('nonStratigraphicalDate', null, $this->createZeroRowPartOptions('nonStratigraphicalDate'))
-                ->add('historicalDate', null, $this->createZeroRowPartOptions('historicalDate'))
+                // ->add('origin', null, $this->createZeroRowPartOptions('origin'))
+                ->add('dateInText', CKEditorType::class, $this->createZeroRowPartOptions('dateInText', ['autoload' => false]))
+                ->add('nonStratigraphicalDate', CKEditorType::class, $this->createZeroRowPartOptions('nonStratigraphicalDate', ['autoload' => false]))
+                ->add('historicalDate', CKEditorType::class, $this->createZeroRowPartOptions('historicalDate', ['autoload' => false]))
             ->end()
             ->with($this->getSectionLabel('media'), ['class' => 'col-md-6'])
                 ->add(

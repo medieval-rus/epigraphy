@@ -28,6 +28,7 @@ namespace App\Admin\Content;
 use App\Admin\AbstractEntityAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 final class PostAdmin extends AbstractEntityAdmin
 {
@@ -47,8 +48,8 @@ final class PostAdmin extends AbstractEntityAdmin
     {
         $formMapper
             ->with($this->getSectionLabel('common'))
-                ->add('title', null, $this->createFormOptions('title'))
-                ->add('body', null, $this->createFormOptions('body'))
+                ->add('title', CKEditorType::class, $this->createFormOptions('title', ['autoload' => true]))
+                ->add('body', CKEditorType::class, $this->createFormOptions('body', ['autoload' => true]))
             ->end()
         ;
     }

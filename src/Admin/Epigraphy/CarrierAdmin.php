@@ -34,6 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Doctrine\ORM\EntityRepository;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 final class CarrierAdmin extends AbstractEntityAdmin
 {
@@ -66,27 +67,21 @@ final class CarrierAdmin extends AbstractEntityAdmin
                 CheckboxType::class,
                 $this->createFormOptions('isSuperCarrier', ['required' => false])
             )
-            ->add('characteristics', null, $this->createFormOptions('characteristics'))
+            ->add('characteristics', CKEditorType::class, $this->createFormOptions('characteristics', ['autoload' => false]))
             ->add('materials', null, $this->createManyToManyFormOptions('materials'))
-            ->add('materialDescription', null, $this->createFormOptions('materialDescription'))
-            ->add('stratigraphicalDate', null, $this->createFormOptions('stratigraphicalDate'))
-            ->add('findCircumstances', null, $this->createFormOptions('findCircumstances'))
-            ->add('carrierHistory', null, $this->createFormOptions('carrierHistory', ['required' => false]))
+            ->add('materialDescription', CKEditorType::class, $this->createFormOptions('materialDescription', ['autoload' => false]))
+            ->add('stratigraphicalDate', CKEditorType::class, $this->createFormOptions('stratigraphicalDate', ['autoload' => false]))
+            ->add('findCircumstances', CKEditorType::class, $this->createFormOptions('findCircumstances', ['autoload' => false]))
+            ->add('carrierHistory', CKEditorType::class, $this->createFormOptions('carrierHistory', ['required' => false, 'autoload' => false]))
             ->add('discoverySite', null, $this->createManyToManyFormOptions('discoverySite'))
             // археология
-            ->add('archaeology', null, $this->createFormOptions('archaeology', ['required' => false]))
+            ->add('archaeology', CKEditorType::class, $this->createFormOptions('archaeology', ['required' => false, 'autoload' => false]))
             // предыдущие места хранения
-            ->add('previousStorage', null, $this->createFormOptions('previousStorage', ['required' => false]))
+            ->add('previousStorage', CKEditorType::class, $this->createFormOptions('previousStorage', ['required' => false, 'autoload' => false]))
             ->add('storageSite', null, $this->createManyToManyFormOptions('storageSite'))
             // локализация в месте хранения
-            ->add('storageLocalization', null, $this->createFormOptions('storageLocalization', ['required' => false]))
+            ->add('storageLocalization', CKEditorType::class, $this->createFormOptions('storageLocalization', ['required' => false, 'autoload' => false]))
             ->add('inventoryNumber', null, $this->createFormOptions('inventoryNumber'))
-            // убрали in situ
-            // ->add(
-            //     'isInSitu',
-            //     CheckboxType::class,
-            //     $this->createFormOptions('isInSitu', ['required' => false])
-            // )
         ;
     }
 }

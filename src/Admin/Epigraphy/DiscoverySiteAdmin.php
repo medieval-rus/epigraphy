@@ -31,6 +31,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 
 final class DiscoverySiteAdmin extends AbstractNamedEntityAdmin
@@ -59,7 +60,7 @@ final class DiscoverySiteAdmin extends AbstractNamedEntityAdmin
             )
             ->add('rivers', null, $this->createManyToManyFormOptions('rivers'))
             ->add('cities', null, $this->createManyToManyFormOptions('cities'))
-            ->add('comments', null, $this->createFormOptions('comments', ['required' => false]))
+            ->add('comments', CKEditorType::class, $this->createFormOptions('comments', ['autoload' => false, 'required' => false]))
             ->add('latitude', null, $this->createFormOptions('latitude', ['required' => false]))
             ->add('longitude', null, $this->createFormOptions('longitude', ['required' => false]))
             ->add('isOutsideCity',

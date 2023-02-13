@@ -327,6 +327,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         $newTextValue = str_replace('/im./', '', $text_value);
         $newTextValue = str_replace('|im.|', '', $newTextValue);
         $newTextValue = str_replace('/vac./', '', $newTextValue);
+        $newTextValue = str_replace('|vac.|', '', $newTextValue);
         $newTextValue = str_replace('*', '', $newTextValue);
         $newTextValue = str_replace('...', '…', $newTextValue);
         $newTextValue = str_replace('\\', '', $newTextValue);

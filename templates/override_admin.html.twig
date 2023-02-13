@@ -1,0 +1,10 @@
+{% extends '@SonataAdmin/CRUD/edit.html.twig' %}
+
+{% block sonata_admin_content %}
+    {% autoescape false %}
+    <script type="text/javascript">
+        const bibliography = {{ admin.bibliography }};
+    </script>
+    {% endautoescape %}
+    {{ parent () }}
+{% endblock %}

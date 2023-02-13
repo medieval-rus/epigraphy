@@ -36,6 +36,17 @@ Encore
         config.useBuiltIns = 'usage';
         config.corejs = 3;
     })
+    .copyFiles([
+        {from: './node_modules/ckeditor4/', to: 'ckeditor/[path][name].[ext]', pattern: /\.(js|css)$/, includeSubdirectories: false},
+        {from: './node_modules/ckeditor4/adapters', to: 'ckeditor/adapters/[path][name].[ext]'},
+        {from: './node_modules/ckeditor4/lang', to: 'ckeditor/lang/[path][name].[ext]'},
+        {from: './node_modules/ckeditor4/plugins', to: 'ckeditor/plugins/[path][name].[ext]'},
+        {from: './node_modules/ckeditor4/skins', to: 'ckeditor/skins/[path][name].[ext]'},
+        {from: './node_modules/ckeditor4/vendor', to: 'ckeditor/vendor/[path][name].[ext]'}
+    ])
+    .copyFiles([
+        {from: './assets/js/plugins', to: 'ckeditor/plugins/[path][name].[ext]', includeSubdirectories: true},
+    ])
     .enableSassLoader()
     .addStyleEntry('css/site/index/index', './assets/scss/pages/site/index/index.scss')
     .addStyleEntry('css/site/content/post', './assets/scss/pages/site/content/post.scss')

@@ -29,6 +29,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use App\Admin\AbstractNamedEntityAdmin;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 
 final class StorageSiteAdmin extends AbstractNamedEntityAdmin
@@ -56,7 +57,7 @@ final class StorageSiteAdmin extends AbstractNamedEntityAdmin
                 )
             )
             ->add('cities', null, $this->createManyToManyFormOptions('cities'))
-            ->add('comments', null, $this->createFormOptions('comments', ['required' => false]))
+            ->add('comments', CKEditorType::class, $this->createFormOptions('comments', ['autoload' => false, 'required' => false]))
         ;
     }
 }
