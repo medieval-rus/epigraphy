@@ -1703,6 +1703,11 @@
   "resolved" "https://registry.npmjs.org/chrome-trace-event/-/chrome-trace-event-1.0.3.tgz"
   "version" "1.0.3"
 
+"ckeditor4@^4.20.1":
+  "integrity" "sha512-OywaO5CC6n5NcY98Fi4Llc/h9rgmn8uHwEIfWxulVKpu0UCdL8x9p6xCfo/ZfgQN6FTS/eZcP7XzKMuokRN+mQ=="
+  "resolved" "https://registry.npmjs.org/ckeditor4/-/ckeditor4-4.20.1.tgz"
+  "version" "4.20.1"
+
 "clean-stack@^2.0.0":
   "integrity" "sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A=="
   "resolved" "https://registry.npmjs.org/clean-stack/-/clean-stack-2.2.0.tgz"

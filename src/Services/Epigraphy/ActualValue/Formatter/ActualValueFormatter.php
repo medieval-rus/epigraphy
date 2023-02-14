@@ -60,8 +60,13 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
                 break;
             
             case self::FORMAT_TYPE_TRANSLATION:
-                $formattedValue = nl2br(htmlspecialchars($value));
+                $formattedValue = nl2br($value);
                 
+                break;
+
+            case self::FORMAT_TYPE_HTML:
+                $formattedValue = nl2br($value);
+
                 break;
 
             default:

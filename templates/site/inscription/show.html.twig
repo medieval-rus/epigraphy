@@ -43,7 +43,6 @@
             {{ self.format_carrier(translationContext, inscription) }}
             {{ self.format_original_text_row(translationContext, 'zeroRow.text', inscription) }}
             {{ self.format_text_row(translationContext, 'zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
-            {# {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_zero_row(inscription, 'translation')) }} #}
             {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_translation(inscription)) }}
             {{ self.format_text_row(translationContext, 'zeroRow.photos', self.format_zero_row_images(inscription, 'photos')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.drawings', self.format_zero_row_images(inscription, 'drawings')) }}
@@ -51,7 +50,6 @@
             {{ self.format_text_row(translationContext, 'zeroRow.materials', self.format_zero_row(inscription, 'materials')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.writingMethods', self.format_zero_row(inscription, 'writingMethods')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.placeOnCarrier', self.format_zero_row(inscription, 'placeOnCarrier')) }}
-            {# {{ self.format_text_row(translationContext, 'zeroRow.origin', self.format_zero_row(inscription, 'origin')) }} #}
             {{ self.format_text_row(translationContext, 'zeroRow.preservationStates', self.format_zero_row(inscription, 'preservationStates')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.nonStratigraphicalDate', self.format_zero_row(inscription, 'nonStratigraphicalDate')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.dateInText', self.format_zero_row(inscription, 'dateInText')) }}
@@ -73,11 +71,12 @@
     {{ include('site/inscription/_photoswipe_layout.html.twig') }}
 {% endblock %}
 
-{%- macro format_zero_row(inscription, propertyName, formatType = 'default') -%}
+{%- macro format_zero_row(inscription, propertyName, formatType = 'html') -%}
 
     {% import _self as self %}
-
-    {{- valueStringifier.stringify(inscription, propertyName, formatType)|raw -}}
+    {# {% autoescape false %} #}
+        {{- valueStringifier.stringify(inscription, propertyName, formatType)|raw -}}
+    {# {% endautoescape %} #}
 {%- endmacro -%}
 
 {%- macro format_zero_row_images(inscription, propertyName) -%}

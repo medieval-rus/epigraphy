@@ -34,6 +34,10 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
     protected function configure(): void
     {
         $entityKey = $this->getEntityKey();
+        $em = $this->getModelManager()->getEntityManager('App\Persistence\Entity\Bibliography\BibliographicRecord');
+        $queryBuilder = $em->createQueryBuilder();
+        $queryBuilder->select('b.shortName')->from('App\Persistence\Entity\Bibliography\BibliographicRecord', 'b');
+        $this->bibliography = json_encode($queryBuilder->getQuery()->execute());
 
         $this->classnameLabel = $entityKey;
         $this->setLabel('menu.paragraphs.'.$entityKey.'.label');
