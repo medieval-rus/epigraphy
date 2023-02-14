@@ -219,7 +219,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     {
         return new DbSortConfiguration(
             'id',
-            true,
+            false,
             200,
             3,
             'controller.inscription.list.filter.disablePaginator'
