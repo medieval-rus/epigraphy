@@ -145,7 +145,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         CKEditorType::class,
                         $this->createFormOptions(
                             'zeroRow.text',
-                            ['autoload' => false, 'required' => false, 'attr' => ['data-virtual-keyboard' => true]]
+                            ['autoload' => false, 'required' => false, 'config_name' => 'textconfig']
                         )
                     )
                     ->add(
@@ -206,7 +206,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.description',
                         CKEditorType::class,
-                        $this->createFormOptions('zeroRow.description', ['autoload' => false, 'required' => false])
+                        $this->createFormOptions('zeroRow.description', ['autoload' => false, 'required' => false, 'config_name' => 'textconfig'])
                     )
                     ->add(
                         'zeroRow.descriptionReferences',
