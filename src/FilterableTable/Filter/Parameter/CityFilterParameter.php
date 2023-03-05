@@ -61,7 +61,7 @@ final class CityFilterParameter implements FilterParameterInterface, ExpressionB
             'class' => City::class,
             'choice_label' => 'name',
             'expanded' => false,
-            'multiple' => true,
+            'multiple' => false,
             'query_builder' => function (EntityRepository $repository): QueryBuilder {
                 $entityAlias = $this->createAlias();
 
@@ -77,11 +77,11 @@ final class CityFilterParameter implements FilterParameterInterface, ExpressionB
      */
     public function buildWhereExpression(QueryBuilder $queryBuilder, $formData, string $entityAlias): ?string
     {
-        if (0 === \count($formData)) {
+        if (is_null($formData)) {
             return null;
         }
 
-        $ids = $formData->map(fn (City $entity): int => $entity->getId())->toArray();
+        $ids = [$formData->getId()];
 
         
         $queryBuilder

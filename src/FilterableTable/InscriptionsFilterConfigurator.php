@@ -189,8 +189,6 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
             $this->carrierCategoryFilterParameter,            
             $this->superMaterialFilterParameter,
             $this->materialFilterParameter,
-            $this->origin1FilterParameter,
-            $this->origin2FilterParameter,
             $this->cityFilterParameter,
             $this->discoverySiteFilterParameter,
             // типология надписи

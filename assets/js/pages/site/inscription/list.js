@@ -28,7 +28,8 @@ window.superFilters = { // mapping of parent and child categories
     "super-carrier-category": {"subfilter": "carrier-category", "cache": []},
     "super-writing-method": {"subfilter": "writing-method", "cache": []},
     "super-content-category": {"subfilter": "content-category", "cache": []},
-    "super-material": {"subfilter": "material", "cache": []}
+    "super-material": {"subfilter": "material", "cache": []},
+    "city": {"subfilter": "discovery-site", "cache": []}
 }
 
 $(window).on('load', () => {
