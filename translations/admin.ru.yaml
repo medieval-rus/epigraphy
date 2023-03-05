@@ -246,7 +246,8 @@ form:
       origin1: Город / Местность
       origin2: Здание / Раскоп
       findCircumstances: Обстоятельства находки
-      carrierHistory: История носителя
+      # удалили из админки
+      # carrierHistory: История носителя
       characteristics: Характеристики носителя
       individualName: Индивидуальное название носителя
       discoverySite: Место находки
@@ -258,6 +259,7 @@ form:
       storageLocalization: Локализация в месте хранения
       previousStorage: Прежние места хранения
       # добавили материал
+      materials: Категория / подкатегория материала
       materialDescription: Описание материала
       inventoryNumber: Инвентарный номер
       isInSitu: In situ
@@ -347,8 +349,6 @@ form:
       isShownOnSite: Показывать надпись на сайте
       isPartOfCorpus: Часть корпуса
       zeroRow:
-        origin: Происхождение надписи
-        originReferences: Происхождение надписи (ссылки)
         placeOnCarrier: Расположение на носителе
         placeOnCarrierReferences: Расположение на носителе (ссылки)
         writingTypes: Разряд по Франклину
@@ -357,10 +357,11 @@ form:
         writingMethodsReferences: Категории / подкатегории способа нанесения (ссылки)
         preservationStates: Состояние сохранности
         preservationStatesReferences: Состояние сохранности (ссылки)
-        materials: Категории / подкатегории материалов
-        materialsReferences: Категории / подкатегории материалов (ссылки)
+        # materials: Категории / подкатегории материалов
+        # materialsReferences: Категории / подкатегории материалов (ссылки)
         alphabets: Алфавит
         alphabetsReferences: Алфавит (ссылки)
+        interpretationComment: Комментарий к прочтению
         text: Текст
         textReferences: Текст (ссылки)
         textImages: Изображения текста (файлы)
@@ -379,6 +380,8 @@ form:
         descriptionReferences: Содержание (ссылки)
         dateInText: Дата в тексте
         dateInTextReferences: Дата в тексте (ссылки)
+        origin: Датировка по иным признакам
+        originReferences: Датировка по иным признакам (ссылки)
         nonStratigraphicalDate: Датировка по палеографии и языку
         nonStratigraphicalDateReferences: Датировка по палеографии и языку (ссылки)
         historicalDate: «Историческая» дата
@@ -409,13 +412,14 @@ form:
       pageNumbersInSource: Номера страниц в публикации
       numberInSource: Номер в публикации
       comment: Комментарий к публикации
-      origin: Происхождение надписи
+      origin: Датировка по иным признакам
       placeOnCarrier: Расположение на носителе
       writingTypes: Разряд по Франклину
       writingMethods: Подкатегория способа нанесения
       preservationStates: Состояние сохранности
       materials: Подкатегория материалов
       alphabets: Алфавит
+      interpretationComment: Комментарий к прочтению
       text: Текст
       textImages: Изображения текста (файлы)
       transliteration: Транслитерация

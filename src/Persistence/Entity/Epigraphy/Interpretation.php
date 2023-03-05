@@ -153,6 +153,13 @@ class Interpretation implements StringifiableEntityInterface
     /**
      * @var string|null
      *
+     * @ORM\Column(name="interpretation_comment", type="text", length=65535, nullable=true)
+     */
+    private $interpretationComment; 
+
+    /**
+     * @var string|null
+     *
      * @ORM\Column(name="text", type="text", length=65535, nullable=true)
      */
     private $text;
@@ -442,6 +449,18 @@ class Interpretation implements StringifiableEntityInterface
     public function setAlphabets(Collection $alphabets): self
     {
         $this->alphabets = $alphabets;
+
+        return $this;
+    }
+
+    public function getInterpretationComment(): ?string
+    {
+        return $this->interpretationComment;
+    }
+
+    public function setInterpretationComment(?string $interpretationComment): self
+    {
+        $this->interpretationComment = $interpretationComment;
 
         return $this;
     }

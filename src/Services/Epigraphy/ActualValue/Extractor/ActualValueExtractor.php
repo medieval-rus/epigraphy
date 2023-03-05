@@ -206,14 +206,13 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
 
     private function getInterpretationRef($interpretation): string 
     {
+        $shortName = $interpretation
+            ->getSource()
+            ->getShortName();
         if (null === $interpretation->getPageNumbersInSource()) {
-            return $interpretation
-                ->getSource()
-                ->getShortName();
+            return '<a href="/epigraphy/bibliography/record/list#'.$shortName.'">'.$shortName.'</a>';
         } else {
-            return $interpretation
-                ->getSource()
-                ->getShortName();
+            return '<a href="/epigraphy/bibliography/record/list#'.$shortName.'">'.$shortName.'</a>';
         }           
     }
 

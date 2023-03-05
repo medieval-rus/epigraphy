@@ -103,7 +103,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                     );
                 })
                 ->setIsIdentifier(false)
-                ->setIsSortable(false)
+                ->setIsSortable(true)
                 ->setLabel('controller.inscription.list.table.column.carrier.category'),
             (new ColumnMetadata())
                 ->setName('carrier-city')
@@ -126,7 +126,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                     return $cities->toArray()[0]->getName() ?? '';
                 })
                 ->setIsIdentifier(false)
-                ->setIsSortable(false)
+                ->setIsSortable(true)
                 ->setLabel('controller.inscription.list.table.column.carrier.city'),
             (new ColumnMetadata())
                 ->setName('carrier-discovery-site')
@@ -143,7 +143,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                     return $discoverySite->toArray()[0]->getName() ?? '';
                 })
                 ->setIsIdentifier(false)
-                ->setIsSortable(false)
+                ->setIsSortable(true)
                 ->setLabel('controller.inscription.list.table.column.carrier.discoverySite'),
             (new ColumnMetadata())
                 ->setIsRaw(true)

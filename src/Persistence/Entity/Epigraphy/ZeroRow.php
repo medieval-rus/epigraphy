@@ -185,6 +185,13 @@ class ZeroRow
     /**
      * @var string|null
      *
+     * @ORM\Column(name="interpretation_comment", type="text", length=65535, nullable=true)
+     */
+    private $interpretationComment; 
+
+    /**
+     * @var string|null
+     *
      * @ORM\Column(name="text", type="text", length=65535, nullable=true)
      */
     private $text;
@@ -729,6 +736,18 @@ class ZeroRow
     public function setAlphabetsReferences(Collection $alphabetsReferences): self
     {
         $this->alphabetsReferences = $alphabetsReferences;
+
+        return $this;
+    }
+
+    public function getInterpretationComment(): ?string
+    {
+        return $this->interpretationComment;
+    }
+
+    public function setInterpretationComment(?string $interpretationComment): self
+    {
+        $this->interpretationComment = $interpretationComment;
 
         return $this;
     }

@@ -20,15 +20,14 @@ fos_ck_editor:
             filename: "plugin.js"
     default_config: common_config
     configs:
-        common_config:
+        common_config: &config
             extraPlugins: ["quoteplugin"]
             removePlugins: ["exportpdf", "easyimage", "cloudservices" ]
             toolbar: [ [ 'CreateDiv', 'Bold', 'Italic', 'Link', 'Quoteplugin', 'SpecialChar', 'RemoveFormat', 'Source' ] ]
-            specialChars: [ '–', '×', '«', '»', '“', '”', '‘', '’', 'ї', '', '|im.|', '|vac.|', 'Ѡ', 'Ѿ', 'Ѧ', 'Ѩ', 'Ѫ', 'Ѭ', 'Ѣ', 'Ѯ', 'Ꙗ', 'Ꙋ', 'Ѳ', 'І', 'Є', 'Ѥ', 'Ѕ', 'Ѵ', 'Ѱ', 'Ꙑ', 'ѡ', 'ѿ', 'ѧ', 'ѩ', 'ѫ', 'ѭ', 'ѣ', 'ѯ', 'ꙗ', 'ꙋ', 'ѳ', 'і', 'є', 'ѥ', 'ѕ', 'ѵ', 'ѱ', 'ꙑ', '⁙', '҂', '|', '¦', '⸗', '҃', '҇', '·' ]
+            specialChars: [ '–', '×', '«', '»', '“', '”', '‘', '’', 'ї', '', '|im.|', '|vac.|', 'Ѡ', 'Ѿ', 'Ѧ', 'Ѩ', 'Ѫ', 'Ѭ', 'Ѣ', 'Ѯ', 'Ꙗ', 'Ꙋ', 'Ѳ', 'І', 'Є', 'Ѥ', 'Ѕ', 'Ѵ', 'Ѱ', 'Ꙑ', 'ѡ', 'ѿ', 'ѧ', 'ѩ', 'ѫ', 'ѭ', 'ѣ', 'ѯ', 'ꙗ', 'ꙋ', 'ѳ', 'і', 'є', 'ѥ', 'ѕ', 'ѵ', 'ѱ', 'ꙑ', '⁙', '҂', '|', '¦', '⸗', '҃', '҇', '·', '→', '⃝' ]
         textconfig:
+            <<: *config
             extraPlugins: ['bbcode']
-            removePlugins: ["exportpdf", "easyimage", "cloudservices" ]
             toolbar: [ [ 'SpecialChar', 'Source' ] ]
-            specialChars: [ '–', '×', '«', '»', '“', '”', '‘', '’', 'ї', '', '|im.|', '|vac.|', 'Ѡ', 'Ѿ', 'Ѧ', 'Ѩ', 'Ѫ', 'Ѭ', 'Ѣ', 'Ѯ', 'Ꙗ', 'Ꙋ', 'Ѳ', 'І', 'Є', 'Ѥ', 'Ѕ', 'Ѵ', 'Ѱ', 'Ꙑ', 'ѡ', 'ѿ', 'ѧ', 'ѩ', 'ѫ', 'ѭ', 'ѣ', 'ѯ', 'ꙗ', 'ꙋ', 'ѳ', 'і', 'є', 'ѥ', 'ѕ', 'ѵ', 'ѱ', 'ꙑ', '⁙', '҂', '|', '¦', '⸗', '҃', '҇', '·' ]
 
 
