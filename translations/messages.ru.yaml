@@ -92,13 +92,14 @@ controller:
         label:
           number: Номер
           conventionalDate: Датировка
+          dateExplanation: Обоснование датировки
           comment: Комментарий
           literature: Литература
           carrier:
             categories: Категория носителя
-            origin1: Город / Местность
-            origin2: Здание / Раскоп
             storageSite: Место хранения носителя
+            storageLocalization: Локализация в месте храения
+            previousStorage: Прежние места хранения
             discoverySite: Место находки
             findCircumstances: Обстоятельства находки носителя
             stratigraphicalDate: Стратиграфическая дата
@@ -116,9 +117,11 @@ controller:
             writingMethods: Способ нанесения
             preservationStates: Состояние сохранности
             alphabets: Алфавит
-            interpretationComment: Комментарий к прочтению
             text: Текст
             transliteration: Транслитерация
+            reconstruction: Реконструкция
+            normalization: Нормализация
+            interpretationComment: Комментарий к прочтению
             translation: Перевод
             description: Содержание
             dateInText: Дата в тексте
