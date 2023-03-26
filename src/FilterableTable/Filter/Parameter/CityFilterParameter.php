@@ -62,6 +62,7 @@ final class CityFilterParameter implements FilterParameterInterface, ExpressionB
             'choice_label' => 'name',
             'expanded' => false,
             'multiple' => false,
+            'required' => false,
             'query_builder' => function (EntityRepository $repository): QueryBuilder {
                 $entityAlias = $this->createAlias();
 
