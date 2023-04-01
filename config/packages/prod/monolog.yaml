@@ -26,9 +26,10 @@ monolog:
       excluded_http_codes: [404, 405]
       buffer_size: 500
     warnings:
-      type: stream
+      type: rotating_file
       path: '%kernel.logs_dir%/%kernel.environment%.warning.log'
       level: debug
+      max_files: 7
     errors_filter:
       type: fingers_crossed
       action_level: error
@@ -36,10 +37,11 @@ monolog:
       excluded_http_codes: [404, 405]
       buffer_size: 500
     errors:
-      type: stream
+      type: rotating_file
       path: '%kernel.logs_dir%/%kernel.environment%.error.log'
       level: debug
       include_stacktraces: true
+      max_files: 7
     console:
       type: console
       process_psr_3_messages: false

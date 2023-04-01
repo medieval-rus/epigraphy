@@ -58,6 +58,11 @@ final class DiscoverySiteFilterParameter implements FilterParameterInterface, Ex
         return [
             'label' => 'controller.inscription.list.filter.discoverySite',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
+            'choice_attr' => function($choice, $key, $value) {
+                return [
+                    'data-super' => count($choice->getCities()) > 0 ? $choice->getCities()[0]->getId() : 0
+                ];
+            },
             'class' => DiscoverySite::class,
             'choice_label' => 'name',
             'expanded' => false,

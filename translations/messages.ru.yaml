@@ -63,6 +63,7 @@ controller:
         writingMethod: "Способ нанесения"
         preservationState: Состояние сохранности
         alphabet: Алфавит
+        interpretationComment: Комментарий к прочтению
         text: Текст надписи
         translation: Перевод
         material: "Материал"
@@ -91,14 +92,15 @@ controller:
         label:
           number: Номер
           conventionalDate: Датировка
+          dateExplanation: Обоснование датировки
           comment: Комментарий
           literature: Литература
           carrier:
-            categories: Категория / подкатегория носителя
-            origin1: Город / Местность
-            origin2: Здание / Раскоп
+            categories: Категория носителя
             storageSite: Место хранения носителя
-            discoverySite: Место находки носителя
+            storageLocalization: Локализация в месте храения
+            previousStorage: Прежние места хранения
+            discoverySite: Место находки
             findCircumstances: Обстоятельства находки носителя
             stratigraphicalDate: Стратиграфическая дата
             characteristics: Характеристики носителя
@@ -117,6 +119,9 @@ controller:
             alphabets: Алфавит
             text: Текст
             transliteration: Транслитерация
+            reconstruction: Реконструкция
+            normalization: Нормализация
+            interpretationComment: Комментарий к прочтению
             translation: Перевод
             description: Содержание
             dateInText: Дата в тексте

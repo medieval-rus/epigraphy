@@ -185,6 +185,24 @@ class ZeroRow
     /**
      * @var string|null
      *
+     * @ORM\Column(name="interpretation_comment", type="text", length=65535, nullable=true)
+     */
+    private $interpretationComment; 
+
+    /**
+     * @var Collection|Interpretation[]
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\Interpretation",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinTable(name="zero_row_interpretation_comment_references")
+     */
+    private $interpretationCommentReferences;
+
+    /**
+     * @var string|null
+     *
      * @ORM\Column(name="text", type="text", length=65535, nullable=true)
      */
     private $text;
@@ -729,6 +747,36 @@ class ZeroRow
     public function setAlphabetsReferences(Collection $alphabetsReferences): self
     {
         $this->alphabetsReferences = $alphabetsReferences;
+
+        return $this;
+    }
+
+    public function getInterpretationComment(): ?string
+    {
+        return $this->interpretationComment;
+    }
+
+    public function setInterpretationComment(?string $interpretationComment): self
+    {
+        $this->interpretationComment = $interpretationComment;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Interpretation[]
+     */
+    public function getInterpretationCommentReferences(): Collection
+    {
+        return $this->interpretationCommentReferences;
+    }
+
+    /**
+     * @param Collection|Interpretation[] $interpretationCommentReferences
+     */
+    public function setInterpretationCommentReferences(Collection $interpretationCommentReferences): self
+    {
+        $this->interpretationCommentReferences = $interpretationCommentReferences;
 
         return $this;
     }

@@ -90,6 +90,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                 ->with($this->getSectionLabel('common'))
                     ->add('id', null, $this->createFormOptions('id'))
                     ->add('conventionalDate', null, $this->createFormOptions('conventionalDate'))
+                    ->add('dateExplanation', CKEditorType::class, $this->createFormOptions('dateExplanation', ['autoload' => false, 'required' => false]))
                     ->add('carrier', null, $this->createFormOptions('carrier'))
                     ->add('comment', CKEditorType::class, $this->createFormOptions('comment', ['autoload' => false, 'required' => false]))
                     ->add('isShownOnSite', null, $this->createFormOptions('isShownOnSite'))
@@ -154,9 +155,17 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         $this->createLabeledReferencesFormOptions('textReferences')
                     )
                     ->add(
+                        'zeroRow.interpretationComment',
+                        CKEditorType::class,
+                        $this->createFormOptions(
+                            'zeroRow.interpretationComment',
+                            ['autoload' => false, 'required' => false]
+                        )
+                    )
+                    ->add(
                         'zeroRow.transliteration',
                         CKEditorType::class,
-                        $this->createFormOptions('zeroRow.transliteration', ['autoload' => false, 'required' => false])
+                        $this->createFormOptions('zeroRow.transliteration', ['autoload' => false, 'required' => false, 'config_name' => 'textconfig'])
                     )
                     ->add(
                         'zeroRow.transliterationReferences',
@@ -166,7 +175,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.reconstruction',
                         CKEditorType::class,
-                        $this->createFormOptions('zeroRow.reconstruction', ['autoload' => false, 'required' => false])
+                        $this->createFormOptions('zeroRow.reconstruction', ['autoload' => false, 'required' => false, 'config_name' => 'textconfig'])
                     )
                     ->add(
                         'zeroRow.reconstructionReferences',
@@ -176,7 +185,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add(
                         'zeroRow.normalization',
                         CKEditorType::class,
-                        $this->createFormOptions('zeroRow.normalization', ['autoload' => false, 'required' => false])
+                        $this->createFormOptions('zeroRow.normalization', ['autoload' => false, 'required' => false, 'config_name' => 'textconfig'])
                     )
                     ->add(
                         'zeroRow.normalizationReferences',
@@ -244,6 +253,19 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         'zeroRow.historicalDateReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('historicalDateReferences')
+                    )
+                    ->add(
+                        'zeroRow.origin',
+                        CKEditorType::class,
+                        $this->createFormOptions(
+                            'zeroRow.origin',
+                            ['required' => false, 'autoload' => false]
+                        )
+                    )
+                    ->add(
+                        'zeroRow.originReferences',
+                        EntityType::class,
+                        $this->createLabeledReferencesFormOptions('originReferences')
                     )
                 ->end()
                 ->with($this->getSectionLabel('zeroRowMedia'), ['class' => 'col-md-6'])

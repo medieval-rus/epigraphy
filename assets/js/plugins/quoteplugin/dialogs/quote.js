@@ -34,7 +34,9 @@ CKEDITOR.dialog.add( 'quoteDialog', function ( editor ) {
                 let textValue = `${shortName}${truePages}`;
                 link.setAttribute( 'href', hrefValue );
                 link.setText( textValue );
+                editor.insertText('(');
                 editor.insertElement( link );
+                editor.insertText(')');
             }
         };
     }

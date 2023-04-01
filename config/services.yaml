@@ -66,6 +66,10 @@ services:
           presets:
             document:
               type: raw
+        - media-types: ['image/vnd.djvu', 'image/x.djvu']
+          presets:
+            document:
+              type: raw
 
   App\:
     resource: '../src/'

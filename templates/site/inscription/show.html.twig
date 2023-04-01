@@ -39,10 +39,13 @@
             {{ self.format_text_row(translationContext, 'zeroRow.description', self.format_zero_row(inscription, 'description')) }}
             {{ self.format_text_row(translationContext, 'carrier.individualName', inscription.carrier.individualName) }}
             {{ self.format_text_row(translationContext, 'carrier.categories', inscription.carrier.categories|map(namedEntity => namedEntity.name)) }}
-            {{ self.format_text_row(translationContext, 'carrier.origin1', inscription.carrier.origin1) }}
+            {{ self.format_text_row(translationContext, 'carrier.discoverySite', inscription.carrier.discoverySite) }}
             {{ self.format_carrier(translationContext, inscription) }}
             {{ self.format_original_text_row(translationContext, 'zeroRow.text', inscription) }}
             {{ self.format_text_row(translationContext, 'zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.reconstruction', self.format_zero_row(inscription, 'reconstruction')) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.normalization', self.format_zero_row(inscription, 'normalization')) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.interpretationComment', self.format_zero_row(inscription, 'interpretationComment')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_translation(inscription)) }}
             {{ self.format_text_row(translationContext, 'zeroRow.photos', self.format_zero_row_images(inscription, 'photos')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.drawings', self.format_zero_row_images(inscription, 'drawings')) }}
@@ -54,8 +57,9 @@
             {{ self.format_text_row(translationContext, 'zeroRow.nonStratigraphicalDate', self.format_zero_row(inscription, 'nonStratigraphicalDate')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.dateInText', self.format_zero_row(inscription, 'dateInText')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.historicalDate', self.format_zero_row(inscription, 'historicalDate')) }}
-            {{ self.format_literature(translationContext, inscription) }}
+            {{ self.format_text_row(translationContext, 'dateExplanation', inscription.dateExplanation) }}
             {{ self.format_text_row(translationContext, 'comment', inscription.comment) }}
+            {{ self.format_literature(translationContext, inscription) }}
         </tbody>
     </table>
     {% if is_granted('ROLE_ADMIN') %}
@@ -173,14 +177,14 @@
                     <div class="eomr-spoiler-content-wrapper">
                         <table class="table table-bordered">
                             <tbody>
-                                {{ self.format_text_row(translationContext, 'carrier.origin2', inscription.carrier.origin2) }}
                                 {{ self.format_text_row(translationContext, 'carrier.discoverySite', inscription.carrier.discoverySite) }}
-                                {{ self.format_text_row(translationContext, 'carrier.storageSite', inscription.carrier.storageSite) }}                                
-                                {# {{ self.format_text_row(translationContext, 'carrier.isInSitu', inscription.carrier.isInSitu) }} #}
-                                {# {{ self.format_text_row(translationContext, 'carrier.storagePlace', inscription.carrier.storagePlace) }} #}
+                                {{ self.format_text_row(translationContext, 'carrier.archaeology', inscription.carrier.archaeology) }}
                                 {{ self.format_text_row(translationContext, 'carrier.findCircumstances', inscription.carrier.findCircumstances) }}
-                                {{ self.format_text_row(translationContext, 'carrier.characteristics', inscription.carrier.characteristics) }}
+                                {{ self.format_text_row(translationContext, 'carrier.storageSite', inscription.carrier.storageSite) }}
+                                {{ self.format_text_row(translationContext, 'carrier.storageLocalization', inscription.carrier.storageLocalization) }}                        
                                 {{ self.format_text_row(translationContext, 'carrier.inventoryNumber', inscription.carrier.inventoryNumber) }}
+                                {{ self.format_text_row(translationContext, 'carrier.previousStorage', inscription.carrier.previousStorage) }}
+                                {{ self.format_text_row(translationContext, 'carrier.characteristics', inscription.carrier.characteristics) }}
                                 {{ self.format_text_row(translationContext, 'carrier.stratigraphicalDate', inscription.carrier.stratigraphicalDate) }}
                             </tbody>
                         </table>
@@ -208,7 +212,13 @@
     {% set bibliographicRecord = record.source %}
     <a href="{{ path("bibliographic_record__list") }}#{{ bibliographicRecord.shortName }}"
     data-toggle="tooltip" data-placement="top" 
-    title="{{ bibliographicRecord.formalNotation }}">{{ bibliographicRecord.shortName }} с. {{ record.pages|default("?") }}</a>
+    title="{{ bibliographicRecord.formalNotation }}">
+    {% if record.pages %}
+    {{ bibliographicRecord.shortName }}: {{ record.pages }}
+    {% else %}
+    {{ bibliographicRecord.shortName }}
+    {% endif %}
+    </a>
 {%- endmacro -%}
 
 {%- macro fill_row(thContent, tdContent) -%}
