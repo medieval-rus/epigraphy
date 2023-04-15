@@ -344,6 +344,7 @@ form:
       number: Номер
       conventionalDate: Датировка
       dateExplanation: Обоснование датировки
+      rssdaRender: Рендер RSSDA
       carrier: Носитель
       comment: Комментарий
       isShownOnSite: Показывать надпись на сайте

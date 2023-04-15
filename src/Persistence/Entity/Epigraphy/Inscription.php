@@ -68,6 +68,13 @@ class Inscription implements StringifiableEntityInterface
     /**
      * @var string|null
      *
+     * @ORM\Column(name="rssda_render", type="string", length=128, nullable=true)
+     */
+    private $rssdaRender;
+
+    /**
+     * @var string|null
+     *
      * @ORM\Column(name="date_explanation", type="text", length=65535, nullable=true)
      */
     private $dateExplanation;
@@ -219,6 +226,18 @@ class Inscription implements StringifiableEntityInterface
     public function setConventionalDate(?string $conventionalDate): self
     {
         $this->conventionalDate = $conventionalDate;
+
+        return $this;
+    }
+
+    public function getRssdaRender(): ?string
+    {
+        return $this->rssdaRender;
+    }
+
+    public function setRssdaRender(?string $rssdaRender): self
+    {
+        $this->rssdaRender = $rssdaRender;
 
         return $this;
     }

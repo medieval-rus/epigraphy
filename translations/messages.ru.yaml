@@ -93,12 +93,13 @@ controller:
           number: Номер
           conventionalDate: Датировка
           dateExplanation: Обоснование датировки
+          rssdaRender: Рендер RSSDA
           comment: Комментарий
           literature: Литература
           carrier:
             categories: Категория носителя
             storageSite: Место хранения носителя
-            storageLocalization: Локализация в месте храения
+            storageLocalization: Локализация в месте хранения
             previousStorage: Прежние места хранения
             discoverySite: Место находки
             findCircumstances: Обстоятельства находки носителя
