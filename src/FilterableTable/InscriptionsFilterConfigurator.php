@@ -186,13 +186,13 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         return [
             // типология носителя
             $this->superCarrierCategoryFilterParameter,
-            $this->carrierCategoryFilterParameter,            
+            $this->carrierCategoryFilterParameter,
             $this->superMaterialFilterParameter,
             $this->materialFilterParameter,
             $this->cityFilterParameter,
             $this->discoverySiteFilterParameter,
             // типология надписи
-            $this->superWritingMethodFilterParameter,    
+            $this->superWritingMethodFilterParameter,
             $this->writingMethodFilterParameter,
             $this->superContentCategoryFilterParameter,
             $this->contentCategoryFilterParameter,

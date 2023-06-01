@@ -134,6 +134,11 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
                 $properties
             )
         );
+        usort($actualValues, function(FilesActualValue $a, FilesActualValue $b) {
+            $year1 = $b->getInterpretation() ? $b->getInterpretation()->getSource()->getYear() : 2500;
+            $year2 = $a->getInterpretation() ? $a->getInterpretation()->getSource()->getYear() : 2500;
+            return $year1 - $year2;
+        });
 
         $result = [];
         foreach ($actualValues as $actualValue) {
