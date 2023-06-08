@@ -162,7 +162,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                         ActualValueFormatterInterface::FORMAT_TYPE_ORIGINAL_TEXT
                     ) ?? '-';
                 })
-                ->setLabel('controller.inscription.list.table.column.interpretation.text'),            
+                ->setLabel('controller.inscription.list.table.column.interpretation.text'),
         ];
     }
 

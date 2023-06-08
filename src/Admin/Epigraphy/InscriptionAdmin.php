@@ -93,6 +93,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     ->add('dateExplanation', CKEditorType::class, $this->createFormOptions('dateExplanation', ['autoload' => false, 'required' => false]))
                     ->add('carrier', null, $this->createFormOptions('carrier'))
                     ->add('comment', CKEditorType::class, $this->createFormOptions('comment', ['autoload' => false, 'required' => false]))
+                    ->add('rssdaRender', null, $this->createFormOptions('rssdaRender'))
                     ->add('isShownOnSite', null, $this->createFormOptions('isShownOnSite'))
                     ->add('isPartOfCorpus', null, $this->createFormOptions('isPartOfCorpus'))
                 ->end()

@@ -34,16 +34,10 @@
         <nav class="navbar navbar-dark bg-dark flex-nowrap p-0 eomr-header">
             <div class="container-fluid">
                 <a class="navbar-brand eomr-navbar-brand" href="{{ path('index') }}">{{ 'page.label.left'|trans }}</a>
-                <span class="navbar-brand eomr-navbar-brand eomr-navbar-danger">{{ 'page.label.right'|trans }}</span>
             </div>
         </nav>
 
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-12 eomr-middle-line">
-                    {{ 'page.middleLine'|trans }}
-                </div>
-            </div>
             <div class="row">
                 <div class="col-2 eomr-sidebar">
                     {% block left_sidebar_content %}
@@ -71,6 +65,8 @@
                     <div class="col-8">
                         <div class="eomr-footer-content">
                             {{ 'page.footer'|trans }}
+                            <br/>
+                            {{ 'page.middleLine'|trans }}
                         </div>
                     </div>
                 </div>

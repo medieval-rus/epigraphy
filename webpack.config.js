@@ -46,6 +46,7 @@ Encore
     ])
     .copyFiles([
         {from: './assets/js/plugins', to: 'ckeditor/plugins/[path][name].[ext]', includeSubdirectories: true},
+        {from: './assets/scss/src', to: 'ckeditor/[path][name].[ext]', pattern: /\.css$/, includeSubdirectories: false}
     ])
     .enableSassLoader()
     .addStyleEntry('css/site/index/index', './assets/scss/pages/site/index/index.scss')

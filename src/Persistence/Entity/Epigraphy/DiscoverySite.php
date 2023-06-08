@@ -112,8 +112,8 @@ class DiscoverySite implements NamedEntityInterface
     public function __toString(): string
     {
         return ((string) $this->getName()).( 
-            count($this->getCities()) > 0 ? "; ".implode(', ', $this->getCities()->toArray()) : ""
-        );
+            count($this->getCities()) > 0 ? " (".implode(', ', $this->getCities()->toArray()) : ""
+        ).')';
     }
 
     public function getId(): ?int

@@ -66,6 +66,7 @@ sonata_admin:
         items:
           - admin.content.post
           - admin.content.inscription_list
+          - admin.tntindex
         roles: [ ROLE_ADMIN ]
   options:
     use_icheck: false
@@ -290,3 +291,10 @@ services:
       - [setTemplate, [edit, 'override_admin.html.twig']]
     tags:
       - { name: sonata.admin, manager_type: orm }
+  admin.tntindex:
+    class: App\Admin\Content\TntIndexAdmin
+    arguments: [null, App\Persistence\Entity\Media\File, App\Controller\Admin\TntIndexController]
+    calls:
+      - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
+    tags:
+      - { name: sonata.admin, manager_type: orm, controller: App\Controller\Admin\TntIndexController }

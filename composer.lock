@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "356caa551ec0b0d90e920210146a02a2",
+    "content-hash": "6b3e2643051c727500f7c70f44f3ecd4",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -8748,6 +8748,84 @@
                 }
             ],
             "time": "2022-01-26T16:05:39+00:00"
+        },
+        {
+            "name": "teamtnt/tntsearch",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/teamtnt/tntsearch.git",
+                "reference": "161d3368ac38c042b42f4002eda3b4698ccd3ca6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/161d3368ac38c042b42f4002eda3b4698ccd3ca6",
+                "reference": "161d3368ac38c042b42f4002eda3b4698ccd3ca6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "ext-pdo_sqlite": "*",
+                "ext-sqlite3": "*",
+                "php": "~7.1|^8"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "7.*|8.*|9.*",
+                "symfony/var-dumper": "^4|^5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "helper/helpers.php"
+                ],
+                "psr-4": {
+                    "TeamTNT\\TNTSearch\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nenad Tičarić",
+                    "email": "nticaric@gmail.com",
+                    "homepage": "http://www.tntstudio.us",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A fully featured full text search engine written in PHP",
+            "homepage": "https://github.com/teamtnt/tntsearch",
+            "keywords": [
+                "Fuzzy search",
+                "bm25",
+                "fulltext",
+                "geosearch",
+                "search",
+                "stemming",
+                "teamtnt",
+                "text classification",
+                "tntsearch"
+            ],
+            "support": {
+                "issues": "https://github.com/teamtnt/tntsearch/issues",
+                "source": "https://github.com/teamtnt/tntsearch/tree/v3.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://ko-fi.com/nticaric",
+                    "type": "ko_fi"
+                },
+                {
+                    "url": "https://opencollective.com/tntsearch",
+                    "type": "open_collective"
+                },
+                {
+                    "url": "https://www.patreon.com/nticaric",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2023-02-16T07:12:52+00:00"
         },
         {
             "name": "twig/extra-bundle",

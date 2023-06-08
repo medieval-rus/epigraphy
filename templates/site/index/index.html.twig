@@ -50,7 +50,7 @@
         <div class="eomr-card card">
             <div class="eomr-card-body card-body">
                 <p class="eomr-card-text card-text">{{- valueStringifier.stringify(inscription, 'description')|raw -}}</p>
-                <p class="eomr-card-text card-text">{{- inscription.carrier.categories|map(category => category.name)|join(', ') -}}</p>
+                <p class="eomr-card-text card-text">{{- self.render_category(inscription) -}}</p>
                 <div class="eomr-card-text card-text">
                     <div class="eomr-additional-data-container small">
                         <div class="eomr-additional-data eomr-additional-data-left">{{- self.render_origin(inscription) -}}</div>
@@ -73,7 +73,6 @@
     {% import _self as self %}
 
     {% if inscription.carrier is not null %}
-        {# {{- inscription.carrier.origin1 ?? inscription.carrier.origin2 -}} #}
         {% if inscription.carrier.discoverySite is not empty %}
             
             {% set cities = inscription.carrier.discoverySite[0].cities %}
@@ -82,6 +81,21 @@
                 {{- cities|map(city => city.name)|join(', ') -}}
             {% endif %}
         {% endif %}
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro render_category(inscription) -%}
+    {% import _self as self %}
+
+    {% set categories = inscription.carrier.categories|map(category => category.name)|join(', ') %}
+    {% if categories == 'стена церкви' %}
+        {% if inscription.carrier is not null and inscription.carrier.discoverySite is not empty %}
+            {{- inscription.carrier.discoverySite[0].name -}}
+        {% else %}
+            {{- categories -}}
+        {% endif %}
+    {% else %}
+        {{- categories -}}
     {% endif %}
 {%- endmacro -%}
 

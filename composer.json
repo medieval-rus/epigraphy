@@ -48,6 +48,7 @@
         "symfony/web-link": "5.3.*",
         "symfony/webpack-encore-bundle": "^1.11",
         "symfony/yaml": "5.3.*",
+        "teamtnt/tntsearch": "^3.1",
         "twig/extra-bundle": "^3.3",
         "twig/twig": "^3.3",
         "vyfony/filterable-table-bundle": "v0.6.3"

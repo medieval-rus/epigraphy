@@ -44,6 +44,7 @@ use App\FilterableTable\Filter\Parameter\TextFilterParameter;
 use App\FilterableTable\Filter\Parameter\TranslationFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
 use App\FilterableTable\Filter\Parameter\SuperWritingMethodFilterParameter;
+use App\FilterableTable\Filter\Parameter\FullTextFilterParameter;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\Epigraphy\ActualValue\Formatter\ActualValueFormatterInterface;
 use App\Services\Epigraphy\Stringifier\ValueStringifierInterface;
@@ -82,6 +83,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     private TranslationFilterParameter $translationFilterParameter;
     private CityFilterParameter $cityFilterParameter;
     private DiscoverySiteFilterParameter $discoverySiteFilterParameter;
+    private FullTextFilterParameter $fullTextFilterParameter;
 
     public function __construct(
         ValueStringifierInterface $valueStringifier,
@@ -103,7 +105,8 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         Origin2FilterParameter $origin2FilterParameter,
         TranslationFilterParameter $translationFilterParameter,
         DiscoverySiteFilterParameter $discoverySiteFilterParameter,
-        CityFilterParameter $cityFilterParameter
+        CityFilterParameter $cityFilterParameter,
+        FullTextFilterParameter $fullTextFilterParameter
     ) {
         $args = func_get_args();
         $reflection_method = new \ReflectionMethod($this, '__construct');
@@ -186,13 +189,13 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         return [
             // типология носителя
             $this->superCarrierCategoryFilterParameter,
-            $this->carrierCategoryFilterParameter,            
+            $this->carrierCategoryFilterParameter,
             $this->superMaterialFilterParameter,
             $this->materialFilterParameter,
             $this->cityFilterParameter,
             $this->discoverySiteFilterParameter,
             // типология надписи
-            $this->superWritingMethodFilterParameter,    
+            $this->superWritingMethodFilterParameter,
             $this->writingMethodFilterParameter,
             $this->superContentCategoryFilterParameter,
             $this->contentCategoryFilterParameter,
@@ -200,8 +203,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
             $this->preservationStateFilterParameter,
             $this->authorFilterParameter,
             $this->numberInSourceFilterParameter,
-            $this->textFilterParameter,
-            $this->translationFilterParameter,
+            $this->fullTextFilterParameter
         ];
     }
 

@@ -65,6 +65,7 @@ controller:
         alphabet: Алфавит
         interpretationComment: Комментарий к прочтению
         text: Текст надписи
+        fulltext: Поиск
         translation: Перевод
         material: "Материал"
         contentCategory: "Содержание"
@@ -93,12 +94,13 @@ controller:
           number: Номер
           conventionalDate: Датировка
           dateExplanation: Обоснование датировки
+          rssdaRender: Рендер RSSDA
           comment: Комментарий
           literature: Литература
           carrier:
             categories: Категория носителя
             storageSite: Место хранения носителя
-            storageLocalization: Локализация в месте храения
+            storageLocalization: Локализация в месте хранения
             previousStorage: Прежние места хранения
             discoverySite: Место находки
             findCircumstances: Обстоятельства находки носителя
@@ -136,7 +138,6 @@ page:
   label:
     title: Древнерусская эпиграфика
     left: Древнерусская эпиграфика
-    right: База данных находится в стадии наполнения и разработки
   middleLine: Сайт разрабатывается за счет гранта Российского научного фонда (проект № 19-18-00352), предоставленного НИУ ВШЭ.
   menu:
     index: Главная
@@ -145,7 +146,7 @@ page:
     bibliography: Библиография
     dataBase: База данных
     legend: Условные обозначения
-  footer: © 2019 – Национальный исследовательский университет «Высшая школа экономики»
+  footer: © 2023, Национальный исследовательский университет «Высшая школа экономики».
 
 type:
   bool:
