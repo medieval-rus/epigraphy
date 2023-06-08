@@ -65,6 +65,7 @@ controller:
         alphabet: Алфавит
         interpretationComment: Комментарий к прочтению
         text: Текст надписи
+        fulltext: Поиск
         translation: Перевод
         material: "Материал"
         contentCategory: "Содержание"

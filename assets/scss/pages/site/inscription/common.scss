@@ -4,3 +4,9 @@
   padding: 20px;
   z-index: 1000;
 }
+
+main.eomr-main form .form-group.vyfony-filterable-table-bundle-form-group:nth-of-type(15) {
+  @extend .col-12;
+  display: block;
+  margin-bottom: 10px;
+}

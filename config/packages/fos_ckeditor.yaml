@@ -29,5 +29,21 @@ fos_ck_editor:
             <<: *config
             extraPlugins: ['bbcode']
             toolbar: [ [ 'SpecialChar', 'Source' ] ]
+        searchconfig:
+            <<: *config
+            removePlugins: ["exportpdf", "easyimage", "cloudservices", "elementspath", "resize" ]
+            extraPlugins: ['bbcode']
+            toolbar: [ [ 'SpecialChar' ] ]
+            height: "32px"
+            contentsCss: [ '/build/ckeditor/custom.css' ]
+            toolbarLocation: "bottom"
+            toolbarCanCollapse: true
+            toolbarStartupExpanded: false
+            stylesSet: 'mystile'
+    styles:
+        mystile:
+            - { name: "text", element: "span", styles: { font-family: 'Arial, Helvetica, sans-serif' } }
+            - { name: "othertext", element: "p", styles: { font-family: 'Arial, Helvetica, sans-serif' } }
+
 
 

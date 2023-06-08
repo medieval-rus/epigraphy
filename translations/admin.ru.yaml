@@ -535,6 +535,9 @@ referencesList_create: Создать список
 referencesList_delete: Удалить список
 
 action:
+  index:
+    label: Перестроить поисковый индекс
+    flash: Индекс перестроен.
   clone:
     label: Клонировать
     flash: Элемент успешно клонирован.
