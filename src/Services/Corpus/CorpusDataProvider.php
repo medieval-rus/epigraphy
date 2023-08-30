@@ -37,6 +37,7 @@ use App\Persistence\Entity\Epigraphy\PreservationState;
 use App\Persistence\Entity\Epigraphy\WritingMethod;
 use App\Persistence\Repository\Epigraphy\InscriptionRepository;
 use App\Services\Epigraphy\ActualValue\Extractor\ActualValueExtractorInterface;
+use App\Services\Epigraphy\ActualValue\Formatter\ActualValueFormatterInterface;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -44,16 +45,19 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
 {
     private UrlGeneratorInterface $urlGenerator;
     private InscriptionRepository $inscriptionRepository;
-    private ActualValueExtractorInterface $actualValueExtractor;
+    private ActualValueExtractorInterface $extractor;
+    private ActualValueFormatterInterface $formatter;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         InscriptionRepository $inscriptionRepository,
-        ActualValueExtractorInterface $actualValueExtractor
+        ActualValueExtractorInterface $extractor,
+        ActualValueFormatterInterface $formatter
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->inscriptionRepository = $inscriptionRepository;
-        $this->actualValueExtractor = $actualValueExtractor;
+        $this->extractor = $extractor;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -103,9 +107,10 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
                 );
                 $newText = '';
                 foreach ($textArray as $key => $value) {
-                    $newText = $newText.(string)($key + 1)." ".$value."\n";
+                    // $newText = $newText.(string)($key + 1)." ".$value."\n";
+                    $newText = $newText.$value."\n";
                 }
-                return $this->getPath($item)."\n\n".$newText;
+                return "/л. ".$this->getPath($item)."/\n".$newText;
             },
             $inscriptions
         );
@@ -203,7 +208,11 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         return [
             'path' => $this->getPath($inscription),
             // 'number' => $inscription->getNumber(),
-            'header' => $this->formatDescription($inscription->getZeroRow()->getDescription()),
+            'header' => $this->formatDescription(
+                $this->extractor->extractFromZeroRowAsStrings($inscription, 'description')[0] ? 
+                $this->extractor->extractFromZeroRowAsStrings($inscription, 'description')[0]->getValue() :
+                null
+            ),
             'category' => $this->join(
                 $inscription
                     ->getZeroRow()
@@ -301,8 +310,13 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
             ])
         );
         $formattedTranslations = array_map([$this, 'formatTranslation'], $translations);
-        $reconstruction = $inscription->getZeroRow()->getReconstruction();
-        if ($reconstruction !== null) {
+        $reconstructions = array_values(array_filter([
+		$inscription->getZeroRow()->getReconstruction(),
+		...$inscription->getZeroRow()->getReconstructionReferences()->map(
+			fn ($item) => $item->getReconstruction()
+		)
+	]));
+        if (count($reconstructions) !== 0) {
             $textPropName = 'reconstruction';
         } else {
             if ($alphabet_name === 'глаголица') {
@@ -315,7 +329,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
             'number' => $inscription->getId(),
             'texts' => array_map(
                 [$this, 'formatTextValue'],
-                $this->actualValueExtractor->extractFromZeroRowAsStrings($inscription, $textPropName)
+                $this->extractor->extractFromZeroRowAsStrings($inscription, $textPropName)
             ),
             'translations' => $formattedTranslations,
         ];
@@ -333,7 +347,8 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         $newTextValue = str_replace('\\', '', $newTextValue);
         $newTextValue = str_replace('оу', 'ѹ', $newTextValue);
         $newTextValue = str_replace('Оу', 'Ѹ', $newTextValue);
-        $newTextValue = preg_replace('/<.+?>\r\n/', '', $newTextValue);
+        $newTextValue = preg_replace('/⸗(?=\r\n)/', '-', $newTextValue);
+        $newTextValue = preg_replace('/<(Текст|text).+?>\r\n/', '', $newTextValue);
         return [
             // 'interpretation' => $value->getDescription(),
             'text' => $newTextValue,
@@ -345,8 +360,8 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         if ($createdAt === null) {
             return null;
         }
-        $newCreatedAt = preg_replace('/[\[\]]/', '', $createdAt);
-        $newCreatedAt = preg_replace('/–/', '-', $newCreatedAt);
+        $newCreatedAt = preg_replace('/[\[\]?→←]/', '', $createdAt);
+        $newCreatedAt = preg_replace('/[\/–]/', '-', $newCreatedAt);
         return $newCreatedAt;
     }
 

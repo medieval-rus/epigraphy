@@ -79,7 +79,7 @@ final class CorpusController extends AbstractController
     {
         $texts = $corpusDataProvider->getPlainFormattedTexts(true);
 
-        $joinedTexts = implode("\n", $texts);
+        $joinedTexts = implode("", $texts);
 
         $response = new Response();
 

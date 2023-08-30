@@ -211,7 +211,7 @@ services:
     calls:
       - [setLabelTranslatorStrategy, ['@sonata.admin.label.strategy.noop']]
     tags:
-      - { name: sonata.admin, manager_type: orm }
+      - { name: sonata.admin, manager_type: orm, default: true }
   admin.bibliography.bibliographic_record:
     class: App\Admin\Bibliography\BibliographicRecordAdmin
     arguments:

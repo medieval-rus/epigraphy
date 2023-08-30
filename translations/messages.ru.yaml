@@ -94,7 +94,7 @@ controller:
           number: Номер
           conventionalDate: Датировка
           dateExplanation: Обоснование датировки
-          rssdaRender: Рендер RSSDA
+          rssdaRender: 3D модель RSSDA
           comment: Комментарий
           literature: Литература
           carrier:
@@ -113,7 +113,7 @@ controller:
             isInSitu: Носитель in situ?
             materials: Материалы
           zeroRow:
-            origin: Происхождение надписи
+            origin: Датировка по иным признакам
             placeOnCarrier: Расположение на носителе
             writingTypes: Разряд (по Франклину)
             writingMethods: Способ нанесения

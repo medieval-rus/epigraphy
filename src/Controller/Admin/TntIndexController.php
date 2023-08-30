@@ -45,7 +45,7 @@ final class TntIndexController extends CRUDController
         $search->loadConfig($config);
         $search->fuzziness = true;
 
-        $indexer = $search->createIndex('fulltext.search');
+        $indexer = $search->createIndex('/thumbs/fulltext.sql');
         $indexer->query('SELECT inscription.id, inscription.comment, inscription.date_explanation, 
         zero_row.place_on_carrier AS zr_poc, 
         zero_row.text AS zr_text, zero_row.translation AS zr_translation,

@@ -164,6 +164,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         )
                     )
                     ->add(
+                        'zeroRow.interpretationCommentReferences',
+                        EntityType::class,
+                        $this->createLabeledReferencesFormOptions('interpretationCommentReferences')
+                    )
+                    ->add(
                         'zeroRow.transliteration',
                         CKEditorType::class,
                         $this->createFormOptions('zeroRow.transliteration', ['autoload' => false, 'required' => false, 'config_name' => 'textconfig'])
