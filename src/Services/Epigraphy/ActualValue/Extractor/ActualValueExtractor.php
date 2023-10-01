@@ -153,7 +153,7 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
                 $formattedInterpretation = $this->translator->trans(
                     'image.source',
                     [
-                        '%source%' => $actualValue->getInterpretation()->getSource()->getShortName(),
+                        '%source%' => $this->getInterpretationRef($actualValue->getInterpretation()),
                     ]
                 );
             }
@@ -168,7 +168,7 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
                     $descriptionParts[] = $file->getDescription();
                 }
 
-                $description = implode('; ', $descriptionParts);
+                $description = implode(' ', $descriptionParts);
 
                 $result[] = new InscriptionActualFile($file, $description);
             }

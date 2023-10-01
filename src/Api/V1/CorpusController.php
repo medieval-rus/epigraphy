@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 
@@ -163,7 +164,13 @@ final class CorpusController extends AbstractController
 
     private function toJson(array $array): string
     {
-        return json_encode($array, \JSON_UNESCAPED_UNICODE | \JSON_PRETTY_PRINT);
+        $jsonEncoder = new JsonEncoder();
+        $context = [
+            'json_encode_options' => \JSON_INVALID_UTF8_SUBSTITUTE | \JSON_UNESCAPED_UNICODE | \JSON_PRETTY_PRINT | \JSON_THROW_ON_ERROR
+        ];
+        $texts = $jsonEncoder->encode($array, 'json', $context);
+        return $texts;
+        // return json_encode($array, \JSON_UNESCAPED_UNICODE | \JSON_PRETTY_PRINT);
     }
 
     private function toXml(array $array): string

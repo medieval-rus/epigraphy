@@ -37,7 +37,6 @@ use App\Persistence\Entity\Epigraphy\PreservationState;
 use App\Persistence\Entity\Epigraphy\WritingMethod;
 use App\Persistence\Repository\Epigraphy\InscriptionRepository;
 use App\Services\Epigraphy\ActualValue\Extractor\ActualValueExtractorInterface;
-use App\Services\Epigraphy\ActualValue\Formatter\ActualValueFormatterInterface;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -46,18 +45,15 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
     private UrlGeneratorInterface $urlGenerator;
     private InscriptionRepository $inscriptionRepository;
     private ActualValueExtractorInterface $extractor;
-    private ActualValueFormatterInterface $formatter;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         InscriptionRepository $inscriptionRepository,
-        ActualValueExtractorInterface $extractor,
-        ActualValueFormatterInterface $formatter
+        ActualValueExtractorInterface $extractor
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->inscriptionRepository = $inscriptionRepository;
         $this->extractor = $extractor;
-        $this->formatter = $formatter;
     }
 
     /**
@@ -362,6 +358,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         }
         $newCreatedAt = preg_replace('/[\[\]?→←]/', '', $createdAt);
         $newCreatedAt = preg_replace('/[\/–]/', '-', $newCreatedAt);
+        // $newCreatedAt = $createdAt;
         return $newCreatedAt;
     }
 

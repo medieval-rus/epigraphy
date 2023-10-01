@@ -109,10 +109,10 @@
                     >
                         <img src="{{ thumbnailsGenerator.thumbnail(actualFile.file, 'large') }}"
                              itemprop="thumbnail"
-                             alt="{{ actualFile.description }}"
+                             alt="{{ actualFile.description|escape }}"
                         />
                     </a>
-                    <figcaption itemprop="caption description">{{ actualFile.description }}</figcaption>
+                    <figcaption itemprop="caption description">{{ actualFile.description|raw }}</figcaption>
                 </figure>
             {%- endfor -%}
         </div>
