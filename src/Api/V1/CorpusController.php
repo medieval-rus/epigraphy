@@ -51,9 +51,9 @@ final class CorpusController extends AbstractController
         if ('true' === $request->query->get('csv')) {
             if (\count($metadata) > 0) {
                 $context = [
-                    'csv_delimiter' => ',',
+                    'csv_delimiter' => ';',
                     'csv_end_of_line' => "\r\n",
-                    'csv_enclosure' => '"',
+                    'csv_enclosure' => '$',
                     'csv_escape_char' => '\\',
                 ];
                 $encoder = new CsvEncoder();
@@ -116,7 +116,7 @@ final class CorpusController extends AbstractController
                 sprintf('%s_corpus_texts_%s.xml', $request->getHost(), (new DateTime())->format('Y-m-d-H-i-s'))
             );
 
-            $response->headers->set('Content-Disposition', $disposition);            
+            $response->headers->set('Content-Disposition', $disposition);
         }
 
         return $response;

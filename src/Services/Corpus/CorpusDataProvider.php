@@ -255,7 +255,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
             ),
             'material' => $this->join(
                 $inscription
-                    ->getZeroRow()
+                    ->getCarrier()
                     ->getMaterials()
                     ->map(function (Material $material): string {
                         $super = $material->getSuperMaterial();
@@ -278,7 +278,6 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
                     ->map(fn (PreservationState $preservationState): string => $preservationState->getName())
             ),
             'created' => $this->formatCreatedAt($inscription->getConventionalDate()),
-            'subcorp' => 'epigraphica',
             'tagging' => 'manual',
             'link' => $baseUrl.$this->urlGenerator->generate(
                 'inscription__show',
@@ -358,6 +357,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         }
         $newCreatedAt = preg_replace('/[\[\]?→←]/', '', $createdAt);
         $newCreatedAt = preg_replace('/[\/–]/', '-', $newCreatedAt);
+        $newCreatedAt = str_replace(';', ',', $newCreatedAt);
         // $newCreatedAt = $createdAt;
         return $newCreatedAt;
     }
@@ -376,12 +376,13 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         if ($description === null) {
             return $description;
         }
-        $descriptionArray = preg_split('/\r{0,1}\n{0,1}<.+?>\r{0,1}\n/', $description);
-        if (count($descriptionArray) > 1) {
+        $descriptionArray = preg_split('/\r{0,1}\n{0,1}<.+?>\r{0,1}\n{0,1} {0,1}/', $description);
+        if (count($descriptionArray) > 1 && preg_match('/ {0,1}/', $descriptionArray[0])) {
             array_shift($descriptionArray);
         }
 
         $newDescription = implode(' | ', $descriptionArray);
+        $newDescription = str_replace(';', ',', $newDescription);
         return $newDescription;
     }
 
