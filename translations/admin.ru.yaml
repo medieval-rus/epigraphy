@@ -344,7 +344,7 @@ form:
       number: Номер
       conventionalDate: Датировка
       dateExplanation: Обоснование датировки
-      rssdaRender: Рендер RSSDA
+      rssdaRender: 3D модель RSSDA
       carrier: Носитель
       comment: Комментарий
       isShownOnSite: Показывать надпись на сайте
@@ -363,6 +363,7 @@ form:
         alphabets: Алфавит
         alphabetsReferences: Алфавит (ссылки)
         interpretationComment: Комментарий к прочтению
+        interpretationCommentReferences: Комментарий к прочтению (ссылки)
         text: Текст
         textReferences: Текст (ссылки)
         textImages: Изображения текста (файлы)
@@ -421,6 +422,7 @@ form:
       materials: Подкатегория материалов
       alphabets: Алфавит
       interpretationComment: Комментарий к прочтению
+      interpretationCommentReferences: Комментарий к прочтению (ссылки)
       text: Текст
       textImages: Изображения текста (файлы)
       transliteration: Транслитерация

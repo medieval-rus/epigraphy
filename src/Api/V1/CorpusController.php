@@ -50,7 +50,7 @@ final class CorpusController extends AbstractController
         if ('true' === $request->query->get('csv')) {
             if (\count($metadata) > 0) {
                 $context = [
-                    'csv_delimiter' => ',',
+                    'csv_delimiter' => ';',
                     'csv_end_of_line' => "\r\n",
                     'csv_enclosure' => '"',
                     'csv_escape_char' => '\\',
@@ -163,7 +163,7 @@ final class CorpusController extends AbstractController
 
     private function toJson(array $array): string
     {
-        return json_encode($array, \JSON_UNESCAPED_UNICODE | \JSON_PRETTY_PRINT);
+        return json_encode($array, \JSON_INVALID_UTF8_SUBSTITUTE | \JSON_UNESCAPED_UNICODE | \JSON_PRETTY_PRINT | \JSON_THROW_ON_ERROR);
     }
 
     private function toXml(array $array): string

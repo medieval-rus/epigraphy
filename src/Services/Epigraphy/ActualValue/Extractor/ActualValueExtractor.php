@@ -153,7 +153,7 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
                 $formattedInterpretation = $this->translator->trans(
                     'image.source',
                     [
-                        '%source%' => $actualValue->getInterpretation()->getSource()->getShortName(),
+                        '%source%' => $this->getInterpretationRef($actualValue->getInterpretation()),
                     ]
                 );
             }

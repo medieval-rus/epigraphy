@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\FilterableTable\Filter\Parameter;
 
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -72,19 +73,21 @@ final class NumberInSourceFilterParameter implements FilterParameterInterface, E
         if (null === $filterValue) {
             return null;
         }
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('App\Persistence\Entity\Epigraphy\Interpretation', 'i');
+        $rsm->addScalarResult('inscription_id', 'inscription_id');
 
-        $queryBuilder
-            ->leftJoin(
-                $entityAlias.'.interpretations',
-                $interpretationsAlias = $this->aliasFactory->createAlias(static::class, 'interpretations')
-            )
-        ;
-
-        $queryBuilder->setParameter(
-            $parameterName = $this->parameterFactory->createParameter($entityAlias.'_number_in_source', 0),
-            mb_strtolower($filterValue)
+        $query = $queryBuilder->getEntityManager()->createNativeQuery(
+            'SELECT inscription_id FROM interpretation WHERE number_in_source = ?', $rsm
         );
+        $query->setParameter(1, mb_strtolower($filterValue));
+        $ids = $query->getResult();
 
-        return (string) $queryBuilder->expr()->eq('LOWER('.$interpretationsAlias.'.numberInSource)', $parameterName);
+        if (count($ids) === 0) {
+            return (string) $queryBuilder->expr()->in($entityAlias.'.id', ['0']);;
+        }
+
+        return (string) $queryBuilder->expr()->in($entityAlias.'.id', array_map(fn($id) => $id['inscription_id'], $ids));
     }
 }
+

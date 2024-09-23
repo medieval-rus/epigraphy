@@ -88,7 +88,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         $formMapper
             ->tab($this->getTabLabel('common'))
                 ->with($this->getSectionLabel('common'))
-                    ->add('id', null, $this->createFormOptions('id'))
                     ->add('conventionalDate', null, $this->createFormOptions('conventionalDate'))
                     ->add('dateExplanation', CKEditorType::class, $this->createFormOptions('dateExplanation', ['autoload' => false, 'required' => false]))
                     ->add('carrier', null, $this->createFormOptions('carrier'))
@@ -162,6 +161,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                             'zeroRow.interpretationComment',
                             ['autoload' => false, 'required' => false]
                         )
+                    )
+                    ->add(
+                        'zeroRow.interpretationCommentReferences',
+                        EntityType::class,
+                        $this->createLabeledReferencesFormOptions('interpretationCommentReferences')
                     )
                     ->add(
                         'zeroRow.transliteration',

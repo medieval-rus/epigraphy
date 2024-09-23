@@ -203,7 +203,9 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
             $this->preservationStateFilterParameter,
             $this->authorFilterParameter,
             $this->numberInSourceFilterParameter,
-            $this->fullTextFilterParameter
+            $this->fullTextFilterParameter,
+            $this->translationFilterParameter,
+            $this->textFilterParameter
         ];
     }
 
