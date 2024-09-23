@@ -163,9 +163,8 @@
 {%- macro format_link(link) -%}
     {%- if link is not empty -%}
         <a href="{{ link }}">{{ link }}</a>
-    {%- endif -%}
+    {% endif %}
 {%- endmacro -%}
-
 
 {%- macro translate_field_label(translationContext, labelTranslationKey) -%}
     {{ ('inscription.label.' ~ labelTranslationKey)|transWithContext(translationContext) }}
@@ -186,7 +185,6 @@
                     <div class="eomr-spoiler-content-wrapper">
                         <table class="table table-bordered">
                             <tbody>
-                                {{ self.format_text_row(translationContext, 'carrier.discoverySite', inscription.carrier.discoverySite) }}
                                 {{ self.format_text_row(translationContext, 'carrier.archaeology', inscription.carrier.archaeology) }}
                                 {{ self.format_text_row(translationContext, 'carrier.findCircumstances', inscription.carrier.findCircumstances) }}
                                 {{ self.format_text_row(translationContext, 'carrier.storageSite', inscription.carrier.storageSite) }}

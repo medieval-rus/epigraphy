@@ -103,10 +103,9 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
                 );
                 $newText = '';
                 foreach ($textArray as $key => $value) {
-                    // $newText = $newText.(string)($key + 1)." ".$value."\n";
-                    $newText = $newText.$value."\n";
+                    $newText = $newText.preg_replace('/⸗$/', '-', $value)."\n";
                 }
-                return "/л. ".$this->getPath($item)."/\n".$newText;
+                return $this->getPath($item)."\n".substr($newText, 0, strlen($newText) - 1);
             },
             $inscriptions
         );
@@ -343,7 +342,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         $newTextValue = str_replace('оу', 'ѹ', $newTextValue);
         $newTextValue = str_replace('Оу', 'Ѹ', $newTextValue);
         $newTextValue = preg_replace('/⸗(?=\r\n)/', '-', $newTextValue);
-        $newTextValue = preg_replace('/<(Текст|text).+?>\r\n/', '', $newTextValue);
+        $newTextValue = preg_replace('/(<.+?>\r\n)/', "-comment:$1", $newTextValue);
         return [
             // 'interpretation' => $value->getDescription(),
             'text' => $newTextValue,
@@ -391,7 +390,8 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
      */
     private function getPath(Inscription $inscription): string {
         $id = (string) $inscription->getId();
-        return str_pad($id, 5, "0", STR_PAD_LEFT);
+        $padded_id = str_pad($id, 5, "0", STR_PAD_LEFT);
+        return '/л. '.$padded_id."/\n/д. ".$padded_id.'/';
     }
 
     private function join(Collection $collection): string
