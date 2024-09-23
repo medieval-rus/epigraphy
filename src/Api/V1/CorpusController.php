@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 
@@ -50,9 +51,9 @@ final class CorpusController extends AbstractController
         if ('true' === $request->query->get('csv')) {
             if (\count($metadata) > 0) {
                 $context = [
-                    'csv_delimiter' => ',',
+                    'csv_delimiter' => ';',
                     'csv_end_of_line' => "\r\n",
-                    'csv_enclosure' => '"',
+                    'csv_enclosure' => '$',
                     'csv_escape_char' => '\\',
                 ];
                 $encoder = new CsvEncoder();
@@ -79,7 +80,7 @@ final class CorpusController extends AbstractController
     {
         $texts = $corpusDataProvider->getPlainFormattedTexts(true);
 
-        $joinedTexts = implode("\n", $texts);
+        $joinedTexts = implode("", $texts);
 
         $response = new Response();
 
@@ -115,7 +116,7 @@ final class CorpusController extends AbstractController
                 sprintf('%s_corpus_texts_%s.xml', $request->getHost(), (new DateTime())->format('Y-m-d-H-i-s'))
             );
 
-            $response->headers->set('Content-Disposition', $disposition);            
+            $response->headers->set('Content-Disposition', $disposition);
         }
 
         return $response;
@@ -163,7 +164,13 @@ final class CorpusController extends AbstractController
 
     private function toJson(array $array): string
     {
-        return json_encode($array, \JSON_UNESCAPED_UNICODE | \JSON_PRETTY_PRINT);
+        $jsonEncoder = new JsonEncoder();
+        $context = [
+            'json_encode_options' => \JSON_INVALID_UTF8_SUBSTITUTE | \JSON_UNESCAPED_UNICODE | \JSON_PRETTY_PRINT | \JSON_THROW_ON_ERROR
+        ];
+        $texts = $jsonEncoder->encode($array, 'json', $context);
+        return $texts;
+        // return json_encode($array, \JSON_UNESCAPED_UNICODE | \JSON_PRETTY_PRINT);
     }
 
     private function toXml(array $array): string

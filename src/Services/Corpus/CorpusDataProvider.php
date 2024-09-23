@@ -44,16 +44,16 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
 {
     private UrlGeneratorInterface $urlGenerator;
     private InscriptionRepository $inscriptionRepository;
-    private ActualValueExtractorInterface $actualValueExtractor;
+    private ActualValueExtractorInterface $extractor;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         InscriptionRepository $inscriptionRepository,
-        ActualValueExtractorInterface $actualValueExtractor
+        ActualValueExtractorInterface $extractor
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->inscriptionRepository = $inscriptionRepository;
-        $this->actualValueExtractor = $actualValueExtractor;
+        $this->extractor = $extractor;
     }
 
     /**
@@ -103,9 +103,9 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
                 );
                 $newText = '';
                 foreach ($textArray as $key => $value) {
-                    $newText = $newText.(string)($key + 1)." ".$value."\n";
+                    $newText = $newText.preg_replace('/⸗$/', '-', $value)."\n";
                 }
-                return $this->getPath($item)."\n\n".$newText;
+                return $this->getPath($item)."\n".substr($newText, 0, strlen($newText) - 1);
             },
             $inscriptions
         );
@@ -203,7 +203,11 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         return [
             'path' => $this->getPath($inscription),
             // 'number' => $inscription->getNumber(),
-            'header' => $this->formatDescription($inscription->getZeroRow()->getDescription()),
+            'header' => $this->formatDescription(
+                $this->extractor->extractFromZeroRowAsStrings($inscription, 'description')[0] ? 
+                $this->extractor->extractFromZeroRowAsStrings($inscription, 'description')[0]->getValue() :
+                null
+            ),
             'category' => $this->join(
                 $inscription
                     ->getZeroRow()
@@ -250,7 +254,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
             ),
             'material' => $this->join(
                 $inscription
-                    ->getZeroRow()
+                    ->getCarrier()
                     ->getMaterials()
                     ->map(function (Material $material): string {
                         $super = $material->getSuperMaterial();
@@ -273,7 +277,6 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
                     ->map(fn (PreservationState $preservationState): string => $preservationState->getName())
             ),
             'created' => $this->formatCreatedAt($inscription->getConventionalDate()),
-            'subcorp' => 'epigraphica',
             'tagging' => 'manual',
             'link' => $baseUrl.$this->urlGenerator->generate(
                 'inscription__show',
@@ -301,8 +304,13 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
             ])
         );
         $formattedTranslations = array_map([$this, 'formatTranslation'], $translations);
-        $reconstruction = $inscription->getZeroRow()->getReconstruction();
-        if ($reconstruction !== null) {
+        $reconstructions = array_values(array_filter([
+		$inscription->getZeroRow()->getReconstruction(),
+		...$inscription->getZeroRow()->getReconstructionReferences()->map(
+			fn ($item) => $item->getReconstruction()
+		)
+	]));
+        if (count($reconstructions) !== 0) {
             $textPropName = 'reconstruction';
         } else {
             if ($alphabet_name === 'глаголица') {
@@ -315,7 +323,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
             'number' => $inscription->getId(),
             'texts' => array_map(
                 [$this, 'formatTextValue'],
-                $this->actualValueExtractor->extractFromZeroRowAsStrings($inscription, $textPropName)
+                $this->extractor->extractFromZeroRowAsStrings($inscription, $textPropName)
             ),
             'translations' => $formattedTranslations,
         ];
@@ -333,7 +341,8 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         $newTextValue = str_replace('\\', '', $newTextValue);
         $newTextValue = str_replace('оу', 'ѹ', $newTextValue);
         $newTextValue = str_replace('Оу', 'Ѹ', $newTextValue);
-        $newTextValue = preg_replace('/<.+?>\r\n/', '', $newTextValue);
+        $newTextValue = preg_replace('/⸗(?=\r\n)/', '-', $newTextValue);
+        $newTextValue = preg_replace('/(<.+?>\r\n)/', "-comment:$1", $newTextValue);
         return [
             // 'interpretation' => $value->getDescription(),
             'text' => $newTextValue,
@@ -345,8 +354,10 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         if ($createdAt === null) {
             return null;
         }
-        $newCreatedAt = preg_replace('/[\[\]]/', '', $createdAt);
-        $newCreatedAt = preg_replace('/–/', '-', $newCreatedAt);
+        $newCreatedAt = preg_replace('/[\[\]?→←]/', '', $createdAt);
+        $newCreatedAt = preg_replace('/[\/–]/', '-', $newCreatedAt);
+        $newCreatedAt = str_replace(';', ',', $newCreatedAt);
+        // $newCreatedAt = $createdAt;
         return $newCreatedAt;
     }
 
@@ -364,12 +375,13 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
         if ($description === null) {
             return $description;
         }
-        $descriptionArray = preg_split('/\r{0,1}\n{0,1}<.+?>\r{0,1}\n/', $description);
-        if (count($descriptionArray) > 1) {
+        $descriptionArray = preg_split('/\r{0,1}\n{0,1}<.+?>\r{0,1}\n{0,1} {0,1}/', $description);
+        if (count($descriptionArray) > 1 && preg_match('/ {0,1}/', $descriptionArray[0])) {
             array_shift($descriptionArray);
         }
 
         $newDescription = implode(' | ', $descriptionArray);
+        $newDescription = str_replace(';', ',', $newDescription);
         return $newDescription;
     }
 
@@ -378,7 +390,8 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
      */
     private function getPath(Inscription $inscription): string {
         $id = (string) $inscription->getId();
-        return str_pad($id, 5, "0", STR_PAD_LEFT);
+        $padded_id = str_pad($id, 5, "0", STR_PAD_LEFT);
+        return '/л. '.$padded_id."/\n/д. ".$padded_id.'/';
     }
 
     private function join(Collection $collection): string

@@ -452,6 +452,7 @@ class ZeroRow
         $this->materialsReferences = new ArrayCollection();
         $this->alphabets = new ArrayCollection();
         $this->alphabetsReferences = new ArrayCollection();
+        $this->interpretationCommentReferences = new ArrayCollection();
         $this->textReferences = new ArrayCollection();
         $this->textImages = new ArrayCollection();
         $this->textImagesReferences = new ArrayCollection();

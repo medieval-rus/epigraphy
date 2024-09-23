@@ -56,7 +56,7 @@ final class FullTextFilterParameter implements FilterParameterInterface, Express
         ];
         $this->search->loadConfig($config);
         $this->search->fuzziness = true;
-        $this->search->selectIndex('fulltext.search');
+        $this->search->selectIndex('/thumbs/fulltext.sql');
     }
 
     public function getQueryParameterName(): string
@@ -95,6 +95,9 @@ final class FullTextFilterParameter implements FilterParameterInterface, Express
 
         $results = $this->search->search($filterValue, 500);
         $ids = $results["ids"];
+        if (count($ids) == 0) {
+            return null;
+        }
 
         return (string) $queryBuilder->expr()->in($entityAlias.'.id', $ids);
     }
