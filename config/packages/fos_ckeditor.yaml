@@ -21,18 +21,17 @@ fos_ck_editor:
     default_config: common_config
     configs:
         common_config: &config
-            extraPlugins: ["quoteplugin"]
-            removePlugins: ["exportpdf", "easyimage", "cloudservices" ]
-            toolbar: [ [ 'CreateDiv', 'Bold', 'Italic', 'Link', 'Quoteplugin', 'SpecialChar', 'RemoveFormat', 'Source' ] ]
+            versionCheck: false
+            extraPlugins: ["quoteplugin", "bbcode"]
+            removePlugins: ["exportpdf", "easyimage", "cloudservices", "div", "divarea"]
+            toolbar: [ [ 'Bold', 'Italic', 'Link', 'Quoteplugin', 'SpecialChar', 'RemoveFormat', 'Source' ] ]
             specialChars: [ '…', '–', '×', '«', '»', '“', '”', '‘', '’', 'ї', '', '|im.|', '|vac.|', 'Ѡ', 'Ѿ', 'Ѧ', 'Ѩ', 'Ѫ', 'Ѭ', 'Ѣ', 'Ѯ', 'Ꙗ', 'Ꙋ', 'Ѳ', 'І', 'Є', 'Ѥ', 'Ѕ', 'Ѵ', 'Ѱ', 'Ꙑ', 'ѡ', 'ѿ', 'ѧ', 'ѩ', 'ѫ', 'ѭ', 'ѣ', 'ѯ', 'ꙗ', 'ꙋ', 'ѳ', 'і', 'є', 'ѥ', 'ѕ', 'ѵ', 'ѱ', 'ꙑ', '⁙', '҂', '|', '¦', '⸗', '҃', '҇', '·', '→', '⃝' ]
         textconfig:
             <<: *config
-            extraPlugins: ['bbcode']
             toolbar: [ [ 'SpecialChar', 'Source', 'RemoveFormat' ] ]
         searchconfig:
             <<: *config
-            removePlugins: ["exportpdf", "easyimage", "cloudservices", "elementspath", "resize" ]
-            extraPlugins: ['bbcode']
+            removePlugins: ["exportpdf", "easyimage", "cloudservices", "elementspath", "resize", "div", "divarea" ]
             toolbar: [ [ 'SpecialChar' ] ]
             height: "32px"
             contentsCss: [ '/build/ckeditor/custom.css' ]
@@ -44,6 +43,3 @@ fos_ck_editor:
         mystile:
             - { name: "text", element: "span", styles: { font-family: 'Arial, Helvetica, sans-serif' } }
             - { name: "othertext", element: "p", styles: { font-family: 'Arial, Helvetica, sans-serif' } }
-
-
-
