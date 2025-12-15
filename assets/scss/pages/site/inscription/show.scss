@@ -35,6 +35,7 @@
     display: inline-block;
     width: 100%;
     margin: 0;
+    text-align: left;
 
     &:not(:last-child) {
       margin-right: 5px;
@@ -42,8 +43,9 @@
 
     a {
       img {
+        max-height: 100vh;
         width: 100%;
-        height: auto;
+        object-fit: contain;
       }
     }
 

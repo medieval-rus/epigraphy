@@ -22,16 +22,18 @@ fos_ck_editor:
     configs:
         common_config: &config
             versionCheck: false
-            extraPlugins: ["quoteplugin", "bbcode"]
-            removePlugins: ["exportpdf", "easyimage", "cloudservices", "div", "divarea"]
+            extraPlugins: ["quoteplugin"]
+            removePlugins: ["exportpdf", "easyimage", "cloudservices" ]
             toolbar: [ [ 'Bold', 'Italic', 'Link', 'Quoteplugin', 'SpecialChar', 'RemoveFormat', 'Source' ] ]
             specialChars: [ '…', '–', '×', '«', '»', '“', '”', '‘', '’', 'ї', '', '|im.|', '|vac.|', 'Ѡ', 'Ѿ', 'Ѻ', 'Ꙩ', 'Ѧ', 'Ѩ', 'Ѫ', 'Ѭ', 'Ѣ', 'Ѯ', 'Ꙗ', 'Ꙋ', 'Ѳ', 'І', 'Є', 'Ѥ', 'Ѕ', 'Ѵ', 'Ѱ', 'Ꙑ', 'ѡ', 'ѿ', 'ѻ', 'ꙩ', 'ѧ', 'ѩ', 'ѫ', 'ѭ', 'ѣ', 'ѯ', 'ꙗ', 'ꙋ', 'ѳ', 'і', 'є', 'ѥ', 'ѕ', 'ѵ', 'ѱ', 'ꙑ', '⁙', '҂', '|', '¦', '⸗', '҃', '҇', '·', '→', '⃝' ]
         textconfig:
             <<: *config
+            extraPlugins: ["bbcode"]
             toolbar: [ [ 'SpecialChar', 'Source', 'RemoveFormat' ] ]
         searchconfig:
             <<: *config
-            removePlugins: ["exportpdf", "easyimage", "cloudservices", "elementspath", "resize", "div", "divarea" ]
+            extraPlugins: ["bbcode"]
+            removePlugins: ["exportpdf", "easyimage", "cloudservices", "elementspath", "resize" ]
             toolbar: [ [ 'SpecialChar' ] ]
             height: "32px"
             contentsCss: [ '/build/ckeditor/custom.css' ]
