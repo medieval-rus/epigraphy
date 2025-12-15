@@ -135,7 +135,7 @@
         {% set content = 'type.bool.false'|trans %}
     {% endif %}
 
-    {{ self.fill_row(self.translate_field_label(translationContext, labelTranslationKey), content|trim|default('-')) }}
+    {{ self.fill_row(self.translate_field_label(translationContext, labelTranslationKey), content|raw|trim|default('-')) }}
 {%- endmacro -%}
 
 {%- macro format_original_text_row(translationContext, labelTranslationKey, inscription) -%}

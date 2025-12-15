@@ -344,7 +344,7 @@ form:
       number: Номер
       conventionalDate: Датировка
       dateExplanation: Обоснование датировки
-      rssdaRender: 3D модель RSSDA
+      rssdaRender: 3D модель
       carrier: Носитель
       comment: Комментарий
       isShownOnSite: Показывать надпись на сайте

@@ -21,7 +21,7 @@
 
 {%- extends 'site/base.html.twig' -%}
 
-{% block title %}{{ post.title }}{% endblock %}
+{% block title %}{{ post.title|striptags|raw }}{% endblock %}
 
 {%- block page_content -%}
 
