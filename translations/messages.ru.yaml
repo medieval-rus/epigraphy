@@ -58,7 +58,7 @@ controller:
         discoverySite: Место находки
         city: Населённый пункт
         carrierType: Тип носителя
-        carrierCategory: "Носитель"
+        carrierCategory: "Подкатегория носителя"
         writingType: Разряд
         writingMethod: "Способ нанесения"
         preservationState: Состояние сохранности
@@ -67,7 +67,7 @@ controller:
         text: Текст надписи
         fulltext: Поиск по всем полям
         translation: Перевод
-        material: "Материал"
+        material: "Подкатегория материала"
         contentCategory: "Содержание"
         origin1: Город / Местность
         origin2: Здание / Раскоп
@@ -80,12 +80,19 @@ controller:
         searchInFoundButton: Искать в найденном
         searchInRuscorporaButton: Поиск в НКРЯ
         superWritingMethod: "Способ нанесения"
-        superMaterial: "Материал"
-        superCarrierCategory: "Носитель"
+        superMaterial: "Категория материала"
+        superCarrierCategory: "Категория носителя"
         superContentCategory: "Содержание"
+        dateSlider:
+          label: Датировка
+          fromYear: От года
+          fromPlaceholder: Начальный год
+          toYear: До года
+          toPlaceholder: Конечный год
+          exactMatch: Строгое вхождение
         sections:
-          carrierData: "Данные о носителе"
-          inscriptionData: "Данные о надписи"
+          carrierData: "Носитель"
+          inscriptionData: "Надпись"
     show:
       title: Надпись
       admin: Просмотреть надпись в админке

@@ -149,7 +149,7 @@
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <label class="control-label">
-                                                    Датировка
+                                                    {{ 'controller.inscription.list.filter.dateSlider.label'|trans }}
                                                 </label>
                                                 <div
                                                     id="conventional-date-range-slider"
@@ -158,18 +158,18 @@
                                                 ></div>
                                                 <div class="row mt-2 align-items-end">
                                                     <div class="col-4">
-                                                        <label class="form-label small">От года:</label>
-                                                        <input type="number" class="form-control" id="conventional-date-initial-input" placeholder="Начальный год">
+                                                        <label class="form-label small">{{ 'controller.inscription.list.filter.dateSlider.fromYear'|trans }}:</label>
+                                                        <input type="number" class="form-control" id="conventional-date-initial-input" placeholder="{{ 'controller.inscription.list.filter.dateSlider.fromPlaceholder'|trans }}">
                                                     </div>
                                                     <div class="col-4">
-                                                        <label class="form-label small">До года:</label>
-                                                        <input type="number" class="form-control" id="conventional-date-final-input" placeholder="Конечный год">
+                                                        <label class="form-label small">{{ 'controller.inscription.list.filter.dateSlider.toYear'|trans }}:</label>
+                                                        <input type="number" class="form-control" id="conventional-date-final-input" placeholder="{{ 'controller.inscription.list.filter.dateSlider.toPlaceholder'|trans }}">
                                                     </div>
                                                     <div class="col-4">
                                                         <div class="form-check date-exact-match-checkbox">
                                                             <input type="checkbox" class="form-check-input" id="conventional-date-exact-match" name="conventionalDateExactMatch" value="1">
                                                             <label class="form-check-label" for="conventional-date-exact-match">
-                                                                Строгое вхождение
+                                                                {{ 'controller.inscription.list.filter.dateSlider.exactMatch'|trans }}
                                                             </label>
                                                         </div>
                                                     </div>
