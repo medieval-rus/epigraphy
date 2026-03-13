@@ -24,6 +24,19 @@
 {%- block stylesheets -%}
     {{ parent() }}
     <style>
+        main.eomr-main table[data-vyfony-filterable-table] tbody tr[data-row-href] {
+            position: relative;
+        }
+
+        main.eomr-main table[data-vyfony-filterable-table] a.table-row-stretched-link {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+        }
+
         main.eomr-main table[data-vyfony-filterable-table] tbody tr {
             cursor: pointer;
         }
@@ -47,10 +60,12 @@
 
         main.eomr-main table[data-vyfony-filterable-table] a.table-filter-link {
             color: #495057;
+            position: relative;
             text-decoration: underline;
             text-decoration-thickness: 1px;
             text-underline-offset: 2px;
             transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+            z-index: 2;
         }
 
         main.eomr-main table[data-vyfony-filterable-table] a.table-filter-link:hover,
