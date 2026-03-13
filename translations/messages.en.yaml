@@ -92,6 +92,9 @@ controller:
       carrierSpoiler:
         open: More about the carrier
         close: More about the carrier (collapse)
+      readingsSpoiler:
+        open: Show all readings
+        close: Show all readings (collapse)
       noPublication: the inscription is not visible to site users
       inscription:
         label:
@@ -119,6 +122,10 @@ controller:
           epidocText: EpiDoc text
           epidocCriticalApparatus: Critical apparatus
           epidocTranslations: Translations
+          readingsTable:
+            reader: Reader
+            reading: Reading
+            baseReader: Main reading
           zeroRow:
             origin: Dating by other features
             placeOnCarrier: Location on carrier

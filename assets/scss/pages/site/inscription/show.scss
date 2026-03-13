@@ -433,6 +433,63 @@
   flex-shrink: 0;
 }
 
+.epidoc-text-main-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.epidoc-text-main-row > .epidoc-text-in-table--server,
+.epidoc-text-main-row > #epidoc-text-in-table {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.epidoc-inline-readings-toggle {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.epidoc-inline-readings-toggle::before {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.epidoc-inline-readings-toggle.epidoc-translations-toggle--open::before {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-135deg);
+}
+
+.epidoc-alt-readings-block {
+  margin-top: 0.25rem;
+}
+
+.epidoc-alt-readings-block--collapsed {
+  display: none;
+}
+
+.epidoc-reading-line {
+  padding: 0.35rem 0;
+  border-top: 1px solid #f0f0f0;
+
+  &:first-child {
+    border-top: 1px solid #e9ecef;
+  }
+}
+
+.epidoc-alt-reading-text {
+  margin-top: 0.25rem;
+  white-space: pre-wrap;
+  font-family: 'Monomachus', 'Georgia', serif;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #212529;
+}
+
 .epidoc-metadata-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

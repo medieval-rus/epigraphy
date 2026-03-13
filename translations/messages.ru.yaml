@@ -92,6 +92,9 @@ controller:
       carrierSpoiler:
         open: Подробнее о носителе
         close: Подробнее о носителе (свернуть)
+      readingsSpoiler:
+        open: Показать все прочтения
+        close: Показать все прочтения (свернуть)
       noPublication: надпись не видна пользователям сайта
       inscription:
         label:
@@ -119,6 +122,10 @@ controller:
           epidocText: EpiDoc текст
           epidocCriticalApparatus: Критический аппарат
           epidocTranslations: Переводы
+          readingsTable:
+            reader: Кто читает
+            reading: Как читает
+            baseReader: Основное прочтение
           zeroRow:
             origin: Датировка по иным признакам
             placeOnCarrier: Расположение на носителе

@@ -412,15 +412,33 @@
             </div>
         </th>
         <td>
-            {% if useXsltEdition %}
-                <div class="epidoc-text-in-table--server" data-epidoc-render-source="xslt" style="font-family: 'Monomachus', 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #212529; white-space: pre-wrap;">
-                    {{- epidocRendered.editionHtml|trim|raw -}}
-                </div>
-            {% else %}
-                <div id="epidoc-text-in-table" style="font-family: 'Monomachus', 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #212529; white-space: pre-wrap;">
-                    {# JavaScript will populate this #}
-                </div>
-            {% endif %}
+            <div class="epidoc-text-main-row">
+                {% if useXsltEdition %}
+                    <div class="epidoc-text-in-table--server" data-epidoc-render-source="xslt" style="font-family: 'Monomachus', 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #212529; white-space: pre-wrap;">
+                        {{- epidocRendered.editionHtml|trim|raw -}}
+                    </div>
+                {% else %}
+                    <div id="epidoc-text-in-table" style="font-family: 'Monomachus', 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #212529; white-space: pre-wrap;">
+                        {# JavaScript will populate this #}
+                    </div>
+                {% endif %}
+                <button
+                    type="button"
+                    id="epidoc-full-readings-toggle"
+                    class="epidoc-translations-toggle epidoc-inline-readings-toggle"
+                    aria-expanded="false"
+                    title="{{ 'readingsSpoiler.open'|transWithContext(translationContext) }}"
+                    hidden
+                ></button>
+            </div>
+            <div
+                id="epidoc-full-readings-in-text"
+                data-show-readings-title="{{ 'readingsSpoiler.open'|transWithContext(translationContext) }}"
+                data-hide-readings-title="{{ 'readingsSpoiler.close'|transWithContext(translationContext) }}"
+                style="margin-top: 0.75rem;"
+            >
+                {# JavaScript will populate this #}
+            </div>
         </td>
     </tr>
 endmacro
@@ -455,7 +473,7 @@ macro format_epidoc_translations_row(translationContext, labelTranslationKey)
     </tr>
 endmacro
 
-macro format_epidoc_text_content()
+{%- macro format_epidoc_text_content() -%}
     <div class="epidoc-section epidoc-section--edition" style="margin: 0; padding: 0; background: transparent; border: none;">
         <div id="epidoc-text-in-table" style="margin-bottom: 0.5rem; font-family: 'Monomachus', 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #212529; white-space: pre-wrap;">
             JavaScript will populate this

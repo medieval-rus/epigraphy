@@ -244,6 +244,8 @@ function initEpidocViewer() {
     const stubScript = document.getElementById('epidoc-stub-data');
     const tableContainer = document.getElementById('epidoc-text-in-table');
     const tableApparatusContainer = document.getElementById('epidoc-apparatus-in-table');
+    const fullReadingsContainer = document.getElementById('epidoc-full-readings-in-text');
+    const fullReadingsToggle = document.getElementById('epidoc-full-readings-toggle');
     const serverEditionContainer = document.querySelector('[data-epidoc-render-source="xslt"]');
 
     if (serverEditionContainer) {
@@ -257,6 +259,14 @@ function initEpidocViewer() {
         }
         if (tableApparatusContainer) {
             tableApparatusContainer.innerHTML = '<span style="color: #6c757d; font-style: italic;">EpiDoc данные отсутствуют</span>';
+        }
+        if (fullReadingsContainer) {
+            fullReadingsContainer.innerHTML = '';
+        }
+        if (fullReadingsToggle) {
+            fullReadingsToggle.hidden = true;
+            fullReadingsToggle.setAttribute('aria-expanded', 'false');
+            fullReadingsToggle.classList.remove('epidoc-translations-toggle--open');
         }
         return;
     }
@@ -276,6 +286,14 @@ function initEpidocViewer() {
         }
         if (tableApparatusContainer) {
             tableApparatusContainer.innerHTML = '<span style="color: #dc3545; font-style: italic;">Ошибка парсинга XML</span>';
+        }
+        if (fullReadingsContainer) {
+            fullReadingsContainer.innerHTML = '';
+        }
+        if (fullReadingsToggle) {
+            fullReadingsToggle.hidden = true;
+            fullReadingsToggle.setAttribute('aria-expanded', 'false');
+            fullReadingsToggle.classList.remove('epidoc-translations-toggle--open');
         }
         return;
     }
@@ -502,6 +520,15 @@ function extractAppElements(xmlDoc) {
     return Array.from(edition.getElementsByTagName('app'));
 }
 
+function extractEditionDiv(xmlDoc) {
+    if (!xmlDoc) {
+        return null;
+    }
+    const textBody = getTextBody(xmlDoc);
+    const editions = getDivsByType(textBody, 'edition');
+    return editions.length > 0 ? editions[0] : null;
+}
+
 function extractExternalApparatusText(xmlDoc) {
     if (!xmlDoc) {
         return '';
@@ -555,6 +582,8 @@ function renderTableView(xmlDoc, stubDoc = null) {
     const tableContainer = document.getElementById('epidoc-text-in-table');
     const tableApparatusContainer = document.getElementById('epidoc-apparatus-in-table');
     const tableTranslationsContainer = document.getElementById('epidoc-translations-in-table');
+    const fullReadingsContainer = document.getElementById('epidoc-full-readings-in-text');
+    const fullReadingsToggle = document.getElementById('epidoc-full-readings-toggle');
     
     // Parse bibliography map
     const bibliographyMap = parseBibliography(xmlDoc);
@@ -562,10 +591,34 @@ function renderTableView(xmlDoc, stubDoc = null) {
     
     // Initial bracket system (default: Leiden = false in toggle)
     let currentSystem = getEpidocSystemPreference();
+    let readingsToggleBound = false;
+
+    function setupReadingsToggle() {
+        if (!fullReadingsToggle || !fullReadingsContainer || readingsToggleBound) {
+            return;
+        }
+        readingsToggleBound = true;
+
+        fullReadingsToggle.addEventListener('click', () => {
+            const isExpanded = fullReadingsToggle.getAttribute('aria-expanded') === 'true';
+            const nextExpanded = !isExpanded;
+            const showTitle = fullReadingsContainer.dataset.showReadingsTitle || 'Показать все прочтения';
+            const hideTitle = fullReadingsContainer.dataset.hideReadingsTitle || 'Скрыть прочтения';
+
+            fullReadingsToggle.setAttribute('aria-expanded', String(nextExpanded));
+            fullReadingsToggle.classList.toggle('epidoc-translations-toggle--open', nextExpanded);
+            fullReadingsToggle.title = nextExpanded ? hideTitle : showTitle;
+
+            const block = fullReadingsContainer.querySelector('.epidoc-alt-readings-block');
+            if (block) {
+                block.classList.toggle('epidoc-alt-readings-block--collapsed', !nextExpanded);
+            }
+        });
+    }
 
     function renderContent() {
         // Render for table widget (if exists)
-        if (tableContainer || tableApparatusContainer || tableTranslationsContainer) {
+        if (tableContainer || tableApparatusContainer || tableTranslationsContainer || fullReadingsContainer) {
             const textBody = getTextBody(xmlDoc);
             if (textBody) {
                 const editions = getDivsByType(textBody, 'edition');
@@ -591,6 +644,29 @@ function renderTableView(xmlDoc, stubDoc = null) {
                             tableTranslationsContainer.innerHTML = '<span style="color: #6c757d; font-style: italic;">Переводы не найдены в XML</span>';
                         }
                     }
+                    if (fullReadingsContainer) {
+                        const rendered = renderReadingsIntoContainer(
+                            fullReadingsContainer,
+                            fullReadingsToggle,
+                            xmlDoc,
+                            bibliographyMap,
+                            currentSystem
+                        ) || renderReadingsIntoContainer(
+                            fullReadingsContainer,
+                            fullReadingsToggle,
+                            stubDoc,
+                            stubBibliographyMap,
+                            currentSystem
+                        );
+                        if (!rendered) {
+                            fullReadingsContainer.innerHTML = '';
+                            if (fullReadingsToggle) {
+                                fullReadingsToggle.hidden = true;
+                                fullReadingsToggle.setAttribute('aria-expanded', 'false');
+                                fullReadingsToggle.classList.remove('epidoc-translations-toggle--open');
+                            }
+                        }
+                    }
                 } else {
                     if (tableContainer) {
                         tableContainer.innerHTML = '<span style="color: #6c757d; font-style: italic;">Секция edition не найдена в XML</span>';
@@ -600,6 +676,14 @@ function renderTableView(xmlDoc, stubDoc = null) {
                     }
                     if (tableTranslationsContainer) {
                         tableTranslationsContainer.innerHTML = '<span style="color: #6c757d; font-style: italic;">Секция edition не найдена в XML</span>';
+                    }
+                    if (fullReadingsContainer) {
+                        fullReadingsContainer.innerHTML = '';
+                        if (fullReadingsToggle) {
+                            fullReadingsToggle.hidden = true;
+                            fullReadingsToggle.setAttribute('aria-expanded', 'false');
+                            fullReadingsToggle.classList.remove('epidoc-translations-toggle--open');
+                        }
                     }
                 }
             } else {
@@ -611,6 +695,14 @@ function renderTableView(xmlDoc, stubDoc = null) {
                 }
                 if (tableTranslationsContainer) {
                     tableTranslationsContainer.innerHTML = '<span style="color: #6c757d; font-style: italic;">Секция body не найдена в XML</span>';
+                }
+                if (fullReadingsContainer) {
+                    fullReadingsContainer.innerHTML = '';
+                    if (fullReadingsToggle) {
+                        fullReadingsToggle.hidden = true;
+                        fullReadingsToggle.setAttribute('aria-expanded', 'false');
+                        fullReadingsToggle.classList.remove('epidoc-translations-toggle--open');
+                    }
                 }
             }
             
@@ -630,6 +722,8 @@ function renderTableView(xmlDoc, stubDoc = null) {
         renderContent();
     }
     
+    setupReadingsToggle();
+
     // Initial render
     renderContent();
 }
@@ -929,6 +1023,191 @@ function buildCriticalApparatusRows(appElements, bibliographyMap, system) {
             </tr>`;
     }
     return rows;
+}
+
+function splitRespValues(resp) {
+    if (!resp) {
+        return [];
+    }
+    return resp.trim().split(/\s+/).filter(Boolean);
+}
+
+function collectWitnessRespValues(editionDiv) {
+    const values = new Set();
+    if (!editionDiv) {
+        return [];
+    }
+
+    const appElements = editionDiv.getElementsByTagName('app');
+    for (let i = 0; i < appElements.length; i++) {
+        const readings = appElements[i].getElementsByTagName('rdg');
+        for (let j = 0; j < readings.length; j++) {
+            const respValues = splitRespValues(readings[j].getAttribute('resp') || '');
+            respValues.forEach(resp => values.add(resp));
+        }
+    }
+
+    return Array.from(values);
+}
+
+function pickWitnessReading(appNode, witnessResp) {
+    const lem = appNode.querySelector('lem');
+    const readings = appNode.querySelectorAll('rdg');
+
+    if (!witnessResp) {
+        return lem || (readings.length > 0 ? readings[0] : null);
+    }
+
+    for (let i = 0; i < readings.length; i++) {
+        const rdgRespValues = splitRespValues(readings[i].getAttribute('resp') || '');
+        if (rdgRespValues.includes(witnessResp)) {
+            return readings[i];
+        }
+    }
+
+    return lem || (readings.length > 0 ? readings[0] : null);
+}
+
+function buildWitnessReadingText(node, system, witnessResp) {
+    let result = '';
+
+    for (const child of node.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+            result += child.textContent.replace(/\s+/g, ' ');
+            continue;
+        }
+
+        if (child.nodeType !== Node.ELEMENT_NODE) {
+            continue;
+        }
+
+        const tagName = child.localName;
+        if (tagName === 'app') {
+            const selectedReading = pickWitnessReading(child, witnessResp);
+            if (selectedReading) {
+                result += buildWitnessReadingText(selectedReading, system, witnessResp);
+            }
+            continue;
+        }
+
+        if (tagName === 'supplied') {
+            const reason = child.getAttribute('reason') || 'lost';
+            if (reason === 'unclear') {
+                const unclearSuppliedText = buildWitnessReadingText(child, system, witnessResp);
+                if (system === 'zaliznyak') {
+                    result += `[${unclearSuppliedText}]`;
+                } else {
+                    result += applyDotBelowMarks(unclearSuppliedText);
+                }
+                continue;
+            }
+
+            const brackets = BRACKET_SYSTEMS[system].supplied[reason] || BRACKET_SYSTEMS[system].supplied.lost;
+            result += `${brackets[0]}${buildWitnessReadingText(child, system, witnessResp)}${brackets[1]}`;
+            continue;
+        }
+
+        if (tagName === 'unclear') {
+            const unclearText = buildWitnessReadingText(child, system, witnessResp);
+            if (system === 'zaliznyak') {
+                result += `[${unclearText}]`;
+            } else {
+                result += applyDotBelowMarks(unclearText);
+            }
+            continue;
+        }
+
+        if (tagName === 'gap') {
+            result += system === 'zaliznyak' ? '...' : '***';
+            continue;
+        }
+
+        if (tagName === 'lb') {
+            result += '\n';
+            continue;
+        }
+
+        result += buildWitnessReadingText(child, system, witnessResp);
+    }
+
+    return result;
+}
+
+function normalizeWitnessReadingText(text) {
+    return text
+        .replace(/[ \t]+\n/g, '\n')
+        .replace(/\n[ \t]+/g, '\n')
+        .replace(/[ \t]{2,}/g, ' ')
+        .trim();
+}
+
+function formatReadingTextForHtml(text) {
+    return escapeHtml(text).replace(/\n/g, '<br>');
+}
+
+function buildFullReadingsEntries(editionDiv, bibliographyMap, system) {
+    const entries = [];
+    const witnesses = collectWitnessRespValues(editionDiv);
+
+    for (let i = 0; i < witnesses.length; i++) {
+        const witnessResp = witnesses[i];
+        const reader = resolveResp(witnessResp, bibliographyMap) || witnessResp;
+        const readingText = normalizeWitnessReadingText(buildWitnessReadingText(editionDiv, system, witnessResp));
+        if (!readingText) {
+            continue;
+        }
+
+        entries.push({ reader, text: readingText });
+    }
+
+    return entries;
+}
+
+function renderReadingsIntoContainer(container, toggle, xmlDoc, bibliographyMap, system) {
+    if (!container || !xmlDoc) {
+        return false;
+    }
+
+    const editionDiv = extractEditionDiv(xmlDoc);
+    if (!editionDiv) {
+        return false;
+    }
+
+    if (editionDiv.getElementsByTagName('app').length === 0) {
+        return false;
+    }
+
+    const entries = buildFullReadingsEntries(editionDiv, bibliographyMap, system);
+    if (!entries.length) {
+        return false;
+    }
+
+    const isExpanded = !!(toggle && toggle.getAttribute('aria-expanded') === 'true');
+
+    let items = '';
+    for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i];
+        items += `
+            <div class="epidoc-reading-line">
+                <span class="epidoc-resp-badge">${escapeHtml(entry.reader)}</span>
+                <div class="epidoc-alt-reading-text">${formatReadingTextForHtml(entry.text)}</div>
+            </div>`;
+    }
+
+    const blockClass = isExpanded
+        ? 'epidoc-alt-readings-block'
+        : 'epidoc-alt-readings-block epidoc-alt-readings-block--collapsed';
+
+    container.innerHTML = `<div class="${blockClass}">${items}</div>`;
+    if (toggle) {
+        const showTitle = container.dataset.showReadingsTitle || 'Показать все прочтения';
+        const hideTitle = container.dataset.hideReadingsTitle || 'Скрыть прочтения';
+        toggle.hidden = false;
+        toggle.classList.toggle('epidoc-translations-toggle--open', isExpanded);
+        toggle.title = isExpanded ? hideTitle : showTitle;
+    }
+
+    return true;
 }
 
 /**
