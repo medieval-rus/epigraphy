@@ -31,6 +31,7 @@ use App\Models\StringActualValue;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Epigraphy\NamedEntityInterface;
+use App\Services\Epigraphy\Localization\LocalizedTextService;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -39,11 +40,50 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
 {
     private PropertyAccessorInterface $propertyAccessor;
     private TranslatorInterface $translator;
+    private LocalizedTextService $localizedTextService;
 
-    public function __construct(PropertyAccessorInterface $propertyAccessor, TranslatorInterface $translator)
+    /** @var string[] */
+    private array $localizedZeroRowFields = [
+        'origin',
+        'placeOnCarrier',
+        'interpretationComment',
+        'text',
+        'transliteration',
+        'reconstruction',
+        'normalization',
+        'translation',
+        'description',
+        'dateInText',
+        'nonStratigraphicalDate',
+        'historicalDate',
+    ];
+
+    /** @var string[] */
+    private array $localizedInterpretationFields = [
+        'comment',
+        'origin',
+        'placeOnCarrier',
+        'interpretationComment',
+        'text',
+        'transliteration',
+        'reconstruction',
+        'normalization',
+        'translation',
+        'description',
+        'dateInText',
+        'nonStratigraphicalDate',
+        'historicalDate',
+    ];
+
+    public function __construct(
+        PropertyAccessorInterface $propertyAccessor,
+        TranslatorInterface $translator,
+        LocalizedTextService $localizedTextService
+    )
     {
         $this->propertyAccessor = $propertyAccessor;
         $this->translator = $translator;
+        $this->localizedTextService = $localizedTextService;
     }
 
     /**
@@ -55,6 +95,9 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
             Interpretation $interpretation
         ) use ($propertyName): ?StringActualValue {
             $value = $this->getStringValue($this->propertyAccessor->getValue($interpretation, $propertyName));
+            if (in_array($propertyName, $this->localizedInterpretationFields, true)) {
+                $value = $this->localizedTextService->resolveForEntity($interpretation, $propertyName, $value);
+            }
 
             if (null === $value) {
                 return null;
@@ -75,6 +118,9 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
         $referenceValues = array_map($referenceValueFormatter, $references);
 
         $zeroRowValue = $this->getStringValue($this->propertyAccessor->getValue($zeroRow, $propertyName));
+        if (in_array($propertyName, $this->localizedZeroRowFields, true)) {
+            $zeroRowValue = $this->localizedTextService->resolveForEntity($zeroRow, $propertyName, $zeroRowValue);
+        }
 
         if (null !== $zeroRowValue) {
             $allValues = [

@@ -27,6 +27,7 @@ namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractEntityAdmin;
 use App\DataStorage\DataStorageManagerInterface;
+use App\Persistence\Entity\Epigraphy\LocalizedText;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Media\File;
 use Doctrine\ORM\EntityRepository;
@@ -38,11 +39,46 @@ use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\Form\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 final class InscriptionAdmin extends AbstractEntityAdmin
 {
+    private const INSCRIPTION_TRANSLATABLE_FIELDS = [
+        'dateExplanation' => CKEditorType::class,
+        'comment' => CKEditorType::class,
+    ];
+
+    private const ZERO_ROW_TRANSLATABLE_FIELDS = [
+        'origin' => CKEditorType::class,
+        'placeOnCarrier' => CKEditorType::class,
+        'interpretationComment' => CKEditorType::class,
+        'text' => CKEditorType::class,
+        'transliteration' => CKEditorType::class,
+        'reconstruction' => CKEditorType::class,
+        'normalization' => CKEditorType::class,
+        'translation' => CKEditorType::class,
+        'description' => CKEditorType::class,
+        'dateInText' => CKEditorType::class,
+        'nonStratigraphicalDate' => CKEditorType::class,
+        'historicalDate' => CKEditorType::class,
+    ];
+
+    private const INTERPRETATION_TRANSLATABLE_FIELDS = [
+        'comment' => CKEditorType::class,
+        'origin' => CKEditorType::class,
+        'placeOnCarrier' => CKEditorType::class,
+        'interpretationComment' => CKEditorType::class,
+        'text' => CKEditorType::class,
+        'transliteration' => CKEditorType::class,
+        'reconstruction' => CKEditorType::class,
+        'normalization' => CKEditorType::class,
+        'translation' => CKEditorType::class,
+        'description' => CKEditorType::class,
+        'dateInText' => CKEditorType::class,
+        'nonStratigraphicalDate' => CKEditorType::class,
+        'historicalDate' => CKEditorType::class,
+    ];
+
     protected $baseRouteName = 'epigraphy_inscription';
 
     protected $baseRoutePattern = 'epigraphy/inscription';
@@ -329,6 +365,28 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     )
                 ->end()
             ->end()
+            ->with('Inscription (EN)', ['class' => 'col-md-6'])
+        ;
+
+        $this->addTranslationFields(
+            $formMapper,
+            LocalizedText::TARGET_INSCRIPTION,
+            self::INSCRIPTION_TRANSLATABLE_FIELDS
+        );
+
+        $formMapper
+                ->end()
+                ->with('ZeroRow (EN)', ['class' => 'col-md-6'])
+        ;
+
+        $this->addTranslationFields(
+            $formMapper,
+            LocalizedText::TARGET_ZERO_ROW,
+            self::ZERO_ROW_TRANSLATABLE_FIELDS
+        );
+
+        $formMapper
+                ->end()
         ;
     }
 
@@ -379,5 +437,199 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                 ]
             )
         );
+    }
+
+    public function postPersist($object): void
+    {
+        $this->storeLocalizedTexts($object);
+    }
+
+    public function postUpdate($object): void
+    {
+        $this->storeLocalizedTexts($object);
+    }
+
+    private function addTranslationFields(FormMapper $formMapper, string $targetType, array $fields): void
+    {
+        foreach ($fields as $fieldName => $fieldType) {
+            $options = [
+                'mapped' => false,
+                'required' => false,
+                'label' => sprintf('%s (EN)', $fieldName),
+                'data' => $this->getLocalizedTextValue($targetType, $fieldName),
+            ];
+
+            if (CKEditorType::class === $fieldType) {
+                $options['autoload'] = false;
+            }
+
+            $formMapper->add(
+                $this->getTranslationFieldName($targetType, $fieldName),
+                $fieldType,
+                $options
+            );
+        }
+    }
+
+    private function getTranslationFieldName(string $targetType, string $fieldName): string
+    {
+        return 'localizedEn__'.$targetType.'__'.$fieldName;
+    }
+
+    private function getTargetIdByType(string $targetType): ?int
+    {
+        $subject = $this->getSubject();
+        if (null === $subject) {
+            return null;
+        }
+
+        if (LocalizedText::TARGET_INSCRIPTION === $targetType) {
+            return $subject->getId();
+        }
+
+        if (LocalizedText::TARGET_ZERO_ROW === $targetType && null !== $subject->getZeroRow()) {
+            return $subject->getZeroRow()->getId();
+        }
+
+        return null;
+    }
+
+    private function getLocalizedTextValue(string $targetType, string $fieldName): ?string
+    {
+        $targetId = $this->getTargetIdByType($targetType);
+        if (null === $targetId) {
+            return null;
+        }
+
+        $entity = $this->getModelManager()->getEntityManager(LocalizedText::class);
+        $localizedText = $entity->getRepository(LocalizedText::class)->findOneBy(
+            [
+                'targetType' => $targetType,
+                'targetId' => (int) $targetId,
+                'field' => $fieldName,
+                'locale' => 'en',
+            ]
+        );
+
+        return null === $localizedText ? null : $localizedText->getValue();
+    }
+
+    private function storeLocalizedTexts($inscription): void
+    {
+        if (null === $inscription || null === $inscription->getId()) {
+            return;
+        }
+
+        $targetIds = [
+            LocalizedText::TARGET_INSCRIPTION => $inscription->getId(),
+            LocalizedText::TARGET_ZERO_ROW => null === $inscription->getZeroRow() ? null : $inscription->getZeroRow()->getId(),
+        ];
+
+        $fieldsByTarget = [
+            LocalizedText::TARGET_INSCRIPTION => self::INSCRIPTION_TRANSLATABLE_FIELDS,
+            LocalizedText::TARGET_ZERO_ROW => self::ZERO_ROW_TRANSLATABLE_FIELDS,
+        ];
+
+        $entity = $this->getModelManager()->getEntityManager(LocalizedText::class);
+        $repository = $entity->getRepository(LocalizedText::class);
+        $form = $this->getForm();
+
+        foreach ($fieldsByTarget as $targetType => $fields) {
+            $targetId = $targetIds[$targetType];
+            if (null === $targetId) {
+                continue;
+            }
+
+            foreach (array_keys($fields) as $fieldName) {
+                $formFieldName = $this->getSubmittedTranslationFieldName($targetType, $fieldName);
+                if (!$form->has($formFieldName)) {
+                    continue;
+                }
+
+                $value = $form->get($formFieldName)->getData();
+                $trimmedValue = null === $value ? null : trim((string) $value);
+
+                $localizedText = $repository->findOneBy(
+                    [
+                        'targetType' => $targetType,
+                        'targetId' => (int) $targetId,
+                        'field' => $fieldName,
+                        'locale' => 'en',
+                    ]
+                );
+
+                if (null === $trimmedValue || '' === $trimmedValue) {
+                    if (null !== $localizedText) {
+                        $entity->remove($localizedText);
+                    }
+                    continue;
+                }
+
+                if (null === $localizedText) {
+                    $localizedText = (new LocalizedText())
+                        ->setTargetType($targetType)
+                        ->setTargetId((int) $targetId)
+                        ->setField($fieldName)
+                        ->setLocale('en');
+                    $entity->persist($localizedText);
+                }
+
+                $localizedText->setValue($trimmedValue);
+            }
+        }
+
+        if ($form->has('interpretations')) {
+            foreach ($form->get('interpretations') as $interpretationForm) {
+                $interpretation = $interpretationForm->getData();
+
+                if (!$interpretation instanceof Interpretation || null === $interpretation->getId()) {
+                    continue;
+                }
+
+                foreach (array_keys(self::INTERPRETATION_TRANSLATABLE_FIELDS) as $fieldName) {
+                    $formFieldName = $this->getSubmittedTranslationFieldName(LocalizedText::TARGET_INTERPRETATION, $fieldName);
+                    if (!$interpretationForm->has($formFieldName)) {
+                        continue;
+                    }
+
+                    $value = $interpretationForm->get($formFieldName)->getData();
+                    $trimmedValue = null === $value ? null : trim((string) $value);
+
+                    $localizedText = $repository->findOneBy(
+                        [
+                            'targetType' => LocalizedText::TARGET_INTERPRETATION,
+                            'targetId' => (int) $interpretation->getId(),
+                            'field' => $fieldName,
+                            'locale' => 'en',
+                        ]
+                    );
+
+                    if (null === $trimmedValue || '' === $trimmedValue) {
+                        if (null !== $localizedText) {
+                            $entity->remove($localizedText);
+                        }
+                        continue;
+                    }
+
+                    if (null === $localizedText) {
+                        $localizedText = (new LocalizedText())
+                            ->setTargetType(LocalizedText::TARGET_INTERPRETATION)
+                            ->setTargetId((int) $interpretation->getId())
+                            ->setField($fieldName)
+                            ->setLocale('en');
+                        $entity->persist($localizedText);
+                    }
+
+                    $localizedText->setValue($trimmedValue);
+                }
+            }
+        }
+
+        $entity->flush();
+    }
+
+    private function getSubmittedTranslationFieldName(string $targetType, string $fieldName): string
+    {
+        return str_replace(['__', '.'], ['____', '__'], $this->getTranslationFieldName($targetType, $fieldName));
     }
 }

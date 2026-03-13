@@ -112,11 +112,11 @@ class CarrierCategory implements NamedEntityInterface
                 }
             }
 
-            if (str_contains($normalizedLocale, '_')) {
+            if (false !== strpos($normalizedLocale, '_')) {
                 $normalizedLocale = substr($normalizedLocale, 0, (int) strpos($normalizedLocale, '_'));
             }
 
-            if (str_contains($normalizedLocale, '-')) {
+            if (false !== strpos($normalizedLocale, '-')) {
                 $normalizedLocale = substr($normalizedLocale, 0, (int) strpos($normalizedLocale, '-'));
             }
 

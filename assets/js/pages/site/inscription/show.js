@@ -883,8 +883,7 @@ function setupCopyButton(xmlString) {
         } catch (err) {
             console.error('Failed to copy:', err);
         }
-    }
-    return result;
+    });
 }
 
 /**

@@ -27,17 +27,32 @@ namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractEntityAdmin;
 use App\Persistence\Entity\Epigraphy\Carrier;
+use App\Persistence\Entity\Epigraphy\LocalizedText;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Doctrine\ORM\EntityRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 final class CarrierAdmin extends AbstractEntityAdmin
 {
+    private const TRANSLATABLE_FIELDS = [
+        'origin1' => TextType::class,
+        'origin2' => TextType::class,
+        'findCircumstances' => CKEditorType::class,
+        'carrierHistory' => CKEditorType::class,
+        'archaeology' => CKEditorType::class,
+        'characteristics' => CKEditorType::class,
+        'individualName' => TextType::class,
+        'storagePlace' => TextType::class,
+        'inventoryNumber' => TextType::class,
+        'stratigraphicalDate' => CKEditorType::class,
+        'previousStorage' => CKEditorType::class,
+        'storageLocalization' => CKEditorType::class,
+        'materialDescription' => CKEditorType::class,
+    ];
+
     protected $baseRouteName = 'epigraphy_carrier';
 
     protected $baseRoutePattern = 'epigraphy/carrier';
@@ -83,5 +98,113 @@ final class CarrierAdmin extends AbstractEntityAdmin
             ->add('storageLocalization', CKEditorType::class, $this->createFormOptions('storageLocalization', ['required' => false, 'autoload' => false]))
             ->add('inventoryNumber', null, $this->createFormOptions('inventoryNumber'))
         ;
+
+        foreach (self::TRANSLATABLE_FIELDS as $fieldName => $fieldType) {
+            $options = [
+                'mapped' => false,
+                'required' => false,
+                'label' => sprintf('%s (EN)', $fieldName),
+                'data' => $this->getLocalizedTextValue($fieldName),
+            ];
+            if (CKEditorType::class === $fieldType) {
+                $options['autoload'] = false;
+            }
+
+            $formMapper->add(
+                $this->getTranslationFieldName($fieldName),
+                $fieldType,
+                $options
+            );
+        }
+    }
+
+    public function postPersist($object): void
+    {
+        $this->storeLocalizedTexts($object);
+    }
+
+    public function postUpdate($object): void
+    {
+        $this->storeLocalizedTexts($object);
+    }
+
+    private function getTranslationFieldName(string $fieldName): string
+    {
+        return 'localizedEn__'.$fieldName;
+    }
+
+    private function getLocalizedTextValue(string $fieldName): ?string
+    {
+        $subject = $this->getSubject();
+        if (null === $subject || null === $subject->getId()) {
+            return null;
+        }
+
+        $entity = $this->getModelManager()->getEntityManager(LocalizedText::class);
+        $localizedText = $entity->getRepository(LocalizedText::class)->findOneBy(
+            [
+                'targetType' => LocalizedText::TARGET_CARRIER,
+                'targetId' => (int) $subject->getId(),
+                'field' => $fieldName,
+                'locale' => 'en',
+            ]
+        );
+
+        return null === $localizedText ? null : $localizedText->getValue();
+    }
+
+    private function storeLocalizedTexts(Carrier $carrier): void
+    {
+        if (null === $carrier->getId()) {
+            return;
+        }
+
+        $entity = $this->getModelManager()->getEntityManager(LocalizedText::class);
+        $repository = $entity->getRepository(LocalizedText::class);
+        $form = $this->getForm();
+
+        foreach (array_keys(self::TRANSLATABLE_FIELDS) as $fieldName) {
+            $formFieldName = $this->getSubmittedTranslationFieldName($fieldName);
+            if (!$form->has($formFieldName)) {
+                continue;
+            }
+
+            $value = $form->get($formFieldName)->getData();
+            $trimmedValue = null === $value ? null : trim((string) $value);
+
+            $localizedText = $repository->findOneBy(
+                [
+                    'targetType' => LocalizedText::TARGET_CARRIER,
+                    'targetId' => (int) $carrier->getId(),
+                    'field' => $fieldName,
+                    'locale' => 'en',
+                ]
+            );
+
+            if (null === $trimmedValue || '' === $trimmedValue) {
+                if (null !== $localizedText) {
+                    $entity->remove($localizedText);
+                }
+                continue;
+            }
+
+            if (null === $localizedText) {
+                $localizedText = (new LocalizedText())
+                    ->setTargetType(LocalizedText::TARGET_CARRIER)
+                    ->setTargetId((int) $carrier->getId())
+                    ->setField($fieldName)
+                    ->setLocale('en');
+                $entity->persist($localizedText);
+            }
+
+            $localizedText->setValue($trimmedValue);
+        }
+
+        $entity->flush();
+    }
+
+    private function getSubmittedTranslationFieldName(string $fieldName): string
+    {
+        return str_replace(['__', '.'], ['____', '__'], $this->getTranslationFieldName($fieldName));
     }
 }
