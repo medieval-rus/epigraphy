@@ -229,11 +229,9 @@ $(window).on('load', () => {
         $('[data-toggle="tooltip"]').tooltip()
     })
     
-    // TODO(epidoc): uncomment when EpiDoc viewer is ready
-    // initEpidocViewer();
+    initEpidocViewer();
 });
 
-// TODO(epidoc): functions below are disabled — uncomment initEpidocViewer() call above to enable
 
 /**
  * EpiDoc XML Viewer

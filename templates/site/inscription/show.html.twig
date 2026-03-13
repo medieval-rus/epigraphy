@@ -401,7 +401,7 @@
 
     <tr>
         <th scope="row">
-            translate_field_label(translationContext, labelTranslationKey)
+            {{- self.translate_field_label(translationContext, labelTranslationKey) -}}
             <div class="epidoc-toggle-wrapper" style="margin-top: 0.5rem; justify-content: flex-start; font-weight: normal;">
                 <span class="epidoc-toggle-label epidoc-toggle-label--left" style="font-size: 0.75rem;">Лейденская система</span>
                 <label class="epidoc-toggle" style="margin: 0 0.25rem;">
@@ -441,37 +441,37 @@
             </div>
         </td>
     </tr>
-endmacro
+{%- endmacro -%}
 
-macro format_epidoc_apparatus_row(translationContext, labelTranslationKey)
-    import _self as self
+{%- macro format_epidoc_apparatus_row(translationContext, labelTranslationKey) -%}
+    {%- import _self as self -%}
 
     <tr>
         <th scope="row">
-            translate_field_label(translationContext, labelTranslationKey)
+            {{- self.translate_field_label(translationContext, labelTranslationKey) -}}
         </th>
         <td>
             <div id="epidoc-apparatus-in-table">
-                JavaScript will populate this
+                {# JavaScript will populate this #}
             </div>
         </td>
     </tr>
-endmacro
+{%- endmacro -%}
 
-macro format_epidoc_translations_row(translationContext, labelTranslationKey)
-    import _self as self
+{%- macro format_epidoc_translations_row(translationContext, labelTranslationKey) -%}
+    {%- import _self as self -%}
 
     <tr>
         <th scope="row">
-            translate_field_label(translationContext, labelTranslationKey)
+            {{- self.translate_field_label(translationContext, labelTranslationKey) -}}
         </th>
         <td>
             <div id="epidoc-translations-in-table">
-                JavaScript will populate this
+                {# JavaScript will populate this #}
             </div>
         </td>
     </tr>
-endmacro
+{%- endmacro -%}
 
 {%- macro format_epidoc_text_content() -%}
     <div class="epidoc-section epidoc-section--edition" style="margin: 0; padding: 0; background: transparent; border: none;">
@@ -487,6 +487,4 @@ endmacro
             <span class="epidoc-toggle-label epidoc-toggle-label--right" style="font-size: 0.75rem;">Система Зализняка</span>
         </div>
     </div>
-endmacro
-
-#}
+{%- endmacro -%}
