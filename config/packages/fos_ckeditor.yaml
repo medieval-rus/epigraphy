@@ -41,6 +41,8 @@ fos_ck_editor:
             toolbarCanCollapse: true
             toolbarStartupExpanded: false
             stylesSet: 'mystile'
+            enterMode: 2
+            shiftEnterMode: 1
     styles:
         mystile:
             - { name: "text", element: "span", styles: { font-family: 'Arial, Helvetica, sans-serif' } }

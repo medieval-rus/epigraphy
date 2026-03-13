@@ -1,0 +1,145 @@
+{%- extends 'site/base.html.twig' -%}
+
+{%- block page_content -%}
+
+    {% import '@VyfonyFilterableTable/filterable_table.html.twig' as filterable_table %}
+    {% import 'site/content/post.html.twig' as post_helper %}
+
+    <div style='z-index: 0; position: absolute; right: 1.5rem; top: 1px;'>
+    <a class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Поиск с учетом лексемы и морфологических признаков." target="_blank" href="https://ruscorpora.ru/search?search=CgQyAggXMAE%3D">
+        Поиск в НКРЯ
+    </a>    
+    </div>
+
+    <div class="list_with_grouped_filters">
+        {{ _self.render_grouped_filter(filterForm, filterConfigurator) }}
+    </div>
+
+    <div class="row">
+        {{ filterable_table.render_table(table) }}
+        {# {{ dump(table) }} #}
+    </div>
+
+    <div class="row">
+        {{ filterable_table.render_paginator(table) }}
+    </div>
+
+    <div class="row">
+        {{ filterable_table.render_checkbox_handlers(table) }}
+    </div>
+{%- endblock -%}
+
+{%- macro render_grouped_filter(filterForm, filterConfigurator) -%}
+    {% import _self as self %}
+    {% form_theme filterForm '@VyfonyFilterableTable/filterable_table_form_layout.html.twig' %}
+    
+    <form method="{{ filterForm.vars.method }}" action="{{ filterForm.vars.action }}" class="{{ filterForm.vars.attr.class|default('') }}"{% if filterForm.vars.multipart %} enctype="multipart/form-data"{% endif %}>
+        <div class="row">
+            <!-- Grouped filters (collapsible sections) -->
+            {% set groupedFilters = filterConfigurator.getGroupedFilterParameters() %}
+            
+            {% for groupKey, group in groupedFilters %}
+                <div class="col-12 mb-4 filter-section">
+                    <div class="card">
+                        <div class="card-header" data-toggle="collapse" data-target="#filter-group-{{ groupKey }}" aria-expanded="true" aria-controls="filter-group-{{ groupKey }}" style="cursor: pointer;">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chevron-down collapse-icon" id="icon-{{ groupKey }}"></i>
+                                {{ group.label|trans }}
+                            </h5>
+                        </div>
+                        <div class="collapse show" id="filter-group-{{ groupKey }}">
+                            <div class="card-body">
+                                {% for row in group.rows %}
+                                    <div class="row filter-row mb-3">
+                                        {% for filterParameter in row %}
+                                            {% set fieldName = filterParameter.getQueryParameterName() %}
+                                            {% if filterForm[fieldName] is defined %}
+                                                <div class="col-md-6">
+                                                    {{ form_row(filterForm[fieldName]) }}
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <!-- Standalone filters (always visible) -->
+            {% set standaloneFilters = filterConfigurator.getStandaloneFilterParameters() %}
+            {% for filterParameter in standaloneFilters %}
+                {% set fieldName = filterParameter.getQueryParameterName() %}
+                {% if filterForm[fieldName] is defined %}
+                    <div class="col-12 mb-4">
+                        <div class="standalone-filter-field">
+                            {{ form_row(filterForm[fieldName]) }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            
+            <!-- Action buttons -->
+            <div class="col-12">
+                <div class="form-group vyfony-filterable-table-bundle-button-form-group">
+                    {% for child in filterForm.children %}
+                        {% if child.vars.block_prefixes[1] == 'submit' or child.vars.block_prefixes[1] == 'button' %}
+                            {{ form_widget(child) }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {{ form_rest(filterForm) }}
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle collapse toggle
+            document.querySelectorAll('[data-toggle="collapse"]').forEach(function(element) {
+                element.addEventListener('click', function() {
+                    const target = document.querySelector(this.getAttribute('data-target'));
+                    const icon = document.getElementById(this.getAttribute('data-target').replace('#filter-group-', '#icon-'));
+                    
+                    if (target.classList.contains('show')) {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-right');
+                    } else {
+                        icon.classList.remove('fa-chevron-right');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                });
+            });
+            
+            // Handle Enter key in fulltext search field (CKEditor)
+            // Wait for CKEditor to be loaded
+            if (typeof CKEDITOR !== 'undefined') {
+                // Listen for all CKEditor instances
+                CKEDITOR.on('instanceReady', function(evt) {
+                    var editor = evt.editor;
+                    
+                    // Check if this is the fulltext editor
+                    if (editor.name && editor.name.includes('fulltext')) {
+                        // Configure enterMode to prevent automatic paragraph/br insertion
+                        editor.on('key', function(e) {
+                            if (e.data.keyCode === 13) { // Enter key
+                                if (!e.data.domEvent.$.shiftKey) {
+                                    // Prevent default Enter behavior
+                                    e.cancel();
+                                    // Submit the form
+                                    var form = editor.element.$.form;
+                                    if (form) {
+                                        form.submit();
+                                    }
+                                    return false;
+                                }
+                                // Shift+Enter will allow default behavior (new line)
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+{%- endmacro -%}

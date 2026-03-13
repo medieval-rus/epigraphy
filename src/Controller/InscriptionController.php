@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\FilterableTable\InscriptionsFilterConfigurator;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Repository\Content\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,35 +38,20 @@ use Vyfony\Bundle\FilterableTableBundle\Table\TableInterface;
  */
 final class InscriptionController extends AbstractController
 {
-    /**
-     * @Route("/list", name="inscription__list", methods={"GET"})
-     */
-    public function list(PostRepository $postRepository, TableInterface $filterableTable): Response
-    {
-        return $this->render(
-            'site/inscription/shortlist.html.twig',
-            [
-                'translationContext' => 'controller.inscription.list',
-                'assetsContext' => 'inscription/shortlist',
-                'filterForm' => $filterableTable->getFormView(),
-                'table' => $filterableTable->getTableMetadata(),
-                'post' => $postRepository->findDatabase(),
-            ]
-        );
-    }
 
     /**
      * @Route("/longlist", name="inscription__longlist", methods={"GET"})
      */
-    public function longlist(PostRepository $postRepository, TableInterface $filterableTable): Response
+    public function longlist(PostRepository $postRepository, TableInterface $filterableTable, InscriptionsFilterConfigurator $filterConfigurator): Response
     {
         return $this->render(
-            'site/inscription/list.html.twig', 
+            'site/inscription/list_with_grouped_filters.html.twig', 
             [
                 'translationContext' => 'controller.inscription.list',
                 'assetsContext' => 'inscription/list',
                 'filterForm' => $filterableTable->getFormView(),
                 'table' => $filterableTable->getTableMetadata(),
+                'filterConfigurator' => $filterConfigurator,
                 'post' => $postRepository->findDatabase()
             ]
         );

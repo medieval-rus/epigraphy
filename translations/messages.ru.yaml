@@ -81,6 +81,9 @@ controller:
         superMaterial: "Материал"
         superCarrierCategory: "Носитель"
         superContentCategory: "Содержание"
+        sections:
+          carrierData: "Данные о носителе"
+          inscriptionData: "Данные о надписи"
     show:
       title: Надпись
       admin: Просмотреть надпись в админке
