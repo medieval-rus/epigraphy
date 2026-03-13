@@ -36,6 +36,7 @@ $(window).on('load', () => {
     common.initializeFilters();
     setUpdateListeners();
     common.enableVirtualKeyboards();
+    common.enableRowClickNavigation();
 });
 
 function setUpdateListeners() {

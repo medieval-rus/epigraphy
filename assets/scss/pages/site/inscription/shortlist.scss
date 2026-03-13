@@ -89,6 +89,10 @@ main.eomr-main {
     td:nth-child(2) {
       min-width: 50px;
     }
+    
+    tbody tr[data-row-clickable] {
+      cursor: pointer;
+    }
   }
 
   form {

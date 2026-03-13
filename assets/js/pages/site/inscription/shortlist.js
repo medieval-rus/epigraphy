@@ -27,4 +27,5 @@ import * as common from './common';
 $(window).on('load', () => {
     common.initializeFilters();
     common.enableVirtualKeyboards();
+    common.enableRowClickNavigation();
 });
