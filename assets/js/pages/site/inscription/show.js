@@ -314,6 +314,7 @@ function initServerRenderedEpidocEdition(container) {
     function renderServerEdition() {
         applyBracketSystemToServerRenderedEdition(container, currentSystem);
         trimRenderedEditionEdges(container);
+        restoreMissingSpacingBeforeVariantApps(container);
         tableToggle.checked = currentSystem === 'zaliznyak';
     }
 
@@ -476,6 +477,29 @@ function trimTrailingBoundary(node) {
 
         break;
     }
+}
+
+function restoreMissingSpacingBeforeVariantApps(container) {
+    if (!(container instanceof HTMLElement)) {
+        return;
+    }
+
+    const appNodes = container.querySelectorAll('[data-epidoc-role="app"], .epidoc-app, .app');
+    appNodes.forEach(appNode => {
+        const previous = appNode.previousSibling;
+        if (!previous || previous.nodeType !== Node.TEXT_NODE) {
+            return;
+        }
+
+        const value = previous.textContent || '';
+        if (value === '' || /\s$/.test(value)) {
+            return;
+        }
+
+        if (/[,:;.!?]$/u.test(value)) {
+            previous.textContent = `${value} `;
+        }
+    });
 }
 
 function getFirstByTagName(parent, tagName) {
@@ -866,7 +890,8 @@ function renderEditionContent(node, system = 'leiden') {
             if (nextElement && nextElement.localName === 'app') {
                 const textWithoutTail = text.replace(/\s+$/, '');
                 const lastToken = textWithoutTail.split(/\s+/).pop() || '';
-                if (!hadTrailingWhitespace || lastToken.length <= 2) {
+                const endsWithPunctuation = /[,:;.!?]$/u.test(textWithoutTail);
+                if (!hadTrailingWhitespace || (lastToken.length <= 2 && !endsWithPunctuation)) {
                     text = textWithoutTail;
                 } else {
                     text = `${textWithoutTail} `;
