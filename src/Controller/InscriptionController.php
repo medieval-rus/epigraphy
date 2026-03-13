@@ -37,22 +37,6 @@ use Vyfony\Bundle\FilterableTableBundle\Table\TableInterface;
  */
 final class InscriptionController extends AbstractController
 {
-    /**
-     * @Route("/list", name="inscription__list", methods={"GET"})
-     */
-    public function list(PostRepository $postRepository, TableInterface $filterableTable): Response
-    {
-        return $this->render(
-            'site/inscription/shortlist.html.twig',
-            [
-                'translationContext' => 'controller.inscription.list',
-                'assetsContext' => 'inscription/shortlist',
-                'filterForm' => $filterableTable->getFormView(),
-                'table' => $filterableTable->getTableMetadata(),
-                'post' => $postRepository->findDatabase(),
-            ]
-        );
-    }
 
     /**
      * @Route("/longlist", name="inscription__longlist", methods={"GET"})

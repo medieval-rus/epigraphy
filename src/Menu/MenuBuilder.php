@@ -76,8 +76,8 @@ final class MenuBuilder
         ;
 
         $menu
-            ->addChild('page.menu.dataBase', ['route' => 'inscription__list'])
-            ->setCurrent(\in_array($currentRoute, ['inscription__list', 'inscription__show'], true))
+            ->addChild('page.menu.dataBase', ['route' => 'inscription__longlist'])
+            ->setCurrent(\in_array($currentRoute, ['inscription__longlist', 'inscription__show'], true))
         ;
 
         foreach ($menu->getChildren() as $child) {

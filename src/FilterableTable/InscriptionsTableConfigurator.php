@@ -54,7 +54,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
 
     protected function getListRoute(): RouteConfiguration
     {
-        return new RouteConfiguration('inscription__list', []);
+        return new RouteConfiguration('inscription__longlist', []);
     }
 
     /**
