@@ -59,12 +59,15 @@
                     {% for columnMetadata in table.columnMetadataCollection %}
                         {% if columnMetadata.isIdentifier %}
                             <th scope="row">
-                                <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-link"{{ self.render_attributes(columnMetadata.attributes) }}>
+                                <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-link table-row-stretched-link"{{ self.render_attributes(columnMetadata.attributes) }}>
                                     {{ self.render_value(columnMetadata, rowData) }}
                                 </a>
                             </th>
                         {% else %}
                             <td>
+                                {% if loop.first %}
+                                    <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-stretched-link" aria-hidden="true" tabindex="-1"></a>
+                                {% endif %}
                                 {% set isInscriptionList = table.listRoute.name is same as('inscription__longlist') %}
                                 {% set columnName = columnMetadata.name %}
                                 {% set carrier = rowData.carrier ?? null %}
