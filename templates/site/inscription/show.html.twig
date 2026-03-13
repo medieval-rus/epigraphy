@@ -401,14 +401,14 @@
 
     <tr>
         <th scope="row">
-            {{- self.translate_field_label(translationContext, labelTranslationKey) -}}
-            <div class="epidoc-toggle-wrapper" style="margin-top: 0.5rem; justify-content: flex-start; font-weight: normal;">
-                <span class="epidoc-toggle-label epidoc-toggle-label--left" style="font-size: 0.75rem;">Лейденская система</span>
-                <label class="epidoc-toggle" style="margin: 0 0.25rem;">
-                    <input type="checkbox" class="epidoc-toggle-input epidoc-toggle-input-table" />
-                    <span class="epidoc-toggle-slider"></span>
-                </label>
-                <span class="epidoc-toggle-label epidoc-toggle-label--right" style="font-size: 0.75rem;">Система Зализняка</span>
+            <div class="epidoc-header-cell">
+                <span>{{ self.translate_field_label(translationContext, labelTranslationKey) }}</span>
+                <button
+                    type="button"
+                    class="epidoc-system-toggle-btn"
+                    aria-label="Переключить систему отображения EpiDoc"
+                    title="Переключить систему отображения EpiDoc"
+                >LEID</button>
             </div>
         </th>
         <td>
@@ -477,14 +477,6 @@
     <div class="epidoc-section epidoc-section--edition" style="margin: 0; padding: 0; background: transparent; border: none;">
         <div id="epidoc-text-in-table" style="margin-bottom: 0.5rem; font-family: 'Monomachus', 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #212529; white-space: pre-wrap;">
             JavaScript will populate this
-        </div>
-        <div class="epidoc-toggle-wrapper" style="margin-top: 0.5rem; justify-content: flex-start;">
-            <span class="epidoc-toggle-label epidoc-toggle-label--left" style="font-size: 0.75rem;">Лейденская система</span>
-            <label class="epidoc-toggle" style="margin: 0 0.25rem;">
-                <input type="checkbox" class="epidoc-toggle-input epidoc-toggle-input-table" />
-                <span class="epidoc-toggle-slider"></span>
-            </label>
-            <span class="epidoc-toggle-label epidoc-toggle-label--right" style="font-size: 0.75rem;">Система Зализняка</span>
         </div>
     </div>
 {%- endmacro -%}

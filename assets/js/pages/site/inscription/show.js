@@ -244,11 +244,6 @@ function initEpidocViewer() {
     const tableApparatusContainer = document.getElementById('epidoc-apparatus-in-table');
     const fullReadingsContainer = document.getElementById('epidoc-full-readings-in-text');
     const fullReadingsToggle = document.getElementById('epidoc-full-readings-toggle');
-    const serverEditionContainer = document.querySelector('[data-epidoc-render-source="xslt"]');
-
-    if (serverEditionContainer) {
-        initServerRenderedEpidocEdition(serverEditionContainer);
-    }
 
     if (!dataScript) {
         // If no data but table container exists, show placeholder
@@ -297,37 +292,6 @@ function initEpidocViewer() {
     }
 
     renderTableView(xmlDoc, stubDoc);
-}
-
-function initServerRenderedEpidocEdition(container) {
-    if (!container) {
-        return;
-    }
-
-    const tableToggle = document.querySelector('.epidoc-toggle-input-table');
-    if (!tableToggle) {
-        return;
-    }
-
-    let currentSystem = getEpidocSystemPreference();
-
-    function renderServerEdition() {
-        applyBracketSystemToServerRenderedEdition(container, currentSystem);
-        trimRenderedEditionEdges(container);
-        restoreMissingSpacingBeforeVariantApps(container);
-        tableToggle.checked = currentSystem === 'zaliznyak';
-    }
-
-    function handleToggleChange(e) {
-        currentSystem = e.target.checked ? 'zaliznyak' : 'leiden';
-        setEpidocSystemPreference(currentSystem);
-        renderServerEdition();
-    }
-
-    tableToggle.removeEventListener('change', handleToggleChange);
-    tableToggle.addEventListener('change', handleToggleChange);
-
-    renderServerEdition();
 }
 
 function applyBracketSystemToServerRenderedEdition(container, system) {
@@ -606,6 +570,8 @@ function renderTableView(xmlDoc, stubDoc = null) {
     const tableTranslationsContainer = document.getElementById('epidoc-translations-in-table');
     const fullReadingsContainer = document.getElementById('epidoc-full-readings-in-text');
     const fullReadingsToggle = document.getElementById('epidoc-full-readings-toggle');
+    const serverEditionContainer = document.querySelector('[data-epidoc-render-source="xslt"]');
+    const systemToggle = document.querySelector('.epidoc-system-toggle-btn');
     
     // Parse bibliography map
     const bibliographyMap = parseBibliography(xmlDoc);
@@ -614,6 +580,7 @@ function renderTableView(xmlDoc, stubDoc = null) {
     // Initial bracket system (default: Leiden = false in toggle)
     let currentSystem = getEpidocSystemPreference();
     let readingsToggleBound = false;
+    let systemToggleBound = false;
 
     function setupReadingsToggle() {
         if (!fullReadingsToggle || !fullReadingsContainer || readingsToggleBound) {
@@ -639,6 +606,12 @@ function renderTableView(xmlDoc, stubDoc = null) {
     }
 
     function renderContent() {
+        if (serverEditionContainer) {
+            applyBracketSystemToServerRenderedEdition(serverEditionContainer, currentSystem);
+            trimRenderedEditionEdges(serverEditionContainer);
+            restoreMissingSpacingBeforeVariantApps(serverEditionContainer);
+        }
+
         // Render for table widget (if exists)
         if (tableContainer || tableApparatusContainer || tableTranslationsContainer || fullReadingsContainer) {
             const textBody = getTextBody(xmlDoc);
@@ -728,23 +701,27 @@ function renderTableView(xmlDoc, stubDoc = null) {
                 }
             }
             
-            // Re-attach event listener to toggle in table
-            const tableToggle = document.querySelector('.epidoc-toggle-input-table');
-            if (tableToggle) {
-                tableToggle.checked = currentSystem === 'zaliznyak';
-                tableToggle.removeEventListener('change', handleToggleChange);
-                tableToggle.addEventListener('change', handleToggleChange);
-            }
         }
+
+        updateSystemToggle(systemToggle, currentSystem);
     }
     
-    function handleToggleChange(e) {
-        currentSystem = e.target.checked ? 'zaliznyak' : 'leiden';
+    function handleToggleClick() {
+        currentSystem = currentSystem === 'zaliznyak' ? 'leiden' : 'zaliznyak';
         setEpidocSystemPreference(currentSystem);
         renderContent();
     }
+
+    function setupSystemToggle() {
+        if (!systemToggle || systemToggleBound) {
+            return;
+        }
+        systemToggleBound = true;
+        systemToggle.addEventListener('click', handleToggleClick);
+    }
     
     setupReadingsToggle();
+    setupSystemToggle();
 
     // Initial render
     renderContent();
@@ -755,7 +732,7 @@ function getEpidocSystemPreference() {
     if (value === 'zaliznyak' || value === 'leiden') {
         return value;
     }
-    return 'leiden';
+    return 'zaliznyak';
 }
 
 function setEpidocSystemPreference(system) {
@@ -771,6 +748,17 @@ function setCookie(name, value, days) {
     const date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
     document.cookie = `${name}=${encodeURIComponent(value)}; expires=${date.toUTCString()}; path=/`;
+}
+
+function updateSystemToggle(toggle, system) {
+    if (!toggle) {
+        return;
+    }
+
+    const nextSystemLabel = system === 'zaliznyak' ? 'LEID' : 'ZAL';
+    toggle.textContent = nextSystemLabel;
+    toggle.setAttribute('aria-label', `Переключить на ${nextSystemLabel}`);
+    toggle.title = `Переключить на ${nextSystemLabel}`;
 }
 
 function extractTranslations(xmlDoc) {
