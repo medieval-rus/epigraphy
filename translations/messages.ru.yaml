@@ -78,6 +78,7 @@ controller:
         resetButton: Сбросить фильтры
         submitButton: Искать
         searchInFoundButton: Искать в найденном
+        searchInRuscorporaButton: Поиск в НКРЯ
         superWritingMethod: "Способ нанесения"
         superMaterial: "Материал"
         superCarrierCategory: "Носитель"

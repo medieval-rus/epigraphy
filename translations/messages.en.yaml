@@ -78,6 +78,7 @@ controller:
         resetButton: Reset filters
         submitButton: Search
         searchInFoundButton: Search within results
+        searchInRuscorporaButton: Search in RusCorpora
         superWritingMethod: "Method of application"
         superMaterial: "Material"
         superCarrierCategory: "Carrier"
