@@ -49,6 +49,25 @@
 }
 
 main.eomr-main {
+  overflow-x: hidden;
+
+  .inscription-search-table-col {
+    min-width: 0;
+  }
+
+  .vyfony-filterable-table-scroll {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .vyfony-filterable-table-scroll > table[data-vyfony-filterable-table] {
+    margin-bottom: 0;
+  }
+
   table[data-vyfony-filterable-table] {
     th[data-vyfony-filterable-table-sortable] {
       cursor: pointer;

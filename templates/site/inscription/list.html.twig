@@ -78,8 +78,10 @@
     {{ filterable_table.render_filter(filterForm) }}
 
     <div class="row">
-        {{ filterable_table.render_table(table) }}
-        {# {{ dump(table) }} #}
+        <div class="col-12 inscription-search-table-col">
+            {{ filterable_table.render_table(table) }}
+            {# {{ dump(table) }} #}
+        </div>
     </div>
 
     <div class="row">
