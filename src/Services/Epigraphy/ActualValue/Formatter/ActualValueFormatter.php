@@ -47,6 +47,7 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
     {
         $value = $actualValue->getValue();
         $description = $actualValue->getDescription();
+        $shouldAppendDescription = true;
 
         switch ($formatType) {
             case self::FORMAT_TYPE_DEFAULT:
@@ -56,6 +57,12 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
 
             case self::FORMAT_TYPE_ORIGINAL_TEXT:
                 $formattedValue = $this->originalTextFormatter->format($this->originalTextParser->parse($value));
+
+                break;
+
+            case self::FORMAT_TYPE_ORIGINAL_TEXT_PLAIN:
+                $formattedValue = $this->originalTextFormatter->format($this->originalTextParser->parse($value));
+                $shouldAppendDescription = false;
 
                 break;
             
@@ -71,6 +78,10 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
 
             default:
                 throw new InvalidArgumentException(sprintf('Unknown value format type "%s"', $formatType));
+        }
+
+        if (!$shouldAppendDescription) {
+            return $formattedValue;
         }
 
         if (null === $description) {

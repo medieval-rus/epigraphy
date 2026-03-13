@@ -163,7 +163,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                     return $this->valueStringifier->stringify(
                         $inscription,
                         'text',
-                        ActualValueFormatterInterface::FORMAT_TYPE_ORIGINAL_TEXT
+                        ActualValueFormatterInterface::FORMAT_TYPE_ORIGINAL_TEXT_PLAIN
                     ) ?? '-';
                 })
                 ->setLabel('controller.inscription.list.table.column.interpretation.text'),
