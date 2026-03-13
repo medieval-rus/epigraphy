@@ -57,6 +57,23 @@ html {
         color: $red;
       }
     }
+
+    .eomr-header-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .eomr-header-lang {
+      color: $white;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .eomr-header-lang:hover {
+      color: $gray-300;
+      text-decoration: none;
+    }
   }
 
   .eomr-middle-line {

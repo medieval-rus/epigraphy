@@ -82,12 +82,6 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
     {
         return [
             (new ColumnMetadata())
-                ->setName('id')
-                ->setIsIdentifier(true)
-                ->setIsSortable(true)
-                ->setValueExtractor(fn (Inscription $inscription): string => '⬤')
-                ->setLabel('controller.inscription.list.table.column.id'),
-            (new ColumnMetadata())
                 ->setName('carrier-category')
                 ->setValueExtractor(static function (Inscription $inscription): string {
                     if (null === $carrier = $inscription->getCarrier()) {

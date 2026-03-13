@@ -1,0 +1,172 @@
+# This file is part of «Epigraphy of Medieval Rus» database.
+#
+# Copyright (c) National Research University Higher School of Economics
+#
+# «Epigraphy of Medieval Rus» database is free software:
+# you can redistribute it and/or modify it under the terms of the
+# GNU General Public License as published by the Free Software Foundation, version 3.
+#
+# «Epigraphy of Medieval Rus» database is distributed
+# in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code. If you have not received
+# a copy of the GNU General Public License along with
+# «Epigraphy of Medieval Rus» database,
+# see <http://www.gnu.org/licenses/>.
+
+controller:
+  index:
+    index:
+      title: Home
+  security:
+    login:
+      title: Sign in
+      form:
+        username: Username
+        password: Password
+        rememberMe: Remember me
+        signIn: Sign in
+  bibliographic-record:
+    list:
+      title: Bibliography
+  inscription:
+    list:
+      title: List of inscriptions
+      table:
+        column:
+          id: ''
+          carrier:
+            category: Carrier category
+            city: Settlement
+            discoverySite: Findspot
+            origin1: City / locality
+            origin2: Building / excavation
+          interpretation:
+            text: Text
+            description: Content
+            contentCategory: Content category
+        resultsCount: 'Inscriptions found: count'
+      filter:
+        dataColumn:
+          label: Data column
+          option:
+            text: Text
+            description: Content
+        discoverySite: Findspot
+        city: Settlement
+        carrierType: Carrier type
+        carrierCategory: "Carrier"
+        writingType: Type
+        writingMethod: "Method of application"
+        preservationState: Preservation state
+        alphabet: Alphabet
+        interpretationComment: Reading comment
+        text: Inscription text
+        fulltext: Full-text search
+        translation: Translation
+        material: "Material"
+        contentCategory: "Content"
+        origin1: City / locality
+        origin2: Building / excavation
+        author: Publication author
+        numberInSource: Number in publication
+        conventionalDate: Date
+        disablePaginator: show on one page
+        resetButton: Reset filters
+        submitButton: Search
+        searchInFoundButton: Search within results
+        superWritingMethod: "Method of application"
+        superMaterial: "Material"
+        superCarrierCategory: "Carrier"
+        superContentCategory: "Content"
+        sections:
+          carrierData: "Carrier data"
+          inscriptionData: "Inscription data"
+    show:
+      title: Inscription
+      admin: View inscription in admin
+      legend: see Conventions
+      carrierSpoiler:
+        open: More about the carrier
+        close: More about the carrier (collapse)
+      noPublication: the inscription is not visible to site users
+      inscription:
+        label:
+          number: Number
+          conventionalDate: Date
+          dateExplanation: Date justification
+          rssdaRender: RSSDA 3D model
+          comment: Comment
+          literature: Literature
+          carrier:
+            categories: Carrier category
+            storageSite: Storage place
+            storageLocalization: Location within storage
+            previousStorage: Previous storage locations
+            discoverySite: Findspot
+            findCircumstances: Discovery circumstances
+            stratigraphicalDate: Stratigraphic date
+            characteristics: Carrier characteristics
+            archaeology: Archaeological context
+            individualName: Carrier
+            storagePlace: Storage place
+            inventoryNumber: Inventory number
+            isInSitu: Carrier in situ?
+          materials: Materials
+          epidocText: EpiDoc text
+          epidocCriticalApparatus: Critical apparatus
+          epidocTranslations: Translations
+          zeroRow:
+            origin: Dating by other features
+            placeOnCarrier: Location on carrier
+            writingTypes: Writing type (Franklin)
+            writingMethods: Method of application
+            preservationStates: Preservation state
+            alphabets: Alphabet
+            text: Text
+            transliteration: Transliteration
+            reconstruction: Reconstruction
+            normalization: Normalization
+            interpretationComment: Reading comment
+            translation: Translation
+            description: Content
+            dateInText: Date in text
+            nonStratigraphicalDate: Dating by paleography and language
+            historicalDate: '"Historical" date'
+            comment: Comment (differences with source)
+            materials: Materials
+            photos: Photos
+            drawings: Drawings
+
+page:
+  label:
+    title: Old Russian Epigraphy
+    left: Old Russian Epigraphy
+  middleLine: The site is developed with support from the Russian Science Foundation grant (project No. 19-18-00352) provided by HSE University.
+  menu:
+    index: Home
+    aboutSite: About the site
+    news: News
+    bibliography: Bibliography
+    dataBase: Database
+    legend: Conventions
+    settings: Settings
+  footer: © 2023, National Research University Higher School of Economics.
+
+type:
+  bool:
+    "true": yes
+    "false": no
+
+originalText:
+  ligature: Ligature "%symbols%".
+image:
+  source: From %source%
+post:
+  admin: Edit post in admin
+bibliography:
+  prePublicationMark: '[Forth.]'
+  prePublicationRemark: Publication in preparation

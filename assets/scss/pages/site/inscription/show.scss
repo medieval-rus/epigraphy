@@ -69,3 +69,440 @@
 .pswp__top-bar {
   z-index: 1551;
 }
+
+// Toggle wrapper with labels
+.epidoc-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.epidoc-toggle-label {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #6c757d;
+  white-space: nowrap;
+  user-select: none;
+  
+  &--left {
+    order: 1;
+  }
+  
+  &--right {
+    order: 3;
+  }
+}
+
+// Minimalistic toggle switch
+.epidoc-toggle {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+  cursor: pointer;
+  order: 2;
+}
+
+.epidoc-toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  
+  &:checked + .epidoc-toggle-slider {
+    background-color: #495057;
+    
+    &::before {
+      transform: translateX(16px);
+    }
+  }
+  
+  &:focus + .epidoc-toggle-slider {
+    box-shadow: 0 0 0 2px rgba(73, 80, 87, 0.2);
+  }
+}
+
+.epidoc-toggle-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #dee2e6;
+  border-radius: 20px;
+  transition: background-color 0.2s ease;
+  
+  &::before {
+    position: absolute;
+    content: '';
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+  }
+}
+
+// Critical Apparatus Table
+.apparatus-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: 'Monomachus', 'Georgia', serif;
+  font-size: 1.1rem;
+  
+  thead {
+    background: #e9ecef;
+    
+    th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #495057;
+      border-bottom: 1px solid #dee2e6;
+      
+      &:first-child {
+        width: 40%;
+        border-right: 1px solid #dee2e6;
+      }
+    }
+  }
+  
+  tbody {
+    tr {
+      &:not(:last-child) {
+        border-bottom: 1px solid #dee2e6;
+      }
+    }
+    
+    td {
+      padding: 0.75rem 1rem;
+      vertical-align: top;
+      color: #212529;
+      line-height: 1.6;
+    }
+  }
+}
+
+.apparatus-lem-cell {
+  border-right: 1px solid #dee2e6;
+  font-weight: 500;
+}
+
+.apparatus-rdg-cell {
+  color: #495057;
+}
+
+.apparatus-resp {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.4rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  background: #e9ecef;
+  color: #6c757d;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+.epidoc-edition-text {
+  font-family: 'Monomachus', 'Georgia', serif;
+  font-size: 1.3rem;
+  line-height: 2;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  color: #212529;
+}
+
+// EpiDoc markup styling
+.epidoc-supplied {
+  color: #495057;
+  
+  // Brackets are now handled via data attributes or separate spans in JS for easier switching
+  // but we keep CSS as fallback or for specific styling if needed
+  
+  &--editorial {
+    color: #495057;
+  }
+}
+
+.epidoc-unclear--leiden {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.12em;
+}
+
+.epidoc-app {
+  position: relative;
+  
+  .epidoc-lem {
+    color: #212529;
+    border-bottom: 1px dotted #6c757d;
+    cursor: help;
+  }
+  
+  .epidoc-readings {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 0.75rem;
+    min-width: 200px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    
+    .epidoc-rdg {
+      display: block;
+      padding: 0.25rem 0;
+      font-size: 0.9rem;
+      color: #495057;
+      
+      &::before {
+        content: '• ';
+        color: #6c757d;
+      }
+      
+      .epidoc-resp {
+        color: #6c757d;
+        font-style: italic;
+        font-size: 0.8rem;
+      }
+    }
+  }
+  
+  &:hover .epidoc-readings {
+    display: block;
+  }
+}
+
+// Translations block - unified container
+.epidoc-translations-block {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.epidoc-translations-block--collapsed {
+  .epidoc-translation-line {
+    &:not(:first-child) {
+      display: none;
+    }
+    
+    &:first-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+}
+
+.epidoc-translation-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  line-height: 1.5;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  &:first-child {
+    padding-top: 0;
+  }
+  
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.epidoc-translation-text {
+  flex: 1;
+  color: #212529;
+}
+
+.epidoc-translations-toggle {
+  border: none;
+  background: transparent;
+  padding: 0.1rem 0.2rem;
+  margin-left: 0.25rem;
+  color: #6c757d;
+  cursor: pointer;
+  width: 1.2rem;
+  height: 1rem;
+  position: relative;
+}
+
+.epidoc-translations-toggle:focus {
+  outline: none;
+  color: #343a40;
+}
+
+.epidoc-translations-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0.2rem;
+  left: 0.3rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.epidoc-translations-toggle--open::before {
+  transform: rotate(-135deg);
+  top: 0.35rem;
+}
+
+.epidoc-lang-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: #e9ecef;
+  color: #495057;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.epidoc-resp-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  background: #e9ecef;
+  color: #495057;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.epidoc-metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.epidoc-metadata-item {
+  padding: 0.75rem;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  
+  .epidoc-meta-label {
+    display: block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+  }
+  
+  .epidoc-meta-value {
+    color: #212529;
+    font-size: 0.95rem;
+  }
+}
+
+// XML Source view
+.epidoc-source-wrapper {
+  position: relative;
+}
+
+.epidoc-copy-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.875rem;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  color: #6c757d;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  
+  &:hover {
+    background: #f8f9fa;
+    color: #495057;
+    border-color: #adb5bd;
+  }
+  
+  &.copied {
+    background: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+  }
+  
+  .copy-icon {
+    font-size: 0.9rem;
+  }
+}
+
+.epidoc-source {
+  margin: 0;
+  padding: 1.25rem;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #212529;
+  white-space: pre;
+  tab-size: 2;
+  
+  // Syntax highlighting classes - light theme
+  .xml-tag {
+    color: #22863a;
+  }
+  
+  .xml-attr-name {
+    color: #6f42c1;
+  }
+  
+  .xml-attr-value {
+    color: #032f62;
+  }
+  
+  .xml-text {
+    color: #212529;
+  }
+  
+  .xml-comment {
+    color: #6a737d;
+    font-style: italic;
+  }
+  
+  .xml-declaration {
+    color: #d73a49;
+  }
+}

@@ -47,3 +47,9 @@
         {{ filterable_table.render_checkbox_handlers(table) }}
     </div>
 {%- endblock -%}
+
+{%- block page_title -%}
+    <div class="container pb-2">
+        <h1 class="border-bottom">{{ block('title') }}</h1>
+    </div>
+{%- endblock -%}

@@ -29,6 +29,12 @@
     </div>
 {%- endblock -%}
 
+{%- block page_title -%}
+    <div class="container pb-2">
+        <h1 class="border-bottom">{{ block('title') }}</h1>
+    </div>
+{%- endblock -%}
+
 {%- macro render_grouped_filter(filterForm, filterConfigurator) -%}
     {% import _self as self %}
     {% form_theme filterForm '@VyfonyFilterableTable/filterable_table_form_layout.html.twig' %}

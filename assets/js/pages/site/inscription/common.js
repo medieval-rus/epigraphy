@@ -8,11 +8,6 @@ export function initializeFilters() {
     });
 }
 
-export const virtualKeyboardCoordinates = {
-    top: 30,
-    right: 30,
-}
-
 export function enableVirtualKeyboards()
 {
     $('[data-virtual-keyboard]').each(initializeVirtualKeyboard);
@@ -25,19 +20,21 @@ export function initializeVirtualKeyboard(index, targetInputDom)
     const virtualKeyboardWrapper = createVirtualKeyboard(index, targetInputElement);
 
     targetInputElement.on('focus', () => {
+        const fieldWidth = targetInputElement.outerWidth() || 'auto';
+        const offsetLeft = targetInputElement.position().left || 0;
         virtualKeyboardWrapper
-            .css('top', virtualKeyboardCoordinates.top + 'px')
-            .css('right', virtualKeyboardCoordinates.right + 'px')
-            .show();
+            .css('width', fieldWidth)
+            .css('margin-left', offsetLeft + 'px')
+            .addClass('is-visible');
     });
 
-    $('body').on('click', function (event) {
-        let clickedElement = $(event.target);
+    $(document).on('mousedown', function (event) {
+        const clickedElement = $(event.target);
 
         if (0 === clickedElement.closest(virtualKeyboardWrapper).length &&
             0 === clickedElement.closest(targetInputElement).length
         ) {
-            virtualKeyboardWrapper.hide();
+            virtualKeyboardWrapper.removeClass('is-visible');
         }
     });
 }
@@ -49,26 +46,15 @@ export function createVirtualKeyboard(index, targetInputElement)
         .addClass('hg-theme-default')
         .addClass('hg-layout-default');
 
+    const containerParent = targetInputElement.closest('.vyfony-filterable-table-bundle-form-group, .form-group');
     const wrapper = $('<div/>')
-        .css('display', 'none')
-        .css('position', 'fixed')
+        .addClass('virtual-keyboard-container')
         .append(
             $('<div/>')
                 .addClass('virtual-keyboard-wrapper')
                 .append(keyboardElement)
         )
-        .appendTo($('body'));
-
-    wrapper.draggable({
-        stop: (event, ui) => {
-            const position = ui.helper.position();
-
-            if (isNumber(position.top) && isNumber(position.right)) {
-                virtualKeyboardCoordinates.top = position.top;
-                virtualKeyboardCoordinates.right = position.right;
-            }
-        }
-    });
+        .insertAfter(containerParent.length ? containerParent : targetInputElement);
 
     const keyboard = new Keyboard(
         keyboardElement[0],
@@ -124,6 +110,12 @@ export function enableRowClickNavigation()
     }
 
     const interactiveSelector = 'a, button, input, textarea, select, label, summary, [role="button"]';
+    let isDraggingSelection = false;
+    let isMouseDown = false;
+    const hasTextSelection = () => {
+        const selection = window.getSelection();
+        return !!(selection && selection.toString().trim().length > 0);
+    };
 
     function getRowHref($row) {
         const firstCellAnchor = $row.find('td:first a[href]').attr('href');
@@ -138,12 +130,43 @@ export function enableRowClickNavigation()
         if ($(event.target).closest(interactiveSelector).length) {
             return;
         }
+        if (hasTextSelection()) {
+            return;
+        }
+        if (isDraggingSelection) {
+            return;
+        }
 
         const $row = $(this);
         const href = getRowHref($row);
         if (href) {
             window.location.href = href;
         }
+    });
+
+    table.on('click', 'a.table-row-link', function (event) {
+        if (hasTextSelection() || isDraggingSelection) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    });
+
+    table.on('mousedown', 'tbody', function () {
+        isMouseDown = true;
+        isDraggingSelection = false;
+    });
+
+    table.on('mousemove', 'tbody', function () {
+        if (isMouseDown) {
+            isDraggingSelection = true;
+        }
+    });
+
+    $(document).on('mouseup', function () {
+        isMouseDown = false;
+        setTimeout(() => {
+            isDraggingSelection = false;
+        }, 0);
     });
 
     table.find('tbody tr').each(function () {
@@ -160,6 +183,12 @@ export function enableRowClickNavigation()
             return;
         }
         if ($(event.target).closest(interactiveSelector).length) {
+            return;
+        }
+        if (hasTextSelection()) {
+            return;
+        }
+        if (isDraggingSelection) {
             return;
         }
         const href = getRowHref($(this));

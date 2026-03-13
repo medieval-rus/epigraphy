@@ -1,8 +1,20 @@
+.virtual-keyboard-container {
+  display: none;
+  width: 100%;
+  clear: both;
+  margin-top: 8px;
+}
+
+.virtual-keyboard-container.is-visible {
+  display: block;
+}
+
 .virtual-keyboard-wrapper {
   background-color: #ececec;
-  width: 600px;
-  padding: 20px;
-  z-index: 1000;
+  padding: 12px;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 main.eomr-main form .form-group.vyfony-filterable-table-bundle-form-group:nth-of-type(15) {
