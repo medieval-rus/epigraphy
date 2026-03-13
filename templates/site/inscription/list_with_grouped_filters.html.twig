@@ -54,13 +54,65 @@
                                         {% for filterParameter in row %}
                                             {% set fieldName = filterParameter.getQueryParameterName() %}
                                             {% if filterForm[fieldName] is defined %}
-                                                <div class="col-md-6">
-                                                    {{ form_row(filterForm[fieldName]) }}
-                                                </div>
+                                                {% if fieldName in ['conventionalDateInitialYear', 'conventionalDateFinalYear'] %}
+                                                    {# skip rendering here; handled by the custom slider block below #}
+                                                {% else %}
+                                                    <div class="col-md-6">
+                                                        {{ form_row(filterForm[fieldName]) }}
+                                                    </div>
+                                                {% endif %}
                                             {% endif %}
                                         {% endfor %}
                                     </div>
                                 {% endfor %}
+                                
+                                {# Date range slider - now wired to hidden form fields #}
+                                {% if groupKey == 'inscriptionData' %}
+                                    <div class="row filter-row mb-3">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Датировка
+                                                </label>
+                                                <div
+                                                    id="conventional-date-range-slider"
+                                                    data-minimal-date="862"
+                                                    data-maximal-date="1700"
+                                                ></div>
+                                                <div class="row mt-2 align-items-end">
+                                                    <div class="col-4">
+                                                        <label class="form-label small">От года:</label>
+                                                        <input type="number" class="form-control" id="conventional-date-initial-input" placeholder="Начальный год">
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label small">До года:</label>
+                                                        <input type="number" class="form-control" id="conventional-date-final-input" placeholder="Конечный год">
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="form-check date-exact-match-checkbox">
+                                                            <input type="checkbox" class="form-check-input" id="conventional-date-exact-match" name="conventionalDateExactMatch" value="1">
+                                                            <label class="form-check-label" for="conventional-date-exact-match">
+                                                                Строгое вхождение
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {# Ensure hidden fields exist in the form so values submit #}
+                                                {% if filterForm['conventionalDateInitialYear'] is defined %}
+                                                    {{ form_widget(filterForm['conventionalDateInitialYear']) }}
+                                                {% else %}
+                                                    <input type="hidden" id="conventionalDateInitialYear" name="conventionalDateInitialYear" />
+                                                {% endif %}
+
+                                                {% if filterForm['conventionalDateFinalYear'] is defined %}
+                                                    {{ form_widget(filterForm['conventionalDateFinalYear']) }}
+                                                {% else %}
+                                                    <input type="hidden" id="conventionalDateFinalYear" name="conventionalDateFinalYear" />
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -111,6 +163,17 @@
                     }
                 });
             });
+            
+            // Handle the exact match checkbox - restore state from URL
+            const exactMatchCheckbox = document.getElementById('conventional-date-exact-match');
+            if (exactMatchCheckbox) {
+                // Initialize checkbox state from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const exactMatchValue = urlParams.get('conventionalDateExactMatch');
+                if (exactMatchValue === '1') {
+                    exactMatchCheckbox.checked = true;
+                }
+            }
             
             // Handle Enter key in fulltext search field (CKEditor)
             // Wait for CKEditor to be loaded
