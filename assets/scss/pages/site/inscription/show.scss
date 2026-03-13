@@ -490,6 +490,24 @@
   color: #212529;
 }
 
+.epidoc-text-in-table--server,
+#epidoc-text-in-table,
+.epidoc-alt-reading-text {
+  .epidoc-hi-superscript,
+  sup {
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: super;
+  }
+
+  .epidoc-hi-subscript,
+  sub {
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: sub;
+  }
+}
+
 .epidoc-metadata-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

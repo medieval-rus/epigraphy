@@ -845,6 +845,11 @@ function renderEditionContent(node, system = 'leiden') {
                     && !/\s$/.test(result)) {
                     result += ' ';
                 }
+                if (prevElementForGap && prevElementForGap.localName === 'app'
+                    && nextElementForGap && nextElementForGap.localName === 'app'
+                    && !/\s$/.test(result)) {
+                    result += ' ';
+                }
                 continue;
             }
             const prevElement = getSiblingElement(node.childNodes, index, -1);
@@ -903,8 +908,25 @@ function renderEditionContent(node, system = 'leiden') {
                 case 'p':
                     result += renderEditionContent(child, system);
                     break;
+
+                case 'hi':
+                    const rend = (child.getAttribute('rend') || '').trim().toLowerCase();
+                    if (rend === 'superscript') {
+                        result += `<sup class="epidoc-hi-superscript">${renderEditionContent(child, system)}</sup>`;
+                        break;
+                    }
+                    if (rend === 'subscript') {
+                        result += `<sub class="epidoc-hi-subscript">${renderEditionContent(child, system)}</sub>`;
+                        break;
+                    }
+                    result += renderEditionContent(child, system);
+                    break;
                     
                 case 'lb':
+                    result = result.replace(/\s+$/, '');
+                    if (system === 'zaliznyak' && isInWordLineBreak(child)) {
+                        result += '⸗';
+                    }
                     if (!result.endsWith('<br />')) {
                         result += '<br />';
                     }
@@ -989,29 +1011,28 @@ function buildCriticalApparatusRows(appElements, bibliographyMap, system) {
         const lem = app.querySelector('lem');
         const readings = app.querySelectorAll('rdg');
         
-        // Get lemma text and resp
-        let lemText = lem ? getPlainText(lem, system) : '';
-        // let lemResp = lem ? (lem.getAttribute('resp') || '') : '';
+        // Keep inline markup (e.g. hi[@rend='superscript']) in apparatus cells.
+        let lemHtml = lem ? renderEditionContent(lem, system) : '';
         
         // Build alternative readings
         let alternatives = [];
         for (let j = 0; j < readings.length; j++) {
             const rdg = readings[j];
-            const rdgText = getPlainText(rdg, system);
+            const rdgHtml = renderEditionContent(rdg, system);
             const rdgResp = rdg.getAttribute('resp') || '';
             alternatives.push({
-                text: rdgText,
+                html: rdgHtml,
                 resp: rdgResp
             });
         }
         
         // Create row
-        const lemDisplay = escapeHtml(lemText);
+        const lemDisplay = lemHtml;
         
         const altDisplay = alternatives.map(alt => {
             const resolvedResp = resolveResp(alt.resp, bibliographyMap);
             const respTag = resolvedResp ? ` <span class="apparatus-resp">${escapeHtml(resolvedResp)}</span>` : '';
-            return `${escapeHtml(alt.text)}${respTag}`;
+            return `${alt.html}${respTag}`;
         }).join('<br>');
         
         rows += `
@@ -1121,6 +1142,10 @@ function buildWitnessReadingText(node, system, witnessResp) {
         }
 
         if (tagName === 'lb') {
+            result = result.replace(/\s+$/, '');
+            if (system === 'zaliznyak' && isInWordLineBreak(child)) {
+                result += '⸗';
+            }
             result += '\n';
             continue;
         }
@@ -1245,6 +1270,12 @@ function getPlainText(node, system = 'leiden') {
                 }
             } else if (tagName === 'gap') {
                 result += system === 'zaliznyak' ? '...' : '***';
+            } else if (tagName === 'lb') {
+                result = result.replace(/\s+$/, '');
+                if (system === 'zaliznyak' && isInWordLineBreak(child)) {
+                    result += '⸗';
+                }
+                result += '\n';
             } else {
                 result += getPlainText(child, system);
             }
@@ -1264,6 +1295,14 @@ function applyDotBelowMarks(text) {
         }
     }
     return result;
+}
+
+function isInWordLineBreak(node) {
+    if (!node || node.nodeType !== Node.ELEMENT_NODE) {
+        return false;
+    }
+
+    return node.getAttribute('break') === 'no' || node.getAttribute('type') === 'inWord';
 }
 
 /**
