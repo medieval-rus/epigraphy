@@ -73,6 +73,7 @@ controller:
         origin2: Здание / Раскоп
         author: Автор публикации
         numberInSource: Номер в публикации
+        conventionalDate: Датировка
         disablePaginator: показать на одной странице
         resetButton: Сбросить фильтры
         submitButton: Искать

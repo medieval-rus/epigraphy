@@ -62,4 +62,72 @@ final class InscriptionRepository extends ServiceEntityRepository
 
         return $inscriptions;
     }
+
+    public function getMinimalConventionalDate(): int
+    {
+        $result = $this->createQueryBuilder('i')
+            ->select('i.conventionalDate')
+            ->where('i.isShownOnSite = :shown')
+            ->setParameter('shown', true)
+            ->andWhere('i.conventionalDate IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+
+        $minYear = PHP_INT_MAX;
+
+        foreach ($result as $row) {
+            $date = $row['conventionalDate'];
+            if ($date) {
+                $clean = mb_strtolower((string) $date);
+                $clean = preg_replace('/^\s*(після\s*|после\s*)/u', '', $clean);
+                $clean = str_replace(['[', ']'], '', $clean);
+
+                $yearMatches = [];
+                preg_match_all('/\d{3,4}/u', $clean, $yearMatches);
+
+                if (!empty($yearMatches[0][0])) {
+                    $year = (int) $yearMatches[0][0];
+                    if ($year > 0 && $year < $minYear) {
+                        $minYear = $year;
+                    }
+                }
+            }
+        }
+
+        return $minYear === PHP_INT_MAX ? 862 : $minYear;
+    }
+
+    public function getMaximalConventionalDate(): int
+    {
+        $result = $this->createQueryBuilder('i')
+            ->select('i.conventionalDate')
+            ->where('i.isShownOnSite = :shown')
+            ->setParameter('shown', true)
+            ->andWhere('i.conventionalDate IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+
+        $maxYear = 0;
+
+        foreach ($result as $row) {
+            $date = $row['conventionalDate'];
+            if ($date) {
+                $clean = mb_strtolower((string) $date);
+                $clean = preg_replace('/^\s*(після\s*|после\s*)/u', '', $clean);
+                $clean = str_replace(['[', ']'], '', $clean);
+
+                $yearMatches = [];
+                preg_match_all('/\d{3,4}/u', $clean, $yearMatches);
+
+                if (!empty($yearMatches[0])) {
+                    $year = (int) end($yearMatches[0]);
+                    if ($year > $maxYear) {
+                        $maxYear = $year;
+                    }
+                }
+            }
+        }
+
+        return $maxYear === 0 ? 1700 : $maxYear;
+    }
 }

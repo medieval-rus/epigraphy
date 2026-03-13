@@ -45,6 +45,8 @@ use App\FilterableTable\Filter\Parameter\TranslationFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
 use App\FilterableTable\Filter\Parameter\SuperWritingMethodFilterParameter;
 use App\FilterableTable\Filter\Parameter\FullTextFilterParameter;
+use App\FilterableTable\Filter\Parameter\ConventionalDateInitialYearFilterParameter;
+use App\FilterableTable\Filter\Parameter\ConventionalDateFinalYearFilterParameter;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\Epigraphy\ActualValue\Formatter\ActualValueFormatterInterface;
 use App\Services\Epigraphy\Stringifier\ValueStringifierInterface;
@@ -84,6 +86,8 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     private CityFilterParameter $cityFilterParameter;
     private DiscoverySiteFilterParameter $discoverySiteFilterParameter;
     private FullTextFilterParameter $fullTextFilterParameter;
+    private ConventionalDateInitialYearFilterParameter $conventionalDateInitialYearFilterParameter;
+    private ConventionalDateFinalYearFilterParameter $conventionalDateFinalYearFilterParameter;
 
     public function __construct(
         ValueStringifierInterface $valueStringifier,
@@ -106,7 +110,9 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         TranslationFilterParameter $translationFilterParameter,
         DiscoverySiteFilterParameter $discoverySiteFilterParameter,
         CityFilterParameter $cityFilterParameter,
-        FullTextFilterParameter $fullTextFilterParameter
+        FullTextFilterParameter $fullTextFilterParameter,
+        ConventionalDateInitialYearFilterParameter $conventionalDateInitialYearFilterParameter,
+        ConventionalDateFinalYearFilterParameter $conventionalDateFinalYearFilterParameter
     ) {
         $args = func_get_args();
         $reflection_method = new \ReflectionMethod($this, '__construct');
@@ -120,7 +126,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     public function createSubmitButtonOptions(): array
     {
         return [
-            'attr' => ['class' => 'btn btn-primary'],
+            'attr' => ['class' => 'btn btn-secondary'],
             'label' => 'controller.inscription.list.filter.submitButton',
         ];
     }
@@ -205,7 +211,9 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
             $this->numberInSourceFilterParameter,
             $this->fullTextFilterParameter,
             $this->translationFilterParameter,
-            $this->textFilterParameter
+            $this->textFilterParameter,
+            $this->conventionalDateInitialYearFilterParameter,
+            $this->conventionalDateFinalYearFilterParameter,
         ];
     }
 
@@ -231,6 +239,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
                     [$this->alphabetFilterParameter, $this->preservationStateFilterParameter],
                     [$this->authorFilterParameter, $this->numberInSourceFilterParameter],
                     [$this->translationFilterParameter, $this->textFilterParameter],
+                    [$this->conventionalDateInitialYearFilterParameter, $this->conventionalDateFinalYearFilterParameter],
                 ]
             ]
         ];

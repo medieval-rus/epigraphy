@@ -22,6 +22,7 @@
 import $ from 'jquery';
 import 'bootstrap';
 import 'select2';
+import 'jquery-ui/ui/widgets/slider';
 import * as common from './common';
 
 window.superFilters = { // mapping of parent and child categories
@@ -37,6 +38,11 @@ $(window).on('load', () => {
     setUpdateListeners();
     common.enableVirtualKeyboards();
     common.enableRowClickNavigation();
+
+    // Delay the date slider initialization to ensure DOM is fully ready
+    setTimeout(() => {
+        initializeDateSlider();
+    }, 100);
 });
 
 function setUpdateListeners() {
@@ -61,6 +67,254 @@ function setUpdateListeners() {
         window.superFilters[parent_id].cache = Array.from(child.children)
 
         parent.addEventListener("change", updateSubfilters);
+    }
+}
+
+function initializeDateSlider() {
+    const sliderElement = $('#conventional-date-range-slider');
+    const initialInput = $('#conventional-date-initial-input');
+    const finalInput = $('#conventional-date-final-input');
+
+    // Check if all required elements exist
+    if (sliderElement.length === 0) {
+        return;
+    }
+
+    if (initialInput.length === 0 || finalInput.length === 0) {
+        return;
+    }
+
+    const minDate = parseInt(sliderElement.attr('data-minimal-date')) || 862;
+    const maxDate = parseInt(sliderElement.attr('data-maximal-date')) || 1700;
+    const step = 1;
+
+    // Keep slider visual display limited to 862-1700 but allow typing extended range
+    const extendedMinDate = 1;  // Allow typing dates from year 1
+    const extendedMaxDate = 2025; // Allow typing dates up to current year
+
+    // Initialize slider with visual range limited to 862-1700
+    sliderElement.slider({
+        range: true,
+        step: step,
+        min: minDate,
+        max: maxDate,
+        values: [minDate, maxDate],
+        slide: function(event, ui) {
+            updateInputs(ui.values);
+            // write to hidden fields if present so backend can use them
+            const $initial = $('#conventionalDateInitialYear');
+            const $final = $('#conventionalDateFinalYear');
+            if ($initial.length) { $initial.val(ui.values[0]); }
+            if ($final.length) { $final.val(ui.values[1]); }
+        }
+    });
+
+    // Track which input is currently being edited
+    let editingInput = null;
+    let editingInputType = null; // 'initial' or 'final'
+
+    // Handle input field focus - detach from slider
+    initialInput.on('focus', function() {
+        editingInput = initialInput;
+        editingInputType = 'initial';
+        initialInput.removeClass('is-valid is-invalid');
+        initialInput.addClass('editing');
+    });
+
+    finalInput.on('focus', function() {
+        editingInput = finalInput;
+        editingInputType = 'final';
+        finalInput.removeClass('is-valid is-invalid');
+        finalInput.addClass('editing');
+    });
+
+    // Handle input field blur - validate and reattach to slider
+    initialInput.on('blur', function() {
+        validateCrossFieldAndUpdateVisuals();
+        validateAndUpdateInput('initial');
+    });
+
+    finalInput.on('blur', function() {
+        validateCrossFieldAndUpdateVisuals();
+        validateAndUpdateInput('final');
+    });
+
+    // Handle Enter key press - validate and update
+    initialInput.on('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            validateCrossFieldAndUpdateVisuals();
+            validateAndUpdateInput('initial');
+            $(this).blur(); // Trigger blur to reattach
+        }
+    });
+
+    finalInput.on('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            validateCrossFieldAndUpdateVisuals();
+            validateAndUpdateInput('final');
+            $(this).blur(); // Trigger blur to reattach
+        }
+    });
+
+    // Handle input changes - show visual feedback but don't validate yet
+    initialInput.on('input', function() {
+        validateInputVisualFeedback('initial');
+    });
+
+    finalInput.on('input', function() {
+        validateInputVisualFeedback('final');
+    });
+
+    // Initial setup
+    updateInputs([minDate, maxDate]);
+    updateHiddenFields(minDate, maxDate);
+
+    // Set initial visual feedback
+    validateCrossFieldAndUpdateVisuals();
+
+    function validateInputVisualFeedback(inputType) {
+        const input = inputType === 'initial' ? initialInput : finalInput;
+        const value = parseInt(input.val());
+
+        // Check if input is valid number and within extended range
+        let isValid = false;
+        if (!isNaN(value) && value >= extendedMinDate && value <= extendedMaxDate) {
+            isValid = true;
+        }
+
+        // Apply cross-field validation during typing
+        const initialValue = parseInt(initialInput.val());
+        const finalValue = parseInt(finalInput.val());
+        const initialIsValid = !isNaN(initialValue) && initialValue >= extendedMinDate && initialValue <= extendedMaxDate;
+        const finalIsValid = !isNaN(finalValue) && finalValue >= extendedMinDate && finalValue <= extendedMaxDate;
+
+        let hasCrossFieldError = false;
+        if (initialIsValid && finalIsValid) {
+            if (inputType === 'initial' && initialValue > finalValue) {
+                hasCrossFieldError = true;
+            } else if (inputType === 'final' && finalValue < initialValue) {
+                hasCrossFieldError = true;
+            }
+        }
+
+        // Update visual state
+        if (hasCrossFieldError) {
+            input.removeClass('is-valid').addClass('is-invalid');
+            // Also mark the other input as invalid
+            if (inputType === 'initial') {
+                finalInput.removeClass('is-valid').addClass('is-invalid');
+            } else {
+                initialInput.removeClass('is-valid').addClass('is-invalid');
+            }
+        } else if (isValid) {
+            input.removeClass('is-invalid').addClass('is-valid');
+        } else {
+            input.removeClass('is-valid is-invalid');
+        }
+    }
+
+    function validateCrossFieldAndUpdateVisuals() {
+        // Apply cross-field validation and update both fields
+        const initialValue = parseInt(initialInput.val());
+        const finalValue = parseInt(finalInput.val());
+        const initialIsValid = !isNaN(initialValue) && initialValue >= extendedMinDate && initialValue <= extendedMaxDate;
+        const finalIsValid = !isNaN(finalValue) && finalValue >= extendedMinDate && finalValue <= extendedMaxDate;
+
+        if (initialIsValid && finalIsValid) {
+            if (initialValue <= finalValue) {
+                // Valid combination - make both green
+                initialInput.removeClass('is-invalid').addClass('is-valid');
+                finalInput.removeClass('is-invalid').addClass('is-valid');
+            } else {
+                // Invalid order - make both red
+                initialInput.removeClass('is-valid').addClass('is-invalid');
+                finalInput.removeClass('is-valid').addClass('is-invalid');
+            }
+        } else {
+            // At least one field is invalid or empty - update visual state for valid fields only
+            if (initialIsValid) {
+                initialInput.removeClass('is-invalid').addClass('is-valid');
+            } else if (initialInput.val() !== '') {
+                initialInput.removeClass('is-valid').addClass('is-invalid');
+            }
+
+            if (finalIsValid) {
+                finalInput.removeClass('is-invalid').addClass('is-valid');
+            } else if (finalInput.val() !== '') {
+                finalInput.removeClass('is-valid').addClass('is-invalid');
+            }
+        }
+    }
+
+    function validateAndUpdateInput(inputType) {
+        const input = inputType === 'initial' ? initialInput : finalInput;
+        const value = parseInt(input.val());
+
+        input.removeClass('editing');
+
+        if (isNaN(value)) {
+            // Invalid input - reset to previous valid value
+            const currentValues = sliderElement.slider('values');
+            const newValue = inputType === 'initial' ? currentValues[0] : currentValues[1];
+            input.val(newValue);
+            input.removeClass('is-valid is-invalid');
+            // Re-validate visual feedback after reset
+            validateCrossFieldAndUpdateVisuals();
+            return;
+        }
+
+        // Clamp value to valid range (use extended range for validation)
+        let clampedValue = value;
+        if (value < extendedMinDate) {
+            clampedValue = extendedMinDate;
+        } else if (value > extendedMaxDate) {
+            clampedValue = extendedMaxDate;
+        }
+
+        if (clampedValue !== value) {
+            // Value was outside range, clamp it
+            input.val(clampedValue);
+        }
+
+        // Apply cross-field validation for final submission
+        const initialValue = parseInt(initialInput.val());
+        const finalValue = parseInt(finalInput.val());
+
+        const initialIsValid = !isNaN(initialValue) && initialValue >= extendedMinDate && initialValue <= extendedMaxDate;
+        const finalIsValid = !isNaN(finalValue) && finalValue >= extendedMinDate && finalValue <= extendedMaxDate;
+        const datesInOrder = initialIsValid && finalIsValid && initialValue <= finalValue;
+
+        if (initialIsValid && finalIsValid && datesInOrder) {
+            // Both dates are valid and in correct order - update slider and hidden fields
+            sliderElement.slider('values', [initialValue, finalValue]);
+            updateHiddenFields(initialValue, finalValue);
+            // Visual feedback is handled by validateCrossFieldAndUpdateVisuals()
+        } else {
+            // Either invalid or out of order - don't update slider, just update visual feedback
+            // Visual feedback is handled by validateCrossFieldAndUpdateVisuals()
+        }
+
+        editingInput = null;
+        editingInputType = null;
+    }
+
+    function updateInputs(values) {
+        initialInput.val(values[0]);
+        finalInput.val(values[1]);
+        initialInput.removeClass('is-valid is-invalid editing');
+        finalInput.removeClass('is-valid is-invalid editing');
+
+        // Update visual feedback after slider changes
+        validateCrossFieldAndUpdateVisuals();
+    }
+
+    function updateHiddenFields(initial, final) {
+        const $initial = $('#conventionalDateInitialYear');
+        const $final = $('#conventionalDateFinalYear');
+        if ($initial.length) { $initial.val(initial); }
+        if ($final.length) { $final.val(final); }
     }
 }
 
