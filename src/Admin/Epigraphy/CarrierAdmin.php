@@ -27,17 +27,28 @@ namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractEntityAdmin;
 use App\Persistence\Entity\Epigraphy\Carrier;
+use App\Persistence\Entity\Epigraphy\LocalizedText;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Doctrine\ORM\EntityRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 final class CarrierAdmin extends AbstractEntityAdmin
 {
+    private const TRANSLATABLE_FIELDS = [
+        'findCircumstances' => CKEditorType::class,
+        'archaeology' => CKEditorType::class,
+        'characteristics' => CKEditorType::class,
+        'individualName' => TextType::class,
+        'inventoryNumber' => TextType::class,
+        'stratigraphicalDate' => CKEditorType::class,
+        'previousStorage' => CKEditorType::class,
+        'storageLocalization' => CKEditorType::class,
+        'materialDescription' => CKEditorType::class,
+    ];
+
     protected $baseRouteName = 'epigraphy_carrier';
 
     protected $baseRoutePattern = 'epigraphy/carrier';
@@ -56,6 +67,11 @@ final class CarrierAdmin extends AbstractEntityAdmin
     {
         $formMapper
             ->add('individualName', null, $this->createFormOptions('individualName'))
+            ->add(
+                $this->getTranslationFieldName('individualName'),
+                TextType::class,
+                $this->createTranslationFieldOptions('individualName')
+            )
             ->add('categories', null, $this->createManyToManyFormOptions('categories'))
             ->add(
                 'supercarrier',
@@ -68,20 +84,166 @@ final class CarrierAdmin extends AbstractEntityAdmin
                 $this->createFormOptions('isSuperCarrier', ['required' => false])
             )
             ->add('characteristics', CKEditorType::class, $this->createFormOptions('characteristics', ['autoload' => false]))
+            ->add(
+                $this->getTranslationFieldName('characteristics'),
+                CKEditorType::class,
+                $this->createTranslationFieldOptions('characteristics')
+            )
             ->add('materials', null, $this->createManyToManyFormOptions('materials'))
             ->add('materialDescription', CKEditorType::class, $this->createFormOptions('materialDescription', ['autoload' => false, 'required' => false]))
+            ->add(
+                $this->getTranslationFieldName('materialDescription'),
+                CKEditorType::class,
+                $this->createTranslationFieldOptions('materialDescription')
+            )
             ->add('stratigraphicalDate', CKEditorType::class, $this->createFormOptions('stratigraphicalDate', ['autoload' => false, 'required' => false]))
+            ->add(
+                $this->getTranslationFieldName('stratigraphicalDate'),
+                CKEditorType::class,
+                $this->createTranslationFieldOptions('stratigraphicalDate')
+            )
             ->add('findCircumstances', CKEditorType::class, $this->createFormOptions('findCircumstances', ['autoload' => false, 'required' => false]))
+            ->add(
+                $this->getTranslationFieldName('findCircumstances'),
+                CKEditorType::class,
+                $this->createTranslationFieldOptions('findCircumstances')
+            )
             // ->add('carrierHistory', CKEditorType::class, $this->createFormOptions('carrierHistory', ['required' => false, 'autoload' => false]))
             ->add('discoverySite', null, $this->createManyToManyFormOptions('discoverySite'))
             // археология
             ->add('archaeology', CKEditorType::class, $this->createFormOptions('archaeology', ['required' => false, 'autoload' => false]))
+            ->add(
+                $this->getTranslationFieldName('archaeology'),
+                CKEditorType::class,
+                $this->createTranslationFieldOptions('archaeology')
+            )
             // предыдущие места хранения
             ->add('previousStorage', CKEditorType::class, $this->createFormOptions('previousStorage', ['required' => false, 'autoload' => false]))
+            ->add(
+                $this->getTranslationFieldName('previousStorage'),
+                CKEditorType::class,
+                $this->createTranslationFieldOptions('previousStorage')
+            )
             ->add('storageSite', null, $this->createManyToManyFormOptions('storageSite'))
             // локализация в месте хранения
             ->add('storageLocalization', CKEditorType::class, $this->createFormOptions('storageLocalization', ['required' => false, 'autoload' => false]))
+            ->add(
+                $this->getTranslationFieldName('storageLocalization'),
+                CKEditorType::class,
+                $this->createTranslationFieldOptions('storageLocalization')
+            )
             ->add('inventoryNumber', null, $this->createFormOptions('inventoryNumber'))
+            ->add(
+                $this->getTranslationFieldName('inventoryNumber'),
+                TextType::class,
+                $this->createTranslationFieldOptions('inventoryNumber')
+            )
         ;
+    }
+
+    public function postPersist($object): void
+    {
+        $this->storeLocalizedTexts($object);
+    }
+
+    public function postUpdate($object): void
+    {
+        $this->storeLocalizedTexts($object);
+    }
+
+    private function getTranslationFieldName(string $fieldName): string
+    {
+        return 'localizedEn__'.$fieldName;
+    }
+
+    private function createTranslationFieldOptions(string $fieldName): array
+    {
+        $options = [
+            'mapped' => false,
+            'required' => false,
+            'label' => sprintf('%s (EN)', $fieldName),
+            'data' => $this->getLocalizedTextValue($fieldName),
+        ];
+
+        if (CKEditorType::class === self::TRANSLATABLE_FIELDS[$fieldName]) {
+            $options['autoload'] = false;
+        }
+
+        return $options;
+    }
+
+    private function getLocalizedTextValue(string $fieldName): ?string
+    {
+        $subject = $this->getSubject();
+        if (null === $subject || null === $subject->getId()) {
+            return null;
+        }
+
+        $entity = $this->getModelManager()->getEntityManager(LocalizedText::class);
+        $localizedText = $entity->getRepository(LocalizedText::class)->findOneBy(
+            [
+                'targetType' => LocalizedText::TARGET_CARRIER,
+                'targetId' => (int) $subject->getId(),
+                'field' => $fieldName,
+                'locale' => 'en',
+            ]
+        );
+
+        return null === $localizedText ? null : $localizedText->getValue();
+    }
+
+    private function storeLocalizedTexts(Carrier $carrier): void
+    {
+        if (null === $carrier->getId()) {
+            return;
+        }
+
+        $entity = $this->getModelManager()->getEntityManager(LocalizedText::class);
+        $repository = $entity->getRepository(LocalizedText::class);
+        $form = $this->getForm();
+
+        foreach (array_keys(self::TRANSLATABLE_FIELDS) as $fieldName) {
+            $formFieldName = $this->getSubmittedTranslationFieldName($fieldName);
+            if (!$form->has($formFieldName)) {
+                continue;
+            }
+
+            $value = $form->get($formFieldName)->getData();
+            $trimmedValue = null === $value ? null : trim((string) $value);
+
+            $localizedText = $repository->findOneBy(
+                [
+                    'targetType' => LocalizedText::TARGET_CARRIER,
+                    'targetId' => (int) $carrier->getId(),
+                    'field' => $fieldName,
+                    'locale' => 'en',
+                ]
+            );
+
+            if (null === $trimmedValue || '' === $trimmedValue) {
+                if (null !== $localizedText) {
+                    $entity->remove($localizedText);
+                }
+                continue;
+            }
+
+            if (null === $localizedText) {
+                $localizedText = (new LocalizedText())
+                    ->setTargetType(LocalizedText::TARGET_CARRIER)
+                    ->setTargetId((int) $carrier->getId())
+                    ->setField($fieldName)
+                    ->setLocale('en');
+                $entity->persist($localizedText);
+            }
+
+            $localizedText->setValue($trimmedValue);
+        }
+
+        $entity->flush();
+    }
+
+    private function getSubmittedTranslationFieldName(string $fieldName): string
+    {
+        return str_replace(['__', '.'], ['____', '__'], $this->getTranslationFieldName($fieldName));
     }
 }

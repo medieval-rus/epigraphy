@@ -30,7 +30,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\ChoiceList\ChoiceList;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\ExpressionBuilderInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
@@ -38,10 +38,12 @@ use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFact
 final class CarrierCategoryFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
     private AliasFactoryInterface $aliasFactory;
+    private RequestStack $requestStack;
 
-    public function __construct(AliasFactoryInterface $aliasFactory)
+    public function __construct(AliasFactoryInterface $aliasFactory, RequestStack $requestStack)
     {
         $this->aliasFactory = $aliasFactory;
+        $this->requestStack = $requestStack;
     }
 
     public function getQueryParameterName(): string
@@ -56,6 +58,9 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
 
     public function getOptions(EntityManager $entityManager): array
     {
+        $request = $this->requestStack->getCurrentRequest();
+        $locale = null !== $request ? $request->getLocale() : 'ru';
+
         return [
             'label' => 'controller.inscription.list.filter.carrierCategory',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
@@ -65,7 +70,9 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
                 ];
             },
             'class' => CarrierCategory::class,
-            'choice_label' => 'name',
+            'choice_label' => static fn (?CarrierCategory $choice): string => null === $choice
+                ? ''
+                : (string) $choice->getTranslatedName($locale),
             'expanded' => false,
             'multiple' => true,
             'query_builder' => function (EntityRepository $repository): QueryBuilder {

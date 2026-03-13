@@ -229,11 +229,9 @@ $(window).on('load', () => {
         $('[data-toggle="tooltip"]').tooltip()
     })
     
-    // TODO(epidoc): uncomment when EpiDoc viewer is ready
-    // initEpidocViewer();
+    initEpidocViewer();
 });
 
-// TODO(epidoc): functions below are disabled — uncomment initEpidocViewer() call above to enable
 
 /**
  * EpiDoc XML Viewer
@@ -244,6 +242,9 @@ function initEpidocViewer() {
     const stubScript = document.getElementById('epidoc-stub-data');
     const tableContainer = document.getElementById('epidoc-text-in-table');
     const tableApparatusContainer = document.getElementById('epidoc-apparatus-in-table');
+    const fullReadingsContainer = document.getElementById('epidoc-full-readings-in-text');
+    const fullReadingsToggle = document.getElementById('epidoc-full-readings-toggle');
+
     if (!dataScript) {
         // If no data but table container exists, show placeholder
         if (tableContainer) {
@@ -251,6 +252,14 @@ function initEpidocViewer() {
         }
         if (tableApparatusContainer) {
             tableApparatusContainer.innerHTML = '<span style="color: #6c757d; font-style: italic;">EpiDoc данные отсутствуют</span>';
+        }
+        if (fullReadingsContainer) {
+            fullReadingsContainer.innerHTML = '';
+        }
+        if (fullReadingsToggle) {
+            fullReadingsToggle.hidden = true;
+            fullReadingsToggle.setAttribute('aria-expanded', 'false');
+            fullReadingsToggle.classList.remove('epidoc-translations-toggle--open');
         }
         return;
     }
@@ -271,10 +280,252 @@ function initEpidocViewer() {
         if (tableApparatusContainer) {
             tableApparatusContainer.innerHTML = '<span style="color: #dc3545; font-style: italic;">Ошибка парсинга XML</span>';
         }
+        if (fullReadingsContainer) {
+            fullReadingsContainer.innerHTML = '';
+        }
+        if (fullReadingsToggle) {
+            fullReadingsToggle.hidden = true;
+            fullReadingsToggle.setAttribute('aria-expanded', 'false');
+            fullReadingsToggle.classList.remove('epidoc-translations-toggle--open');
+        }
         return;
     }
 
     renderTableView(xmlDoc, stubDoc);
+}
+
+function applyBracketSystemToServerRenderedEdition(container, system) {
+    if (!container) {
+        return;
+    }
+
+    const suppliedNodes = container.querySelectorAll('[data-epidoc-hook="supplied"]');
+    suppliedNodes.forEach(node => {
+        if (!(node instanceof HTMLElement)) {
+            return;
+        }
+        const originalText = node.dataset.originalText ?? stripCombiningDotBelowMarks(node.textContent ?? '');
+        node.dataset.originalText = originalText;
+
+        const reason = node.dataset.suppliedReason || (node.classList.contains('epidoc-supplied--editorial') ? 'editorial' : 'lost');
+        if (reason === 'unclear') {
+            if (system === 'zaliznyak') {
+                node.textContent = `[${originalText}]`;
+            } else {
+                node.innerHTML = renderUnderdottedHtml(originalText);
+            }
+            return;
+        }
+        const brackets = (BRACKET_SYSTEMS[system] && BRACKET_SYSTEMS[system].supplied[reason])
+            || BRACKET_SYSTEMS[system].supplied.lost;
+        node.textContent = `${brackets[0]}${originalText}${brackets[1]}`;
+    });
+
+    const unclearNodes = container.querySelectorAll('[data-epidoc-hook="unclear"]');
+    unclearNodes.forEach(node => {
+        if (!(node instanceof HTMLElement)) {
+            return;
+        }
+        const originalText = node.dataset.originalText ?? stripCombiningDotBelowMarks(node.textContent ?? '');
+        node.dataset.originalText = originalText;
+
+        if (system === 'zaliznyak') {
+            node.textContent = `[${originalText}]`;
+            node.classList.remove('epidoc-unclear--leiden');
+        } else {
+            node.innerHTML = renderUnderdottedHtml(originalText);
+            node.classList.add('epidoc-unclear--leiden');
+        }
+    });
+
+    const gapNodes = container.querySelectorAll('[data-epidoc-hook="gap"]');
+    gapNodes.forEach(node => {
+        if (!(node instanceof HTMLElement)) {
+            return;
+        }
+        const gapMeta = getGapMetadataFromDataset(node);
+        const originalText = node.dataset.originalText ?? node.textContent ?? '';
+        node.dataset.originalText = originalText;
+        node.textContent = getGapDisplayText(system, gapMeta);
+    });
+
+    container.dataset.epidocSystem = system;
+}
+
+function stripCombiningDotBelowMarks(text) {
+    return text.replace(/\u0323/g, '');
+}
+
+function renderUnderdottedHtml(text) {
+    let result = '';
+    for (const char of text) {
+        if (/\s/.test(char)) {
+            result += char;
+            continue;
+        }
+        result += `<span class="epidoc-underdot-char">${escapeHtml(char)}</span>`;
+    }
+    return result;
+}
+
+function getGapMetadataFromElement(gapElement) {
+    if (!(gapElement instanceof Element)) {
+        return {
+            quantity: null,
+            unit: '',
+            extent: ''
+        };
+    }
+
+    const quantityRaw = gapElement.getAttribute('quantity');
+    const quantity = quantityRaw !== null ? Number.parseInt(quantityRaw, 10) : null;
+
+    return {
+        quantity: Number.isInteger(quantity) && quantity > 0 ? quantity : null,
+        unit: (gapElement.getAttribute('unit') || '').trim().toLowerCase(),
+        extent: (gapElement.getAttribute('extent') || '').trim().toLowerCase()
+    };
+}
+
+function getGapMetadataFromDataset(gapNode) {
+    if (!(gapNode instanceof HTMLElement)) {
+        return {
+            quantity: null,
+            unit: '',
+            extent: ''
+        };
+    }
+
+    const quantityRaw = gapNode.dataset.gapQuantity;
+    const quantity = quantityRaw !== undefined ? Number.parseInt(quantityRaw, 10) : null;
+
+    return {
+        quantity: Number.isInteger(quantity) && quantity > 0 ? quantity : null,
+        unit: (gapNode.dataset.gapUnit || '').trim().toLowerCase(),
+        extent: (gapNode.dataset.gapExtent || '').trim().toLowerCase()
+    };
+}
+
+function getGapDisplayText(system, gapMeta = {}) {
+    const quantity = Number.isInteger(gapMeta.quantity) && gapMeta.quantity > 0 ? gapMeta.quantity : null;
+    const unit = (gapMeta.unit || '').toLowerCase();
+
+    if (quantity !== null && unit === 'character') {
+        if (system === 'zaliznyak') {
+            return '-'.repeat(quantity);
+        }
+        return '*'.repeat(quantity);
+    }
+
+    return system === 'zaliznyak' ? '...' : '***';
+}
+
+function getGapTitle(gapMeta = {}) {
+    if (Number.isInteger(gapMeta.quantity) && gapMeta.quantity > 0 && gapMeta.unit === 'character') {
+        return `Gap: ${gapMeta.quantity} character${gapMeta.quantity === 1 ? '' : 's'}`;
+    }
+
+    const extent = gapMeta.extent || '?';
+    return `Gap: ${extent}`;
+}
+
+function trimRenderedEditionEdges(container) {
+    if (!(container instanceof HTMLElement)) {
+        return;
+    }
+
+    const root = container.querySelector('[data-epidoc-role="edition-root"], #edition') || container;
+    trimLeadingBoundary(root);
+    trimTrailingBoundary(root);
+}
+
+function trimLeadingBoundary(node) {
+    let current = node;
+
+    while (current && current.firstChild) {
+        const first = current.firstChild;
+
+        if (first.nodeType === Node.TEXT_NODE) {
+            const value = first.textContent || '';
+            const trimmed = value.replace(/^\s+/, '');
+            if (trimmed === '') {
+                current.removeChild(first);
+                continue;
+            }
+            if (trimmed !== value) {
+                first.textContent = trimmed;
+            }
+            break;
+        }
+
+        if (first.nodeType === Node.ELEMENT_NODE && first.nodeName === 'BR') {
+            current.removeChild(first);
+            continue;
+        }
+
+        if (first.nodeType === Node.ELEMENT_NODE) {
+            current = first;
+            continue;
+        }
+
+        break;
+    }
+}
+
+function trimTrailingBoundary(node) {
+    let current = node;
+
+    while (current && current.lastChild) {
+        const last = current.lastChild;
+
+        if (last.nodeType === Node.TEXT_NODE) {
+            const value = last.textContent || '';
+            const trimmed = value.replace(/\s+$/, '');
+            if (trimmed === '') {
+                current.removeChild(last);
+                continue;
+            }
+            if (trimmed !== value) {
+                last.textContent = trimmed;
+            }
+            break;
+        }
+
+        if (last.nodeType === Node.ELEMENT_NODE && last.nodeName === 'BR') {
+            current.removeChild(last);
+            continue;
+        }
+
+        if (last.nodeType === Node.ELEMENT_NODE) {
+            current = last;
+            continue;
+        }
+
+        break;
+    }
+}
+
+function restoreMissingSpacingBeforeVariantApps(container) {
+    if (!(container instanceof HTMLElement)) {
+        return;
+    }
+
+    const appNodes = container.querySelectorAll('[data-epidoc-role="app"], .epidoc-app, .app');
+    appNodes.forEach(appNode => {
+        const previous = appNode.previousSibling;
+        if (!previous || previous.nodeType !== Node.TEXT_NODE) {
+            return;
+        }
+
+        const value = previous.textContent || '';
+        if (value === '' || /\s$/.test(value)) {
+            return;
+        }
+
+        if (/[,:;.!?]$/u.test(value)) {
+            previous.textContent = `${value} `;
+        }
+    });
 }
 
 function getFirstByTagName(parent, tagName) {
@@ -315,6 +566,15 @@ function extractAppElements(xmlDoc) {
         return [];
     }
     return Array.from(edition.getElementsByTagName('app'));
+}
+
+function extractEditionDiv(xmlDoc) {
+    if (!xmlDoc) {
+        return null;
+    }
+    const textBody = getTextBody(xmlDoc);
+    const editions = getDivsByType(textBody, 'edition');
+    return editions.length > 0 ? editions[0] : null;
 }
 
 function extractExternalApparatusText(xmlDoc) {
@@ -370,6 +630,10 @@ function renderTableView(xmlDoc, stubDoc = null) {
     const tableContainer = document.getElementById('epidoc-text-in-table');
     const tableApparatusContainer = document.getElementById('epidoc-apparatus-in-table');
     const tableTranslationsContainer = document.getElementById('epidoc-translations-in-table');
+    const fullReadingsContainer = document.getElementById('epidoc-full-readings-in-text');
+    const fullReadingsToggle = document.getElementById('epidoc-full-readings-toggle');
+    const serverEditionContainer = document.querySelector('[data-epidoc-render-source="xslt"]');
+    const systemToggle = document.querySelector('.epidoc-system-toggle-btn');
     
     // Parse bibliography map
     const bibliographyMap = parseBibliography(xmlDoc);
@@ -377,10 +641,41 @@ function renderTableView(xmlDoc, stubDoc = null) {
     
     // Initial bracket system (default: Leiden = false in toggle)
     let currentSystem = getEpidocSystemPreference();
+    let readingsToggleBound = false;
+    let systemToggleBound = false;
+
+    function setupReadingsToggle() {
+        if (!fullReadingsToggle || !fullReadingsContainer || readingsToggleBound) {
+            return;
+        }
+        readingsToggleBound = true;
+
+        fullReadingsToggle.addEventListener('click', () => {
+            const isExpanded = fullReadingsToggle.getAttribute('aria-expanded') === 'true';
+            const nextExpanded = !isExpanded;
+            const showTitle = fullReadingsContainer.dataset.showReadingsTitle || 'Показать все прочтения';
+            const hideTitle = fullReadingsContainer.dataset.hideReadingsTitle || 'Скрыть прочтения';
+
+            fullReadingsToggle.setAttribute('aria-expanded', String(nextExpanded));
+            fullReadingsToggle.classList.toggle('epidoc-translations-toggle--open', nextExpanded);
+            fullReadingsToggle.title = nextExpanded ? hideTitle : showTitle;
+
+            const block = fullReadingsContainer.querySelector('.epidoc-alt-readings-block');
+            if (block) {
+                block.classList.toggle('epidoc-alt-readings-block--collapsed', !nextExpanded);
+            }
+        });
+    }
 
     function renderContent() {
+        if (serverEditionContainer) {
+            applyBracketSystemToServerRenderedEdition(serverEditionContainer, currentSystem);
+            trimRenderedEditionEdges(serverEditionContainer);
+            restoreMissingSpacingBeforeVariantApps(serverEditionContainer);
+        }
+
         // Render for table widget (if exists)
-        if (tableContainer || tableApparatusContainer || tableTranslationsContainer) {
+        if (tableContainer || tableApparatusContainer || tableTranslationsContainer || fullReadingsContainer) {
             const textBody = getTextBody(xmlDoc);
             if (textBody) {
                 const editions = getDivsByType(textBody, 'edition');
@@ -390,6 +685,7 @@ function renderTableView(xmlDoc, stubDoc = null) {
                         let textContent = renderEditionContent(edition, currentSystem);
                         textContent = normalizeEditionHtml(textContent);
                         tableContainer.innerHTML = textContent;
+                        trimRenderedEditionEdges(tableContainer);
                     }
                     if (tableApparatusContainer) {
                         const rendered = renderApparatusIntoContainer(tableApparatusContainer, xmlDoc, bibliographyMap, currentSystem)
@@ -405,6 +701,29 @@ function renderTableView(xmlDoc, stubDoc = null) {
                             tableTranslationsContainer.innerHTML = '<span style="color: #6c757d; font-style: italic;">Переводы не найдены в XML</span>';
                         }
                     }
+                    if (fullReadingsContainer) {
+                        const rendered = renderReadingsIntoContainer(
+                            fullReadingsContainer,
+                            fullReadingsToggle,
+                            xmlDoc,
+                            bibliographyMap,
+                            currentSystem
+                        ) || renderReadingsIntoContainer(
+                            fullReadingsContainer,
+                            fullReadingsToggle,
+                            stubDoc,
+                            stubBibliographyMap,
+                            currentSystem
+                        );
+                        if (!rendered) {
+                            fullReadingsContainer.innerHTML = '';
+                            if (fullReadingsToggle) {
+                                fullReadingsToggle.hidden = true;
+                                fullReadingsToggle.setAttribute('aria-expanded', 'false');
+                                fullReadingsToggle.classList.remove('epidoc-translations-toggle--open');
+                            }
+                        }
+                    }
                 } else {
                     if (tableContainer) {
                         tableContainer.innerHTML = '<span style="color: #6c757d; font-style: italic;">Секция edition не найдена в XML</span>';
@@ -414,6 +733,14 @@ function renderTableView(xmlDoc, stubDoc = null) {
                     }
                     if (tableTranslationsContainer) {
                         tableTranslationsContainer.innerHTML = '<span style="color: #6c757d; font-style: italic;">Секция edition не найдена в XML</span>';
+                    }
+                    if (fullReadingsContainer) {
+                        fullReadingsContainer.innerHTML = '';
+                        if (fullReadingsToggle) {
+                            fullReadingsToggle.hidden = true;
+                            fullReadingsToggle.setAttribute('aria-expanded', 'false');
+                            fullReadingsToggle.classList.remove('epidoc-translations-toggle--open');
+                        }
                     }
                 }
             } else {
@@ -426,24 +753,38 @@ function renderTableView(xmlDoc, stubDoc = null) {
                 if (tableTranslationsContainer) {
                     tableTranslationsContainer.innerHTML = '<span style="color: #6c757d; font-style: italic;">Секция body не найдена в XML</span>';
                 }
+                if (fullReadingsContainer) {
+                    fullReadingsContainer.innerHTML = '';
+                    if (fullReadingsToggle) {
+                        fullReadingsToggle.hidden = true;
+                        fullReadingsToggle.setAttribute('aria-expanded', 'false');
+                        fullReadingsToggle.classList.remove('epidoc-translations-toggle--open');
+                    }
+                }
             }
             
-            // Re-attach event listener to toggle in table
-            const tableToggle = document.querySelector('.epidoc-toggle-input-table');
-            if (tableToggle) {
-                tableToggle.checked = currentSystem === 'zaliznyak';
-                tableToggle.removeEventListener('change', handleToggleChange);
-                tableToggle.addEventListener('change', handleToggleChange);
-            }
         }
+
+        updateSystemToggle(systemToggle, currentSystem);
     }
     
-    function handleToggleChange(e) {
-        currentSystem = e.target.checked ? 'zaliznyak' : 'leiden';
+    function handleToggleClick() {
+        currentSystem = currentSystem === 'zaliznyak' ? 'leiden' : 'zaliznyak';
         setEpidocSystemPreference(currentSystem);
         renderContent();
     }
+
+    function setupSystemToggle() {
+        if (!systemToggle || systemToggleBound) {
+            return;
+        }
+        systemToggleBound = true;
+        systemToggle.addEventListener('click', handleToggleClick);
+    }
     
+    setupReadingsToggle();
+    setupSystemToggle();
+
     // Initial render
     renderContent();
 }
@@ -453,7 +794,7 @@ function getEpidocSystemPreference() {
     if (value === 'zaliznyak' || value === 'leiden') {
         return value;
     }
-    return 'leiden';
+    return 'zaliznyak';
 }
 
 function setEpidocSystemPreference(system) {
@@ -469,6 +810,17 @@ function setCookie(name, value, days) {
     const date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
     document.cookie = `${name}=${encodeURIComponent(value)}; expires=${date.toUTCString()}; path=/`;
+}
+
+function updateSystemToggle(toggle, system) {
+    if (!toggle) {
+        return;
+    }
+
+    const nextSystemLabel = system === 'zaliznyak' ? 'LEID' : 'ZAL';
+    toggle.textContent = nextSystemLabel;
+    toggle.setAttribute('aria-label', `Переключить на ${nextSystemLabel}`);
+    toggle.title = `Переключить на ${nextSystemLabel}`;
 }
 
 function extractTranslations(xmlDoc) {
@@ -567,6 +919,11 @@ function renderEditionContent(node, system = 'leiden') {
                     && !/\s$/.test(result)) {
                     result += ' ';
                 }
+                if (prevElementForGap && prevElementForGap.localName === 'app'
+                    && nextElementForGap && nextElementForGap.localName === 'app'
+                    && !/\s$/.test(result)) {
+                    result += ' ';
+                }
                 continue;
             }
             const prevElement = getSiblingElement(node.childNodes, index, -1);
@@ -583,7 +940,8 @@ function renderEditionContent(node, system = 'leiden') {
             if (nextElement && nextElement.localName === 'app') {
                 const textWithoutTail = text.replace(/\s+$/, '');
                 const lastToken = textWithoutTail.split(/\s+/).pop() || '';
-                if (!hadTrailingWhitespace || lastToken.length <= 2) {
+                const endsWithPunctuation = /[,:;.!?]$/u.test(textWithoutTail);
+                if (!hadTrailingWhitespace || (lastToken.length <= 2 && !endsWithPunctuation)) {
                     text = textWithoutTail;
                 } else {
                     text = `${textWithoutTail} `;
@@ -597,11 +955,11 @@ function renderEditionContent(node, system = 'leiden') {
                 case 'supplied':
                     const reason = child.getAttribute('reason') || 'lost';
                     if (reason === 'unclear') {
-                        const unclearSuppliedContent = renderEditionContent(child, system);
+                        const unclearSuppliedText = stripCombiningDotBelowMarks(child.textContent || '');
                         if (system === 'zaliznyak') {
-                            result += `<span class="epidoc-supplied" title="Supplied: ${reason}">[${unclearSuppliedContent}]</span>`;
+                            result += `<span class="epidoc-supplied" title="Supplied: ${reason}">[${escapeHtml(unclearSuppliedText)}]</span>`;
                         } else {
-                            result += `<span class="epidoc-unclear epidoc-unclear--leiden" title="Unclear reading">${unclearSuppliedContent}</span>`;
+                            result += `<span class="epidoc-unclear epidoc-unclear--leiden" title="Unclear reading">${renderUnderdottedHtml(unclearSuppliedText)}</span>`;
                         }
                         break;
                     }
@@ -625,25 +983,42 @@ function renderEditionContent(node, system = 'leiden') {
                 case 'p':
                     result += renderEditionContent(child, system);
                     break;
+
+                case 'hi':
+                    const rend = (child.getAttribute('rend') || '').trim().toLowerCase();
+                    if (rend === 'superscript') {
+                        result += `<sup class="epidoc-hi-superscript">${renderEditionContent(child, system)}</sup>`;
+                        break;
+                    }
+                    if (rend === 'subscript') {
+                        result += `<sub class="epidoc-hi-subscript">${renderEditionContent(child, system)}</sub>`;
+                        break;
+                    }
+                    result += renderEditionContent(child, system);
+                    break;
                     
                 case 'lb':
+                    result = result.replace(/\s+$/, '');
+                    if (system === 'zaliznyak' && isInWordLineBreak(child)) {
+                        result += '⸗';
+                    }
                     if (!result.endsWith('<br />')) {
                         result += '<br />';
                     }
                     break;
                     
                 case 'gap':
-                    const extent = child.getAttribute('extent') || '?';
-                    const gapMarker = system === 'zaliznyak' ? '...' : '***';
-                    result += `<span class="epidoc-gap" title="Gap: ${extent}">${gapMarker}</span>`;
+                    const gapMeta = getGapMetadataFromElement(child);
+                    const gapMarker = getGapDisplayText(system, gapMeta);
+                    result += `<span class="epidoc-gap" title="${escapeHtml(getGapTitle(gapMeta))}" data-gap-quantity="${gapMeta.quantity ?? ''}" data-gap-unit="${escapeHtml(gapMeta.unit)}" data-gap-extent="${escapeHtml(gapMeta.extent)}">${gapMarker}</span>`;
                     break;
                     
                 case 'unclear':
-                    const unclearContent = renderEditionContent(child, system);
+                    const unclearText = stripCombiningDotBelowMarks(child.textContent || '');
                     if (system === 'zaliznyak') {
-                        result += `[${unclearContent}]`;
+                        result += `[${escapeHtml(unclearText)}]`;
                     } else {
-                        result += `<span class="epidoc-unclear epidoc-unclear--leiden" title="Unclear reading">${unclearContent}</span>`;
+                        result += `<span class="epidoc-unclear epidoc-unclear--leiden" title="Unclear reading">${renderUnderdottedHtml(unclearText)}</span>`;
                     }
                     break;
                     
@@ -711,29 +1086,28 @@ function buildCriticalApparatusRows(appElements, bibliographyMap, system) {
         const lem = app.querySelector('lem');
         const readings = app.querySelectorAll('rdg');
         
-        // Get lemma text and resp
-        let lemText = lem ? getPlainText(lem, system) : '';
-        // let lemResp = lem ? (lem.getAttribute('resp') || '') : '';
+        // Keep inline markup (e.g. hi[@rend='superscript']) in apparatus cells.
+        let lemHtml = lem ? renderEditionContent(lem, system) : '';
         
         // Build alternative readings
         let alternatives = [];
         for (let j = 0; j < readings.length; j++) {
             const rdg = readings[j];
-            const rdgText = getPlainText(rdg, system);
+            const rdgHtml = renderEditionContent(rdg, system);
             const rdgResp = rdg.getAttribute('resp') || '';
             alternatives.push({
-                text: rdgText,
+                html: rdgHtml,
                 resp: rdgResp
             });
         }
         
         // Create row
-        const lemDisplay = escapeHtml(lemText);
+        const lemDisplay = lemHtml;
         
         const altDisplay = alternatives.map(alt => {
             const resolvedResp = resolveResp(alt.resp, bibliographyMap);
             const respTag = resolvedResp ? ` <span class="apparatus-resp">${escapeHtml(resolvedResp)}</span>` : '';
-            return `${escapeHtml(alt.text)}${respTag}`;
+            return `${alt.html}${respTag}`;
         }).join('<br>');
         
         rows += `
@@ -743,6 +1117,195 @@ function buildCriticalApparatusRows(appElements, bibliographyMap, system) {
             </tr>`;
     }
     return rows;
+}
+
+function splitRespValues(resp) {
+    if (!resp) {
+        return [];
+    }
+    return resp.trim().split(/\s+/).filter(Boolean);
+}
+
+function collectWitnessRespValues(editionDiv) {
+    const values = new Set();
+    if (!editionDiv) {
+        return [];
+    }
+
+    const appElements = editionDiv.getElementsByTagName('app');
+    for (let i = 0; i < appElements.length; i++) {
+        const readings = appElements[i].getElementsByTagName('rdg');
+        for (let j = 0; j < readings.length; j++) {
+            const respValues = splitRespValues(readings[j].getAttribute('resp') || '');
+            respValues.forEach(resp => values.add(resp));
+        }
+    }
+
+    return Array.from(values);
+}
+
+function pickWitnessReading(appNode, witnessResp) {
+    const lem = appNode.querySelector('lem');
+    const readings = appNode.querySelectorAll('rdg');
+
+    if (!witnessResp) {
+        return lem || (readings.length > 0 ? readings[0] : null);
+    }
+
+    for (let i = 0; i < readings.length; i++) {
+        const rdgRespValues = splitRespValues(readings[i].getAttribute('resp') || '');
+        if (rdgRespValues.includes(witnessResp)) {
+            return readings[i];
+        }
+    }
+
+    return lem || (readings.length > 0 ? readings[0] : null);
+}
+
+function buildWitnessReadingText(node, system, witnessResp) {
+    let result = '';
+
+    for (const child of node.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+            result += child.textContent.replace(/\s+/g, ' ');
+            continue;
+        }
+
+        if (child.nodeType !== Node.ELEMENT_NODE) {
+            continue;
+        }
+
+        const tagName = child.localName;
+        if (tagName === 'app') {
+            const selectedReading = pickWitnessReading(child, witnessResp);
+            if (selectedReading) {
+                result += buildWitnessReadingText(selectedReading, system, witnessResp);
+            }
+            continue;
+        }
+
+        if (tagName === 'supplied') {
+            const reason = child.getAttribute('reason') || 'lost';
+            if (reason === 'unclear') {
+                const unclearSuppliedText = buildWitnessReadingText(child, system, witnessResp);
+                if (system === 'zaliznyak') {
+                    result += `[${unclearSuppliedText}]`;
+                } else {
+                    result += applyDotBelowMarks(unclearSuppliedText);
+                }
+                continue;
+            }
+
+            const brackets = BRACKET_SYSTEMS[system].supplied[reason] || BRACKET_SYSTEMS[system].supplied.lost;
+            result += `${brackets[0]}${buildWitnessReadingText(child, system, witnessResp)}${brackets[1]}`;
+            continue;
+        }
+
+        if (tagName === 'unclear') {
+            const unclearText = buildWitnessReadingText(child, system, witnessResp);
+            if (system === 'zaliznyak') {
+                result += `[${unclearText}]`;
+            } else {
+                result += applyDotBelowMarks(unclearText);
+            }
+            continue;
+        }
+
+        if (tagName === 'gap') {
+            result += getGapDisplayText(system, getGapMetadataFromElement(child));
+            continue;
+        }
+
+        if (tagName === 'lb') {
+            result = result.replace(/\s+$/, '');
+            if (system === 'zaliznyak' && isInWordLineBreak(child)) {
+                result += '⸗';
+            }
+            result += '\n';
+            continue;
+        }
+
+        result += buildWitnessReadingText(child, system, witnessResp);
+    }
+
+    return result;
+}
+
+function normalizeWitnessReadingText(text) {
+    return text
+        .replace(/[ \t]+\n/g, '\n')
+        .replace(/\n[ \t]+/g, '\n')
+        .replace(/[ \t]{2,}/g, ' ')
+        .trim();
+}
+
+function formatReadingTextForHtml(text) {
+    return escapeHtml(text).replace(/\n/g, '<br>');
+}
+
+function buildFullReadingsEntries(editionDiv, bibliographyMap, system) {
+    const entries = [];
+    const witnesses = collectWitnessRespValues(editionDiv);
+
+    for (let i = 0; i < witnesses.length; i++) {
+        const witnessResp = witnesses[i];
+        const reader = resolveResp(witnessResp, bibliographyMap) || witnessResp;
+        const readingText = normalizeWitnessReadingText(buildWitnessReadingText(editionDiv, system, witnessResp));
+        if (!readingText) {
+            continue;
+        }
+
+        entries.push({ reader, text: readingText });
+    }
+
+    return entries;
+}
+
+function renderReadingsIntoContainer(container, toggle, xmlDoc, bibliographyMap, system) {
+    if (!container || !xmlDoc) {
+        return false;
+    }
+
+    const editionDiv = extractEditionDiv(xmlDoc);
+    if (!editionDiv) {
+        return false;
+    }
+
+    if (editionDiv.getElementsByTagName('app').length === 0) {
+        return false;
+    }
+
+    const entries = buildFullReadingsEntries(editionDiv, bibliographyMap, system);
+    if (!entries.length) {
+        return false;
+    }
+
+    const isExpanded = !!(toggle && toggle.getAttribute('aria-expanded') === 'true');
+
+    let items = '';
+    for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i];
+        items += `
+            <div class="epidoc-reading-line">
+                <span class="epidoc-resp-badge">${escapeHtml(entry.reader)}</span>
+                <div class="epidoc-alt-reading-text">${formatReadingTextForHtml(entry.text)}</div>
+            </div>`;
+    }
+
+    const blockClass = isExpanded
+        ? 'epidoc-alt-readings-block'
+        : 'epidoc-alt-readings-block epidoc-alt-readings-block--collapsed';
+
+    container.innerHTML = `<div class="${blockClass}">${items}</div>`;
+    if (toggle) {
+        const showTitle = container.dataset.showReadingsTitle || 'Показать все прочтения';
+        const hideTitle = container.dataset.hideReadingsTitle || 'Скрыть прочтения';
+        toggle.hidden = false;
+        toggle.classList.toggle('epidoc-translations-toggle--open', isExpanded);
+        toggle.title = isExpanded ? hideTitle : showTitle;
+    }
+
+    return true;
 }
 
 /**
@@ -781,7 +1344,13 @@ function getPlainText(node, system = 'leiden') {
                     result += applyDotBelowMarks(unclearText);
                 }
             } else if (tagName === 'gap') {
-                result += system === 'zaliznyak' ? '...' : '***';
+                result += getGapDisplayText(system, getGapMetadataFromElement(child));
+            } else if (tagName === 'lb') {
+                result = result.replace(/\s+$/, '');
+                if (system === 'zaliznyak' && isInWordLineBreak(child)) {
+                    result += '⸗';
+                }
+                result += '\n';
             } else {
                 result += getPlainText(child, system);
             }
@@ -801,6 +1370,97 @@ function applyDotBelowMarks(text) {
         }
     }
     return result;
+}
+
+function isInWordLineBreak(node) {
+    if (!node || node.nodeType !== Node.ELEMENT_NODE) {
+        return false;
+    }
+
+    return node.getAttribute('break') === 'no' || node.getAttribute('type') === 'inWord';
+}
+
+/**
+ * Render XML source with syntax highlighting
+ */
+function renderSourceView(xmlString) {
+    const container = document.getElementById('epidoc-source');
+    if (!container) return;
+    
+    // Apply syntax highlighting
+    const highlighted = highlightXml(xmlString.trim());
+    container.innerHTML = highlighted;
+}
+
+/**
+ * Simple XML syntax highlighter
+ */
+function highlightXml(xml) {
+    // Escape HTML first
+    let result = escapeHtml(xml);
+    
+    // Highlight XML declarations
+    result = result.replace(/(&lt;\?[\s\S]*?\?&gt;)/g, '<span class="xml-declaration">$1</span>');
+    
+    // Highlight comments
+    result = result.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="xml-comment">$1</span>');
+    
+    // Highlight tags with attributes
+    result = result.replace(/(&lt;\/?)(\w+[\w:-]*)((?:\s+[\w:-]+\s*=\s*&quot;[^&]*&quot;)*\s*)(\/?)(&gt;)/g, 
+        (match, open, tagName, attrs, selfClose, close) => {
+            // Highlight attributes
+            const highlightedAttrs = attrs.replace(/([\w:-]+)(\s*=\s*)(&quot;)([^&]*)(&quot;)/g, 
+                '<span class="xml-attr-name">$1</span>$2<span class="xml-attr-value">$3$4$5</span>');
+            return `${open}<span class="xml-tag">${tagName}</span>${highlightedAttrs}${selfClose}${close}`;
+        });
+    
+    return result;
+}
+
+/**
+ * Setup tab switching functionality
+ */
+function setupTabs() {
+    const tabs = document.querySelectorAll('.epidoc-tab');
+    const contents = document.querySelectorAll('.epidoc-content');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetTab = tab.getAttribute('data-tab');
+            
+            // Update tab states
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // Update content visibility
+            contents.forEach(content => {
+                content.classList.toggle('active', content.getAttribute('data-content') === targetTab);
+            });
+        });
+    });
+}
+
+/**
+ * Setup copy to clipboard functionality
+ */
+function setupCopyButton(xmlString) {
+    const copyBtn = document.querySelector('.epidoc-copy-btn');
+    if (!copyBtn) return;
+    
+    copyBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(xmlString.trim());
+            copyBtn.classList.add('copied');
+            copyBtn.innerHTML = '<span class="copy-icon">✓</span> Copied!';
+            
+            setTimeout(() => {
+                copyBtn.classList.remove('copied');
+                copyBtn.innerHTML = '<span class="copy-icon">📋</span> Copy';
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
+    });
 }
 
 /**

@@ -26,14 +26,19 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractNamedEntityAdmin;
+use App\Persistence\Entity\Epigraphy\LocalizedText;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use App\Persistence\Entity\Epigraphy\WritingMethod;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class WritingMethodAdmin extends AbstractNamedEntityAdmin
 {
+    private const LOCALIZED_FIELDS = [
+        'name' => 'string',
+    ];
+
     protected $baseRouteName = 'epigraphy_writing_method';
 
     protected $baseRoutePattern = 'epigraphy/writing-method';
@@ -42,6 +47,15 @@ final class WritingMethodAdmin extends AbstractNamedEntityAdmin
     {
         $formMapper
             ->add('name', null, $this->createFormOptions('name'))
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_WRITING_METHOD, 'name'),
+                TextType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_WRITING_METHOD,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'name'
+                )
+            )
             ->add(
                 'supermethod',
                 EntityType::class,
@@ -53,5 +67,23 @@ final class WritingMethodAdmin extends AbstractNamedEntityAdmin
                 $this->createFormOptions('isSuperMethod', ['required' => false])
             )
         ;
+    }
+
+    public function postPersist($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_WRITING_METHOD,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
+    }
+
+    public function postUpdate($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_WRITING_METHOD,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
     }
 }

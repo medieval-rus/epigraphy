@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractNamedEntityAdmin;
+use App\Persistence\Entity\Epigraphy\LocalizedText;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -34,6 +35,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class CityAdmin extends AbstractNamedEntityAdmin
 {
+    private const LOCALIZED_FIELDS = [
+        'name' => 'string',
+        'nameAliases' => 'array',
+    ];
+
     protected $baseRouteName = 'epigraphy_city';
 
     protected $baseRoutePattern = 'epigraphy/city';
@@ -42,6 +48,15 @@ final class CityAdmin extends AbstractNamedEntityAdmin
     {
         $formMapper
             ->add('name', null, $this->createFormOptions('name'))
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_CITY, 'name'),
+                TextType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_CITY,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'name'
+                )
+            )
             ->add(
                 'nameAliases',
                 CollectionType::class,
@@ -53,6 +68,27 @@ final class CityAdmin extends AbstractNamedEntityAdmin
                         'allow_delete' => true,
                         'delete_empty' => true,
                         'required' => false
+                    ]
+                )
+            )
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_CITY, 'nameAliases'),
+                CollectionType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_CITY,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'nameAliases',
+                    [
+                        'data' => $this->getLocalizedTextArrayValueForTarget(
+                            LocalizedText::TARGET_CITY,
+                            null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                            'nameAliases'
+                        ),
+                        'entry_type' => TextType::class,
+                        'allow_add' => true,
+                        'allow_delete' => true,
+                        'delete_empty' => true,
+                        'required' => false,
                     ]
                 )
             )
@@ -77,5 +113,23 @@ final class CityAdmin extends AbstractNamedEntityAdmin
             ->add('country', null, $this->createManyToManyFormOptions('country'))
             ->add('region', null, $this->createFormOptions('region'))
         ;
+    }
+
+    public function postPersist($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_CITY,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
+    }
+
+    public function postUpdate($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_CITY,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
     }
 }

@@ -25,23 +25,35 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
+use App\Services\Epigraphy\Localization\LocalizedTextService;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 final class AppTwigExtension extends AbstractExtension
 {
     private TranslatorInterface $translator;
+    private LocalizedTextService $localizedTextService;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, LocalizedTextService $localizedTextService)
     {
         $this->translator = $translator;
+        $this->localizedTextService = $localizedTextService;
     }
 
     public function getFilters(): array
     {
         return [
             new TwigFilter('transWithContext', [$this, 'translateWithContext']),
+        ];
+    }
+
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('localizedText', [$this, 'localizedText']),
+            new TwigFunction('localizedName', [$this, 'localizedName']),
         ];
     }
 
@@ -53,5 +65,19 @@ final class AppTwigExtension extends AbstractExtension
         ?string $locale = null
     ): string {
         return $this->translator->trans($context.'.'.$message, $parameters, $domain, $locale);
+    }
+
+    public function localizedText($entity, string $field, ?string $fallbackValue = null, ?string $locale = null): ?string
+    {
+        return $this->localizedTextService->resolveForEntity($entity, $field, $fallbackValue, $locale);
+    }
+
+    public function localizedName($entity, ?string $locale = null): ?string
+    {
+        if (null === $entity || !method_exists($entity, 'getName')) {
+            return null;
+        }
+
+        return $this->localizedTextService->resolveForEntity($entity, 'name', $entity->getName(), $locale);
     }
 }

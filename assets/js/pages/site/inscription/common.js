@@ -118,11 +118,17 @@ export function enableRowClickNavigation()
     };
 
     function getRowHref($row) {
-        const firstCellAnchor = $row.find('td:first a[href]').attr('href');
-        if (firstCellAnchor) {
-            return firstCellAnchor;
+        const rowHref = $row.attr('data-row-href');
+        if (rowHref) {
+            return rowHref;
         }
-        const anyAnchor = $row.find('a[href]').attr('href');
+
+        const rowLink = $row.find('a.table-row-link[href]').first().attr('href');
+        if (rowLink) {
+            return rowLink;
+        }
+
+        const anyAnchor = $row.find('a[href]').first().attr('href');
         return anyAnchor || null;
     }
 

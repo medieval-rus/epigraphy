@@ -70,6 +70,41 @@
   z-index: 1551;
 }
 
+.epidoc-header-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.epidoc-system-toggle-btn {
+  border: 0;
+  background: #e9ecef;
+  border-radius: 3px;
+  color: #6c757d;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  padding: 0.18rem 0.45rem;
+  text-transform: uppercase;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+
+  &:hover,
+  &:focus {
+    background: #dee2e6;
+    color: #495057;
+    outline: none;
+    text-decoration: none;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
 // Toggle wrapper with labels
 .epidoc-toggle-wrapper {
   display: flex;
@@ -240,10 +275,48 @@
 }
 
 .epidoc-unclear--leiden {
-  text-decoration-line: underline;
-  text-decoration-style: dotted;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.12em;
+  text-decoration: none;
+}
+
+.epidoc-underdot-char {
+  position: relative;
+  display: inline-block;
+}
+
+.epidoc-underdot-char::after {
+  content: '·';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -0.22em;
+  font-size: 0.62em;
+  line-height: 1;
+}
+
+.epidoc-text-in-table--server {
+  .epidoc-unclear,
+  .epidoc-supplied,
+  [data-epidoc-hook='unclear'],
+  [data-epidoc-hook='supplied'] {
+    text-decoration: none !important;
+    border-bottom: 0 !important;
+  }
+
+  abbr[title],
+  abbr[data-original-title] {
+    text-decoration: none;
+    border-bottom: 0;
+  }
+}
+
+#epidoc-text-in-table {
+  .epidoc-unclear,
+  .epidoc-supplied,
+  [data-epidoc-hook='unclear'],
+  [data-epidoc-hook='supplied'] {
+    text-decoration: none !important;
+    border-bottom: 0 !important;
+  }
 }
 
 .epidoc-app {
@@ -251,7 +324,6 @@
   
   .epidoc-lem {
     color: #212529;
-    border-bottom: 1px dotted #6c757d;
     cursor: help;
   }
   
@@ -394,6 +466,81 @@
   color: #495057;
   border-radius: 3px;
   flex-shrink: 0;
+}
+
+.epidoc-text-main-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.epidoc-text-main-row > .epidoc-text-in-table--server,
+.epidoc-text-main-row > #epidoc-text-in-table {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.epidoc-inline-readings-toggle {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.epidoc-inline-readings-toggle::before {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.epidoc-inline-readings-toggle.epidoc-translations-toggle--open::before {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-135deg);
+}
+
+.epidoc-alt-readings-block {
+  margin-top: 0.25rem;
+}
+
+.epidoc-alt-readings-block--collapsed {
+  display: none;
+}
+
+.epidoc-reading-line {
+  padding: 0.35rem 0;
+  border-top: 1px solid #f0f0f0;
+
+  &:first-child {
+    border-top: 1px solid #e9ecef;
+  }
+}
+
+.epidoc-alt-reading-text {
+  margin-top: 0.25rem;
+  white-space: pre-wrap;
+  font-family: 'Monomachus', 'Georgia', serif;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #212529;
+}
+
+.epidoc-text-in-table--server,
+#epidoc-text-in-table,
+.epidoc-alt-reading-text {
+  .epidoc-hi-superscript,
+  sup {
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: super;
+  }
+
+  .epidoc-hi-subscript,
+  sub {
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: sub;
+  }
 }
 
 .epidoc-metadata-grid {

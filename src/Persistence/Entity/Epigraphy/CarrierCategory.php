@@ -27,6 +27,7 @@ namespace App\Persistence\Entity\Epigraphy;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\PersistentCollection;
 
 /**
@@ -68,8 +69,21 @@ class CarrierCategory implements NamedEntityInterface
      */
     private $supercategory;
 
+    /**
+     * @var Collection|CarrierCategoryTranslation[]
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\CarrierCategoryTranslation",
+     *     mappedBy="carrierCategory",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
+     */
+    private $translations;
+
     public function __construct() {
         $this->subcategories = new ArrayCollection();
+        $this->translations = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -84,6 +98,35 @@ class CarrierCategory implements NamedEntityInterface
 
     public function getName(): ?string
     {
+        return $this->name;
+    }
+
+    public function getTranslatedName(?string $locale): ?string
+    {
+        $normalizedLocale = null === $locale ? null : strtolower($locale);
+
+        if (null !== $normalizedLocale) {
+            foreach ($this->translations as $translation) {
+                if ($translation->getLocale() === $normalizedLocale) {
+                    return $translation->getName();
+                }
+            }
+
+            if (false !== strpos($normalizedLocale, '_')) {
+                $normalizedLocale = substr($normalizedLocale, 0, (int) strpos($normalizedLocale, '_'));
+            }
+
+            if (false !== strpos($normalizedLocale, '-')) {
+                $normalizedLocale = substr($normalizedLocale, 0, (int) strpos($normalizedLocale, '-'));
+            }
+
+            foreach ($this->translations as $translation) {
+                if ($translation->getLocale() === $normalizedLocale) {
+                    return $translation->getName();
+                }
+            }
+        }
+
         return $this->name;
     }
 
@@ -121,5 +164,30 @@ class CarrierCategory implements NamedEntityInterface
     public function getIsSuperCategory(): ?bool
     {
         return $this->isSuperCategory;
+    }
+
+    /**
+     * @return Collection|CarrierCategoryTranslation[]
+     */
+    public function getTranslations(): Collection
+    {
+        return $this->translations;
+    }
+
+    public function addTranslation(CarrierCategoryTranslation $translation): self
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations->add($translation);
+            $translation->setCarrierCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTranslation(CarrierCategoryTranslation $translation): self
+    {
+        $this->translations->removeElement($translation);
+
+        return $this;
     }
 }

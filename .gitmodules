@@ -1,0 +1,3 @@
+[submodule "tools/epidoc-stylesheets"]
+	path = tools/epidoc-stylesheets
+	url = https://github.com/EpiDoc/Stylesheets.git

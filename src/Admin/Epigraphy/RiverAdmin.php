@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractNamedEntityAdmin;
+use App\Persistence\Entity\Epigraphy\LocalizedText;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use App\Persistence\Entity\Epigraphy\River;
@@ -36,6 +37,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class RiverAdmin extends AbstractNamedEntityAdmin
 {
+    private const LOCALIZED_FIELDS = [
+        'name' => 'string',
+        'nameAliases' => 'array',
+    ];
+
     protected $baseRouteName = 'epigraphy_river';
 
     protected $baseRoutePattern = 'epigraphy/river';
@@ -44,6 +50,15 @@ final class RiverAdmin extends AbstractNamedEntityAdmin
     {
         $formMapper
             ->add('name', null, $this->createFormOptions('name'))
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_RIVER, 'name'),
+                TextType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_RIVER,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'name'
+                )
+            )
             ->add(
                 'nameAliases',
                 CollectionType::class,
@@ -58,6 +73,27 @@ final class RiverAdmin extends AbstractNamedEntityAdmin
                     ]
                 )
             )
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_RIVER, 'nameAliases'),
+                CollectionType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_RIVER,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'nameAliases',
+                    [
+                        'data' => $this->getLocalizedTextArrayValueForTarget(
+                            LocalizedText::TARGET_RIVER,
+                            null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                            'nameAliases'
+                        ),
+                        'entry_type' => TextType::class,
+                        'allow_add' => true,
+                        'allow_delete' => true,
+                        'delete_empty' => true,
+                        'required' => false,
+                    ]
+                )
+            )
             // изменили на many to many
             ->add('type', null, $this->createManyToManyFormOptions('type'))
             ->add(
@@ -66,5 +102,23 @@ final class RiverAdmin extends AbstractNamedEntityAdmin
                 $this->createEntityOptions('superriver', River::class) 
             )
         ;
+    }
+
+    public function postPersist($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_RIVER,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
+    }
+
+    public function postUpdate($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_RIVER,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
     }
 }

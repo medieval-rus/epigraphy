@@ -26,9 +26,11 @@ declare(strict_types=1);
 namespace App\FilterableTable;
 
 use App\Persistence\Entity\Epigraphy\CarrierCategory;
+use App\Services\Epigraphy\Localization\LocalizedTextService;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\Epigraphy\Stringifier\ValueStringifierInterface;
 use App\Services\Epigraphy\ActualValue\Formatter\ActualValueFormatterInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\FilterConfiguratorInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Routing\RouteConfiguration;
@@ -41,15 +43,21 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadataInte
 final class InscriptionsTableConfigurator extends AbstractTableConfigurator
 {
     private ValueStringifierInterface $valueStringifier;
+    private RequestStack $requestStack;
+    private LocalizedTextService $localizedTextService;
 
     public function __construct(
         RouterInterface $router,
         FilterConfiguratorInterface $filterConfigurator,
-        ValueStringifierInterface $valueStringifier
+        ValueStringifierInterface $valueStringifier,
+        RequestStack $requestStack,
+        LocalizedTextService $localizedTextService
     ) {
         parent::__construct($router, $filterConfigurator);
 
         $this->valueStringifier = $valueStringifier;
+        $this->requestStack = $requestStack;
+        $this->localizedTextService = $localizedTextService;
     }
 
     protected function getListRoute(): RouteConfiguration
@@ -83,16 +91,22 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
         return [
             (new ColumnMetadata())
                 ->setName('carrier-category')
-                ->setValueExtractor(static function (Inscription $inscription): string {
+                ->setValueExtractor(function (Inscription $inscription): string {
                     if (null === $carrier = $inscription->getCarrier()) {
                         return '';
                     }
+
+                    $request = $this->requestStack->getCurrentRequest();
+                    $locale = null !== $request ? $request->getLocale() : null;
 
                     return implode(
                         ', ',
                         $carrier
                             ->getCategories()
-                            ->map(static fn (CarrierCategory $carrierCategory): string => $carrierCategory->getName())
+                            ->map(
+                                static fn (CarrierCategory $carrierCategory) => $carrierCategory->getTranslatedName($locale)
+                            )
+                            ->filter(static fn ($name): bool => null !== $name && '' !== trim((string) $name))
                             ->toArray()
                     );
                 })
@@ -101,7 +115,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                 ->setLabel('controller.inscription.list.table.column.carrier.category'),
             (new ColumnMetadata())
                 ->setName('carrier-city')
-                ->setValueExtractor(static function (Inscription $inscription) {
+                ->setValueExtractor(function (Inscription $inscription) {
                     // on no carrier: skip
                     if (null === $carrier = $inscription->getCarrier()) {
                         return '';
@@ -117,14 +131,16 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                         return '';
                     }
                     // return main name
-                    return $cities->toArray()[0]->getName() ?? '';
+                    $city = $cities->toArray()[0];
+
+                    return $this->localizedTextService->resolveForEntity($city, 'name', $city->getName()) ?? '';
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)
                 ->setLabel('controller.inscription.list.table.column.carrier.city'),
             (new ColumnMetadata())
                 ->setName('carrier-discovery-site')
-                ->setValueExtractor(static function (Inscription $inscription) {
+                ->setValueExtractor(function (Inscription $inscription) {
                     // on no carrier: skip
                     if (null === $carrier = $inscription->getCarrier()) {
                         return '';
@@ -134,7 +150,9 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                     if (count($discoverySite) === 0) {
                         return '';
                     }
-                    return $discoverySite->toArray()[0]->getName() ?? '';
+                    $site = $discoverySite->toArray()[0];
+
+                    return $this->localizedTextService->resolveForEntity($site, 'name', $site->getName()) ?? '';
                 })
                 ->setIsIdentifier(false)
                 ->setIsSortable(false)
@@ -153,7 +171,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
                     return $this->valueStringifier->stringify(
                         $inscription,
                         'text',
-                        ActualValueFormatterInterface::FORMAT_TYPE_ORIGINAL_TEXT
+                        ActualValueFormatterInterface::FORMAT_TYPE_ORIGINAL_TEXT_PLAIN
                     ) ?? '-';
                 })
                 ->setLabel('controller.inscription.list.table.column.interpretation.text'),

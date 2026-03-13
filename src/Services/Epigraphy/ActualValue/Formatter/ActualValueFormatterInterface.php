@@ -31,6 +31,7 @@ interface ActualValueFormatterInterface
 {
     public const FORMAT_TYPE_DEFAULT = 'default';
     public const FORMAT_TYPE_ORIGINAL_TEXT = 'original-text';
+    public const FORMAT_TYPE_ORIGINAL_TEXT_PLAIN = 'original-text-plain';
     public const FORMAT_TYPE_TRANSLATION = 'translation';
     public const FORMAT_TYPE_HTML = 'html';
 

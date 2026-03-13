@@ -277,6 +277,9 @@ form:
       name: Название
       supercategory: Категория
       isSuperCategory: Является категорией
+      translations: Переводы
+      "translations.locale": Язык
+      "translations.name": Название
   alphabet:
     section:
       name:

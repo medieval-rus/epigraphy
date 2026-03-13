@@ -26,14 +26,19 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractNamedEntityAdmin;
+use App\Persistence\Entity\Epigraphy\LocalizedText;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use App\Persistence\Entity\Epigraphy\Material;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class MaterialAdmin extends AbstractNamedEntityAdmin
 {
+    private const LOCALIZED_FIELDS = [
+        'name' => 'string',
+    ];
+
     protected $baseRouteName = 'epigraphy_material';
 
     protected $baseRoutePattern = 'epigraphy/material';
@@ -42,6 +47,15 @@ final class MaterialAdmin extends AbstractNamedEntityAdmin
     {
         $formMapper
             ->add('name', null, $this->createFormOptions('name'))
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_MATERIAL, 'name'),
+                TextType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_MATERIAL,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'name'
+                )
+            )
             ->add(
                 'supermaterial',
                 EntityType::class, 
@@ -53,5 +67,23 @@ final class MaterialAdmin extends AbstractNamedEntityAdmin
                 $this->createFormOptions('isSuperMaterial', ['required' => false])
             )
         ;
+    }
+
+    public function postPersist($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_MATERIAL,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
+    }
+
+    public function postUpdate($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_MATERIAL,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
     }
 }

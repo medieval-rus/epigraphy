@@ -28,6 +28,10 @@ namespace App\Controller;
 use App\FilterableTable\InscriptionsFilterConfigurator;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Repository\Content\PostRepository;
+use App\Services\Epidoc\Xslt\EpidocRenderModeResolver;
+use App\Services\Epidoc\Xslt\EpidocXsltRenderResult;
+use App\Services\Epidoc\Xslt\EpidocXsltRenderer;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -60,48 +64,97 @@ final class InscriptionController extends AbstractController
     /**
      * @Route("/show/{id}", name="inscription__show", methods={"GET"})
      */
-    public function show(Inscription $inscription): Response
+    public function show(
+        Inscription $inscription,
+        EpidocRenderModeResolver $epidocRenderModeResolver,
+        EpidocXsltRenderer $epidocXsltRenderer,
+        LoggerInterface $logger
+    ): Response
     {
         if (!$inscription->getIsShownOnSite() && !$this->isGranted('ROLE_ADMIN')) {
             throw $this->createNotFoundException();
         }
 
-        // TODO(epidoc): uncomment when EpiDoc viewer is ready
-        // $epidocXml = null;
-        // $projectDir = (string) $this->getParameter('kernel.project_dir');
-        // $epidocDir = $projectDir . '/assets/epidoc';
-        // $candidateNames = [];
-        //
-        // $inscriptionNumber = $inscription->getNumber();
-        // if ($inscriptionNumber !== null) {
-        //     $inscriptionNumber = trim($inscriptionNumber);
-        //     if ($inscriptionNumber !== '') {
-        //         $candidateNames[] = $inscriptionNumber;
-        //     }
-        // }
-        //
-        // $inscriptionId = $inscription->getId();
-        // if ($inscriptionId !== null) {
-        //     $candidateNames[] = (string) $inscriptionId;
-        // }
-        //
-        // $candidateNames = array_values(array_unique($candidateNames));
-        // foreach ($candidateNames as $candidateName) {
-        //     if (str_contains($candidateName, '/') || str_contains($candidateName, '\\') || str_contains($candidateName, '..')) {
-        //         continue;
-        //     }
-        //
-        //     $epidocPath = $epidocDir . '/' . $candidateName . '.xml';
-        //     if (!is_file($epidocPath) || !is_readable($epidocPath)) {
-        //         continue;
-        //     }
-        //
-        //     $fileContent = file_get_contents($epidocPath);
-        //     if ($fileContent !== false) {
-        //         $epidocXml = $fileContent;
-        //         break;
-        //     }
-        // }
+        $epidocXml = null;
+        $epidocRendered = null;
+        $projectDir = (string) $this->getParameter('kernel.project_dir');
+        $epidocDir = $projectDir . '/assets/epidoc';
+        $candidateNames = [];
+
+        $inscriptionNumber = $inscription->getNumber();
+        if ($inscriptionNumber !== null) {
+            $inscriptionNumber = trim($inscriptionNumber);
+            if ($inscriptionNumber !== '') {
+                $candidateNames[] = $inscriptionNumber;
+            }
+        }
+
+        $inscriptionId = $inscription->getId();
+        if ($inscriptionId !== null) {
+            $candidateNames[] = (string) $inscriptionId;
+        }
+
+        $candidateNames = array_values(array_unique($candidateNames));
+        foreach ($candidateNames as $candidateName) {
+            if (str_contains($candidateName, '/') || str_contains($candidateName, '\\') || str_contains($candidateName, '..')) {
+                continue;
+            }
+
+            $epidocPath = $epidocDir . '/' . $candidateName . '.xml';
+            if (!is_file($epidocPath) || !is_readable($epidocPath)) {
+                continue;
+            }
+
+            $fileContent = file_get_contents($epidocPath);
+            if ($fileContent !== false) {
+                $epidocXml = $fileContent;
+                break;
+            }
+        }
+
+        $epidocRenderWarnings = $epidocRenderModeResolver->getWarnings();
+        $epidocRenderErrors = [];
+
+        if ($epidocXml !== null && $epidocRenderModeResolver->shouldAttemptXslt()) {
+            $epidocRendered = $epidocXsltRenderer->render($epidocXml);
+            if ($epidocRendered->hasErrors()) {
+                $epidocRenderErrors = $epidocRendered->getErrors();
+
+                $logger->warning(
+                    'EpiDoc XSLT rendering failed; falling back to legacy rendering.',
+                    [
+                        'inscription_id' => $inscription->getId(),
+                        'inscription_number' => $inscription->getNumber(),
+                        'render_mode' => $epidocRenderModeResolver->getConfiguredMode(),
+                        'errors' => $epidocRenderErrors,
+                    ]
+                );
+
+                if ($epidocRenderModeResolver->shouldFallbackToLegacyOnXsltFailure()) {
+                    $epidocRendered = null;
+                }
+            }
+        }
+
+        if ($epidocRendered === null) {
+            $epidocRendered = new EpidocXsltRenderResult(
+                null,
+                null,
+                null,
+                null,
+                $epidocRenderErrors,
+                $epidocRenderWarnings
+            );
+        } elseif ($epidocRenderWarnings !== []) {
+            $epidocRendered = new EpidocXsltRenderResult(
+                $epidocRendered->getEditionHtml(),
+                $epidocRendered->getApparatusHtml(),
+                $epidocRendered->getTranslationsHtml(),
+                $epidocRendered->getVariantModel(),
+                $epidocRendered->getErrors(),
+                array_merge($epidocRendered->getWarnings(), $epidocRenderWarnings)
+            );
+        }
 
         return $this->render(
             'site/inscription/show.html.twig',
@@ -109,7 +162,9 @@ final class InscriptionController extends AbstractController
                 'translationContext' => 'controller.inscription.show',
                 'assetsContext' => 'inscription/show',
                 'inscription' => $inscription,
-                // 'epidocXml' => $epidocXml,
+                'epidocXml' => $epidocXml,
+                'epidocRendered' => $epidocRendered,
+                'epidocRenderMode' => $epidocRenderModeResolver->getConfiguredMode(),
             ]
         );
     }

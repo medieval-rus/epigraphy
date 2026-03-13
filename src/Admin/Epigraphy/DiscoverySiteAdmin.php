@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractNamedEntityAdmin;
+use App\Persistence\Entity\Epigraphy\LocalizedText;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -36,6 +37,12 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 final class DiscoverySiteAdmin extends AbstractNamedEntityAdmin
 {
+    private const LOCALIZED_FIELDS = [
+        'name' => 'string',
+        'nameAliases' => 'array',
+        'comments' => 'string',
+    ];
+
     protected $baseRouteName = 'epigraphy_discovery_site';
 
     protected $baseRoutePattern = 'epigraphy/discovery-site';    
@@ -44,6 +51,15 @@ final class DiscoverySiteAdmin extends AbstractNamedEntityAdmin
     {
         $formMapper
             ->add('name', null, $this->createFormOptions('name'))
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_DISCOVERY_SITE, 'name'),
+                TextType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_DISCOVERY_SITE,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'name'
+                )
+            )
             ->add(
                 'nameAliases',
                 CollectionType::class,
@@ -58,9 +74,40 @@ final class DiscoverySiteAdmin extends AbstractNamedEntityAdmin
                     ]
                 )
             )
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_DISCOVERY_SITE, 'nameAliases'),
+                CollectionType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_DISCOVERY_SITE,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'nameAliases',
+                    [
+                        'data' => $this->getLocalizedTextArrayValueForTarget(
+                            LocalizedText::TARGET_DISCOVERY_SITE,
+                            null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                            'nameAliases'
+                        ),
+                        'entry_type' => TextType::class,
+                        'allow_add' => true,
+                        'allow_delete' => true,
+                        'delete_empty' => true,
+                        'required' => false,
+                    ]
+                )
+            )
             ->add('rivers', null, $this->createManyToManyFormOptions('rivers'))
             ->add('cities', null, $this->createManyToManyFormOptions('cities'))
             ->add('comments', CKEditorType::class, $this->createFormOptions('comments', ['autoload' => false, 'required' => false]))
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_DISCOVERY_SITE, 'comments'),
+                CKEditorType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_DISCOVERY_SITE,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'comments',
+                    ['autoload' => false]
+                )
+            )
             ->add('latitude', null, $this->createFormOptions('latitude', ['required' => false]))
             ->add('longitude', null, $this->createFormOptions('longitude', ['required' => false]))
             ->add('isOutsideCity',
@@ -68,5 +115,23 @@ final class DiscoverySiteAdmin extends AbstractNamedEntityAdmin
                 $this->createFormOptions('isOutsideCity', ['required' => false])
             )
         ;
+    }
+
+    public function postPersist($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_DISCOVERY_SITE,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
+    }
+
+    public function postUpdate($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_DISCOVERY_SITE,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
     }
 }

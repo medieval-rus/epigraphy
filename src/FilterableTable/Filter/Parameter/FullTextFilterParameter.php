@@ -27,7 +27,7 @@ namespace App\FilterableTable\Filter\Parameter;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\ExpressionBuilderInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
@@ -66,18 +66,17 @@ final class FullTextFilterParameter implements FilterParameterInterface, Express
 
     public function getType(): string
     {
-        return CKEditorType::class;
+        return TextType::class;
     }
 
     public function getOptions(EntityManager $entityManager): array
     {
         return [
             'label' => 'controller.inscription.list.filter.fulltext',
-            'autoload' => true,
-            'config_name' => 'searchconfig',
             'attr' => [
                 'data-vyfony-filterable-table-filter-parameter' => true,
                 'data-important' => true,
+                'data-virtual-keyboard' => true,
             ],
         ];
     }
