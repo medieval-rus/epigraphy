@@ -102,6 +102,7 @@ controller:
           conventionalDate: Date
           dateExplanation: Date justification
           rssdaRender: RSSDA 3D model
+          rssdaViewer: "3D viewer"
           comment: Comment
           literature: Literature
           carrier:

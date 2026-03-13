@@ -102,6 +102,7 @@ controller:
           conventionalDate: Датировка
           dateExplanation: Обоснование датировки
           rssdaRender: 3D модель
+          rssdaViewer: "3D просмотрщик"
           comment: Комментарий
           literature: Литература
           carrier:

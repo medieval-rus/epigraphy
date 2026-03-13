@@ -48,6 +48,7 @@
             {{ self.format_text_row(translationContext, 'zeroRow.interpretationComment', self.format_zero_row(inscription, 'interpretationComment')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_translation(inscription)) }}
             {{ self.format_text_row(translationContext, 'rssdaRender', self.format_link(inscription.rssdaRender)) }}
+            {{ self.format_rssda_iframe_row(translationContext, inscription.rssdaRender) }}
             {{ self.format_text_row(translationContext, 'zeroRow.photos', self.format_zero_row_images(inscription, 'photos')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.drawings', self.format_zero_row_images(inscription, 'drawings')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.alphabets', self.format_zero_row(inscription, 'alphabets')) }}
@@ -307,6 +308,25 @@
 {%- macro format_link(link) -%}
     {%- if link is not empty -%}
         <a href="{{ link }}">{{ link }}</a>
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro format_rssda_iframe_row(translationContext, link) -%}
+    {% import _self as self %}
+    {% if link is not empty %}
+        <tr>
+            <th scope="row">{{ self.translate_field_label(translationContext, 'rssdaViewer') }}</th>
+            <td>
+                <div class="rssda-viewer-wrapper">
+                    <iframe
+                        src="{{ link }}"
+                        title="RSSDA 3D viewer"
+                        loading="lazy"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            </td>
+        </tr>
     {% endif %}
 {%- endmacro -%}
 

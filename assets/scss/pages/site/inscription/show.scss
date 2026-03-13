@@ -653,3 +653,29 @@
     color: #d73a49;
   }
 }
+
+.rssda-viewer-wrapper {
+  width: 100%;
+  min-height: 420px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+
+  iframe {
+    display: block;
+    width: 100%;
+    height: 420px;
+    border: 0;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .rssda-viewer-wrapper {
+    min-height: 320px;
+
+    iframe {
+      height: 320px;
+    }
+  }
+}
