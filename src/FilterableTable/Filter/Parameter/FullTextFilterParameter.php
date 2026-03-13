@@ -89,14 +89,68 @@ final class FullTextFilterParameter implements FilterParameterInterface, Express
     {
         $filterValue = $formData;
 
-        if (null === $filterValue) {
+        if (null === $filterValue || trim($filterValue) === '') {
             return null;
         }
 
-        $results = $this->search->search($filterValue, 500);
-        $ids = $results["ids"];
-        if (count($ids) == 0) {
+        // Разбиваем запрос на слова (токены)
+        $tokens = $this->search->breakIntoTokens($filterValue);
+        
+        if (count($tokens) === 0) {
             return null;
+        }
+
+        // Для каждого слова находим документы, где оно встречается
+        $docIdsSets = [];
+        foreach ($tokens as $token) {
+            // Пропускаем пустые токены
+            $token = trim($token);
+            if ($token === '') {
+                continue;
+            }
+
+            // Стеммируем слово (приводим к базовой форме)
+            $stemmedToken = $this->search->getStemmer()->stem($token);
+            
+            // Получаем все документы, содержащие это слово
+            $documents = $this->search->getAllDocumentsForKeyword($stemmedToken, true);
+            
+            // Извлекаем ID документов
+            $docIds = [];
+            foreach ($documents as $document) {
+                $docIds[] = (int) $document['doc_id'];
+            }
+            
+            // Если хотя бы для одного слова нет документов, возвращаем пустой результат
+            if (count($docIds) === 0) {
+                return null;
+            }
+            
+            $docIdsSets[] = $docIds;
+        }
+
+        // Если не было валидных токенов
+        if (count($docIdsSets) === 0) {
+            return null;
+        }
+
+        // Находим пересечение всех множеств (AND логика)
+        // Документ должен содержать ВСЕ слова из запроса
+        $intersection = $docIdsSets[0];
+        for ($i = 1; $i < count($docIdsSets); $i++) {
+            $intersection = array_intersect($intersection, $docIdsSets[$i]);
+        }
+
+        // Убираем дубликаты и переиндексируем массив
+        $ids = array_values(array_unique($intersection));
+
+        if (count($ids) === 0) {
+            return null;
+        }
+
+        // Ограничиваем количество результатов
+        if (count($ids) > 500) {
+            $ids = array_slice($ids, 0, 500);
         }
 
         return (string) $queryBuilder->expr()->in($entityAlias.'.id', $ids);

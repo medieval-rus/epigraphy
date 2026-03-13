@@ -1,0 +1,252 @@
+{% macro render_table(table) %}
+    {% import _self as self %}
+
+    <div data-vyfony-filterable-table-results-count>{{ table.resultsCountText|trans({count: table.rowDataCollection.data|length}) }}</div>
+    <table class="table table-striped table-sm" data-vyfony-filterable-table>
+        <thead>
+            <tr>
+                {% if table.hasCheckboxColumn %}
+                    <th>
+                        <div class="custom-control custom-checkbox">
+                            {% set mainCheckboxId = 'vyfony-filterable-table-main-checkbox' %}
+                            <input type="checkbox" id="{{ mainCheckboxId }}" class="custom-control-input"/>
+                            <label class="custom-control-label" for="{{ mainCheckboxId }}">&#8203;</label>
+                        </div>
+                    </th>
+                {% endif %}
+                {% for columnMetadata in table.columnMetadataCollection %}
+                    <th
+                            {% if columnMetadata.isSortable -%}
+                                data-vyfony-filterable-table-sortable
+                            {%- endif %}
+                            {% if table.queryParameters.sortBy is defined and table.queryParameters.sortOrder is defined and table.queryParameters.sortBy is same as(columnMetadata.name) -%}
+                                data-vyfony-filterable-table-sort-order="{{ table.queryParameters.sortOrder }}"
+                            {%- endif %}
+                    >
+                        {% if columnMetadata.isSortable %}
+                            <a href="{{ path(table.listRoute.name, table.listRoute.parameters|merge(columnMetadata.sortParameters)) }}">
+                                {{ columnMetadata.label|trans }}
+                            </a>
+                        {% else %}
+                            <span>{{ columnMetadata.label|trans }}</span>
+                        {% endif %}
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for rowData in table.rowDataCollection.data %}
+                {% set showRoute = table.showRoute(rowData) %}
+
+                <tr>
+                    {% if table.hasCheckboxColumn %}
+                        <td>
+                            <div class="custom-control custom-checkbox">
+
+                                {% set identifier = showRoute.parameters|json_encode %}
+                                {% set checkboxId = 'data-vyfony-filterable-table-checkbox-' ~ identifier %}
+
+                                <input type="checkbox"
+                                       id="{{ checkboxId }}"
+                                       class="custom-control-input"
+                                       data-vyfony-filterable-table-checkbox="{{ identifier }}"
+                                />
+                                <label class="custom-control-label" for="{{ checkboxId }}">&#8203;</label>
+                            </div>
+                        </td>
+                    {% endif %}
+                    {% for columnMetadata in table.columnMetadataCollection %}
+                        {% if columnMetadata.isIdentifier %}
+                            <th scope="row">
+                                <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-link"{{ self.render_attributes(columnMetadata.attributes) }}>
+                                    {{ self.render_value(columnMetadata, rowData) }}
+                                </a>
+                            </th>
+                        {% else %}
+                            <td>
+                                <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-link">
+                                    {{ self.render_value(columnMetadata, rowData) }}
+                                </a>
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script type="text/javascript">
+        window.addEventListener('load', () => {
+
+            const resetButtonElement = document.querySelector('button[data-vyfony-filterable-table-reset-button]');
+
+            resetButtonElement.addEventListener('click', () => {
+
+                const form = resetButtonElement.closest('form');
+                const filterParameterAttribute = 'data-vyfony-filterable-table-filter-parameter';
+
+                form
+                    .querySelectorAll(
+                        `input[type=radio][${filterParameterAttribute}], ` +
+                        `input[type=checkbox][${filterParameterAttribute}]`
+                    )
+                    .forEach((checkboxOrRadioFilterParameterElement) => {
+                        checkboxOrRadioFilterParameterElement.removeAttribute('checked');
+                    });
+
+                form
+                    .querySelectorAll(`input[type=text][${filterParameterAttribute}]`)
+                    .forEach((textOrTextareaFilterParameterElement) => {
+                        textOrTextareaFilterParameterElement.setAttribute('value', '');
+                    });
+
+                form
+                    .querySelectorAll(`textarea[${filterParameterAttribute}]`)
+                    .forEach((textOrTextareaFilterParameterElement) => {
+                        textOrTextareaFilterParameterElement.value = '';
+                    });
+
+                form
+                    .querySelectorAll('select[data-vyfony-filterable-table-filter-parameter]')
+                    .forEach((textOrTextareaFilterParameterElement) => {
+                        for (const optionElement of textOrTextareaFilterParameterElement.options) {
+                            optionElement.removeAttribute('selected');
+                        }
+                    });
+
+                return false;
+            });
+        });
+    </script>
+{% endmacro %}
+
+{% macro render_paginator(table) %}
+    {% if table.hasPaginator %}
+        <ul class="pagination justify-content-center" data-vyfony-filterable-table-paginator>
+
+            {% set lastRenderedPageIndex = null %}
+
+            {% for page in table.paginator.visiblePages %}
+
+                {% if lastRenderedPageIndex is not null and page.index is not same as(lastRenderedPageIndex + 1) %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">..</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item{% if table.paginator.isPageCurrent(page) %} active{% endif %}">
+                    <a class="page-link" href="{{ page.url }}">{{ page.index }}</a>
+                </li>
+
+                {% set lastRenderedPageIndex = page.index %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{% macro render_checkbox_handlers(table) %}
+    {% if (table.hasCheckboxColumn) %}
+
+        {% for checkboxHandler in table.checkboxHandlers %}
+            <button type="button"
+                    class="{{ checkboxHandler.classes|join(' ') }}"
+                    data-vyfony-filterable-table-checkbox-handler-button="{{ path(checkboxHandler.routeName) }}"
+                    data-vyfony-filterable-table-checkbox-handler-empty-selection-error-text="{{ checkboxHandler.emptySelectionErrorText|trans }}"
+            >
+                {{ checkboxHandler.label|trans }}
+            </button>
+        {% endfor %}
+
+        <script type="text/javascript">
+            window.addEventListener('load', () => {
+
+                const checkboxAttribute = 'data-vyfony-filterable-table-checkbox';
+                const checkboxHandlerButtonAttribute = 'data-vyfony-filterable-table-checkbox-handler-button';
+
+                const mainCheckboxElement = document.querySelector('#vyfony-filterable-table-main-checkbox');
+
+                const rowCheckboxElements = Object.values(
+                    document.querySelectorAll(`input[type="checkbox"][${checkboxAttribute}]`)
+                );
+
+                mainCheckboxElement.addEventListener('click', () => {
+
+                    rowCheckboxElements.forEach(rowCheckboxElement => {
+                        rowCheckboxElement.checked = mainCheckboxElement.checked
+                    });
+
+                    return false;
+                });
+
+                rowCheckboxElements.forEach(rowCheckboxElement => {
+
+                    rowCheckboxElement.addEventListener('click', () => {
+
+                        mainCheckboxElement.checked = rowCheckboxElements.every(oneOfRowCheckboxElements => {
+                            return true === oneOfRowCheckboxElements.checked;
+                        });
+
+                        mainCheckboxElement.indeterminate = !rowCheckboxElements.every(oneOfRowCheckboxElements => {
+                            return rowCheckboxElements[0].checked === oneOfRowCheckboxElements.checked;
+                        });
+
+                        return false;
+                    });
+                });
+
+                document.querySelectorAll(`[${checkboxHandlerButtonAttribute}]`).forEach(buttonElement => {
+
+                    buttonElement.addEventListener('click', () => {
+
+                        const rowIdentifiers = rowCheckboxElements
+                            .filter(checkboxElement => checkboxElement.checked)
+                            .map(checkboxElement => checkboxElement.attributes[checkboxAttribute].value)
+                            .map(formattedRowIdentifier => JSON.parse(formattedRowIdentifier));
+
+                        const actionUrl = buttonElement.attributes[checkboxHandlerButtonAttribute].value;
+
+                        const searchParams = new URLSearchParams();
+
+                        if (rowIdentifiers.length > 0) {
+                            searchParams.set('rowIdentifiers', JSON.stringify(rowIdentifiers));
+
+                            window.location = `${actionUrl}?${searchParams.toString()}`;
+                        } else {
+                            alert(
+                                buttonElement.attributes['data-vyfony-filterable-table-checkbox-handler-empty-selection-error-text'].value
+                            );
+                        }
+
+                        return false;
+                    });
+                });
+            });
+        </script>
+    {% endif %}
+{% endmacro %}
+
+{% macro render_value(columnMetadata, rowData) %}
+    {%- if columnMetadata.isRaw() -%}
+        {{- columnMetadata.getValue(rowData)|raw  -}}
+    {%- else -%}
+        <span>{{- columnMetadata.getValue(rowData) -}}</span>
+    {%- endif -%}
+{% endmacro %}
+
+{% macro render_filter(filterForm) %}
+    {% form_theme filterForm '@VyfonyFilterableTable/filterable_table_form_layout.html.twig' %}
+    {{ form(filterForm) }}
+{% endmacro %}
+
+{%- macro render_attributes(attributes) -%}
+    {%- for name, value in attributes -%}
+        {{- " " -}}
+        {%- if name in ['placeholder', 'title'] -%}
+            {{- name }}="{{ translation_domain is same as(false) ? value : value|trans(attr_translation_parameters, translation_domain) }}"
+        {%- elseif value is same as(true) -%}
+            {{- name }}="{{ name }}"
+        {%- elseif value is not same as(false) -%}
+            {{- name }}="{{ value }}"
+        {%- endif -%}
+    {%- endfor -%}
+{%- endmacro -%}

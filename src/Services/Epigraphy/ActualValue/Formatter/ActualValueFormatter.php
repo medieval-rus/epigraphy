@@ -73,6 +73,14 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
                 throw new InvalidArgumentException(sprintf('Unknown value format type "%s"', $formatType));
         }
 
-        return null !== $description ? sprintf('%s (%s)', $formattedValue, $description) : $formattedValue;
+        if (null === $description) {
+            return $formattedValue;
+        }
+
+        $description = trim($description);
+        $description = preg_replace('/^<p>(.*)<\\/p>$/is', '$1', $description);
+        $description = preg_replace('/^(?:<br\\s*\\/?>|&nbsp;|\\s)+/i', '', $description);
+
+        return sprintf('%s (%s)', $formattedValue, $description);
     }
 }

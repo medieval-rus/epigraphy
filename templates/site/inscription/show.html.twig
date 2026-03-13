@@ -62,6 +62,13 @@
             {{ self.format_text_row(translationContext, 'dateExplanation', inscription.dateExplanation) }}
             {{ self.format_text_row(translationContext, 'comment', inscription.comment) }}
             {{ self.format_literature(translationContext, inscription) }}
+            {# TODO(epidoc): uncomment when EpiDoc viewer is ready
+            {% if epidocXml is not empty %}
+                {{ self.format_epidoc_text_row(translationContext, 'epidocText') }}
+                {{ self.format_epidoc_apparatus_row(translationContext, 'epidocCriticalApparatus') }}
+                {{ self.format_epidoc_translations_row(translationContext, 'epidocTranslations') }}
+            {% endif %}
+            #}
         </tbody>
     </table>
     {% if is_granted('ROLE_ADMIN') %}
@@ -74,6 +81,147 @@
             </a>
         </div>
     {% endif %}
+
+    {# TODO(epidoc): uncomment when EpiDoc viewer is ready
+    {% if epidocXml is not empty %}
+    {% set epidocStubXml %}
+<TEI xml:space="preserve" xml:lang="or" xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>title of document</title>
+            </titleStmt>
+            <publicationStmt>
+                <authority/>
+                <idno type="filename"/>
+            </publicationStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        <repository>museum/archive</repository>
+                        <idno>inventory number</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <objectDesc>
+                            <supportDesc>
+                                <support>description of object/monument (likely to include <material/>
+                                    and <objectType/> information, <dimensions/>, etc.)</support>
+                            </supportDesc>
+                            <layoutDesc>
+                                <layout>description of text field/campus</layout>
+                            </layoutDesc>
+                        </objectDesc>
+                        <handDesc>
+                            <handNote>description of letters, possibly including <height>letter-heights</height>
+                            </handNote>
+                        </handDesc>
+                    </physDesc>
+                    <history>
+                        <origin>
+                            <origPlace>Place of origin</origPlace>
+                            <origDate>Date of origin</origDate>
+                        </origin>
+                        <provenance type="found"> Надпись обнаружена в приделе Михаила, справа от южного портала собора.
+                        </provenance>
+                        <provenance type="observed">Modern location(s) (if different from repository, above)
+                        </provenance>
+                    </history>
+                </msDesc>
+                <listBibl>
+                    <bibl xml:id="Kor">Корниенко 2015б</bibl>
+                    <bibl xml:id="Vys">Высоцкий 1985</bibl>
+                    <bibl xml:id="Tur">Турилов 2000</bibl>
+                </listBibl>
+            </sourceDesc>
+        </fileDesc>
+        <profileDesc>
+            <textClass>
+                <keywords scheme="#genre">
+                    <term>молитва</term>
+                </keywords>
+                <keywords scheme="#technique">
+                    <term key="graffito">граффито</term> 
+                </keywords>
+                <keywords scheme="#preservation">
+                    <term key="50">50%</term>
+                </keywords>
+            </textClass>
+        </profileDesc>
+    </teiHeader>
+    <facsimile>
+        <graphic url="path/to/photograph_of_text_or_monument"/>
+    </facsimile>
+    <text>
+        <body>
+            <div type="edition" xml:space="preserve">
+                 <ab>
+          Ги҃ помози рабу
+          <app>
+            <lem resp="#ed">своему</lem>
+            <rdg resp="#Vys">своиму</rdg>
+          </app>
+          <app>
+            <lem resp="#ed">
+                Ил
+                <supplied reason="lost">ье</supplied>
+            </lem>
+            <rdg resp="#Vys">
+                Илыи
+            </rdg>
+            <rdg resp="#Tur">
+                Ильї
+            </rdg>
+          </app>
+          <app>
+            <lem resp="#ed">на прот
+              <supplied reason="lost">ивьнꙑ</supplied>
+            </lem>
+            <rdg resp="#Vys">а про Т
+              <supplied reason="unclear">и</supplied>рънѣ
+            </rdg>
+            <rdg resp="#Tur">на прот
+              <supplied reason="unclear">и</supplied>въне
+            </rdg>
+            <rdg resp="#Kor">на противънъ</rdg>
+          </app>
+        </ab>
+            </div>
+            <div type="apparatus">
+                <p>external apparatus criticus (if applicable)</p>
+            </div>
+      <div type="translation" xml:lang="ru">
+        <p>Господи, помоги рабу своему Илье против врагов.</p>
+      </div>
+      <div type="translation" resp="#Kor" xml:lang="uk">
+        <p>Господи, поможи рабу своєму Іллі на ворожих.</p>
+      </div>
+      <div type="translation" resp="#Vys" xml:lang="ru">
+        <p>Господи, помоги рабу своему Илье на [день памяти Федора] Тирена</p>
+      </div>
+      <div type="translation" resp="#Tur" xml:lang="ru">
+        <p>Господи, помоги рабу своему Илье на противников.</p>
+      </div>
+            <div type="commentary">
+                <p>commentary</p>
+            </div>
+            <div type="bibliography">
+                <p>bibliography of previous editions, discussion, etc.</p>
+            </div>
+        </body>
+    </text>
+</TEI>
+    {% endset %}
+
+    {# EpiDoc XML Data - moved here to ensure it loads before JS initialization #}
+    <script id="epidoc-data" type="application/xml">
+{{ epidocXml|raw }}
+    </script>
+    <script id="epidoc-stub-data" type="application/xml">
+{{ epidocStubXml|raw }}
+    </script>
+    {% endif %}
+    #}
+
     {{ include('site/inscription/_photoswipe_layout.html.twig') }}
 {% endblock %}
 
@@ -248,3 +396,76 @@
 
     {{- self.format_zero_row(inscription, 'translation', 'translation')|default('-') -}}
 {%- endmacro -%}
+
+{# TODO(epidoc): uncomment when EpiDoc viewer is ready
+
+macro format_epidoc_text_row(translationContext, labelTranslationKey)
+    import _self as self
+
+    <tr>
+        <th scope="row">
+            translate_field_label(translationContext, labelTranslationKey)
+            <div class="epidoc-toggle-wrapper" style="margin-top: 0.5rem; justify-content: flex-start; font-weight: normal;">
+                <span class="epidoc-toggle-label epidoc-toggle-label--left" style="font-size: 0.75rem;">Лейденская система</span>
+                <label class="epidoc-toggle" style="margin: 0 0.25rem;">
+                    <input type="checkbox" class="epidoc-toggle-input epidoc-toggle-input-table" />
+                    <span class="epidoc-toggle-slider"></span>
+                </label>
+                <span class="epidoc-toggle-label epidoc-toggle-label--right" style="font-size: 0.75rem;">Система Зализняка</span>
+            </div>
+        </th>
+        <td>
+            <div id="epidoc-text-in-table" style="font-family: 'Monomachus', 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #212529; white-space: pre-wrap;">
+                JavaScript will populate this
+            </div>
+        </td>
+    </tr>
+endmacro
+
+macro format_epidoc_apparatus_row(translationContext, labelTranslationKey)
+    import _self as self
+
+    <tr>
+        <th scope="row">
+            translate_field_label(translationContext, labelTranslationKey)
+        </th>
+        <td>
+            <div id="epidoc-apparatus-in-table">
+                JavaScript will populate this
+            </div>
+        </td>
+    </tr>
+endmacro
+
+macro format_epidoc_translations_row(translationContext, labelTranslationKey)
+    import _self as self
+
+    <tr>
+        <th scope="row">
+            translate_field_label(translationContext, labelTranslationKey)
+        </th>
+        <td>
+            <div id="epidoc-translations-in-table">
+                JavaScript will populate this
+            </div>
+        </td>
+    </tr>
+endmacro
+
+macro format_epidoc_text_content()
+    <div class="epidoc-section epidoc-section--edition" style="margin: 0; padding: 0; background: transparent; border: none;">
+        <div id="epidoc-text-in-table" style="margin-bottom: 0.5rem; font-family: 'Monomachus', 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #212529; white-space: pre-wrap;">
+            JavaScript will populate this
+        </div>
+        <div class="epidoc-toggle-wrapper" style="margin-top: 0.5rem; justify-content: flex-start;">
+            <span class="epidoc-toggle-label epidoc-toggle-label--left" style="font-size: 0.75rem;">Лейденская система</span>
+            <label class="epidoc-toggle" style="margin: 0 0.25rem;">
+                <input type="checkbox" class="epidoc-toggle-input epidoc-toggle-input-table" />
+                <span class="epidoc-toggle-slider"></span>
+            </label>
+            <span class="epidoc-toggle-label epidoc-toggle-label--right" style="font-size: 0.75rem;">Система Зализняка</span>
+        </div>
+    </div>
+endmacro
+
+#}

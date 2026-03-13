@@ -34,6 +34,13 @@
         <nav class="navbar navbar-dark bg-dark flex-nowrap p-0 eomr-header">
             <div class="container-fluid">
                 <a class="navbar-brand eomr-navbar-brand" href="{{ path('index') }}">{{ 'page.label.left'|trans }}</a>
+                <div class="eomr-header-actions">
+                    {% if app.request.locale == 'ru' %}
+                        <a class="eomr-header-lang" href="{{ path('locale__set', {locale: 'en'}) }}">en</a>
+                    {% else %}
+                        <a class="eomr-header-lang" href="{{ path('locale__set', {locale: 'ru'}) }}">рус</a>
+                    {% endif %}
+                </div>
             </div>
         </nav>
 
