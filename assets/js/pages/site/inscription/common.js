@@ -114,3 +114,57 @@ export function insertAtCursorPosition(inputElement, textToInsert)
     inputElement.prop('selectionEnd', newCursorPosition);
     setTimeout(() => inputElement.focus(), 250);
 }
+
+
+export function enableRowClickNavigation()
+{
+    const table = $('table[data-vyfony-filterable-table]');
+    if (table.length === 0) {
+        return;
+    }
+
+    const interactiveSelector = 'a, button, input, textarea, select, label, summary, [role="button"]';
+
+    function getRowHref($row) {
+        const firstCellAnchor = $row.find('td:first a[href]').attr('href');
+        if (firstCellAnchor) {
+            return firstCellAnchor;
+        }
+        const anyAnchor = $row.find('a[href]').attr('href');
+        return anyAnchor || null;
+    }
+
+    table.on('click', 'tbody tr', function (event) {
+        if ($(event.target).closest(interactiveSelector).length) {
+            return;
+        }
+
+        const $row = $(this);
+        const href = getRowHref($row);
+        if (href) {
+            window.location.href = href;
+        }
+    });
+
+    table.find('tbody tr').each(function () {
+        const $row = $(this);
+        const href = getRowHref($row);
+        if (href) {
+            $row.attr('data-row-clickable', 'true');
+            $row.attr('tabindex', '0');
+        }
+    });
+
+    $(document).on('keydown', 'table[data-vyfony-filterable-table] tbody tr[data-row-clickable]', function (event) {
+        if (event.key !== 'Enter') {
+            return;
+        }
+        if ($(event.target).closest(interactiveSelector).length) {
+            return;
+        }
+        const href = getRowHref($(this));
+        if (href) {
+            window.location.href = href;
+        }
+    });
+}
