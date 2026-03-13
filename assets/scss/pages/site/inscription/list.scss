@@ -88,6 +88,25 @@ main.eomr-main {
 
     tbody tr[data-row-clickable] {
       cursor: pointer;
+
+      th,
+      td {
+        transition: background-color 0.15s ease-in-out;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          th,
+          td {
+            background-color: #e9ecef;
+          }
+        }
+      }
+
+      &:focus-visible {
+        outline: 2px solid #6c757d;
+        outline-offset: -2px;
+      }
     }
 
     a.table-row-link {

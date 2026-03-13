@@ -21,6 +21,49 @@
 
 {%- extends 'site/base.html.twig' -%}
 
+{%- block stylesheets -%}
+    {{ parent() }}
+    <style>
+        main.eomr-main table[data-vyfony-filterable-table] tbody tr {
+            cursor: pointer;
+        }
+
+        main.eomr-main table[data-vyfony-filterable-table] tbody tr > th,
+        main.eomr-main table[data-vyfony-filterable-table] tbody tr > td {
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            main.eomr-main table[data-vyfony-filterable-table] tbody tr:hover > th,
+            main.eomr-main table[data-vyfony-filterable-table] tbody tr:hover > td {
+                background-color: #e9ecef !important;
+            }
+        }
+
+        main.eomr-main table[data-vyfony-filterable-table] tbody tr:focus-visible {
+            outline: 2px solid #6c757d;
+            outline-offset: -2px;
+        }
+
+        main.eomr-main table[data-vyfony-filterable-table] a.table-filter-link {
+            color: #495057;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 2px;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+        }
+
+        main.eomr-main table[data-vyfony-filterable-table] a.table-filter-link:hover,
+        main.eomr-main table[data-vyfony-filterable-table] a.table-filter-link:focus-visible {
+            color: #212529;
+            background-color: #dde2e6;
+            border-radius: 2px;
+            outline: none;
+            text-decoration: none;
+        }
+    </style>
+{%- endblock -%}
+
 {%- block page_content -%}
 
     {% import '@VyfonyFilterableTable/filterable_table.html.twig' as filterable_table %}
@@ -52,4 +95,36 @@
     <div class="container pb-2">
         <h1 class="border-bottom">{{ block('title') }}</h1>
     </div>
+{%- endblock -%}
+
+{%- block javascripts -%}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const table = document.querySelector('table[data-vyfony-filterable-table]');
+            if (!table) {
+                return;
+            }
+
+            const interactiveSelector = 'a, button, input, textarea, select, label, summary, [role="button"]';
+
+            table.addEventListener('click', function (event) {
+                const row = event.target.closest('tbody tr[data-row-href]');
+                if (!row) {
+                    return;
+                }
+
+                if (event.target.closest(interactiveSelector)) {
+                    return;
+                }
+
+                const href = row.getAttribute('data-row-href');
+                if (href) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    window.location.href = href;
+                }
+            }, true);
+        });
+    </script>
 {%- endblock -%}
