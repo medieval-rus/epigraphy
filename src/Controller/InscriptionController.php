@@ -66,42 +66,41 @@ final class InscriptionController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        // TODO(epidoc): uncomment when EpiDoc viewer is ready
-        // $epidocXml = null;
-        // $projectDir = (string) $this->getParameter('kernel.project_dir');
-        // $epidocDir = $projectDir . '/assets/epidoc';
-        // $candidateNames = [];
-        //
-        // $inscriptionNumber = $inscription->getNumber();
-        // if ($inscriptionNumber !== null) {
-        //     $inscriptionNumber = trim($inscriptionNumber);
-        //     if ($inscriptionNumber !== '') {
-        //         $candidateNames[] = $inscriptionNumber;
-        //     }
-        // }
-        //
-        // $inscriptionId = $inscription->getId();
-        // if ($inscriptionId !== null) {
-        //     $candidateNames[] = (string) $inscriptionId;
-        // }
-        //
-        // $candidateNames = array_values(array_unique($candidateNames));
-        // foreach ($candidateNames as $candidateName) {
-        //     if (str_contains($candidateName, '/') || str_contains($candidateName, '\\') || str_contains($candidateName, '..')) {
-        //         continue;
-        //     }
-        //
-        //     $epidocPath = $epidocDir . '/' . $candidateName . '.xml';
-        //     if (!is_file($epidocPath) || !is_readable($epidocPath)) {
-        //         continue;
-        //     }
-        //
-        //     $fileContent = file_get_contents($epidocPath);
-        //     if ($fileContent !== false) {
-        //         $epidocXml = $fileContent;
-        //         break;
-        //     }
-        // }
+        $epidocXml = null;
+        $projectDir = (string) $this->getParameter('kernel.project_dir');
+        $epidocDir = $projectDir . '/assets/epidoc';
+        $candidateNames = [];
+
+        $inscriptionNumber = $inscription->getNumber();
+        if ($inscriptionNumber !== null) {
+            $inscriptionNumber = trim($inscriptionNumber);
+            if ($inscriptionNumber !== '') {
+                $candidateNames[] = $inscriptionNumber;
+            }
+        }
+
+        $inscriptionId = $inscription->getId();
+        if ($inscriptionId !== null) {
+            $candidateNames[] = (string) $inscriptionId;
+        }
+
+        $candidateNames = array_values(array_unique($candidateNames));
+        foreach ($candidateNames as $candidateName) {
+            if (str_contains($candidateName, '/') || str_contains($candidateName, '\\') || str_contains($candidateName, '..')) {
+                continue;
+            }
+
+            $epidocPath = $epidocDir . '/' . $candidateName . '.xml';
+            if (!is_file($epidocPath) || !is_readable($epidocPath)) {
+                continue;
+            }
+
+            $fileContent = file_get_contents($epidocPath);
+            if ($fileContent !== false) {
+                $epidocXml = $fileContent;
+                break;
+            }
+        }
 
         return $this->render(
             'site/inscription/show.html.twig',
@@ -109,7 +108,7 @@ final class InscriptionController extends AbstractController
                 'translationContext' => 'controller.inscription.show',
                 'assetsContext' => 'inscription/show',
                 'inscription' => $inscription,
-                // 'epidocXml' => $epidocXml,
+                'epidocXml' => $epidocXml,
             ]
         );
     }

@@ -804,6 +804,90 @@ function applyDotBelowMarks(text) {
 }
 
 /**
+ * Render XML source with syntax highlighting
+ */
+function renderSourceView(xmlString) {
+    const container = document.getElementById('epidoc-source');
+    if (!container) return;
+    
+    // Apply syntax highlighting
+    const highlighted = highlightXml(xmlString.trim());
+    container.innerHTML = highlighted;
+}
+
+/**
+ * Simple XML syntax highlighter
+ */
+function highlightXml(xml) {
+    // Escape HTML first
+    let result = escapeHtml(xml);
+    
+    // Highlight XML declarations
+    result = result.replace(/(&lt;\?[\s\S]*?\?&gt;)/g, '<span class="xml-declaration">$1</span>');
+    
+    // Highlight comments
+    result = result.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="xml-comment">$1</span>');
+    
+    // Highlight tags with attributes
+    result = result.replace(/(&lt;\/?)(\w+[\w:-]*)((?:\s+[\w:-]+\s*=\s*&quot;[^&]*&quot;)*\s*)(\/?)(&gt;)/g, 
+        (match, open, tagName, attrs, selfClose, close) => {
+            // Highlight attributes
+            const highlightedAttrs = attrs.replace(/([\w:-]+)(\s*=\s*)(&quot;)([^&]*)(&quot;)/g, 
+                '<span class="xml-attr-name">$1</span>$2<span class="xml-attr-value">$3$4$5</span>');
+            return `${open}<span class="xml-tag">${tagName}</span>${highlightedAttrs}${selfClose}${close}`;
+        });
+    
+    return result;
+}
+
+/**
+ * Setup tab switching functionality
+ */
+function setupTabs() {
+    const tabs = document.querySelectorAll('.epidoc-tab');
+    const contents = document.querySelectorAll('.epidoc-content');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetTab = tab.getAttribute('data-tab');
+            
+            // Update tab states
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // Update content visibility
+            contents.forEach(content => {
+                content.classList.toggle('active', content.getAttribute('data-content') === targetTab);
+            });
+        });
+    });
+}
+
+/**
+ * Setup copy to clipboard functionality
+ */
+function setupCopyButton(xmlString) {
+    const copyBtn = document.querySelector('.epidoc-copy-btn');
+    if (!copyBtn) return;
+    
+    copyBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(xmlString.trim());
+            copyBtn.classList.add('copied');
+            copyBtn.innerHTML = '<span class="copy-icon">✓</span> Copied!';
+            
+            setTimeout(() => {
+                copyBtn.classList.remove('copied');
+                copyBtn.innerHTML = '<span class="copy-icon">📋</span> Copy';
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
+    }
+    return result;
+}
+
+/**
  * Parse bibliography for resolving references
  */
 function parseBibliography(xmlDoc) {

@@ -50,7 +50,7 @@
         <div class="eomr-card card">
             <div class="eomr-card-body card-body">
                 <p class="eomr-card-text card-text">{{- valueStringifier.stringify(inscription, 'description')|raw -}}</p>
-                <p class="eomr-card-text card-text">{{- self.render_category(inscription) -}}</p>
+                <p class="eomr-card-text card-text">{{- self.render_category(inscription, app.request.locale) -}}</p>
                 <div class="eomr-card-text card-text">
                     <div class="eomr-additional-data-container small">
                         <div class="eomr-additional-data eomr-additional-data-left">{{- self.render_origin(inscription) -}}</div>
@@ -84,11 +84,12 @@
     {% endif %}
 {%- endmacro -%}
 
-{%- macro render_category(inscription) -%}
+{%- macro render_category(inscription, locale) -%}
     {% import _self as self %}
 
-    {% set categories = inscription.carrier.categories|map(category => category.name)|join(', ') %}
-    {% if categories == 'стена церкви' %}
+    {% set categories = inscription.carrier.categories|map(category => category.translatedName(locale))|join(', ') %}
+    {% set sourceCategories = inscription.carrier.categories|map(category => category.name)|join(', ') %}
+    {% if sourceCategories == 'стена церкви' %}
         {% if inscription.carrier is not null and inscription.carrier.discoverySite is not empty %}
             {{- inscription.carrier.discoverySite[0].name -}}
         {% else %}

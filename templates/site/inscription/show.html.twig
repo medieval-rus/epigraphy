@@ -38,7 +38,7 @@
             {{ self.format_text_row(translationContext, 'conventionalDate', inscription.conventionalDate) }}
             {{ self.format_text_row(translationContext, 'zeroRow.description', self.format_zero_row(inscription, 'description')) }}
             {{ self.format_text_row(translationContext, 'carrier.individualName', inscription.carrier.individualName) }}
-            {{ self.format_text_row(translationContext, 'carrier.categories', inscription.carrier.categories|map(namedEntity => namedEntity.name)) }}
+            {{ self.format_text_row(translationContext, 'carrier.categories', inscription.carrier.categories|map(namedEntity => namedEntity.translatedName(app.request.locale))) }}
             {{ self.format_text_row(translationContext, 'carrier.discoverySite', inscription.carrier.discoverySite) }}
             {{ self.format_carrier(translationContext, inscription) }}
             {{ self.format_original_text_row(translationContext, 'zeroRow.text', inscription) }}
@@ -62,13 +62,11 @@
             {{ self.format_text_row(translationContext, 'dateExplanation', inscription.dateExplanation) }}
             {{ self.format_text_row(translationContext, 'comment', inscription.comment) }}
             {{ self.format_literature(translationContext, inscription) }}
-            {# TODO(epidoc): uncomment when EpiDoc viewer is ready
             {% if epidocXml is not empty %}
                 {{ self.format_epidoc_text_row(translationContext, 'epidocText') }}
                 {{ self.format_epidoc_apparatus_row(translationContext, 'epidocCriticalApparatus') }}
                 {{ self.format_epidoc_translations_row(translationContext, 'epidocTranslations') }}
             {% endif %}
-            #}
         </tbody>
     </table>
     {% if is_granted('ROLE_ADMIN') %}
@@ -82,7 +80,6 @@
         </div>
     {% endif %}
 
-    {# TODO(epidoc): uncomment when EpiDoc viewer is ready
     {% if epidocXml is not empty %}
     {% set epidocStubXml %}
 <TEI xml:space="preserve" xml:lang="or" xmlns="http://www.tei-c.org/ns/1.0">
@@ -220,7 +217,6 @@
 {{ epidocStubXml|raw }}
     </script>
     {% endif %}
-    #}
 
     {{ include('site/inscription/_photoswipe_layout.html.twig') }}
 {% endblock %}

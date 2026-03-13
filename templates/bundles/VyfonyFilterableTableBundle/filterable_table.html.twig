@@ -38,7 +38,7 @@
             {% for rowData in table.rowDataCollection.data %}
                 {% set showRoute = table.showRoute(rowData) %}
 
-                <tr>
+                <tr data-row-href="{{ path(showRoute.name, showRoute.parameters) }}">
                     {% if table.hasCheckboxColumn %}
                         <td>
                             <div class="custom-control custom-checkbox">
@@ -64,9 +64,44 @@
                             </th>
                         {% else %}
                             <td>
-                                <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-link">
-                                    {{ self.render_value(columnMetadata, rowData) }}
-                                </a>
+                                {% set isInscriptionList = table.listRoute.name is same as('inscription__longlist') %}
+                                {% set columnName = columnMetadata.name %}
+                                {% set carrier = rowData.carrier ?? null %}
+                                {% set discoverySite = carrier and carrier.discoverySite is not empty ? (carrier.discoverySite|first) : null %}
+                                {% set city = discoverySite and discoverySite.cities is not empty ? (discoverySite.cities|first) : null %}
+                                {% set categoryList = carrier ? carrier.categories : [] %}
+
+                                {% if isInscriptionList and columnName is same as('carrier-discovery-site') and discoverySite %}
+                                    <a
+                                        href="{{ path(table.listRoute.name, table.listRoute.parameters|merge({'discovery-site': [discoverySite.id]})) }}"
+                                        class="table-filter-link"
+                                        title="{{ 'Перейти к списку надписей с этим местом находки' }}"
+                                    >
+                                        {{ discoverySite.name }}
+                                    </a>
+                                {% elseif isInscriptionList and columnName is same as('carrier-city') and city %}
+                                    <a
+                                        href="{{ path(table.listRoute.name, table.listRoute.parameters|merge({'city': city.id})) }}"
+                                        class="table-filter-link"
+                                        title="{{ 'Перейти к списку надписей с этим населённым пунктом' }}"
+                                    >
+                                        {{ city.name }}
+                                    </a>
+                                {% elseif isInscriptionList and columnName is same as('carrier-category') and categoryList is not empty %}
+                                    {% for category in categoryList %}
+                                        <a
+                                            href="{{ path(table.listRoute.name, table.listRoute.parameters|merge({'carrier-category': [category.id]})) }}"
+                                            class="table-filter-link"
+                                            title="{{ 'Перейти к списку надписей с этой категорией носителя' }}"
+                                        >
+                                            {{ category.translatedName(app.request.locale) }}
+                                        </a>{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-link">
+                                        {{ self.render_value(columnMetadata, rowData) }}
+                                    </a>
+                                {% endif %}
                             </td>
                         {% endif %}
                     {% endfor %}

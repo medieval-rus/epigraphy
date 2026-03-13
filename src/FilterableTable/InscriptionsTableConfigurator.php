@@ -29,6 +29,7 @@ use App\Persistence\Entity\Epigraphy\CarrierCategory;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\Epigraphy\Stringifier\ValueStringifierInterface;
 use App\Services\Epigraphy\ActualValue\Formatter\ActualValueFormatterInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\FilterConfiguratorInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Routing\RouteConfiguration;
@@ -41,15 +42,18 @@ use Vyfony\Bundle\FilterableTableBundle\Table\Metadata\Column\ColumnMetadataInte
 final class InscriptionsTableConfigurator extends AbstractTableConfigurator
 {
     private ValueStringifierInterface $valueStringifier;
+    private RequestStack $requestStack;
 
     public function __construct(
         RouterInterface $router,
         FilterConfiguratorInterface $filterConfigurator,
-        ValueStringifierInterface $valueStringifier
+        ValueStringifierInterface $valueStringifier,
+        RequestStack $requestStack
     ) {
         parent::__construct($router, $filterConfigurator);
 
         $this->valueStringifier = $valueStringifier;
+        $this->requestStack = $requestStack;
     }
 
     protected function getListRoute(): RouteConfiguration
@@ -83,16 +87,22 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
         return [
             (new ColumnMetadata())
                 ->setName('carrier-category')
-                ->setValueExtractor(static function (Inscription $inscription): string {
+                ->setValueExtractor(function (Inscription $inscription): string {
                     if (null === $carrier = $inscription->getCarrier()) {
                         return '';
                     }
+
+                    $request = $this->requestStack->getCurrentRequest();
+                    $locale = null !== $request ? $request->getLocale() : null;
 
                     return implode(
                         ', ',
                         $carrier
                             ->getCategories()
-                            ->map(static fn (CarrierCategory $carrierCategory): string => $carrierCategory->getName())
+                            ->map(
+                                static fn (CarrierCategory $carrierCategory) => $carrierCategory->getTranslatedName($locale)
+                            )
+                            ->filter(static fn ($name): bool => null !== $name && '' !== trim((string) $name))
                             ->toArray()
                     );
                 })

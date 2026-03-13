@@ -26,11 +26,12 @@ declare(strict_types=1);
 namespace App\Admin\Epigraphy;
 
 use App\Admin\AbstractNamedEntityAdmin;
+use App\Form\CarrierCategoryTranslationType;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use App\Persistence\Entity\Epigraphy\CarrierCategory;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Doctrine\ORM\EntityRepository;
 
 final class CarrierCategoryAdmin extends AbstractNamedEntityAdmin
 {
@@ -51,6 +52,21 @@ final class CarrierCategoryAdmin extends AbstractNamedEntityAdmin
                 'isSuperCategory',
                 CheckboxType::class,
                 $this->createFormOptions('isSuperCategory', ['required' => false])
+            )
+            ->add(
+                'translations',
+                CollectionType::class,
+                $this->createFormOptions(
+                    'translations',
+                    [
+                        'entry_type' => CarrierCategoryTranslationType::class,
+                        'allow_add' => true,
+                        'allow_delete' => true,
+                        'delete_empty' => true,
+                        'required' => false,
+                        'by_reference' => false,
+                    ]
+                )
             )
         ;
     }
