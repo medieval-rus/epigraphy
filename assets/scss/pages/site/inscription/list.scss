@@ -166,23 +166,24 @@ main.eomr-main {
   }
 }
 
-form.row::before {
-    content: "Данные о носителе";
-    font-weight: bold;
-    font-size: large;
-    display: block;
-    padding-bottom: 10px;
-}
+// Old static headers - now handled by collapsible sections
+// form.row::before {
+//     content: "Данные о носителе";
+//     font-weight: bold;
+//     font-size: large;
+//     display: block;
+//     padding-bottom: 10px;
+// }
 
-.form-group.vyfony-filterable-table-bundle-form-group:nth-of-type(6)::after {
-    content: "Данные о надписи";
-    position: relative;
-    padding-top: 16px;
-    left: calc(-100% - 30px);
-    font-weight: bold;
-    font-size: large;
-    display: block;
-}
+// .form-group.vyfony-filterable-table-bundle-form-group:nth-of-type(6)::after {
+//     content: "Данные о надписи";
+//     position: relative;
+//     padding-top: 16px;
+//     left: calc(-100% - 30px);
+//     font-weight: bold;
+//     font-size: large;
+//     display: block;
+// }
 
 label[for="carrier-category"]::after,
 label[for="material"]::after, 
@@ -196,4 +197,168 @@ label[for|="super"]::after {
   content: ": категория";
   font-weight: lighter;
   color: #778899;
+}
+
+// Standalone filter field (fulltext search)
+.standalone-filter-field-old {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  
+  .form-group {
+    margin-bottom: 0;
+  }
+  
+  label {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #495057;
+  }
+}
+
+// alternative of standalone filter field but with 100% width of the form
+.standalone-filter-field {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  width: 100%;
+
+  .form-group {
+    margin-bottom: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  
+  label {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #495057;
+    flex: 0 0 auto;
+  }
+  
+  // Ensure input, textarea, and CKEditor take full width
+  input[type=text],
+  textarea,
+  .cke {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100% !important;
+  }
+}
+
+// Collapsible filter sections
+.filter-section {
+  .card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #dee2e6;
+      padding: 0.75rem 1rem;
+      
+      h5 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #495057;
+        
+        .collapse-icon {
+          margin-right: 0.5rem;
+          transition: transform 0.3s ease;
+        }
+      }
+      
+      &:hover {
+        background-color: #e9ecef;
+      }
+    }
+    
+    .card-body {
+      padding: 1rem;
+      
+      .filter-row {
+        margin-left: 0;
+        margin-right: 0;
+        
+        > div {
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
+        }
+      }
+      
+      .form-group {
+        margin-bottom: 0;
+        width: 100%;
+      }
+      
+      // Ensure full width is maintained
+      .vyfony-filterable-table-bundle-form-group {
+        width: 100%;
+      }
+      
+      // Make all input fields take full width
+      input[type=text],
+      textarea,
+      select,
+      .select2-container,
+      .cke {
+        width: 100% !important;
+      }
+    }
+  }
+  
+  // Maintain width when collapsed
+  .collapse {
+    &:not(.show) {
+      & + .card-body {
+        display: none;
+      }
+    }
+  }
+}
+
+// Override the old grouping styles for the new template
+.list_with_grouped_filters {
+  form.row::before {
+    display: none !important;
+  }
+  
+  .form-group.vyfony-filterable-table-bundle-form-group:nth-of-type(6)::after {
+    display: none !important;
+  }
+  
+  // Ensure form maintains proper width
+  form {
+    width: 100%;
+    
+    > div.row {
+      width: 100%;
+    }
+  }
+  
+  // Override col-6 limitation from old template for filter fields
+  .vyfony-filterable-table-bundle-form-group {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+  
+  // Ensure select2 and other widgets maintain width
+  .select2-container {
+    width: 100% !important;
+  }
+  
+  // Ensure all input elements take full width
+  input[type=text],
+  textarea,
+  select,
+  .cke {
+    width: 100% !important;
+  }
 }

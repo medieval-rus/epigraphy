@@ -210,6 +210,43 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     }
 
     /**
+     * Get grouped filter parameters for collapsible sections
+     */
+    public function getGroupedFilterParameters(): array
+    {
+        return [
+            'carrierData' => [
+                'label' => 'controller.inscription.list.filter.sections.carrierData',
+                'rows' => [
+                    [$this->superCarrierCategoryFilterParameter, $this->carrierCategoryFilterParameter],
+                    [$this->superMaterialFilterParameter, $this->materialFilterParameter],
+                    [$this->cityFilterParameter, $this->discoverySiteFilterParameter],
+                ]
+            ],
+            'inscriptionData' => [
+                'label' => 'controller.inscription.list.filter.sections.inscriptionData',
+                'rows' => [
+                    [$this->superWritingMethodFilterParameter, $this->writingMethodFilterParameter],
+                    [$this->superContentCategoryFilterParameter, $this->contentCategoryFilterParameter],
+                    [$this->alphabetFilterParameter, $this->preservationStateFilterParameter],
+                    [$this->authorFilterParameter, $this->numberInSourceFilterParameter],
+                    [$this->translationFilterParameter, $this->textFilterParameter],
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * Get standalone filter parameters (not in collapsible sections)
+     */
+    public function getStandaloneFilterParameters(): array
+    {
+        return [
+            $this->fullTextFilterParameter,
+        ];
+    }
+
+    /**
      * @return TableParameterInterface[]
      */
     protected function createTableParameters(): array
