@@ -230,7 +230,7 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
         }
 
         if ($value instanceof NamedEntityInterface) {
-            return $value->getName();
+            return $this->localizedTextService->resolveForEntity($value, 'name', $value->getName());
         }
 
         if ($value instanceof Collection) {

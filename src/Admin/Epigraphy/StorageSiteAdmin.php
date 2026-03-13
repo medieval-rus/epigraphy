@@ -27,6 +27,7 @@ namespace App\Admin\Epigraphy;
 
 use Sonata\AdminBundle\Form\FormMapper;
 use App\Admin\AbstractNamedEntityAdmin;
+use App\Persistence\Entity\Epigraphy\LocalizedText;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -34,6 +35,12 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 final class StorageSiteAdmin extends AbstractNamedEntityAdmin
 {
+    private const LOCALIZED_FIELDS = [
+        'name' => 'string',
+        'nameAliases' => 'array',
+        'comments' => 'string',
+    ];
+
     protected $baseRouteName = 'epigraphy_storage_site';
 
     protected $baseRoutePattern = 'epigraphy/storage-site';
@@ -42,6 +49,15 @@ final class StorageSiteAdmin extends AbstractNamedEntityAdmin
     {
         $formMapper
             ->add('name', null, $this->createFormOptions('name'))
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_STORAGE_SITE, 'name'),
+                TextType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_STORAGE_SITE,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'name'
+                )
+            )
             ->add(
                 'nameAliases',
                 CollectionType::class,
@@ -56,8 +72,57 @@ final class StorageSiteAdmin extends AbstractNamedEntityAdmin
                     ]
                 )
             )
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_STORAGE_SITE, 'nameAliases'),
+                CollectionType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_STORAGE_SITE,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'nameAliases',
+                    [
+                        'data' => $this->getLocalizedTextArrayValueForTarget(
+                            LocalizedText::TARGET_STORAGE_SITE,
+                            null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                            'nameAliases'
+                        ),
+                        'entry_type' => TextType::class,
+                        'allow_add' => true,
+                        'allow_delete' => true,
+                        'delete_empty' => true,
+                        'required' => false,
+                    ]
+                )
+            )
             ->add('cities', null, $this->createManyToManyFormOptions('cities'))
             ->add('comments', CKEditorType::class, $this->createFormOptions('comments', ['autoload' => false, 'required' => false]))
+            ->add(
+                $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_STORAGE_SITE, 'comments'),
+                CKEditorType::class,
+                $this->createLocalizedTextOptionsForTarget(
+                    LocalizedText::TARGET_STORAGE_SITE,
+                    null === $this->getSubject() ? null : $this->getSubject()->getId(),
+                    'comments',
+                    ['autoload' => false]
+                )
+            )
         ;
+    }
+
+    public function postPersist($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_STORAGE_SITE,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
+    }
+
+    public function postUpdate($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_STORAGE_SITE,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
     }
 }

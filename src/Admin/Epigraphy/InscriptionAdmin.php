@@ -126,8 +126,18 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                 ->with($this->getSectionLabel('common'))
                     ->add('conventionalDate', null, $this->createFormOptions('conventionalDate'))
                     ->add('dateExplanation', CKEditorType::class, $this->createFormOptions('dateExplanation', ['autoload' => false, 'required' => false]))
+                    ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_INSCRIPTION, 'dateExplanation'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_INSCRIPTION, 'dateExplanation')
+                    )
                     ->add('carrier', null, $this->createFormOptions('carrier'))
                     ->add('comment', CKEditorType::class, $this->createFormOptions('comment', ['autoload' => false, 'required' => false]))
+                    ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_INSCRIPTION, 'comment'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_INSCRIPTION, 'comment')
+                    )
                     ->add('rssdaRender', null, $this->createFormOptions('rssdaRender'))
                     ->add('isShownOnSite', null, $this->createFormOptions('isShownOnSite'))
                     ->add('isPartOfCorpus', null, $this->createFormOptions('isPartOfCorpus'))
@@ -139,6 +149,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         'zeroRow.placeOnCarrier',
                         CKEditorType::class,
                         $this->createFormOptions('zeroRow.placeOnCarrier', ['autoload' => false, 'required' => false])
+                    )
+                    ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'placeOnCarrier'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'placeOnCarrier')
                     )
                     ->add(
                         'zeroRow.placeOnCarrierReferences',
@@ -186,6 +201,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         )
                     )
                     ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'text'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'text')
+                    )
+                    ->add(
                         'zeroRow.textReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('textReferences')
@@ -199,6 +219,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         )
                     )
                     ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'interpretationComment'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'interpretationComment')
+                    )
+                    ->add(
                         'zeroRow.interpretationCommentReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('interpretationCommentReferences')
@@ -207,6 +232,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         'zeroRow.transliteration',
                         CKEditorType::class,
                         $this->createFormOptions('zeroRow.transliteration', ['autoload' => false, 'required' => false, 'config_name' => 'textconfig'])
+                    )
+                    ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'transliteration'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'transliteration')
                     )
                     ->add(
                         'zeroRow.transliterationReferences',
@@ -219,6 +249,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         $this->createFormOptions('zeroRow.reconstruction', ['autoload' => false, 'required' => false, 'config_name' => 'textconfig'])
                     )
                     ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'reconstruction'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'reconstruction')
+                    )
+                    ->add(
                         'zeroRow.reconstructionReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('reconstructionReferences')
@@ -229,6 +264,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         $this->createFormOptions('zeroRow.normalization', ['autoload' => false, 'required' => false, 'config_name' => 'textconfig'])
                     )
                     ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'normalization'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'normalization')
+                    )
+                    ->add(
                         'zeroRow.normalizationReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('normalizationReferences')
@@ -237,6 +277,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         'zeroRow.translation',
                         CKEditorType::class,
                         $this->createFormOptions('zeroRow.translation', ['autoload' => false, 'required' => false])
+                    )
+                    ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'translation'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'translation')
                     )
                     ->add(
                         'zeroRow.translationReferences',
@@ -259,6 +304,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         $this->createFormOptions('zeroRow.description', ['autoload' => false, 'required' => false, 'config_name' => 'textconfig'])
                     )
                     ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'description'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'description')
+                    )
+                    ->add(
                         'zeroRow.descriptionReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('descriptionReferences')
@@ -271,6 +321,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         $this->createFormOptions('zeroRow.dateInText', ['autoload' => false, 'required' => false])
                     )
                     ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'dateInText'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'dateInText')
+                    )
+                    ->add(
                         'zeroRow.dateInTextReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('dateInTextReferences')
@@ -281,6 +336,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         $this->createFormOptions('zeroRow.nonStratigraphicalDate', ['autoload' => false, 'required' => false])
                     )
                     ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'nonStratigraphicalDate'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'nonStratigraphicalDate')
+                    )
+                    ->add(
                         'zeroRow.nonStratigraphicalDateReferences',
                         EntityType::class,
                         $this->createLabeledReferencesFormOptions('nonStratigraphicalDateReferences')
@@ -289,6 +349,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                         'zeroRow.historicalDate',
                         CKEditorType::class,
                         $this->createFormOptions('zeroRow.historicalDate', ['autoload' => false, 'required' => false])
+                    )
+                    ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'historicalDate'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'historicalDate')
                     )
                     ->add(
                         'zeroRow.historicalDateReferences',
@@ -302,6 +367,11 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                             'zeroRow.origin',
                             ['required' => false, 'autoload' => false]
                         )
+                    )
+                    ->add(
+                        $this->getTranslationFieldName(LocalizedText::TARGET_ZERO_ROW, 'origin'),
+                        CKEditorType::class,
+                        $this->createTranslationFieldOptions(LocalizedText::TARGET_ZERO_ROW, 'origin')
                     )
                     ->add(
                         'zeroRow.originReferences',
@@ -365,28 +435,6 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     )
                 ->end()
             ->end()
-            ->with('Inscription (EN)', ['class' => 'col-md-6'])
-        ;
-
-        $this->addTranslationFields(
-            $formMapper,
-            LocalizedText::TARGET_INSCRIPTION,
-            self::INSCRIPTION_TRANSLATABLE_FIELDS
-        );
-
-        $formMapper
-                ->end()
-                ->with('ZeroRow (EN)', ['class' => 'col-md-6'])
-        ;
-
-        $this->addTranslationFields(
-            $formMapper,
-            LocalizedText::TARGET_ZERO_ROW,
-            self::ZERO_ROW_TRANSLATABLE_FIELDS
-        );
-
-        $formMapper
-                ->end()
         ;
     }
 
@@ -449,31 +497,30 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         $this->storeLocalizedTexts($object);
     }
 
-    private function addTranslationFields(FormMapper $formMapper, string $targetType, array $fields): void
-    {
-        foreach ($fields as $fieldName => $fieldType) {
-            $options = [
-                'mapped' => false,
-                'required' => false,
-                'label' => sprintf('%s (EN)', $fieldName),
-                'data' => $this->getLocalizedTextValue($targetType, $fieldName),
-            ];
-
-            if (CKEditorType::class === $fieldType) {
-                $options['autoload'] = false;
-            }
-
-            $formMapper->add(
-                $this->getTranslationFieldName($targetType, $fieldName),
-                $fieldType,
-                $options
-            );
-        }
-    }
-
     private function getTranslationFieldName(string $targetType, string $fieldName): string
     {
         return 'localizedEn__'.$targetType.'__'.$fieldName;
+    }
+
+    private function createTranslationFieldOptions(string $targetType, string $fieldName): array
+    {
+        $fields = [
+            LocalizedText::TARGET_INSCRIPTION => self::INSCRIPTION_TRANSLATABLE_FIELDS,
+            LocalizedText::TARGET_ZERO_ROW => self::ZERO_ROW_TRANSLATABLE_FIELDS,
+        ];
+
+        $options = [
+            'mapped' => false,
+            'required' => false,
+            'label' => sprintf('%s (EN)', $fieldName),
+            'data' => $this->getLocalizedTextValue($targetType, $fieldName),
+        ];
+
+        if (CKEditorType::class === $fields[$targetType][$fieldName]) {
+            $options['autoload'] = false;
+        }
+
+        return $options;
     }
 
     private function getTargetIdByType(string $targetType): ?int

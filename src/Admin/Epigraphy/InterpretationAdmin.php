@@ -81,9 +81,19 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                 ->add('pageNumbersInSource', null, $this->createFormOptions('pageNumbersInSource'))
                 ->add('numberInSource', null, $this->createFormOptions('numberInSource'))
                 ->add('comment', CKEditorType::class, $this->createFormOptions('comment', ['autoload' => false, 'required' => false]))
+                ->add(
+                    $this->getTranslationFieldName('comment'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('comment')
+                )
             ->end()
             ->with($this->getSectionLabel('materialAspect'), ['class' => 'col-md-6'])
                 ->add('placeOnCarrier', CKEditorType::class, $this->createZeroRowPartOptions('placeOnCarrier', ['autoload' => false]))
+                ->add(
+                    $this->getTranslationFieldName('placeOnCarrier'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('placeOnCarrier')
+                )
                 // ->add('writingTypes', null, $this->createZeroRowPartOptions('writingTypes'))
                 ->add('writingMethods', null, $this->createZeroRowPartOptions('writingMethods'))
                 ->add('preservationStates', null, $this->createZeroRowPartOptions('preservationStates'))
@@ -92,19 +102,74 @@ final class InterpretationAdmin extends AbstractEntityAdmin
             ->with($this->getSectionLabel('linguisticAspect'), ['class' => 'col-md-6'])
                 ->add('alphabets', null, $this->createZeroRowPartOptions('alphabets'))
                 ->add('text', CKEditorType::class, $this->createZeroRowPartOptions('text', ['autoload' => false, 'config_name' => 'textconfig']))
+                ->add(
+                    $this->getTranslationFieldName('text'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('text')
+                )
                 ->add('interpretationComment', CKEditorType::class, $this->createZeroRowPartOptions('interpretationComment', ['autoload' => false, 'required' => false]))
+                ->add(
+                    $this->getTranslationFieldName('interpretationComment'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('interpretationComment')
+                )
                 ->add('transliteration', CKEditorType::class, $this->createZeroRowPartOptions('transliteration', ['autoload' => false, 'config_name' => 'textconfig']))
+                ->add(
+                    $this->getTranslationFieldName('transliteration'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('transliteration')
+                )
                 ->add('reconstruction', CKEditorType::class, $this->createZeroRowPartOptions('reconstruction', ['autoload' => false, 'config_name' => 'textconfig']))
+                ->add(
+                    $this->getTranslationFieldName('reconstruction'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('reconstruction')
+                )
                 ->add('normalization', CKEditorType::class, $this->createZeroRowPartOptions('normalization', ['autoload' => false, 'config_name' => 'textconfig']))
+                ->add(
+                    $this->getTranslationFieldName('normalization'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('normalization')
+                )
                 ->add('translation', CKEditorType::class, $this->createZeroRowPartOptions('translation', ['autoload' => false]))
+                ->add(
+                    $this->getTranslationFieldName('translation'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('translation')
+                )
                 ->add('contentCategories', null, $this->createZeroRowPartOptions('contentCategories'))
                 ->add('description', CKEditorType::class, $this->createZeroRowPartOptions('description', ['autoload' => false, 'config_name' => 'textconfig']))
+                ->add(
+                    $this->getTranslationFieldName('description'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('description')
+                )
             ->end()
             ->with($this->getSectionLabel('historicalAspect'), ['class' => 'col-md-6'])
                 ->add('dateInText', CKEditorType::class, $this->createZeroRowPartOptions('dateInText', ['autoload' => false]))
+                ->add(
+                    $this->getTranslationFieldName('dateInText'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('dateInText')
+                )
                 ->add('nonStratigraphicalDate', CKEditorType::class, $this->createZeroRowPartOptions('nonStratigraphicalDate', ['autoload' => false]))
+                ->add(
+                    $this->getTranslationFieldName('nonStratigraphicalDate'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('nonStratigraphicalDate')
+                )
                 ->add('historicalDate', CKEditorType::class, $this->createZeroRowPartOptions('historicalDate', ['autoload' => false]))
+                ->add(
+                    $this->getTranslationFieldName('historicalDate'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('historicalDate')
+                )
                 ->add('origin', CKEditorType::class, $this->createZeroRowPartOptions('origin', ['autoload' => false]))
+                ->add(
+                    $this->getTranslationFieldName('origin'),
+                    CKEditorType::class,
+                    $this->createTranslationFieldOptions('origin')
+                )
             ->end()
             ->with($this->getSectionLabel('media'), ['class' => 'col-md-6'])
                 ->add(
@@ -142,20 +207,6 @@ final class InterpretationAdmin extends AbstractEntityAdmin
                 )
             ->end()
         ;
-
-        foreach (self::TRANSLATABLE_FIELDS as $fieldName => $fieldType) {
-            $formMapper->add(
-                $this->getTranslationFieldName($fieldName),
-                $fieldType,
-                [
-                    'mapped' => false,
-                    'required' => false,
-                    'label' => sprintf('%s (EN)', $fieldName),
-                    'data' => $this->getLocalizedTextValue($fieldName),
-                    'autoload' => false,
-                ]
-            );
-        }
     }
 
     private function createZeroRowPartOptions(
@@ -185,6 +236,17 @@ final class InterpretationAdmin extends AbstractEntityAdmin
     private function getTranslationFieldName(string $fieldName): string
     {
         return 'localizedEn__interpretation__'.$fieldName;
+    }
+
+    private function createTranslationFieldOptions(string $fieldName): array
+    {
+        return [
+            'mapped' => false,
+            'required' => false,
+            'label' => sprintf('%s (EN)', $fieldName),
+            'data' => $this->getLocalizedTextValue($fieldName),
+            'autoload' => false,
+        ];
     }
 
     private function getLocalizedTextValue(string $fieldName): ?string

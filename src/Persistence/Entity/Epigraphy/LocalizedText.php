@@ -29,6 +29,16 @@ class LocalizedText
     public const TARGET_CARRIER = 'carrier';
     public const TARGET_ZERO_ROW = 'zero_row';
     public const TARGET_INTERPRETATION = 'interpretation';
+    public const TARGET_CONTENT_CATEGORY = 'content_category';
+    public const TARGET_WRITING_METHOD = 'writing_method';
+    public const TARGET_ALPHABET = 'alphabet';
+    public const TARGET_MATERIAL = 'material';
+    public const TARGET_DISCOVERY_SITE = 'discovery_site';
+    public const TARGET_CITY = 'city';
+    public const TARGET_COUNTRY = 'country';
+    public const TARGET_RIVER = 'river';
+    public const TARGET_RIVER_TYPE = 'river_type';
+    public const TARGET_STORAGE_SITE = 'storage_site';
 
     /**
      * @var int|null
@@ -87,6 +97,36 @@ class LocalizedText
         }
         if ($entity instanceof Interpretation) {
             return self::TARGET_INTERPRETATION;
+        }
+        if ($entity instanceof ContentCategory) {
+            return self::TARGET_CONTENT_CATEGORY;
+        }
+        if ($entity instanceof WritingMethod) {
+            return self::TARGET_WRITING_METHOD;
+        }
+        if ($entity instanceof Alphabet) {
+            return self::TARGET_ALPHABET;
+        }
+        if ($entity instanceof Material) {
+            return self::TARGET_MATERIAL;
+        }
+        if ($entity instanceof DiscoverySite) {
+            return self::TARGET_DISCOVERY_SITE;
+        }
+        if ($entity instanceof City) {
+            return self::TARGET_CITY;
+        }
+        if ($entity instanceof Country) {
+            return self::TARGET_COUNTRY;
+        }
+        if ($entity instanceof River) {
+            return self::TARGET_RIVER;
+        }
+        if ($entity instanceof RiverType) {
+            return self::TARGET_RIVER_TYPE;
+        }
+        if ($entity instanceof StorageSite) {
+            return self::TARGET_STORAGE_SITE;
         }
 
         return null;

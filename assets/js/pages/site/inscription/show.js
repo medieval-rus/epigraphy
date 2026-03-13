@@ -343,9 +343,10 @@ function applyBracketSystemToServerRenderedEdition(container, system) {
         if (!(node instanceof HTMLElement)) {
             return;
         }
+        const gapMeta = getGapMetadataFromDataset(node);
         const originalText = node.dataset.originalText ?? node.textContent ?? '';
         node.dataset.originalText = originalText;
-        node.textContent = system === 'zaliznyak' ? '...' : '***';
+        node.textContent = getGapDisplayText(system, gapMeta);
     });
 
     container.dataset.epidocSystem = system;
@@ -365,6 +366,67 @@ function renderUnderdottedHtml(text) {
         result += `<span class="epidoc-underdot-char">${escapeHtml(char)}</span>`;
     }
     return result;
+}
+
+function getGapMetadataFromElement(gapElement) {
+    if (!(gapElement instanceof Element)) {
+        return {
+            quantity: null,
+            unit: '',
+            extent: ''
+        };
+    }
+
+    const quantityRaw = gapElement.getAttribute('quantity');
+    const quantity = quantityRaw !== null ? Number.parseInt(quantityRaw, 10) : null;
+
+    return {
+        quantity: Number.isInteger(quantity) && quantity > 0 ? quantity : null,
+        unit: (gapElement.getAttribute('unit') || '').trim().toLowerCase(),
+        extent: (gapElement.getAttribute('extent') || '').trim().toLowerCase()
+    };
+}
+
+function getGapMetadataFromDataset(gapNode) {
+    if (!(gapNode instanceof HTMLElement)) {
+        return {
+            quantity: null,
+            unit: '',
+            extent: ''
+        };
+    }
+
+    const quantityRaw = gapNode.dataset.gapQuantity;
+    const quantity = quantityRaw !== undefined ? Number.parseInt(quantityRaw, 10) : null;
+
+    return {
+        quantity: Number.isInteger(quantity) && quantity > 0 ? quantity : null,
+        unit: (gapNode.dataset.gapUnit || '').trim().toLowerCase(),
+        extent: (gapNode.dataset.gapExtent || '').trim().toLowerCase()
+    };
+}
+
+function getGapDisplayText(system, gapMeta = {}) {
+    const quantity = Number.isInteger(gapMeta.quantity) && gapMeta.quantity > 0 ? gapMeta.quantity : null;
+    const unit = (gapMeta.unit || '').toLowerCase();
+
+    if (quantity !== null && unit === 'character') {
+        if (system === 'zaliznyak') {
+            return '-'.repeat(quantity);
+        }
+        return '*'.repeat(quantity);
+    }
+
+    return system === 'zaliznyak' ? '...' : '***';
+}
+
+function getGapTitle(gapMeta = {}) {
+    if (Number.isInteger(gapMeta.quantity) && gapMeta.quantity > 0 && gapMeta.unit === 'character') {
+        return `Gap: ${gapMeta.quantity} character${gapMeta.quantity === 1 ? '' : 's'}`;
+    }
+
+    const extent = gapMeta.extent || '?';
+    return `Gap: ${extent}`;
 }
 
 function trimRenderedEditionEdges(container) {
@@ -832,7 +894,7 @@ const BRACKET_SYSTEMS = {
     zaliznyak: {
         supplied: {
             editorial: ['[', ']'],
-            lost: ['[', ']'],
+            lost: ['(', ')'],
             unclear: ['[', ']']
         }
     }
@@ -946,9 +1008,9 @@ function renderEditionContent(node, system = 'leiden') {
                     break;
                     
                 case 'gap':
-                    const extent = child.getAttribute('extent') || '?';
-                    const gapMarker = system === 'zaliznyak' ? '...' : '***';
-                    result += `<span class="epidoc-gap" title="Gap: ${extent}">${gapMarker}</span>`;
+                    const gapMeta = getGapMetadataFromElement(child);
+                    const gapMarker = getGapDisplayText(system, gapMeta);
+                    result += `<span class="epidoc-gap" title="${escapeHtml(getGapTitle(gapMeta))}" data-gap-quantity="${gapMeta.quantity ?? ''}" data-gap-unit="${escapeHtml(gapMeta.unit)}" data-gap-extent="${escapeHtml(gapMeta.extent)}">${gapMarker}</span>`;
                     break;
                     
                 case 'unclear':
@@ -1150,7 +1212,7 @@ function buildWitnessReadingText(node, system, witnessResp) {
         }
 
         if (tagName === 'gap') {
-            result += system === 'zaliznyak' ? '...' : '***';
+            result += getGapDisplayText(system, getGapMetadataFromElement(child));
             continue;
         }
 
@@ -1282,7 +1344,7 @@ function getPlainText(node, system = 'leiden') {
                     result += applyDotBelowMarks(unclearText);
                 }
             } else if (tagName === 'gap') {
-                result += system === 'zaliznyak' ? '...' : '***';
+                result += getGapDisplayText(system, getGapMetadataFromElement(child));
             } else if (tagName === 'lb') {
                 result = result.replace(/\s+$/, '');
                 if (system === 'zaliznyak' && isInWordLineBreak(child)) {

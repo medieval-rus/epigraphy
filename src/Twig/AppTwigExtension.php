@@ -53,6 +53,7 @@ final class AppTwigExtension extends AbstractExtension
     {
         return [
             new TwigFunction('localizedText', [$this, 'localizedText']),
+            new TwigFunction('localizedName', [$this, 'localizedName']),
         ];
     }
 
@@ -69,5 +70,14 @@ final class AppTwigExtension extends AbstractExtension
     public function localizedText($entity, string $field, ?string $fallbackValue = null, ?string $locale = null): ?string
     {
         return $this->localizedTextService->resolveForEntity($entity, $field, $fallbackValue, $locale);
+    }
+
+    public function localizedName($entity, ?string $locale = null): ?string
+    {
+        if (null === $entity || !method_exists($entity, 'getName')) {
+            return null;
+        }
+
+        return $this->localizedTextService->resolveForEntity($entity, 'name', $entity->getName(), $locale);
     }
 }

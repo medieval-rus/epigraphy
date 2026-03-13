@@ -39,7 +39,7 @@
             {{ self.format_text_row(translationContext, 'zeroRow.description', self.format_zero_row(inscription, 'description')) }}
             {{ self.format_text_row(translationContext, 'carrier.individualName', localizedText(inscription.carrier, 'individualName', inscription.carrier.individualName)) }}
             {{ self.format_text_row(translationContext, 'carrier.categories', inscription.carrier.categories|map(namedEntity => namedEntity.translatedName(app.request.locale))) }}
-            {{ self.format_text_row(translationContext, 'carrier.discoverySite', inscription.carrier.discoverySite) }}
+            {{ self.format_text_row(translationContext, 'carrier.discoverySite', inscription.carrier.discoverySite|map(site => localizedName(site, app.request.locale))) }}
             {{ self.format_carrier(translationContext, inscription) }}
             {{ self.format_original_text_row(translationContext, 'zeroRow.text', inscription) }}
             {{ self.format_text_row(translationContext, 'zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
@@ -331,7 +331,7 @@
                             <tbody>
                                 {{ self.format_text_row(translationContext, 'carrier.archaeology', localizedText(inscription.carrier, 'archaeology', inscription.carrier.archaeology)) }}
                                 {{ self.format_text_row(translationContext, 'carrier.findCircumstances', localizedText(inscription.carrier, 'findCircumstances', inscription.carrier.findCircumstances)) }}
-                                {{ self.format_text_row(translationContext, 'carrier.storageSite', inscription.carrier.storageSite) }}
+                                {{ self.format_text_row(translationContext, 'carrier.storageSite', inscription.carrier.storageSite|map(site => localizedName(site, app.request.locale))) }}
                                 {{ self.format_text_row(translationContext, 'carrier.storageLocalization', localizedText(inscription.carrier, 'storageLocalization', inscription.carrier.storageLocalization)) }}                        
                                 {{ self.format_text_row(translationContext, 'carrier.inventoryNumber', localizedText(inscription.carrier, 'inventoryNumber', inscription.carrier.inventoryNumber)) }}
                                 {{ self.format_text_row(translationContext, 'carrier.previousStorage', localizedText(inscription.carrier, 'previousStorage', inscription.carrier.previousStorage)) }}

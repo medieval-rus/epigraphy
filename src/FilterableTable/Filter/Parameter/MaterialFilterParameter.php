@@ -26,10 +26,12 @@ declare(strict_types=1);
 namespace App\FilterableTable\Filter\Parameter;
 
 use App\Persistence\Entity\Epigraphy\Material;
+use App\Services\Epigraphy\Localization\LocalizedTextService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\ExpressionBuilderInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Parameter\FilterParameterInterface;
 use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface;
@@ -37,10 +39,18 @@ use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFact
 final class MaterialFilterParameter implements FilterParameterInterface, ExpressionBuilderInterface
 {
     private AliasFactoryInterface $aliasFactory;
+    private LocalizedTextService $localizedTextService;
+    private RequestStack $requestStack;
 
-    public function __construct(AliasFactoryInterface $aliasFactory)
+    public function __construct(
+        AliasFactoryInterface $aliasFactory,
+        LocalizedTextService $localizedTextService,
+        RequestStack $requestStack
+    )
     {
         $this->aliasFactory = $aliasFactory;
+        $this->localizedTextService = $localizedTextService;
+        $this->requestStack = $requestStack;
     }
 
     public function getQueryParameterName(): string
@@ -64,7 +74,16 @@ final class MaterialFilterParameter implements FilterParameterInterface, Express
                 ];
             },
             'class' => Material::class,
-            'choice_label' => 'name',
+            'choice_label' => function (?Material $choice): string {
+                if (null === $choice) {
+                    return '';
+                }
+
+                $request = $this->requestStack->getCurrentRequest();
+                $locale = null === $request ? null : $request->getLocale();
+
+                return (string) $this->localizedTextService->resolveForEntity($choice, 'name', $choice->getName(), $locale);
+            },
             'expanded' => false,
             'multiple' => true,
             'query_builder' => function (EntityRepository $repository): QueryBuilder {
