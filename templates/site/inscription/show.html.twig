@@ -63,7 +63,7 @@
             {{ self.format_text_row(translationContext, 'comment', localizedText(inscription, 'comment', inscription.comment)) }}
             {{ self.format_literature(translationContext, inscription) }}
             {% if epidocXml is not empty %}
-                {{ self.format_epidoc_text_row(translationContext, 'epidocText') }}
+                {{ self.format_epidoc_text_row(translationContext, 'epidocText', epidocRendered|default(null), epidocRenderMode|default('legacy_js')) }}
                 {{ self.format_epidoc_apparatus_row(translationContext, 'epidocCriticalApparatus') }}
                 {{ self.format_epidoc_translations_row(translationContext, 'epidocTranslations') }}
             {% endif %}
@@ -393,10 +393,11 @@
     {{- self.format_zero_row(inscription, 'translation', 'translation')|default('-') -}}
 {%- endmacro -%}
 
-{# TODO(epidoc): uncomment when EpiDoc viewer is ready
-
-macro format_epidoc_text_row(translationContext, labelTranslationKey)
-    import _self as self
+{%- macro format_epidoc_text_row(translationContext, labelTranslationKey, epidocRendered, epidocRenderMode) -%}
+    {% import _self as self %}
+    {% set hasXsltEdition = epidocRendered is not null and epidocRendered.editionHtml is not empty %}
+    {% set xsltMode = epidocRenderMode in ['xslt_mvp', 'hybrid'] %}
+    {% set useXsltEdition = hasXsltEdition and xsltMode %}
 
     <tr>
         <th scope="row">
@@ -411,9 +412,15 @@ macro format_epidoc_text_row(translationContext, labelTranslationKey)
             </div>
         </th>
         <td>
-            <div id="epidoc-text-in-table" style="font-family: 'Monomachus', 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #212529; white-space: pre-wrap;">
-                JavaScript will populate this
-            </div>
+            {% if useXsltEdition %}
+                <div class="epidoc-text-in-table--server" data-epidoc-render-source="xslt" style="font-family: 'Monomachus', 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #212529; white-space: pre-wrap;">
+                    {{- epidocRendered.editionHtml|trim|raw -}}
+                </div>
+            {% else %}
+                <div id="epidoc-text-in-table" style="font-family: 'Monomachus', 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; color: #212529; white-space: pre-wrap;">
+                    {# JavaScript will populate this #}
+                </div>
+            {% endif %}
         </td>
     </tr>
 endmacro

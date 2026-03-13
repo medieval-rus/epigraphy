@@ -99,3 +99,17 @@ services:
         - '@App\Services\Epigraphy\OriginalText\Parser\Rules\CommentRuleDefinition'
         - '@App\Services\Epigraphy\OriginalText\Parser\Rules\TextBreakRuleDefinition'
         - '@App\Services\Epigraphy\OriginalText\Parser\Rules\SuperscriptRuleDefinition'
+
+  App\Services\Epidoc\Xslt\SaxonRuntimeConfig:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+      $javaBinary: '%env(EPIDOC_XSLT_JAVA_BIN)%'
+      $saxonJarPath: '%env(EPIDOC_XSLT_SAXON_JAR)%'
+      $stylesheetsDir: '%env(EPIDOC_XSLT_STYLESHEETS_DIR)%'
+      $timeoutSeconds: '%env(int:EPIDOC_XSLT_TIMEOUT_SECONDS)%'
+
+  App\Services\Epidoc\Xslt\SaxonProcessRunnerInterface: '@App\Services\Epidoc\Xslt\SymfonySaxonProcessRunner'
+
+  App\Services\Epidoc\Xslt\EpidocRenderModeResolver:
+    arguments:
+      $configuredMode: '%env(EPIDOC_RENDER_MODE)%'

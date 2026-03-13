@@ -240,10 +240,48 @@
 }
 
 .epidoc-unclear--leiden {
-  text-decoration-line: underline;
-  text-decoration-style: dotted;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.12em;
+  text-decoration: none;
+}
+
+.epidoc-underdot-char {
+  position: relative;
+  display: inline-block;
+}
+
+.epidoc-underdot-char::after {
+  content: '·';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -0.22em;
+  font-size: 0.62em;
+  line-height: 1;
+}
+
+.epidoc-text-in-table--server {
+  .epidoc-unclear,
+  .epidoc-supplied,
+  [data-epidoc-hook='unclear'],
+  [data-epidoc-hook='supplied'] {
+    text-decoration: none !important;
+    border-bottom: 0 !important;
+  }
+
+  abbr[title],
+  abbr[data-original-title] {
+    text-decoration: none;
+    border-bottom: 0;
+  }
+}
+
+#epidoc-text-in-table {
+  .epidoc-unclear,
+  .epidoc-supplied,
+  [data-epidoc-hook='unclear'],
+  [data-epidoc-hook='supplied'] {
+    text-decoration: none !important;
+    border-bottom: 0 !important;
+  }
 }
 
 .epidoc-app {
@@ -251,7 +289,6 @@
   
   .epidoc-lem {
     color: #212529;
-    border-bottom: 1px dotted #6c757d;
     cursor: help;
   }
   

@@ -244,6 +244,12 @@ function initEpidocViewer() {
     const stubScript = document.getElementById('epidoc-stub-data');
     const tableContainer = document.getElementById('epidoc-text-in-table');
     const tableApparatusContainer = document.getElementById('epidoc-apparatus-in-table');
+    const serverEditionContainer = document.querySelector('[data-epidoc-render-source="xslt"]');
+
+    if (serverEditionContainer) {
+        initServerRenderedEpidocEdition(serverEditionContainer);
+    }
+
     if (!dataScript) {
         // If no data but table container exists, show placeholder
         if (tableContainer) {
@@ -275,6 +281,185 @@ function initEpidocViewer() {
     }
 
     renderTableView(xmlDoc, stubDoc);
+}
+
+function initServerRenderedEpidocEdition(container) {
+    if (!container) {
+        return;
+    }
+
+    const tableToggle = document.querySelector('.epidoc-toggle-input-table');
+    if (!tableToggle) {
+        return;
+    }
+
+    let currentSystem = getEpidocSystemPreference();
+
+    function renderServerEdition() {
+        applyBracketSystemToServerRenderedEdition(container, currentSystem);
+        trimRenderedEditionEdges(container);
+        tableToggle.checked = currentSystem === 'zaliznyak';
+    }
+
+    function handleToggleChange(e) {
+        currentSystem = e.target.checked ? 'zaliznyak' : 'leiden';
+        setEpidocSystemPreference(currentSystem);
+        renderServerEdition();
+    }
+
+    tableToggle.removeEventListener('change', handleToggleChange);
+    tableToggle.addEventListener('change', handleToggleChange);
+
+    renderServerEdition();
+}
+
+function applyBracketSystemToServerRenderedEdition(container, system) {
+    if (!container) {
+        return;
+    }
+
+    const suppliedNodes = container.querySelectorAll('[data-epidoc-hook="supplied"]');
+    suppliedNodes.forEach(node => {
+        if (!(node instanceof HTMLElement)) {
+            return;
+        }
+        const originalText = node.dataset.originalText ?? stripCombiningDotBelowMarks(node.textContent ?? '');
+        node.dataset.originalText = originalText;
+
+        const reason = node.dataset.suppliedReason || (node.classList.contains('epidoc-supplied--editorial') ? 'editorial' : 'lost');
+        if (reason === 'unclear') {
+            if (system === 'zaliznyak') {
+                node.textContent = `[${originalText}]`;
+            } else {
+                node.innerHTML = renderUnderdottedHtml(originalText);
+            }
+            return;
+        }
+        const brackets = (BRACKET_SYSTEMS[system] && BRACKET_SYSTEMS[system].supplied[reason])
+            || BRACKET_SYSTEMS[system].supplied.lost;
+        node.textContent = `${brackets[0]}${originalText}${brackets[1]}`;
+    });
+
+    const unclearNodes = container.querySelectorAll('[data-epidoc-hook="unclear"]');
+    unclearNodes.forEach(node => {
+        if (!(node instanceof HTMLElement)) {
+            return;
+        }
+        const originalText = node.dataset.originalText ?? stripCombiningDotBelowMarks(node.textContent ?? '');
+        node.dataset.originalText = originalText;
+
+        if (system === 'zaliznyak') {
+            node.textContent = `[${originalText}]`;
+            node.classList.remove('epidoc-unclear--leiden');
+        } else {
+            node.innerHTML = renderUnderdottedHtml(originalText);
+            node.classList.add('epidoc-unclear--leiden');
+        }
+    });
+
+    const gapNodes = container.querySelectorAll('[data-epidoc-hook="gap"]');
+    gapNodes.forEach(node => {
+        if (!(node instanceof HTMLElement)) {
+            return;
+        }
+        const originalText = node.dataset.originalText ?? node.textContent ?? '';
+        node.dataset.originalText = originalText;
+        node.textContent = system === 'zaliznyak' ? '...' : '***';
+    });
+
+    container.dataset.epidocSystem = system;
+}
+
+function stripCombiningDotBelowMarks(text) {
+    return text.replace(/\u0323/g, '');
+}
+
+function renderUnderdottedHtml(text) {
+    let result = '';
+    for (const char of text) {
+        if (/\s/.test(char)) {
+            result += char;
+            continue;
+        }
+        result += `<span class="epidoc-underdot-char">${escapeHtml(char)}</span>`;
+    }
+    return result;
+}
+
+function trimRenderedEditionEdges(container) {
+    if (!(container instanceof HTMLElement)) {
+        return;
+    }
+
+    const root = container.querySelector('[data-epidoc-role="edition-root"], #edition') || container;
+    trimLeadingBoundary(root);
+    trimTrailingBoundary(root);
+}
+
+function trimLeadingBoundary(node) {
+    let current = node;
+
+    while (current && current.firstChild) {
+        const first = current.firstChild;
+
+        if (first.nodeType === Node.TEXT_NODE) {
+            const value = first.textContent || '';
+            const trimmed = value.replace(/^\s+/, '');
+            if (trimmed === '') {
+                current.removeChild(first);
+                continue;
+            }
+            if (trimmed !== value) {
+                first.textContent = trimmed;
+            }
+            break;
+        }
+
+        if (first.nodeType === Node.ELEMENT_NODE && first.nodeName === 'BR') {
+            current.removeChild(first);
+            continue;
+        }
+
+        if (first.nodeType === Node.ELEMENT_NODE) {
+            current = first;
+            continue;
+        }
+
+        break;
+    }
+}
+
+function trimTrailingBoundary(node) {
+    let current = node;
+
+    while (current && current.lastChild) {
+        const last = current.lastChild;
+
+        if (last.nodeType === Node.TEXT_NODE) {
+            const value = last.textContent || '';
+            const trimmed = value.replace(/\s+$/, '');
+            if (trimmed === '') {
+                current.removeChild(last);
+                continue;
+            }
+            if (trimmed !== value) {
+                last.textContent = trimmed;
+            }
+            break;
+        }
+
+        if (last.nodeType === Node.ELEMENT_NODE && last.nodeName === 'BR') {
+            current.removeChild(last);
+            continue;
+        }
+
+        if (last.nodeType === Node.ELEMENT_NODE) {
+            current = last;
+            continue;
+        }
+
+        break;
+    }
 }
 
 function getFirstByTagName(parent, tagName) {
@@ -390,6 +575,7 @@ function renderTableView(xmlDoc, stubDoc = null) {
                         let textContent = renderEditionContent(edition, currentSystem);
                         textContent = normalizeEditionHtml(textContent);
                         tableContainer.innerHTML = textContent;
+                        trimRenderedEditionEdges(tableContainer);
                     }
                     if (tableApparatusContainer) {
                         const rendered = renderApparatusIntoContainer(tableApparatusContainer, xmlDoc, bibliographyMap, currentSystem)
@@ -542,7 +728,7 @@ const BRACKET_SYSTEMS = {
     zaliznyak: {
         supplied: {
             editorial: ['[', ']'],
-            lost: ['(', ')'],
+            lost: ['[', ']'],
             unclear: ['[', ']']
         }
     }
@@ -597,11 +783,11 @@ function renderEditionContent(node, system = 'leiden') {
                 case 'supplied':
                     const reason = child.getAttribute('reason') || 'lost';
                     if (reason === 'unclear') {
-                        const unclearSuppliedContent = renderEditionContent(child, system);
+                        const unclearSuppliedText = stripCombiningDotBelowMarks(child.textContent || '');
                         if (system === 'zaliznyak') {
-                            result += `<span class="epidoc-supplied" title="Supplied: ${reason}">[${unclearSuppliedContent}]</span>`;
+                            result += `<span class="epidoc-supplied" title="Supplied: ${reason}">[${escapeHtml(unclearSuppliedText)}]</span>`;
                         } else {
-                            result += `<span class="epidoc-unclear epidoc-unclear--leiden" title="Unclear reading">${unclearSuppliedContent}</span>`;
+                            result += `<span class="epidoc-unclear epidoc-unclear--leiden" title="Unclear reading">${renderUnderdottedHtml(unclearSuppliedText)}</span>`;
                         }
                         break;
                     }
@@ -639,11 +825,11 @@ function renderEditionContent(node, system = 'leiden') {
                     break;
                     
                 case 'unclear':
-                    const unclearContent = renderEditionContent(child, system);
+                    const unclearText = stripCombiningDotBelowMarks(child.textContent || '');
                     if (system === 'zaliznyak') {
-                        result += `[${unclearContent}]`;
+                        result += `[${escapeHtml(unclearText)}]`;
                     } else {
-                        result += `<span class="epidoc-unclear epidoc-unclear--leiden" title="Unclear reading">${unclearContent}</span>`;
+                        result += `<span class="epidoc-unclear epidoc-unclear--leiden" title="Unclear reading">${renderUnderdottedHtml(unclearText)}</span>`;
                     }
                     break;
                     
