@@ -113,3 +113,10 @@ services:
   App\Services\Epidoc\Xslt\EpidocRenderModeResolver:
     arguments:
       $configuredMode: '%env(EPIDOC_RENDER_MODE)%'
+
+  App\Services\Translation\YandexCloudTranslateClient:
+    arguments:
+      $endpoint: '%env(YANDEX_TRANSLATE_ENDPOINT)%'
+      $apiKey: '%env(YANDEX_TRANSLATE_API_KEY)%'
+      $folderId: '%env(YANDEX_TRANSLATE_FOLDER_ID)%'
+      $timeoutSeconds: '%env(int:YANDEX_TRANSLATE_TIMEOUT)%'
