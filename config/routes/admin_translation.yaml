@@ -1,0 +1,4 @@
+admin_translation_preview:
+  path: /admin/translation/preview
+  controller: App\Controller\Admin\TranslationController::preview
+  methods: [POST]

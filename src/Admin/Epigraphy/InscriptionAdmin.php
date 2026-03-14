@@ -509,11 +509,21 @@ final class InscriptionAdmin extends AbstractEntityAdmin
             LocalizedText::TARGET_ZERO_ROW => self::ZERO_ROW_TRANSLATABLE_FIELDS,
         ];
 
+        $sourceFieldSuffix = sprintf('[%s]', $fieldName);
+        if (LocalizedText::TARGET_ZERO_ROW === $targetType) {
+            $sourceFieldSuffix = sprintf('[zeroRow][%s]', $fieldName);
+        }
+
         $options = [
             'mapped' => false,
             'required' => false,
             'label' => sprintf('%s (EN)', $fieldName),
             'data' => $this->getLocalizedTextValue($targetType, $fieldName),
+            'attr' => [
+                'data-auto-translate-source-suffix' => $sourceFieldSuffix,
+                'data-auto-translate-target-lang' => 'en',
+                'data-auto-translate-source-lang' => 'ru',
+            ],
         ];
 
         if (CKEditorType::class === $fields[$targetType][$fieldName]) {

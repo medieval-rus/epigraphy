@@ -246,6 +246,11 @@ final class InterpretationAdmin extends AbstractEntityAdmin
             'label' => sprintf('%s (EN)', $fieldName),
             'data' => $this->getLocalizedTextValue($fieldName),
             'autoload' => false,
+            'attr' => [
+                'data-auto-translate-source-suffix' => sprintf('[%s]', $fieldName),
+                'data-auto-translate-target-lang' => 'en',
+                'data-auto-translate-source-lang' => 'ru',
+            ],
         ];
     }
 
