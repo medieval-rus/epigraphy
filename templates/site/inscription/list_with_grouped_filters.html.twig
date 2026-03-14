@@ -48,12 +48,6 @@
     {% import '@VyfonyFilterableTable/filterable_table.html.twig' as filterable_table %}
     {% import 'site/content/post.html.twig' as post_helper %}
 
-    <div style='z-index: 0; position: absolute; right: 1.5rem; top: 1px;'>
-    <a class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Поиск с учетом лексемы и морфологических признаков." target="_blank" href="https://ruscorpora.ru/search?search=CgQyAggXMAE%3D">
-        Поиск в НКРЯ
-    </a>    
-    </div>
-
     <div class="list_with_grouped_filters">
         {{ _self.render_grouped_filter(filterForm, filterConfigurator) }}
     </div>
@@ -155,7 +149,7 @@
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <label class="control-label">
-                                                    Датировка
+                                                    {{ 'controller.inscription.list.filter.dateSlider.label'|trans }}
                                                 </label>
                                                 <div
                                                     id="conventional-date-range-slider"
@@ -164,18 +158,18 @@
                                                 ></div>
                                                 <div class="row mt-2 align-items-end">
                                                     <div class="col-4">
-                                                        <label class="form-label small">От года:</label>
-                                                        <input type="number" class="form-control" id="conventional-date-initial-input" placeholder="Начальный год">
+                                                        <label class="form-label small">{{ 'controller.inscription.list.filter.dateSlider.fromYear'|trans }}:</label>
+                                                        <input type="number" class="form-control" id="conventional-date-initial-input" placeholder="{{ 'controller.inscription.list.filter.dateSlider.fromPlaceholder'|trans }}">
                                                     </div>
                                                     <div class="col-4">
-                                                        <label class="form-label small">До года:</label>
-                                                        <input type="number" class="form-control" id="conventional-date-final-input" placeholder="Конечный год">
+                                                        <label class="form-label small">{{ 'controller.inscription.list.filter.dateSlider.toYear'|trans }}:</label>
+                                                        <input type="number" class="form-control" id="conventional-date-final-input" placeholder="{{ 'controller.inscription.list.filter.dateSlider.toPlaceholder'|trans }}">
                                                     </div>
                                                     <div class="col-4">
                                                         <div class="form-check date-exact-match-checkbox">
                                                             <input type="checkbox" class="form-check-input" id="conventional-date-exact-match" name="conventionalDateExactMatch" value="1">
                                                             <label class="form-check-label" for="conventional-date-exact-match">
-                                                                Строгое вхождение
+                                                                {{ 'controller.inscription.list.filter.dateSlider.exactMatch'|trans }}
                                                             </label>
                                                         </div>
                                                     </div>
@@ -217,12 +211,20 @@
             
             <!-- Action buttons -->
             <div class="col-12">
-                <div class="form-group vyfony-filterable-table-bundle-button-form-group">
+                <div class="form-group vyfony-filterable-table-bundle-button-form-group d-flex align-items-center" style="gap: 0.5rem;">
                     {% for child in filterForm.children %}
                         {% if child.vars.block_prefixes[1] == 'submit' or child.vars.block_prefixes[1] == 'button' %}
                             {{ form_widget(child) }}
                         {% endif %}
                     {% endfor %}
+                    <a class="btn btn-outline-secondary"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       title="Поиск с учетом лексемы и морфологических признаков."
+                       target="_blank"
+                       href="https://ruscorpora.ru/search?search=CgQyAggXMAE%3D">
+                        {{ 'controller.inscription.list.filter.searchInRuscorporaButton'|trans }}
+                    </a>
                 </div>
             </div>
         </div>

@@ -39,36 +39,36 @@ controller:
         column:
           id: ''
           carrier:
-            category: Carrier category
-            city: Settlement
+            category: Carrier type
+            city: Location
             discoverySite: Findspot
             origin1: City / locality
             origin2: Building / excavation
           interpretation:
             text: Text
-            description: Content
+            description: Inscription type
             contentCategory: Content category
-        resultsCount: 'Inscriptions found: count'
+        resultsCount: 'Number of inscriptions: count'
       filter:
         dataColumn:
           label: Data column
           option:
             text: Text
-            description: Content
+            description: Inscription type
         discoverySite: Findspot
-        city: Settlement
+        city: Location
         carrierType: Carrier type
-        carrierCategory: "Carrier"
+        carrierCategory: "Carrier subcategory"
         writingType: Type
-        writingMethod: "Method of application"
+        writingMethod: "Writing technique"
         preservationState: Preservation state
-        alphabet: Alphabet
+        alphabet: Script
         interpretationComment: Reading comment
-        text: Inscription text
+        text: Text
         fulltext: Full-text search
         translation: Translation
-        material: "Material"
-        contentCategory: "Content"
+        material: "Material subcategory"
+        contentCategory: "Inscription type"
         origin1: City / locality
         origin2: Building / excavation
         author: Publication author
@@ -78,13 +78,21 @@ controller:
         resetButton: Reset filters
         submitButton: Search
         searchInFoundButton: Search within results
-        superWritingMethod: "Method of application"
-        superMaterial: "Material"
-        superCarrierCategory: "Carrier"
-        superContentCategory: "Content"
+        searchInRuscorporaButton: Search in RusCorpora
+        superWritingMethod: "Writing technique"
+        superMaterial: "Material category"
+        superCarrierCategory: "Carrier category"
+        superContentCategory: "Inscription type"
+        dateSlider:
+          label: Dating
+          fromYear: From year
+          fromPlaceholder: Start year
+          toYear: To year
+          toPlaceholder: End year
+          exactMatch: Exact match
         sections:
-          carrierData: "Carrier data"
-          inscriptionData: "Inscription data"
+          carrierData: "Carrier"
+          inscriptionData: "Inscription"
     show:
       title: Inscription
       admin: View inscription in admin
@@ -100,12 +108,13 @@ controller:
         label:
           number: Number
           conventionalDate: Date
-          dateExplanation: Date justification
+          dateExplanation: Basis for dating
           rssdaRender: RSSDA 3D model
-          comment: Comment
-          literature: Literature
+          rssdaViewer: "3D viewer"
+          comment: Commentary
+          literature: Bibliography
           carrier:
-            categories: Carrier category
+            categories: Carrier type
             storageSite: Storage place
             storageLocalization: Location within storage
             previousStorage: Previous storage locations
@@ -127,35 +136,35 @@ controller:
             reading: Reading
             baseReader: Main reading
           zeroRow:
-            origin: Dating by other features
+            origin: Dating (other criteria)
             placeOnCarrier: Location on carrier
             writingTypes: Writing type (Franklin)
-            writingMethods: Method of application
+            writingMethods: Writing technique
             preservationStates: Preservation state
-            alphabets: Alphabet
+            alphabets: Script
             text: Text
             transliteration: Transliteration
             reconstruction: Reconstruction
             normalization: Normalization
             interpretationComment: Reading comment
             translation: Translation
-            description: Content
-            dateInText: Date in text
-            nonStratigraphicalDate: Dating by paleography and language
-            historicalDate: '"Historical" date'
-            comment: Comment (differences with source)
+            description: Inscription type
+            dateInText: Date stated in text
+            nonStratigraphicalDate: Dating (palaeography & language)
+            historicalDate: Dating (historical reference)
+            comment: Commentary (differences with source)
             materials: Materials
             photos: Photos
             drawings: Drawings
 
 page:
   label:
-    title: Old Russian Epigraphy
-    left: Old Russian Epigraphy
+    title: Old East Slavic Epigraphy
+    left: Old East Slavic Epigraphy
   middleLine: The site is developed with support from the Russian Science Foundation grant (project No. 19-18-00352) provided by HSE University.
   menu:
     index: Home
-    aboutSite: About the site
+    aboutSite: About the project
     news: News
     bibliography: Bibliography
     dataBase: Database

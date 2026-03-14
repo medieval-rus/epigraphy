@@ -84,13 +84,29 @@
     {% import '@VyfonyFilterableTable/filterable_table.html.twig' as filterable_table %}
     {% import 'site/content/post.html.twig' as post_helper %}
 
-    <div style='z-index: 0; position: absolute; right: 1.5rem; top: 1px;'>
-    <a class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Поиск с учетом лексемы и морфологических признаков." target="_blank" href="https://ruscorpora.ru/search?search=CgQyAggXMAE%3D">
-        Поиск в НКРЯ
-    </a>    
+    {% form_theme filterForm '@VyfonyFilterableTable/filterable_table_form_layout.html.twig' %}
+    {{ form_start(filterForm) }}
+    {% for child in filterForm %}
+        {% if child.vars.block_prefixes[1] != 'submit' and child.vars.block_prefixes[1] != 'button' %}
+            {{ form_row(child) }}
+        {% endif %}
+    {% endfor %}
+    <div class="form-group vyfony-filterable-table-bundle-button-form-group d-flex align-items-center" style="gap: 0.5rem;">
+        {% for child in filterForm %}
+            {% if child.vars.block_prefixes[1] == 'submit' or child.vars.block_prefixes[1] == 'button' %}
+                {{ form_widget(child) }}
+            {% endif %}
+        {% endfor %}
+        <a class="btn btn-outline-secondary"
+           data-toggle="tooltip"
+           data-placement="top"
+           title="Поиск с учетом лексемы и морфологических признаков."
+           target="_blank"
+           href="https://ruscorpora.ru/search?search=CgQyAggXMAE%3D">
+            {{ 'controller.inscription.list.filter.searchInRuscorporaButton'|trans }}
+        </a>
     </div>
-
-    {{ filterable_table.render_filter(filterForm) }}
+    {{ form_end(filterForm) }}
 
     <div class="row">
         <div class="col-12 inscription-search-table-col">

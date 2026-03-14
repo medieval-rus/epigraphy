@@ -261,18 +261,38 @@ main.eomr-main {
 //     display: block;
 // }
 
-label[for="carrier-category"]::after,
-label[for="material"]::after, 
-label[for="writing-method"]::after, 
-label[for="content-category"]::after {
-  content: ": подкатегория";
-  font-weight: lighter;
-  color: #778899;
+html[lang="ru"] {
+  label[for="carrier-category"]::after,
+  label[for="material"]::after,
+  label[for="writing-method"]::after,
+  label[for="content-category"]::after {
+    content: ": подкатегория";
+    font-weight: lighter;
+    color: #778899;
+  }
+
+  label[for|="super"]::after {
+    content: ": категория";
+    font-weight: lighter;
+    color: #778899;
+  }
 }
-label[for|="super"]::after {
-  content: ": категория";
-  font-weight: lighter;
-  color: #778899;
+
+html[lang="en"] {
+  label[for="carrier-category"]::after,
+  label[for="material"]::after,
+  label[for="writing-method"]::after,
+  label[for="content-category"]::after {
+    content: ": subcategory";
+    font-weight: lighter;
+    color: #778899;
+  }
+
+  label[for|="super"]::after {
+    content: ": category";
+    font-weight: lighter;
+    color: #778899;
+  }
 }
 
 // Standalone filter field (fulltext search)
