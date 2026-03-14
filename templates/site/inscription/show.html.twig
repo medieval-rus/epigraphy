@@ -47,7 +47,6 @@
             {{ self.format_text_row(translationContext, 'zeroRow.normalization', self.format_zero_row(inscription, 'normalization')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.interpretationComment', self.format_zero_row(inscription, 'interpretationComment')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_translation(inscription)) }}
-            {{ self.format_text_row(translationContext, 'rssdaRender', self.format_link(inscription.rssdaRender)) }}
             {{ self.format_rssda_iframe_row(translationContext, inscription.rssdaRender) }}
             {{ self.format_text_row(translationContext, 'zeroRow.photos', self.format_zero_row_images(inscription, 'photos')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.drawings', self.format_zero_row_images(inscription, 'drawings')) }}

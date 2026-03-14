@@ -110,7 +110,7 @@ controller:
           conventionalDate: Date
           dateExplanation: Basis for dating
           rssdaRender: RSSDA 3D model
-          rssdaViewer: "3D viewer"
+          rssdaViewer: "3D model"
           comment: Commentary
           literature: Bibliography
           carrier:
