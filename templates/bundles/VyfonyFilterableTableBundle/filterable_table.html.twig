@@ -36,10 +36,11 @@
             </tr>
         </thead>
         <tbody>
+            {% set isInscriptionList = table.listRoute.name is same as('inscription__longlist') %}
             {% for rowData in table.rowDataCollection.data %}
                 {% set showRoute = table.showRoute(rowData) %}
 
-                <tr data-row-href="{{ path(showRoute.name, showRoute.parameters) }}">
+                <tr{% if not isInscriptionList %} data-row-href="{{ path(showRoute.name, showRoute.parameters) }}"{% endif %}>
                     {% if table.hasCheckboxColumn %}
                         <td>
                             <div class="custom-control custom-checkbox">
@@ -59,16 +60,23 @@
                     {% for columnMetadata in table.columnMetadataCollection %}
                         {% if columnMetadata.isIdentifier %}
                             <th scope="row">
-                                <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-link table-row-stretched-link"{{ self.render_attributes(columnMetadata.attributes) }}>
-                                    {{ self.render_value(columnMetadata, rowData) }}
-                                </a>
+                                {% if isInscriptionList %}
+                                    <div class="table-primary-cell">
+                                        <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-primary-link"{{ self.render_attributes(columnMetadata.attributes) }}>
+                                            {{ self.render_value(columnMetadata, rowData) }}
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-link table-row-stretched-link"{{ self.render_attributes(columnMetadata.attributes) }}>
+                                        {{ self.render_value(columnMetadata, rowData) }}
+                                    </a>
+                                {% endif %}
                             </th>
                         {% else %}
                             <td>
-                                {% if loop.first %}
+                                {% if loop.first and not isInscriptionList %}
                                     <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-stretched-link" aria-hidden="true" tabindex="-1"></a>
                                 {% endif %}
-                                {% set isInscriptionList = table.listRoute.name is same as('inscription__longlist') %}
                                 {% set columnName = columnMetadata.name %}
                                 {% set carrier = rowData.carrier ?? null %}
                                 {% set discoverySite = carrier and carrier.discoverySite is not empty ? (carrier.discoverySite|first) : null %}
@@ -78,7 +86,7 @@
                                 {% if isInscriptionList and columnName is same as('carrier-discovery-site') and discoverySite %}
                                     <a
                                         href="{{ path(table.listRoute.name, table.listRoute.parameters|merge({'discovery-site': [discoverySite.id]})) }}"
-                                        class="table-filter-link"
+                                        class="table-filter-link table-entity-filter-link"
                                         title="{{ 'Перейти к списку надписей с этим местом находки' }}"
                                     >
                                         {{ discoverySite.name }}
@@ -86,25 +94,31 @@
                                 {% elseif isInscriptionList and columnName is same as('carrier-city') and city %}
                                     <a
                                         href="{{ path(table.listRoute.name, table.listRoute.parameters|merge({'city': city.id})) }}"
-                                        class="table-filter-link"
+                                        class="table-filter-link table-entity-filter-link"
                                         title="{{ 'Перейти к списку надписей с этим населённым пунктом' }}"
                                     >
                                         {{ city.name }}
                                     </a>
                                 {% elseif isInscriptionList and columnName is same as('carrier-category') and categoryList is not empty %}
-                                    {% for category in categoryList %}
-                                        <a
-                                            href="{{ path(table.listRoute.name, table.listRoute.parameters|merge({'carrier-category': [category.id]})) }}"
-                                            class="table-filter-link"
-                                            title="{{ 'Перейти к списку надписей с этой категорией носителя' }}"
-                                        >
-                                            {{ category.translatedName(app.request.locale) }}
-                                        </a>{% if not loop.last %}, {% endif %}
-                                    {% endfor %}
+                                    <span class="table-filter-chip-list">
+                                        {% for category in categoryList %}
+                                            <a
+                                                href="{{ path(table.listRoute.name, table.listRoute.parameters|merge({'carrier-category': [category.id]})) }}"
+                                                class="table-filter-link table-entity-filter-link"
+                                                title="{{ 'Перейти к списку надписей с этой категорией носителя' }}"
+                                            >
+                                                {{ category.translatedName(app.request.locale) }}
+                                            </a>
+                                        {% endfor %}
+                                    </span>
                                 {% else %}
-                                    <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-link">
-                                        {{ self.render_value(columnMetadata, rowData) }}
-                                    </a>
+                                    {% if isInscriptionList %}
+                                        <span class="table-cell-value">{{ self.render_value(columnMetadata, rowData) }}</span>
+                                    {% else %}
+                                        <a href="{{ path(showRoute.name, showRoute.parameters) }}" class="table-row-link">
+                                            {{ self.render_value(columnMetadata, rowData) }}
+                                        </a>
+                                    {% endif %}
                                 {% endif %}
                             </td>
                         {% endif %}

@@ -118,21 +118,10 @@ export function enableRowClickNavigation()
     };
 
     function getRowHref($row) {
-        const rowHref = $row.attr('data-row-href');
-        if (rowHref) {
-            return rowHref;
-        }
-
-        const rowLink = $row.find('a.table-row-link[href]').first().attr('href');
-        if (rowLink) {
-            return rowLink;
-        }
-
-        const anyAnchor = $row.find('a[href]').first().attr('href');
-        return anyAnchor || null;
+        return $row.attr('data-row-href') || null;
     }
 
-    table.on('click', 'tbody tr', function (event) {
+    table.on('click', 'tbody tr[data-row-href]', function (event) {
         if ($(event.target).closest(interactiveSelector).length) {
             return;
         }
@@ -175,7 +164,7 @@ export function enableRowClickNavigation()
         }, 0);
     });
 
-    table.find('tbody tr').each(function () {
+    table.find('tbody tr[data-row-href]').each(function () {
         const $row = $(this);
         const href = getRowHref($row);
         if (href) {

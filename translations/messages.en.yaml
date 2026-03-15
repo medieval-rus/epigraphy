@@ -37,7 +37,7 @@ controller:
       title: List of inscriptions
       table:
         column:
-          id: ''
+          id: ID
           carrier:
             category: Carrier type
             city: Location
@@ -48,6 +48,7 @@ controller:
             text: Text
             description: Inscription type
             contentCategory: Content category
+        hint: 'ID goes to the inscription page. Carrier labels open the list of related inscriptions.'
         resultsCount: 'Number of inscriptions: count'
       filter:
         dataColumn:
