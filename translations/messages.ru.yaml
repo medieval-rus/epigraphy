@@ -59,7 +59,7 @@ controller:
         discoverySite: Место находки
         city: Населённый пункт
         carrierType: Тип носителя
-        carrierCategory: "Подкатегория носителя"
+        carrierCategory: "Носитель"
         writingType: Разряд
         writingMethod: "Способ нанесения"
         preservationState: Состояние сохранности
@@ -68,7 +68,7 @@ controller:
         text: Текст надписи
         fulltext: Поиск по всем полям
         translation: Перевод
-        material: "Подкатегория материала"
+        material: "Материал"
         contentCategory: "Содержание"
         origin1: Город / Местность
         origin2: Здание / Раскоп

@@ -59,7 +59,7 @@ controller:
         discoverySite: Findspot
         city: Location
         carrierType: Carrier type
-        carrierCategory: "Carrier subcategory"
+        carrierCategory: "Carrier"
         writingType: Type
         writingMethod: "Writing technique"
         preservationState: Preservation state
@@ -68,7 +68,7 @@ controller:
         text: Text
         fulltext: Full-text search
         translation: Translation
-        material: "Material subcategory"
+        material: "Material"
         contentCategory: "Inscription type"
         origin1: City / locality
         origin2: Building / excavation

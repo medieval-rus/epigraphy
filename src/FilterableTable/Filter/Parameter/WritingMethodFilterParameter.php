@@ -68,9 +68,11 @@ final class WritingMethodFilterParameter implements FilterParameterInterface, Ex
         return [
             'label' => 'controller.inscription.list.filter.writingMethod',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
-            'choice_attr' => function($choice, $key, $value) {
+            'choice_attr' => function (WritingMethod $choice) {
+                $superMethod = $choice->getSupermethod();
+
                 return [
-                    'data-super' => $choice->getSupermethod() ? $choice->getSupermethod()->getId() : 0
+                    'data-parent-id' => null === $superMethod ? '' : (string) $superMethod->getId(),
                 ];
             },
             'class' => WritingMethod::class,
@@ -81,18 +83,29 @@ final class WritingMethodFilterParameter implements FilterParameterInterface, Ex
 
                 $request = $this->requestStack->getCurrentRequest();
                 $locale = null === $request ? null : $request->getLocale();
+                $label = (string) $this->localizedTextService->resolveForEntity($choice, 'name', $choice->getName(), $locale);
 
-                return (string) $this->localizedTextService->resolveForEntity($choice, 'name', $choice->getName(), $locale);
+                return null === $choice->getSupermethod() ? $label : "\u{00A0}\u{00A0}\u{00A0}\u{00A0}{$label}";
             },
             'expanded' => false,
             'multiple' => true,
             'query_builder' => function (EntityRepository $repository): QueryBuilder {
                 $entityAlias = $this->createAlias();
+                $parentAlias = $this->aliasFactory->createAlias(static::class, 'parent');
 
                 return $repository
                     ->createQueryBuilder($entityAlias)
-                    ->where($entityAlias.'.isSuperMethod != true')
-                    ->orderBy($entityAlias.'.name', 'ASC');
+                    ->leftJoin($entityAlias.'.supermethod', $parentAlias)
+                    ->addSelect(
+                        'CASE WHEN '.$entityAlias.'.supermethod IS NULL '.
+                        'THEN '.$entityAlias.'.name ELSE '.$parentAlias.'.name END AS HIDDEN group_name'
+                    )
+                    ->addSelect(
+                        'CASE WHEN '.$entityAlias.'.supermethod IS NULL THEN 0 ELSE 1 END AS HIDDEN level_sort'
+                    )
+                    ->orderBy('group_name', 'ASC')
+                    ->addOrderBy('level_sort', 'ASC')
+                    ->addOrderBy($entityAlias.'.name', 'ASC');
             },
         ];
     }
@@ -106,7 +119,21 @@ final class WritingMethodFilterParameter implements FilterParameterInterface, Ex
             return null;
         }
 
-        $ids = $formData->map(fn (WritingMethod $entity): int => $entity->getId())->toArray();
+        $ids = [];
+
+        foreach ($formData as $entity) {
+            if (!$entity instanceof WritingMethod) {
+                continue;
+            }
+
+            $ids[$entity->getId()] = true;
+
+            foreach ($entity->getSubmethods() as $submethod) {
+                $ids[$submethod->getId()] = true;
+            }
+        }
+
+        $ids = array_keys($ids);
 
         $queryBuilder
             ->innerJoin(

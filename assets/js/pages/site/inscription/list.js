@@ -26,15 +26,16 @@ import 'jquery-ui/ui/widgets/slider';
 import * as common from './common';
 
 window.superFilters = { // mapping of parent and child categories
-    "super-carrier-category": {"subfilter": "carrier-category", "cache": []},
-    "super-writing-method": {"subfilter": "writing-method", "cache": []},
-    "super-content-category": {"subfilter": "content-category", "cache": []},
-    "super-material": {"subfilter": "material", "cache": []},
     "city": {"subfilter": "discovery-site", "cache": []}
 }
 
+const hierarchicalFilterIds = ['carrier-category', 'material', 'writing-method', 'content-category'];
+const previousSelections = {};
+const selectionSyncLocks = {};
+
 $(window).on('load', () => {
     common.initializeFilters();
+    initializeHierarchicalFilters();
     setUpdateListeners();
     common.enableVirtualKeyboards();
     common.enableRowClickNavigation();
@@ -44,6 +45,113 @@ $(window).on('load', () => {
         initializeDateSlider();
     }, 100);
 });
+
+function initializeHierarchicalFilters() {
+    for (const filterId of hierarchicalFilterIds) {
+        const selectElement = document.getElementById(filterId);
+
+        if (!selectElement) {
+            continue;
+        }
+
+        previousSelections[filterId] = new Set($(selectElement).val() || []);
+        selectionSyncLocks[filterId] = false;
+
+        $(selectElement).on('change', function () {
+            syncHierarchicalSelection(this);
+        });
+    }
+}
+
+function syncHierarchicalSelection(selectElement) {
+    const filterId = selectElement.id;
+
+    if (selectionSyncLocks[filterId]) {
+        return;
+    }
+
+    const previous = previousSelections[filterId] || new Set();
+    const currentValues = $(selectElement).val() || [];
+    const current = new Set(currentValues);
+    const next = new Set(currentValues);
+
+    for (const value of current) {
+        if (!previous.has(value) && isRootOption(selectElement, value)) {
+            for (const childValue of getChildValues(selectElement, value)) {
+                next.add(childValue);
+            }
+        }
+    }
+
+    for (const value of previous) {
+        if (!current.has(value) && isRootOption(selectElement, value)) {
+            for (const childValue of getChildValues(selectElement, value)) {
+                next.delete(childValue);
+            }
+        }
+    }
+
+    const normalizedNext = Array.from(next);
+    if (!areValueArraysEqual(normalizedNext, currentValues)) {
+        selectionSyncLocks[filterId] = true;
+        $(selectElement).val(normalizedNext).trigger('change.select2');
+        selectionSyncLocks[filterId] = false;
+        previousSelections[filterId] = new Set(normalizedNext);
+
+        return;
+    }
+
+    previousSelections[filterId] = new Set(currentValues);
+}
+
+function isRootOption(selectElement, value) {
+    const optionElement = findOptionByValue(selectElement, value);
+
+    if (!optionElement) {
+        return false;
+    }
+
+    return optionElement.dataset.parentId === '';
+}
+
+function getChildValues(selectElement, parentId) {
+    const childValues = [];
+
+    for (const optionElement of Array.from(selectElement.options)) {
+        if (optionElement.dataset.parentId === parentId) {
+            childValues.push(optionElement.value);
+        }
+    }
+
+    return childValues;
+}
+
+function findOptionByValue(selectElement, value) {
+    for (const optionElement of Array.from(selectElement.options)) {
+        if (optionElement.value === value) {
+            return optionElement;
+        }
+    }
+
+    return null;
+}
+
+function areValueArraysEqual(left, right) {
+    if (left.length !== right.length) {
+        return false;
+    }
+
+    const leftSorted = [...left].sort();
+    const rightSorted = [...right].sort();
+
+    for (let index = 0; index < leftSorted.length; index += 1) {
+        if (leftSorted[index] !== rightSorted[index]) {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 function setUpdateListeners() {
     function updateSubfilters(event) { // update child categories on parent category choice
@@ -64,6 +172,9 @@ function setUpdateListeners() {
         let child_id = window.superFilters[parent_id].subfilter;
         let parent = document.getElementById(parent_id);
         let child = document.getElementById(child_id);
+        if (!parent || !child) {
+            continue;
+        }
         window.superFilters[parent_id].cache = Array.from(child.children)
 
         parent.addEventListener("change", updateSubfilters);
@@ -317,4 +428,3 @@ function initializeDateSlider() {
         if ($final.length) { $final.val(final); }
     }
 }
-

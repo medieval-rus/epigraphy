@@ -64,24 +64,42 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
         return [
             'label' => 'controller.inscription.list.filter.carrierCategory',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
-            'choice_attr' => function($choice, $key, $value) {
+            'choice_attr' => function (CarrierCategory $choice) {
+                $superCategory = $choice->getSupercategory();
+
                 return [
-                    'data-super' => $choice->getSupercategory() ? $choice->getSupercategory()->getId() : 0
+                    'data-parent-id' => null === $superCategory ? '' : (string) $superCategory->getId(),
                 ];
             },
             'class' => CarrierCategory::class,
-            'choice_label' => static fn (?CarrierCategory $choice): string => null === $choice
-                ? ''
-                : (string) $choice->getTranslatedName($locale),
+            'choice_label' => static function (?CarrierCategory $choice) use ($locale): string {
+                if (null === $choice) {
+                    return '';
+                }
+
+                $label = (string) $choice->getTranslatedName($locale);
+
+                return null === $choice->getSupercategory() ? $label : "\u{00A0}\u{00A0}\u{00A0}\u{00A0}{$label}";
+            },
             'expanded' => false,
             'multiple' => true,
             'query_builder' => function (EntityRepository $repository): QueryBuilder {
                 $entityAlias = $this->createAlias();
+                $parentAlias = $this->aliasFactory->createAlias(static::class, 'parent');
 
                 return $repository
                     ->createQueryBuilder($entityAlias)
-                    ->where($entityAlias.'.isSuperCategory != true')
-                    ->orderBy($entityAlias.'.name', 'ASC');
+                    ->leftJoin($entityAlias.'.supercategory', $parentAlias)
+                    ->addSelect(
+                        'CASE WHEN '.$entityAlias.'.supercategory IS NULL '.
+                        'THEN '.$entityAlias.'.name ELSE '.$parentAlias.'.name END AS HIDDEN group_name'
+                    )
+                    ->addSelect(
+                        'CASE WHEN '.$entityAlias.'.supercategory IS NULL THEN 0 ELSE 1 END AS HIDDEN level_sort'
+                    )
+                    ->orderBy('group_name', 'ASC')
+                    ->addOrderBy('level_sort', 'ASC')
+                    ->addOrderBy($entityAlias.'.name', 'ASC');
             },
         ];
     }
@@ -95,7 +113,21 @@ final class CarrierCategoryFilterParameter implements FilterParameterInterface, 
             return null;
         }
 
-        $ids = $formData->map(fn (CarrierCategory $entity): int => $entity->getId())->toArray();
+        $ids = [];
+
+        foreach ($formData as $entity) {
+            if (!$entity instanceof CarrierCategory) {
+                continue;
+            }
+
+            $ids[$entity->getId()] = true;
+
+            foreach ($entity->getSubcategories() as $subcategory) {
+                $ids[$subcategory->getId()] = true;
+            }
+        }
+
+        $ids = array_keys($ids);
 
         $queryBuilder
             ->innerJoin(
