@@ -104,6 +104,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
     {
         if ('edit' === $action) {
             $buttonList['clone'] = ['template' => 'admin/clone_button.html.twig'];
+            $buttonList['translateAllInscription'] = ['template' => 'admin/translate_all_inscription_button.html.twig'];
         }
 
         return $buttonList;

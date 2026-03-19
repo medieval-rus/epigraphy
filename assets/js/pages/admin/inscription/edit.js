@@ -27,6 +27,7 @@ $(() => {
     forwardChangesFromInterpretationToZeroRow();
     forwardChangesFromZeroRowToInterpretation();
     initializeAutoTranslateButtons();
+    initializeTranslateAllAction();
 });
 
 function createCheckboxes() {
@@ -211,16 +212,114 @@ function initializeAutoTranslateButtons()
     });
 }
 
+function initializeTranslateAllAction()
+{
+    const actionLink = $('[data-auto-translate-all-inscription]');
+    if (actionLink.length === 0 || actionLink.data('auto-translate-all-bound') === true) {
+        return;
+    }
+
+    actionLink.data('auto-translate-all-bound', true);
+
+    actionLink.on('click', async (event) => {
+        event.preventDefault();
+
+        if (actionLink.data('auto-translate-all-running') === true) {
+            return;
+        }
+
+        actionLink.data('auto-translate-all-running', true);
+        actionLink.parent().addClass('disabled');
+
+        const summary = {
+            translated: 0,
+            skipped: 0,
+            errors: 0,
+        };
+
+        const targets = $('[data-auto-translate-source-suffix]');
+
+        for (let index = 0; index < targets.length; index++) {
+            const targetElement = $(targets[index]);
+            const sourceSuffix = targetElement.attr('data-auto-translate-source-suffix');
+            if (!sourceSuffix) {
+                summary.skipped++;
+                continue;
+            }
+
+            const sourceElement = findSourceElement(targetElement, sourceSuffix);
+            if (sourceElement.length === 0) {
+                summary.skipped++;
+                continue;
+            }
+
+            const sourceText = readFieldValue(sourceElement);
+            if (!sourceText || sourceText.trim() === '') {
+                summary.skipped++;
+                continue;
+            }
+
+            const targetLang = targetElement.attr('data-auto-translate-target-lang') || 'en';
+            const sourceLang = targetElement.attr('data-auto-translate-source-lang') || 'ru';
+
+            try {
+                const translatedText = await requestTranslatedText(sourceText, sourceLang, targetLang);
+                writeFieldValue(targetElement, translatedText);
+                summary.translated++;
+            } catch (error) {
+                summary.errors++;
+            }
+        }
+
+        actionLink.parent().removeClass('disabled');
+        actionLink.data('auto-translate-all-running', false);
+
+        const message = [
+            'Автоперевод завершен.',
+            'Переведено: ' + summary.translated + '.',
+            'Пропущено: ' + summary.skipped + '.',
+            'Ошибок: ' + summary.errors + '.',
+            'Нажмите "Сохранить", чтобы записать изменения.',
+        ].join('\n');
+
+        window.alert(message);
+    });
+}
+
 function findSourceElement(targetElement, sourceSuffix)
 {
     const targetName = targetElement.attr('name') || '';
-    const rootPrefix = targetName.replace(/\[localizedEn[\s\S]*$/, '');
-    if (!rootPrefix) {
+    if (!targetName) {
         return $();
     }
 
-    const sourceName = rootPrefix + sourceSuffix;
-    return targetElement.closest('form').find('[name="' + cssEscape(sourceName) + '"]');
+    const sourceNames = [];
+    const replacedLastSegment = targetName.replace(/\[[^\]]+\]$/, sourceSuffix);
+    if (replacedLastSegment !== targetName) {
+        sourceNames.push(replacedLastSegment);
+    }
+
+    const localizedTokenPosition = targetName.indexOf('[localizedEn');
+    if (localizedTokenPosition > -1) {
+        sourceNames.push(targetName.substring(0, localizedTokenPosition) + sourceSuffix);
+    }
+
+    const formElement = targetElement.closest('form');
+    for (let index = 0; index < sourceNames.length; index++) {
+        const sourceName = sourceNames[index];
+        const matchedElement = formElement
+            .find('[name]')
+            .filter((itemIndex, domElement) => {
+                return $(domElement).attr('name') === sourceName;
+            })
+            .first();
+
+        if (matchedElement.length > 0) {
+            return matchedElement;
+        }
+    }
+
+    return $();
 }
 
 function readFieldValue(element)
@@ -252,7 +351,27 @@ function writeFieldValue(element, value)
     element.val(value);
 }
 
-function cssEscape(value)
+function requestTranslatedText(text, sourceLang, targetLang)
 {
-    return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    return fetch('/admin/translation/preview', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: JSON.stringify({
+            text: text,
+            sourceLang: sourceLang,
+            targetLang: targetLang,
+        }),
+    })
+        .then((response) => response.json().then((body) => ({ok: response.ok, body: body})))
+        .then(({ok, body}) => {
+            if (!ok || !body.translatedText) {
+                const message = body && body.error ? body.error : 'Ошибка перевода.';
+                throw new Error(message);
+            }
+
+            return body.translatedText;
+        });
 }
