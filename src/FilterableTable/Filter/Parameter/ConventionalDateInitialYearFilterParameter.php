@@ -79,6 +79,17 @@ final class ConventionalDateInitialYearFilterParameter implements FilterParamete
 
         $conventionalDateInitialYear = (int) $formData;
         $conventionalDateFinalYear = (int) $request->query->get('conventionalDateFinalYear', $conventionalDateInitialYear);
+
+        // Invalid external URLs should not accidentally narrow results to zero.
+        if (
+            $conventionalDateInitialYear < 1 ||
+            $conventionalDateInitialYear > 2025 ||
+            $conventionalDateFinalYear < 1 ||
+            $conventionalDateFinalYear > 2025 ||
+            $conventionalDateInitialYear > $conventionalDateFinalYear
+        ) {
+            return null;
+        }
         
         // When checkbox is checked, it sends value="1", when unchecked it sends nothing
         $exactMatchParam = $request->query->get('conventionalDateExactMatch');
@@ -164,4 +175,3 @@ final class ConventionalDateInitialYearFilterParameter implements FilterParamete
         return (string) $queryBuilder->expr()->in($entityAlias . '.id', $matchingIds);
     }
 }
-

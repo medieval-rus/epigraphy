@@ -185,6 +185,8 @@ function initializeDateSlider() {
     const sliderElement = $('#conventional-date-range-slider');
     const initialInput = $('#conventional-date-initial-input');
     const finalInput = $('#conventional-date-final-input');
+    const hiddenInitialInput = $('#conventionalDateInitialYear');
+    const hiddenFinalInput = $('#conventionalDateFinalYear');
 
     // Check if all required elements exist
     if (sliderElement.length === 0) {
@@ -203,13 +205,50 @@ function initializeDateSlider() {
     const extendedMinDate = 1;  // Allow typing dates from year 1
     const extendedMaxDate = 2025; // Allow typing dates up to current year
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlInitialValue = parseInt(urlParams.get('conventionalDateInitialYear'), 10);
+    const urlFinalValue = parseInt(urlParams.get('conventionalDateFinalYear'), 10);
+
+    const hiddenInitialValue = parseInt(hiddenInitialInput.val(), 10);
+    const hiddenFinalValue = parseInt(hiddenFinalInput.val(), 10);
+
+    const hasInitialValue = Number.isFinite(urlInitialValue) || Number.isFinite(hiddenInitialValue);
+    const hasFinalValue = Number.isFinite(urlFinalValue) || Number.isFinite(hiddenFinalValue);
+
+    let initialValue = hasInitialValue
+        ? (Number.isFinite(urlInitialValue) ? urlInitialValue : hiddenInitialValue)
+        : minDate;
+    let finalValue = hasFinalValue
+        ? (Number.isFinite(urlFinalValue) ? urlFinalValue : hiddenFinalValue)
+        : maxDate;
+
+    if (initialValue < extendedMinDate) {
+        initialValue = extendedMinDate;
+    } else if (initialValue > extendedMaxDate) {
+        initialValue = extendedMaxDate;
+    }
+
+    if (finalValue < extendedMinDate) {
+        finalValue = extendedMinDate;
+    } else if (finalValue > extendedMaxDate) {
+        finalValue = extendedMaxDate;
+    }
+
+    if (initialValue > finalValue) {
+        initialValue = minDate;
+        finalValue = maxDate;
+    }
+
+    const sliderInitialValue = Math.min(Math.max(initialValue, minDate), maxDate);
+    const sliderFinalValue = Math.min(Math.max(finalValue, minDate), maxDate);
+
     // Initialize slider with visual range limited to 862-1700
     sliderElement.slider({
         range: true,
         step: step,
         min: minDate,
         max: maxDate,
-        values: [minDate, maxDate],
+        values: [sliderInitialValue, sliderFinalValue],
         slide: function(event, ui) {
             updateInputs(ui.values);
             // write to hidden fields if present so backend can use them
@@ -219,6 +258,9 @@ function initializeDateSlider() {
             if ($final.length) { $final.val(ui.values[1]); }
         }
     });
+
+    // Force slider handles to the restored range in case another init path overwrote defaults.
+    sliderElement.slider('values', [sliderInitialValue, sliderFinalValue]);
 
     // Track which input is currently being edited
     let editingInput = null;
@@ -279,8 +321,8 @@ function initializeDateSlider() {
     });
 
     // Initial setup
-    updateInputs([minDate, maxDate]);
-    updateHiddenFields(minDate, maxDate);
+    updateInputs([initialValue, finalValue]);
+    updateHiddenFields(initialValue, finalValue);
 
     // Set initial visual feedback
     validateCrossFieldAndUpdateVisuals();

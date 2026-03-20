@@ -139,11 +139,11 @@
                                                 <div class="row mt-2 align-items-end">
                                                     <div class="col-4">
                                                         <label class="form-label small">{{ 'controller.inscription.list.filter.dateSlider.fromYear'|trans }}:</label>
-                                                        <input type="number" class="form-control" id="conventional-date-initial-input" placeholder="{{ 'controller.inscription.list.filter.dateSlider.fromPlaceholder'|trans }}">
+                                                        <input type="number" class="form-control" id="conventional-date-initial-input" value="{{ app.request.query.get('conventionalDateInitialYear') }}" placeholder="{{ 'controller.inscription.list.filter.dateSlider.fromPlaceholder'|trans }}">
                                                     </div>
                                                     <div class="col-4">
                                                         <label class="form-label small">{{ 'controller.inscription.list.filter.dateSlider.toYear'|trans }}:</label>
-                                                        <input type="number" class="form-control" id="conventional-date-final-input" placeholder="{{ 'controller.inscription.list.filter.dateSlider.toPlaceholder'|trans }}">
+                                                        <input type="number" class="form-control" id="conventional-date-final-input" value="{{ app.request.query.get('conventionalDateFinalYear') }}" placeholder="{{ 'controller.inscription.list.filter.dateSlider.toPlaceholder'|trans }}">
                                                     </div>
                                                     <div class="col-4">
                                                         <div class="form-check date-exact-match-checkbox">
@@ -268,6 +268,78 @@
                     }
                 });
             }
+
+            // Restore date range from URL after all page scripts complete initialization.
+            // This keeps UI consistent even if an older cached JS bundle briefly resets values.
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    let initialFromUrl = parseInt(urlParams.get('conventionalDateInitialYear'), 10);
+                    let finalFromUrl = parseInt(urlParams.get('conventionalDateFinalYear'), 10);
+
+                    const initialInput = document.getElementById('conventional-date-initial-input');
+                    const finalInput = document.getElementById('conventional-date-final-input');
+                    const hiddenInitialInput = document.getElementById('conventionalDateInitialYear');
+                    const hiddenFinalInput = document.getElementById('conventionalDateFinalYear');
+                    const sliderElement = document.getElementById('conventional-date-range-slider');
+                    const minDate = sliderElement ? (parseInt(sliderElement.getAttribute('data-minimal-date'), 10) || 862) : 862;
+                    const maxDate = sliderElement ? (parseInt(sliderElement.getAttribute('data-maximal-date'), 10) || 1700) : 1700;
+
+                    const hasValidUrlRange =
+                        Number.isFinite(initialFromUrl) &&
+                        Number.isFinite(finalFromUrl) &&
+                        initialFromUrl >= 1 &&
+                        initialFromUrl <= 2025 &&
+                        finalFromUrl >= 1 &&
+                        finalFromUrl <= 2025 &&
+                        initialFromUrl <= finalFromUrl;
+
+                    if (!hasValidUrlRange) {
+                        initialFromUrl = minDate;
+                        finalFromUrl = maxDate;
+                    }
+
+                    if (initialInput) {
+                        initialInput.value = String(initialFromUrl);
+                    }
+
+                    if (finalInput) {
+                        finalInput.value = String(finalFromUrl);
+                    }
+
+                    if (hiddenInitialInput) {
+                        hiddenInitialInput.value = String(initialFromUrl);
+                    }
+
+                    if (hiddenFinalInput) {
+                        hiddenFinalInput.value = String(finalFromUrl);
+                    }
+
+                    if (sliderElement && window.jQuery && typeof window.jQuery(sliderElement).slider === 'function') {
+                        const sliderInitial = Math.min(Math.max(initialFromUrl, minDate), maxDate);
+                        const sliderFinal = Math.min(Math.max(finalFromUrl, minDate), maxDate);
+                        const orderedInitial = Math.min(sliderInitial, sliderFinal);
+                        const orderedFinal = Math.max(sliderInitial, sliderFinal);
+
+                        let attempt = 0;
+                        const maxAttempts = 10;
+                        const syncSlider = function() {
+                            attempt += 1;
+                            const jqSlider = window.jQuery(sliderElement);
+                            if (jqSlider.hasClass('ui-slider')) {
+                                jqSlider.slider('values', [orderedInitial, orderedFinal]);
+                                return;
+                            }
+
+                            if (attempt < maxAttempts) {
+                                setTimeout(syncSlider, 200);
+                            }
+                        };
+
+                        syncSlider();
+                    }
+                }, 300);
+            });
         });
     </script>
 {%- endmacro -%}
