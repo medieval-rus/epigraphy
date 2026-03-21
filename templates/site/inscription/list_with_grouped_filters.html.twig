@@ -3,42 +3,47 @@
 {%- block stylesheets -%}
     {{ parent() }}
     <style>
-        main.eomr-main table[data-vyfony-filterable-table] tbody tr {
-            cursor: pointer;
+        main.eomr-main table[data-vyfony-filterable-table] .table-primary-cell {
+            align-items: center;
+            display: flex;
+            gap: 0.5rem;
+            white-space: nowrap;
         }
 
-        main.eomr-main table[data-vyfony-filterable-table] tbody tr > th,
-        main.eomr-main table[data-vyfony-filterable-table] tbody tr > td {
-            transition: background-color 0.15s ease-in-out;
+        main.eomr-main table[data-vyfony-filterable-table] a.table-primary-link {
+            color: #0b4ea2;
+            font-weight: 600;
+            text-decoration: none;
         }
 
-        @media (hover: hover) and (pointer: fine) {
-            main.eomr-main table[data-vyfony-filterable-table] tbody tr:hover > th,
-            main.eomr-main table[data-vyfony-filterable-table] tbody tr:hover > td {
-                background-color: #e9ecef !important;
-            }
+        main.eomr-main table[data-vyfony-filterable-table] a.table-primary-link:hover,
+        main.eomr-main table[data-vyfony-filterable-table] a.table-primary-link:focus-visible {
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 2px;
         }
 
-        main.eomr-main table[data-vyfony-filterable-table] tbody tr:focus-visible {
-            outline: 2px solid #6c757d;
-            outline-offset: -2px;
+        main.eomr-main table[data-vyfony-filterable-table] .table-filter-chip-list {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            vertical-align: middle;
         }
 
         main.eomr-main table[data-vyfony-filterable-table] a.table-filter-link {
             color: #495057;
-            text-decoration: underline;
-            text-decoration-thickness: 1px;
-            text-underline-offset: 2px;
-            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+            line-height: 1.25;
+            text-decoration: none;
+            transition: color 0.15s ease-in-out, text-decoration-color 0.15s ease-in-out;
         }
 
         main.eomr-main table[data-vyfony-filterable-table] a.table-filter-link:hover,
         main.eomr-main table[data-vyfony-filterable-table] a.table-filter-link:focus-visible {
-            color: #212529;
-            background-color: #dde2e6;
-            border-radius: 2px;
+            color: #0b3d91;
             outline: none;
-            text-decoration: none;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 2px;
         }
     </style>
 {%- endblock -%}
@@ -54,6 +59,9 @@
 
     <div class="row">
         <div class="col-12 inscription-search-table-col">
+            <p class="text-muted small mb-2">
+                {{ 'controller.inscription.list.table.hint'|trans }}
+            </p>
             {{ filterable_table.render_table(table) }}
             {# {{ dump(table) }} #}
         </div>
@@ -76,34 +84,6 @@
 
 {%- block javascripts -%}
     {{ parent() }}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const table = document.querySelector('table[data-vyfony-filterable-table]');
-            if (!table) {
-                return;
-            }
-
-            const interactiveSelector = 'a, button, input, textarea, select, label, summary, [role="button"]';
-
-            table.addEventListener('click', function (event) {
-                const row = event.target.closest('tbody tr[data-row-href]');
-                if (!row) {
-                    return;
-                }
-
-                if (event.target.closest(interactiveSelector)) {
-                    return;
-                }
-
-                const href = row.getAttribute('data-row-href');
-                if (href) {
-                    event.preventDefault();
-                    event.stopImmediatePropagation();
-                    window.location.href = href;
-                }
-            }, true);
-        });
-    </script>
 {%- endblock -%}
 
 {%- macro render_grouped_filter(filterForm, filterConfigurator) -%}
@@ -159,11 +139,11 @@
                                                 <div class="row mt-2 align-items-end">
                                                     <div class="col-4">
                                                         <label class="form-label small">{{ 'controller.inscription.list.filter.dateSlider.fromYear'|trans }}:</label>
-                                                        <input type="number" class="form-control" id="conventional-date-initial-input" placeholder="{{ 'controller.inscription.list.filter.dateSlider.fromPlaceholder'|trans }}">
+                                                        <input type="number" class="form-control" id="conventional-date-initial-input" value="{{ app.request.query.get('conventionalDateInitialYear') }}" placeholder="{{ 'controller.inscription.list.filter.dateSlider.fromPlaceholder'|trans }}">
                                                     </div>
                                                     <div class="col-4">
                                                         <label class="form-label small">{{ 'controller.inscription.list.filter.dateSlider.toYear'|trans }}:</label>
-                                                        <input type="number" class="form-control" id="conventional-date-final-input" placeholder="{{ 'controller.inscription.list.filter.dateSlider.toPlaceholder'|trans }}">
+                                                        <input type="number" class="form-control" id="conventional-date-final-input" value="{{ app.request.query.get('conventionalDateFinalYear') }}" placeholder="{{ 'controller.inscription.list.filter.dateSlider.toPlaceholder'|trans }}">
                                                     </div>
                                                     <div class="col-4">
                                                         <div class="form-check date-exact-match-checkbox">
@@ -288,6 +268,78 @@
                     }
                 });
             }
+
+            // Restore date range from URL after all page scripts complete initialization.
+            // This keeps UI consistent even if an older cached JS bundle briefly resets values.
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    let initialFromUrl = parseInt(urlParams.get('conventionalDateInitialYear'), 10);
+                    let finalFromUrl = parseInt(urlParams.get('conventionalDateFinalYear'), 10);
+
+                    const initialInput = document.getElementById('conventional-date-initial-input');
+                    const finalInput = document.getElementById('conventional-date-final-input');
+                    const hiddenInitialInput = document.getElementById('conventionalDateInitialYear');
+                    const hiddenFinalInput = document.getElementById('conventionalDateFinalYear');
+                    const sliderElement = document.getElementById('conventional-date-range-slider');
+                    const minDate = sliderElement ? (parseInt(sliderElement.getAttribute('data-minimal-date'), 10) || 862) : 862;
+                    const maxDate = sliderElement ? (parseInt(sliderElement.getAttribute('data-maximal-date'), 10) || 1700) : 1700;
+
+                    const hasValidUrlRange =
+                        Number.isFinite(initialFromUrl) &&
+                        Number.isFinite(finalFromUrl) &&
+                        initialFromUrl >= 1 &&
+                        initialFromUrl <= 2025 &&
+                        finalFromUrl >= 1 &&
+                        finalFromUrl <= 2025 &&
+                        initialFromUrl <= finalFromUrl;
+
+                    if (!hasValidUrlRange) {
+                        initialFromUrl = minDate;
+                        finalFromUrl = maxDate;
+                    }
+
+                    if (initialInput) {
+                        initialInput.value = String(initialFromUrl);
+                    }
+
+                    if (finalInput) {
+                        finalInput.value = String(finalFromUrl);
+                    }
+
+                    if (hiddenInitialInput) {
+                        hiddenInitialInput.value = String(initialFromUrl);
+                    }
+
+                    if (hiddenFinalInput) {
+                        hiddenFinalInput.value = String(finalFromUrl);
+                    }
+
+                    if (sliderElement && window.jQuery && typeof window.jQuery(sliderElement).slider === 'function') {
+                        const sliderInitial = Math.min(Math.max(initialFromUrl, minDate), maxDate);
+                        const sliderFinal = Math.min(Math.max(finalFromUrl, minDate), maxDate);
+                        const orderedInitial = Math.min(sliderInitial, sliderFinal);
+                        const orderedFinal = Math.max(sliderInitial, sliderFinal);
+
+                        let attempt = 0;
+                        const maxAttempts = 10;
+                        const syncSlider = function() {
+                            attempt += 1;
+                            const jqSlider = window.jQuery(sliderElement);
+                            if (jqSlider.hasClass('ui-slider')) {
+                                jqSlider.slider('values', [orderedInitial, orderedFinal]);
+                                return;
+                            }
+
+                            if (attempt < maxAttempts) {
+                                setTimeout(syncSlider, 200);
+                            }
+                        };
+
+                        syncSlider();
+                    }
+                }, 300);
+            });
         });
     </script>
 {%- endmacro -%}

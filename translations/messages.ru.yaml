@@ -37,7 +37,7 @@ controller:
       title: Список надписей
       table:
         column:
-          id: ''
+          id: ID
           carrier:
             category: Категория носителя
             city: Населённый пункт
@@ -48,6 +48,7 @@ controller:
             text: Текст
             description: Содержание
             contentCategory: Категория по содержанию
+        hint: 'ID ведет на страницу надписи. Метки в колонках носителя показывают список связанных надписей.'
         resultsCount: 'Найдено надписей: count'
       filter:
         dataColumn:
@@ -58,7 +59,7 @@ controller:
         discoverySite: Место находки
         city: Населённый пункт
         carrierType: Тип носителя
-        carrierCategory: "Подкатегория носителя"
+        carrierCategory: "Носитель"
         writingType: Разряд
         writingMethod: "Способ нанесения"
         preservationState: Состояние сохранности
@@ -67,7 +68,7 @@ controller:
         text: Текст надписи
         fulltext: Поиск по всем полям
         translation: Перевод
-        material: "Подкатегория материала"
+        material: "Материал"
         contentCategory: "Содержание"
         origin1: Город / Местность
         origin2: Здание / Раскоп
@@ -148,6 +149,7 @@ controller:
             normalization: Нормализация
             interpretationComment: Комментарий к прочтению
             translation: Перевод
+            automaticTranslation: Автоматический перевод
             description: Содержание
             dateInText: Дата в тексте
             nonStratigraphicalDate: Датировка по палеографии и языку
@@ -185,3 +187,6 @@ post:
 bibliography:
   prePublicationMark: '[Предв.]'
   prePublicationRemark: Публикация готовится к печати
+
+translation:
+  aiBadge: Переведено с помощью ИИ

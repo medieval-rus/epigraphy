@@ -13,8 +13,8 @@ final class LocalizedTextService
     private EntityManagerInterface $entityManager;
     private RequestStack $requestStack;
 
-    /** @var array<string, ?string> */
-    private array $cache = [];
+    /** @var array<string, ?LocalizedText> */
+    private array $entityCache = [];
 
     public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack)
     {
@@ -22,7 +22,13 @@ final class LocalizedTextService
         $this->requestStack = $requestStack;
     }
 
-    public function resolveForEntity($entity, string $field, ?string $fallbackValue = null, ?string $locale = null): ?string
+    public function resolveForEntity(
+        $entity,
+        string $field,
+        ?string $fallbackValue = null,
+        ?string $locale = null,
+        bool $allowRuFallback = true
+    ): ?string
     {
         $targetType = LocalizedText::resolveTargetTypeFromEntity($entity);
         if (null === $targetType) {
@@ -45,7 +51,7 @@ final class LocalizedTextService
             return $primaryValue;
         }
 
-        if ('ru' !== $normalizedLocale) {
+        if ($allowRuFallback && 'ru' !== $normalizedLocale) {
             $ruValue = $this->findValue($targetType, (int) $targetId, $field, 'ru');
             if (null !== $ruValue) {
                 return $ruValue;
@@ -73,7 +79,7 @@ final class LocalizedTextService
             if (null !== $entity) {
                 $this->entityManager->remove($entity);
             }
-            $this->cache[$this->cacheKey($targetType, $targetId, $field, $normalizedLocale)] = null;
+            $this->entityCache[$this->cacheKey($targetType, $targetId, $field, $normalizedLocale)] = null;
             return;
         }
 
@@ -89,14 +95,43 @@ final class LocalizedTextService
             $entity->setValue($normalizedValue);
         }
 
-        $this->cache[$this->cacheKey($targetType, $targetId, $field, $normalizedLocale)] = $normalizedValue;
+        $this->entityCache[$this->cacheKey($targetType, $targetId, $field, $normalizedLocale)] = $entity;
+    }
+
+    public function isAiGeneratedForEntity($entity, string $field, ?string $locale = null): bool
+    {
+        $targetType = LocalizedText::resolveTargetTypeFromEntity($entity);
+        if (null === $targetType || !method_exists($entity, 'getId')) {
+            return false;
+        }
+
+        $targetId = $entity->getId();
+        if (null === $targetId) {
+            return false;
+        }
+
+        $request = $this->requestStack->getCurrentRequest();
+        $normalizedLocale = $this->normalizeLocale($locale ?? (null === $request ? 'ru' : $request->getLocale()));
+        $localizedEntity = $this->findEntity($targetType, (int) $targetId, $field, $normalizedLocale);
+
+        if (null === $localizedEntity) {
+            return false;
+        }
+
+        return $localizedEntity->isAiGenerated();
     }
 
     private function findValue(string $targetType, int $targetId, string $field, string $locale): ?string
     {
+        $entity = $this->findEntity($targetType, $targetId, $field, $locale);
+        return null === $entity ? null : $entity->getValue();
+    }
+
+    private function findEntity(string $targetType, int $targetId, string $field, string $locale): ?LocalizedText
+    {
         $cacheKey = $this->cacheKey($targetType, $targetId, $field, $locale);
-        if (array_key_exists($cacheKey, $this->cache)) {
-            return $this->cache[$cacheKey];
+        if (array_key_exists($cacheKey, $this->entityCache)) {
+            return $this->entityCache[$cacheKey];
         }
 
         $entity = $this->entityManager->getRepository(LocalizedText::class)->findOneBy(
@@ -107,11 +142,9 @@ final class LocalizedTextService
                 'locale' => $locale,
             ]
         );
+        $this->entityCache[$cacheKey] = $entity;
 
-        $value = null === $entity ? null : $entity->getValue();
-        $this->cache[$cacheKey] = $value;
-
-        return $value;
+        return $entity;
     }
 
     private function normalizeLocale(?string $locale): string

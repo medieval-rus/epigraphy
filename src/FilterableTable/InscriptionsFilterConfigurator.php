@@ -30,12 +30,9 @@ use App\FilterableTable\Filter\Parameter\DiscoverySiteFilterParameter;
 use App\FilterableTable\Filter\Parameter\AlphabetFilterParameter;
 use App\FilterableTable\Filter\Parameter\AuthorFilterParameter;
 use App\FilterableTable\Filter\Parameter\CarrierCategoryFilterParameter;
-use App\FilterableTable\Filter\Parameter\SuperCarrierCategoryFilterParameter;
 use App\FilterableTable\Filter\Parameter\CarrierTypeFilterParameter;
 use App\FilterableTable\Filter\Parameter\ContentCategoryFilterParameter;
-use App\FilterableTable\Filter\Parameter\SuperContentCategoryFilterParameter;
 use App\FilterableTable\Filter\Parameter\MaterialFilterParameter;
-use App\FilterableTable\Filter\Parameter\SuperMaterialFilterParameter;
 use App\FilterableTable\Filter\Parameter\NumberInSourceFilterParameter;
 use App\FilterableTable\Filter\Parameter\Origin1FilterParameter;
 use App\FilterableTable\Filter\Parameter\Origin2FilterParameter;
@@ -43,7 +40,6 @@ use App\FilterableTable\Filter\Parameter\PreservationStateFilterParameter;
 use App\FilterableTable\Filter\Parameter\TextFilterParameter;
 use App\FilterableTable\Filter\Parameter\TranslationFilterParameter;
 use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
-use App\FilterableTable\Filter\Parameter\SuperWritingMethodFilterParameter;
 use App\FilterableTable\Filter\Parameter\FullTextFilterParameter;
 use App\FilterableTable\Filter\Parameter\ConventionalDateInitialYearFilterParameter;
 use App\FilterableTable\Filter\Parameter\ConventionalDateFinalYearFilterParameter;
@@ -68,16 +64,12 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     private ValueStringifierInterface $valueStringifier;
     private CarrierTypeFilterParameter $carrierTypeFilterParameter;
     private CarrierCategoryFilterParameter $carrierCategoryFilterParameter;
-    private SuperCarrierCategoryFilterParameter $superCarrierCategoryFilterParameter;
     private WritingMethodFilterParameter $writingMethodFilterParameter;
-    private SuperWritingMethodFilterParameter $superWritingMethodFilterParameter;
     private PreservationStateFilterParameter $preservationStateFilterParameter;
     private AlphabetFilterParameter $alphabetFilterParameter;
     private TextFilterParameter $textFilterParameter;
     private MaterialFilterParameter $materialFilterParameter;
-    private SuperMaterialFilterParameter $superMaterialFilterParameter;
     private ContentCategoryFilterParameter $contentCategoryFilterParameter;
-    private SuperContentCategoryFilterParameter $superContentCategoryFilterParameter;
     private AuthorFilterParameter $authorFilterParameter;
     private NumberInSourceFilterParameter $numberInSourceFilterParameter;
     private Origin1FilterParameter $origin1FilterParameter;
@@ -93,16 +85,12 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
         ValueStringifierInterface $valueStringifier,
         CarrierTypeFilterParameter $carrierTypeFilterParameter,
         CarrierCategoryFilterParameter $carrierCategoryFilterParameter,
-        SuperCarrierCategoryFilterParameter $superCarrierCategoryFilterParameter,
         WritingMethodFilterParameter $writingMethodFilterParameter,
-        SuperWritingMethodFilterParameter $superWritingMethodFilterParameter,
         PreservationStateFilterParameter $preservationStateFilterParameter,
         AlphabetFilterParameter $alphabetFilterParameter,
         TextFilterParameter $textFilterParameter,
         MaterialFilterParameter $materialFilterParameter,
-        SuperMaterialFilterParameter $superMaterialFilterParameter,
         ContentCategoryFilterParameter $contentCategoryFilterParameter,
-        SuperContentCategoryFilterParameter $superContentCategoryFilterParameter,
         AuthorFilterParameter $authorFilterParameter,
         NumberInSourceFilterParameter $numberInSourceFilterParameter,
         Origin1FilterParameter $origin1FilterParameter,
@@ -194,16 +182,12 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
     {
         return [
             // типология носителя
-            $this->superCarrierCategoryFilterParameter,
             $this->carrierCategoryFilterParameter,
-            $this->superMaterialFilterParameter,
             $this->materialFilterParameter,
             $this->cityFilterParameter,
             $this->discoverySiteFilterParameter,
             // типология надписи
-            $this->superWritingMethodFilterParameter,
             $this->writingMethodFilterParameter,
-            $this->superContentCategoryFilterParameter,
             $this->contentCategoryFilterParameter,
             $this->alphabetFilterParameter,
             $this->preservationStateFilterParameter,
@@ -226,16 +210,14 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
             'carrierData' => [
                 'label' => 'controller.inscription.list.filter.sections.carrierData',
                 'rows' => [
-                    [$this->superCarrierCategoryFilterParameter, $this->carrierCategoryFilterParameter],
-                    [$this->superMaterialFilterParameter, $this->materialFilterParameter],
+                    [$this->carrierCategoryFilterParameter, $this->materialFilterParameter],
                     [$this->cityFilterParameter, $this->discoverySiteFilterParameter],
                 ]
             ],
             'inscriptionData' => [
                 'label' => 'controller.inscription.list.filter.sections.inscriptionData',
                 'rows' => [
-                    [$this->superWritingMethodFilterParameter, $this->writingMethodFilterParameter],
-                    [$this->superContentCategoryFilterParameter, $this->contentCategoryFilterParameter],
+                    [$this->writingMethodFilterParameter, $this->contentCategoryFilterParameter],
                     [$this->alphabetFilterParameter, $this->preservationStateFilterParameter],
                     [$this->authorFilterParameter, $this->numberInSourceFilterParameter],
                     [$this->translationFilterParameter, $this->textFilterParameter],

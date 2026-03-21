@@ -89,14 +89,27 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
     /**
      * @return StringActualValue[]
      */
-    public function extractFromZeroRowAsStrings(Inscription $inscription, string $propertyName): array
+    public function extractFromZeroRowAsStrings(
+        Inscription $inscription,
+        string $propertyName,
+        ?string $locale = null,
+        bool $allowLocaleFallback = true
+    ): array
     {
         $referenceValueFormatter = function (
             Interpretation $interpretation
-        ) use ($propertyName): ?StringActualValue {
+        ) use ($propertyName, $locale, $allowLocaleFallback): ?StringActualValue {
             $value = $this->getStringValue($this->propertyAccessor->getValue($interpretation, $propertyName));
+            $isAiGenerated = false;
             if (in_array($propertyName, $this->localizedInterpretationFields, true)) {
-                $value = $this->localizedTextService->resolveForEntity($interpretation, $propertyName, $value);
+                $value = $this->localizedTextService->resolveForEntity(
+                    $interpretation,
+                    $propertyName,
+                    $value,
+                    $locale,
+                    $allowLocaleFallback
+                );
+                $isAiGenerated = $this->localizedTextService->isAiGeneratedForEntity($interpretation, $propertyName, $locale);
             }
 
             if (null === $value) {
@@ -105,7 +118,8 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
 
             return new StringActualValue(
                 $value,
-                $this->getInterpretationRef($interpretation)
+                $this->getInterpretationRef($interpretation),
+                $isAiGenerated
             );
         };
 
@@ -118,13 +132,21 @@ final class ActualValueExtractor implements ActualValueExtractorInterface
         $referenceValues = array_map($referenceValueFormatter, $references);
 
         $zeroRowValue = $this->getStringValue($this->propertyAccessor->getValue($zeroRow, $propertyName));
+        $zeroRowIsAiGenerated = false;
         if (in_array($propertyName, $this->localizedZeroRowFields, true)) {
-            $zeroRowValue = $this->localizedTextService->resolveForEntity($zeroRow, $propertyName, $zeroRowValue);
+            $zeroRowValue = $this->localizedTextService->resolveForEntity(
+                $zeroRow,
+                $propertyName,
+                $zeroRowValue,
+                $locale,
+                $allowLocaleFallback
+            );
+            $zeroRowIsAiGenerated = $this->localizedTextService->isAiGeneratedForEntity($zeroRow, $propertyName, $locale);
         }
 
         if (null !== $zeroRowValue) {
             $allValues = [
-                new StringActualValue($zeroRowValue, null),
+                new StringActualValue($zeroRowValue, null, $zeroRowIsAiGenerated),
                 ...$referenceValues,
             ];
         } else {

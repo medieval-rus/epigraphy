@@ -33,6 +33,8 @@ interface ValueStringifierInterface
     public function stringify(
         Inscription $inscription,
         string $propertyName,
-        string $formatType = ActualValueFormatterInterface::FORMAT_TYPE_DEFAULT
+        string $formatType = ActualValueFormatterInterface::FORMAT_TYPE_DEFAULT,
+        ?string $locale = null,
+        bool $allowLocaleFallback = true
     ): ?string;
 }

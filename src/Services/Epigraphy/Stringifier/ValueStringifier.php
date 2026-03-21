@@ -47,12 +47,14 @@ final class ValueStringifier implements ValueStringifierInterface
     public function stringify(
         Inscription $inscription,
         string $propertyName,
-        string $formatType = ActualValueFormatterInterface::FORMAT_TYPE_DEFAULT
+        string $formatType = ActualValueFormatterInterface::FORMAT_TYPE_DEFAULT,
+        ?string $locale = null,
+        bool $allowLocaleFallback = true
     ): ?string {
         
         $map_result = array_map(
             fn (StringActualValue $actualValue): string => $this->formatter->format($actualValue, $formatType),
-            $this->extractor->extractFromZeroRowAsStrings($inscription, $propertyName)
+            $this->extractor->extractFromZeroRowAsStrings($inscription, $propertyName, $locale, $allowLocaleFallback)
         );
         if (
                 count($map_result) > 1 && # add collapse to text and translation

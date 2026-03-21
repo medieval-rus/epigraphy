@@ -174,6 +174,8 @@ list:
       name: Название списка
 
 form:
+  localizedText:
+    aiGenerated: Переведено ИИ (черновик)
   post:
     fields:
       title: Заголовок
@@ -546,6 +548,8 @@ action:
   clone:
     label: Клонировать
     flash: Элемент успешно клонирован.
+  translateAllInscription:
+    label: Перевести всю надпись
   regenerateThumbnails:
     label: Сгенерировать превью
     flash: Превью успешно сгенерированы.

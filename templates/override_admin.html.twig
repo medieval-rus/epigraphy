@@ -4,6 +4,7 @@
     {% autoescape false %}
     <script type="text/javascript">
         const bibliography = {{ admin.bibliography }};
+        window.EOMR_TRANSLATION_STORE_CSRF_TOKEN = {{ csrf_token('admin_translation_store')|json_encode|raw }};
     </script>
     {% endautoescape %}
     {{ parent () }}

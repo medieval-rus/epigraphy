@@ -33,6 +33,7 @@ use App\Services\Epidoc\Xslt\EpidocXsltRenderResult;
 use App\Services\Epidoc\Xslt\EpidocXsltRenderer;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Vyfony\Bundle\FilterableTableBundle\Table\TableInterface;
@@ -46,8 +47,18 @@ final class InscriptionController extends AbstractController
     /**
      * @Route("/longlist", name="inscription__longlist", methods={"GET"})
      */
-    public function longlist(PostRepository $postRepository, TableInterface $filterableTable, InscriptionsFilterConfigurator $filterConfigurator): Response
+    public function longlist(
+        Request $request,
+        PostRepository $postRepository,
+        TableInterface $filterableTable,
+        InscriptionsFilterConfigurator $filterConfigurator
+    ): Response
     {
+        $sanitizedQuery = $this->sanitizeConventionalDateQuery($request->query->all());
+        if (null !== $sanitizedQuery) {
+            return $this->redirectToRoute('inscription__longlist', $sanitizedQuery);
+        }
+
         return $this->render(
             'site/inscription/list_with_grouped_filters.html.twig', 
             [
@@ -59,6 +70,46 @@ final class InscriptionController extends AbstractController
                 'post' => $postRepository->findDatabase()
             ]
         );
+    }
+
+    /**
+     * @param array<string, mixed> $query
+     *
+     * @return array<string, mixed>|null
+     */
+    private function sanitizeConventionalDateQuery(array $query): ?array
+    {
+        $initialRaw = $query['conventionalDateInitialYear'] ?? null;
+        $finalRaw = $query['conventionalDateFinalYear'] ?? null;
+
+        if (null === $initialRaw && null === $finalRaw) {
+            return null;
+        }
+
+        // Empty inputs are treated as "no date filter".
+        if ($initialRaw === '' && $finalRaw === '') {
+            return null;
+        }
+
+        $initialYear = filter_var($initialRaw, FILTER_VALIDATE_INT);
+        $finalYear = filter_var($finalRaw, FILTER_VALIDATE_INT);
+
+        $isRangeInvalid = false;
+        if (false === $initialYear || false === $finalYear) {
+            $isRangeInvalid = true;
+        } elseif ($initialYear < 1 || $initialYear > 2025 || $finalYear < 1 || $finalYear > 2025) {
+            $isRangeInvalid = true;
+        } elseif ($initialYear > $finalYear) {
+            $isRangeInvalid = true;
+        }
+
+        if (!$isRangeInvalid) {
+            return null;
+        }
+
+        unset($query['conventionalDateInitialYear'], $query['conventionalDateFinalYear'], $query['conventionalDateExactMatch']);
+
+        return $query;
     }
 
     /**

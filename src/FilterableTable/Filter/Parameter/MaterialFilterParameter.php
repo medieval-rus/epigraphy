@@ -68,9 +68,11 @@ final class MaterialFilterParameter implements FilterParameterInterface, Express
         return [
             'label' => 'controller.inscription.list.filter.material',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
-            'choice_attr' => function($choice, $key, $value) {
+            'choice_attr' => function (Material $choice) {
+                $superMaterial = $choice->getSupermaterial();
+
                 return [
-                    'data-super' => $choice->getSupermaterial() ? $choice->getSupermaterial()->getId() : 0
+                    'data-parent-id' => null === $superMaterial ? '' : (string) $superMaterial->getId(),
                 ];
             },
             'class' => Material::class,
@@ -81,18 +83,29 @@ final class MaterialFilterParameter implements FilterParameterInterface, Express
 
                 $request = $this->requestStack->getCurrentRequest();
                 $locale = null === $request ? null : $request->getLocale();
+                $label = (string) $this->localizedTextService->resolveForEntity($choice, 'name', $choice->getName(), $locale);
 
-                return (string) $this->localizedTextService->resolveForEntity($choice, 'name', $choice->getName(), $locale);
+                return null === $choice->getSupermaterial() ? $label : "\u{00A0}\u{00A0}\u{00A0}\u{00A0}{$label}";
             },
             'expanded' => false,
             'multiple' => true,
             'query_builder' => function (EntityRepository $repository): QueryBuilder {
                 $entityAlias = $this->createAlias();
+                $parentAlias = $this->aliasFactory->createAlias(static::class, 'parent');
 
                 return $repository
                     ->createQueryBuilder($entityAlias)
-                    ->where($entityAlias.'.isSuperMaterial != true')
-                    ->orderBy($entityAlias.'.name', 'ASC');
+                    ->leftJoin($entityAlias.'.supermaterial', $parentAlias)
+                    ->addSelect(
+                        'CASE WHEN '.$entityAlias.'.supermaterial IS NULL '.
+                        'THEN '.$entityAlias.'.name ELSE '.$parentAlias.'.name END AS HIDDEN group_name'
+                    )
+                    ->addSelect(
+                        'CASE WHEN '.$entityAlias.'.supermaterial IS NULL THEN 0 ELSE 1 END AS HIDDEN level_sort'
+                    )
+                    ->orderBy('group_name', 'ASC')
+                    ->addOrderBy('level_sort', 'ASC')
+                    ->addOrderBy($entityAlias.'.name', 'ASC');
             },
         ];
     }
@@ -106,7 +119,21 @@ final class MaterialFilterParameter implements FilterParameterInterface, Express
             return null;
         }
 
-        $ids = $formData->map(fn (Material $entity): int => $entity->getId())->toArray();
+        $ids = [];
+
+        foreach ($formData as $entity) {
+            if (!$entity instanceof Material) {
+                continue;
+            }
+
+            $ids[$entity->getId()] = true;
+
+            foreach ($entity->getSubmaterials() as $submaterial) {
+                $ids[$submaterial->getId()] = true;
+            }
+        }
+
+        $ids = array_keys($ids);
 
         $queryBuilder
             ->innerJoin(

@@ -68,9 +68,11 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
         return [
             'label' => 'controller.inscription.list.filter.contentCategory',
             'attr' => ['data-vyfony-filterable-table-filter-parameter' => true],
-            'choice_attr' => function($choice, $key, $value) {
+            'choice_attr' => function (ContentCategory $choice) {
+                $superCategory = $choice->getSupercategory();
+
                 return [
-                    'data-super' => $choice->getSupercategory() ? $choice->getSupercategory()->getId() : 0
+                    'data-parent-id' => null === $superCategory ? '' : (string) $superCategory->getId(),
                 ];
             },
             'class' => ContentCategory::class,
@@ -81,18 +83,29 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
 
                 $request = $this->requestStack->getCurrentRequest();
                 $locale = null === $request ? null : $request->getLocale();
+                $label = (string) $this->localizedTextService->resolveForEntity($choice, 'name', $choice->getName(), $locale);
 
-                return (string) $this->localizedTextService->resolveForEntity($choice, 'name', $choice->getName(), $locale);
+                return null === $choice->getSupercategory() ? $label : "\u{00A0}\u{00A0}\u{00A0}\u{00A0}{$label}";
             },
             'expanded' => false,
             'multiple' => true,
             'query_builder' => function (EntityRepository $repository): QueryBuilder {
                 $entityAlias = $this->createAlias();
+                $parentAlias = $this->aliasFactory->createAlias(static::class, 'parent');
 
                 return $repository
                     ->createQueryBuilder($entityAlias)
-                    ->where($entityAlias.'.isSuperCategory != true')
-                    ->orderBy($entityAlias.'.name', 'ASC');
+                    ->leftJoin($entityAlias.'.supercategory', $parentAlias)
+                    ->addSelect(
+                        'CASE WHEN '.$entityAlias.'.supercategory IS NULL '.
+                        'THEN '.$entityAlias.'.name ELSE '.$parentAlias.'.name END AS HIDDEN group_name'
+                    )
+                    ->addSelect(
+                        'CASE WHEN '.$entityAlias.'.supercategory IS NULL THEN 0 ELSE 1 END AS HIDDEN level_sort'
+                    )
+                    ->orderBy('group_name', 'ASC')
+                    ->addOrderBy('level_sort', 'ASC')
+                    ->addOrderBy($entityAlias.'.name', 'ASC');
             },
         ];
     }
@@ -106,7 +119,21 @@ final class ContentCategoryFilterParameter implements FilterParameterInterface, 
             return null;
         }
 
-        $ids = $formData->map(fn (ContentCategory $entity): int => $entity->getId())->toArray();
+        $ids = [];
+
+        foreach ($formData as $entity) {
+            if (!$entity instanceof ContentCategory) {
+                continue;
+            }
+
+            $ids[$entity->getId()] = true;
+
+            foreach ($entity->getSubcategories() as $subcategory) {
+                $ids[$subcategory->getId()] = true;
+            }
+        }
+
+        $ids = array_keys($ids);
 
         $queryBuilder
             ->innerJoin(
