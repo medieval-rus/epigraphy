@@ -31,10 +31,13 @@ final class StringActualValue
 
     private ?string $description;
 
-    public function __construct(string $value, ?string $description)
+    private bool $isAiGenerated;
+
+    public function __construct(string $value, ?string $description, bool $isAiGenerated = false)
     {
         $this->value = $value;
         $this->description = $description;
+        $this->isAiGenerated = $isAiGenerated;
     }
 
     public function getValue(): string
@@ -45,5 +48,10 @@ final class StringActualValue
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function isAiGenerated(): bool
+    {
+        return $this->isAiGenerated;
     }
 }

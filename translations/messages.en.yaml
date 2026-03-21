@@ -149,6 +149,7 @@ controller:
             normalization: Normalization
             interpretationComment: Reading comment
             translation: Translation
+            automaticTranslation: Automatic translation
             description: Inscription type
             dateInText: Date stated in text
             nonStratigraphicalDate: Dating (palaeography & language)
@@ -187,3 +188,6 @@ post:
 bibliography:
   prePublicationMark: '[Forth.]'
   prePublicationRemark: Publication in preparation
+
+translation:
+  aiBadge: Translated with AI

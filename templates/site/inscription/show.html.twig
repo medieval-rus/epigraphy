@@ -46,7 +46,13 @@
             {{ self.format_text_row(translationContext, 'zeroRow.reconstruction', self.format_zero_row(inscription, 'reconstruction')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.normalization', self.format_zero_row(inscription, 'normalization')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.interpretationComment', self.format_zero_row(inscription, 'interpretationComment')) }}
-            {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_translation(inscription)) }}
+            {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_translation(inscription, 'ru')) }}
+            {% if app.request.locale == 'en' %}
+                {% set automaticTranslation = self.format_translation(inscription, 'en', false)|trim %}
+                {% if automaticTranslation is not empty %}
+                    {{ self.format_text_row(translationContext, 'zeroRow.automaticTranslation', automaticTranslation) }}
+                {% endif %}
+            {% endif %}
             {{ self.format_rssda_iframe_row(translationContext, inscription.rssdaRender) }}
             {{ self.format_text_row(translationContext, 'zeroRow.photos', self.format_zero_row_images(inscription, 'photos')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.drawings', self.format_zero_row_images(inscription, 'drawings')) }}
@@ -221,11 +227,11 @@
     {{ include('site/inscription/_photoswipe_layout.html.twig') }}
 {% endblock %}
 
-{%- macro format_zero_row(inscription, propertyName, formatType = 'html') -%}
+{%- macro format_zero_row(inscription, propertyName, formatType = 'html', locale = null, allowLocaleFallback = true) -%}
 
     {% import _self as self %}
     {# {% autoescape false %} #}
-        {{- valueStringifier.stringify(inscription, propertyName, formatType)|raw -}}
+        {{- valueStringifier.stringify(inscription, propertyName, formatType, locale, allowLocaleFallback)|raw -}}
     {# {% endautoescape %} #}
 {%- endmacro -%}
 
@@ -406,10 +412,10 @@
     {% endif %}
 {%- endmacro -%}
 
-{%- macro format_translation(inscription) -%}
+{%- macro format_translation(inscription, locale = null, allowLocaleFallback = true) -%}
     {% import _self as self %}
 
-    {{- self.format_zero_row(inscription, 'translation', 'translation')|default('-') -}}
+    {{- self.format_zero_row(inscription, 'translation', 'translation', locale, allowLocaleFallback) -}}
 {%- endmacro -%}
 
 {%- macro format_epidoc_text_row(translationContext, labelTranslationKey, epidocRendered, epidocRenderMode) -%}

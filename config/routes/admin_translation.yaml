@@ -2,3 +2,8 @@ admin_translation_preview:
   path: /admin/translation/preview
   controller: App\Controller\Admin\TranslationController::preview
   methods: [POST]
+
+admin_translation_store:
+  path: /admin/translation/store
+  controller: App\Controller\Admin\TranslationController::store
+  methods: [POST]

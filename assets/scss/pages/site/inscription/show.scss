@@ -70,6 +70,23 @@
   z-index: 1551;
 }
 
+td .eomr-ai-translation-badge,
+.eomr-ai-translation-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.45rem;
+  border: 1px solid #9dc6ff;
+  border-radius: 6px;
+  background-color: #eaf3ff;
+  color: #0f4ea8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
 .epidoc-header-cell {
   display: flex;
   align-items: center;

@@ -35,7 +35,12 @@ interface ActualValueExtractorInterface
     /**
      * @return StringActualValue[]
      */
-    public function extractFromZeroRowAsStrings(Inscription $inscription, string $propertyName): array;
+    public function extractFromZeroRowAsStrings(
+        Inscription $inscription,
+        string $propertyName,
+        ?string $locale = null,
+        bool $allowLocaleFallback = true
+    ): array;
 
     /**
      * @return FilesActualValue[]

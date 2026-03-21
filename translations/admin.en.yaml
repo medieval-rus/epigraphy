@@ -1,3 +1,7 @@
 action:
   translateAllInscription:
     label: Translate entire inscription
+
+form:
+  localizedText:
+    aiGenerated: AI translated draft

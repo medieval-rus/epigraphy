@@ -149,6 +149,7 @@ controller:
             normalization: Нормализация
             interpretationComment: Комментарий к прочтению
             translation: Перевод
+            automaticTranslation: Автоматический перевод
             description: Содержание
             dateInText: Дата в тексте
             nonStratigraphicalDate: Датировка по палеографии и языку
@@ -186,3 +187,6 @@ post:
 bibliography:
   prePublicationMark: '[Предв.]'
   prePublicationRemark: Публикация готовится к печати
+
+translation:
+  aiBadge: Переведено с помощью ИИ

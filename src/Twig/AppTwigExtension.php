@@ -69,7 +69,23 @@ final class AppTwigExtension extends AbstractExtension
 
     public function localizedText($entity, string $field, ?string $fallbackValue = null, ?string $locale = null): ?string
     {
-        return $this->localizedTextService->resolveForEntity($entity, $field, $fallbackValue, $locale);
+        $resolvedValue = $this->localizedTextService->resolveForEntity($entity, $field, $fallbackValue, $locale);
+        if (null === $resolvedValue) {
+            return null;
+        }
+
+        if (!$this->localizedTextService->isAiGeneratedForEntity($entity, $field, $locale)) {
+            return $resolvedValue;
+        }
+
+        $badgeText = htmlspecialchars($this->translator->trans('translation.aiBadge'), ENT_QUOTES, 'UTF-8');
+        $badgeHtml = '<span class="eomr-ai-translation-badge">'.$badgeText.'</span>';
+
+        if (preg_match('/<\/p>\s*$/i', $resolvedValue)) {
+            return (string) preg_replace('/<\/p>\s*$/i', ' '.$badgeHtml.'</p>', $resolvedValue, 1);
+        }
+
+        return $resolvedValue.' '.$badgeHtml;
     }
 
     public function localizedName($entity, ?string $locale = null): ?string

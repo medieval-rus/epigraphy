@@ -29,18 +29,22 @@ use App\Models\StringActualValue;
 use App\Services\Epigraphy\OriginalText\Formatter\OriginalTextFormatterInterface;
 use App\Services\Epigraphy\OriginalText\Parser\OriginalTextParserInterface;
 use InvalidArgumentException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ActualValueFormatter implements ActualValueFormatterInterface
 {
     private OriginalTextParserInterface $originalTextParser;
     private OriginalTextFormatterInterface $originalTextFormatter;
+    private TranslatorInterface $translator;
 
     public function __construct(
         OriginalTextParserInterface $originalTextParser,
-        OriginalTextFormatterInterface $originalTextFormatter
+        OriginalTextFormatterInterface $originalTextFormatter,
+        TranslatorInterface $translator
     ) {
         $this->originalTextParser = $originalTextParser;
         $this->originalTextFormatter = $originalTextFormatter;
+        $this->translator = $translator;
     }
 
     public function format(StringActualValue $actualValue, string $formatType): string
@@ -68,11 +72,13 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
             
             case self::FORMAT_TYPE_TRANSLATION:
                 $formattedValue = nl2br($value);
+                $formattedValue = $this->appendAiBadgeIfNeeded($actualValue, $formattedValue);
                 
                 break;
 
             case self::FORMAT_TYPE_HTML:
                 $formattedValue = nl2br($value);
+                $formattedValue = $this->appendAiBadgeIfNeeded($actualValue, $formattedValue);
 
                 break;
 
@@ -93,5 +99,22 @@ final class ActualValueFormatter implements ActualValueFormatterInterface
         $description = preg_replace('/^(?:<br\\s*\\/?>|&nbsp;|\\s)+/i', '', $description);
 
         return sprintf('%s (%s)', $formattedValue, $description);
+    }
+
+    private function appendAiBadgeIfNeeded(StringActualValue $actualValue, string $formattedValue): string
+    {
+        if (!$actualValue->isAiGenerated()) {
+            return $formattedValue;
+        }
+
+        $badgeText = $this->translator->trans('translation.aiBadge');
+        $safeBadgeText = htmlspecialchars($badgeText, ENT_QUOTES, 'UTF-8');
+        $badgeHtml = '<span class="eomr-ai-translation-badge">'.$safeBadgeText.'</span>';
+
+        if (preg_match('/<\/p>\s*$/i', $formattedValue)) {
+            return (string) preg_replace('/<\/p>\s*$/i', ' '.$badgeHtml.'</p>', $formattedValue, 1);
+        }
+
+        return $formattedValue.' '.$badgeHtml;
     }
 }

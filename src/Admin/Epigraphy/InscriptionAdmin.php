@@ -43,6 +43,9 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 final class InscriptionAdmin extends AbstractEntityAdmin
 {
+    /** @var array<string, ?LocalizedText> */
+    private array $localizedTextEntityCache = [];
+
     private const INSCRIPTION_TRANSLATABLE_FIELDS = [
         'dateExplanation' => CKEditorType::class,
         'comment' => CKEditorType::class,
@@ -512,7 +515,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
 
         $sourceFieldSuffix = sprintf('[%s]', $fieldName);
         if (LocalizedText::TARGET_ZERO_ROW === $targetType) {
-            $sourceFieldSuffix = sprintf('[zeroRow][%s]', $fieldName);
+            $sourceFieldSuffix = sprintf('[zeroRow__%s]', $fieldName);
         }
 
         $options = [
@@ -521,11 +524,19 @@ final class InscriptionAdmin extends AbstractEntityAdmin
             'label' => sprintf('%s (EN)', $fieldName),
             'data' => $this->getLocalizedTextValue($targetType, $fieldName),
             'attr' => [
-                'data-auto-translate-source-suffix' => $sourceFieldSuffix,
-                'data-auto-translate-target-lang' => 'en',
-                'data-auto-translate-source-lang' => 'ru',
+                'data-auto-translate-ai-generated' => $this->isLocalizedTextAiGenerated($targetType, $fieldName) ? '1' : '0',
+                'data-auto-translate-target-type' => $targetType,
+                'data-auto-translate-target-id' => (string) ($this->getTargetIdByType($targetType) ?? ''),
+                'data-auto-translate-target-field' => $fieldName,
+                'data-auto-translate-target-locale' => 'en',
             ],
         ];
+
+        if ('text' !== $fieldName) {
+            $options['attr']['data-auto-translate-source-suffix'] = $sourceFieldSuffix;
+            $options['attr']['data-auto-translate-target-lang'] = 'en';
+            $options['attr']['data-auto-translate-source-lang'] = 'ru';
+        }
 
         if (CKEditorType::class === $fields[$targetType][$fieldName]) {
             $options['autoload'] = false;
@@ -554,9 +565,32 @@ final class InscriptionAdmin extends AbstractEntityAdmin
 
     private function getLocalizedTextValue(string $targetType, string $fieldName): ?string
     {
+        $localizedText = $this->getLocalizedTextEntity($targetType, $fieldName);
+
+        return null === $localizedText ? null : $localizedText->getValue();
+    }
+
+    private function isLocalizedTextAiGenerated(string $targetType, string $fieldName): bool
+    {
+        $localizedText = $this->getLocalizedTextEntity($targetType, $fieldName);
+
+        if (null === $localizedText) {
+            return false;
+        }
+
+        return $localizedText->isAiGenerated();
+    }
+
+    private function getLocalizedTextEntity(string $targetType, string $fieldName): ?LocalizedText
+    {
         $targetId = $this->getTargetIdByType($targetType);
         if (null === $targetId) {
             return null;
+        }
+
+        $cacheKey = sprintf('%s|%d|%s|en', $targetType, (int) $targetId, $fieldName);
+        if (array_key_exists($cacheKey, $this->localizedTextEntityCache)) {
+            return $this->localizedTextEntityCache[$cacheKey];
         }
 
         $entity = $this->getModelManager()->getEntityManager(LocalizedText::class);
@@ -568,8 +602,9 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                 'locale' => 'en',
             ]
         );
+        $this->localizedTextEntityCache[$cacheKey] = $localizedText;
 
-        return null === $localizedText ? null : $localizedText->getValue();
+        return $localizedText;
     }
 
     private function storeLocalizedTexts($inscription): void
@@ -591,6 +626,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         $entity = $this->getModelManager()->getEntityManager(LocalizedText::class);
         $repository = $entity->getRepository(LocalizedText::class);
         $form = $this->getForm();
+        $aiFlags = $this->extractAiFlagsFromRequest();
 
         foreach ($fieldsByTarget as $targetType => $fields) {
             $targetId = $targetIds[$targetType];
@@ -633,15 +669,23 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                 }
 
                 $localizedText->setValue($trimmedValue);
+                $localizedText->setIsAiGenerated(
+                    $this->resolveAiGeneratedFlag($aiFlags, $formFieldName, $localizedText->isAiGenerated())
+                );
             }
         }
 
         if ($form->has('interpretations')) {
-            foreach ($form->get('interpretations') as $interpretationForm) {
+            foreach ($form->get('interpretations') as $interpretationFormIndex => $interpretationForm) {
                 $interpretation = $interpretationForm->getData();
 
                 if (!$interpretation instanceof Interpretation || null === $interpretation->getId()) {
                     continue;
+                }
+
+                $interpretationAiFlags = $aiFlags['interpretations'][$interpretationFormIndex] ?? [];
+                if (!is_array($interpretationAiFlags)) {
+                    $interpretationAiFlags = [];
                 }
 
                 foreach (array_keys(self::INTERPRETATION_TRANSLATABLE_FIELDS) as $fieldName) {
@@ -679,6 +723,13 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                     }
 
                     $localizedText->setValue($trimmedValue);
+                    $localizedText->setIsAiGenerated(
+                        $this->resolveAiGeneratedFlag(
+                            $interpretationAiFlags,
+                            $formFieldName,
+                            $localizedText->isAiGenerated()
+                        )
+                    );
                 }
             }
         }
@@ -689,5 +740,29 @@ final class InscriptionAdmin extends AbstractEntityAdmin
     private function getSubmittedTranslationFieldName(string $targetType, string $fieldName): string
     {
         return str_replace(['__', '.'], ['____', '__'], $this->getTranslationFieldName($targetType, $fieldName));
+    }
+
+    private function extractAiFlagsFromRequest(): array
+    {
+        $request = $this->getRequest();
+        if (null === $request) {
+            return [];
+        }
+
+        $allData = $request->request->all();
+        if (!isset($allData['localized_ai_flags']) || !is_array($allData['localized_ai_flags'])) {
+            return [];
+        }
+
+        return $allData['localized_ai_flags'];
+    }
+
+    private function resolveAiGeneratedFlag(array $flags, string $formFieldName, bool $fallback): bool
+    {
+        if (!array_key_exists($formFieldName, $flags)) {
+            return $fallback;
+        }
+
+        return in_array((string) $flags[$formFieldName], ['1', 'true', 'on'], true);
     }
 }

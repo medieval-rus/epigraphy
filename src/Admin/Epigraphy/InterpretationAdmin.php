@@ -35,6 +35,9 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 final class InterpretationAdmin extends AbstractEntityAdmin
 {
+    /** @var array<string, ?LocalizedText> */
+    private array $localizedTextEntityCache = [];
+
     private const TRANSLATABLE_FIELDS = [
         'comment' => CKEditorType::class,
         'origin' => CKEditorType::class,
@@ -240,38 +243,73 @@ final class InterpretationAdmin extends AbstractEntityAdmin
 
     private function createTranslationFieldOptions(string $fieldName): array
     {
-        return [
+        $options = [
             'mapped' => false,
             'required' => false,
             'label' => sprintf('%s (EN)', $fieldName),
             'data' => $this->getLocalizedTextValue($fieldName),
             'autoload' => false,
             'attr' => [
-                'data-auto-translate-source-suffix' => sprintf('[%s]', $fieldName),
-                'data-auto-translate-target-lang' => 'en',
-                'data-auto-translate-source-lang' => 'ru',
+                'data-auto-translate-ai-generated' => $this->isLocalizedTextAiGenerated($fieldName) ? '1' : '0',
+                'data-auto-translate-target-type' => LocalizedText::TARGET_INTERPRETATION,
+                'data-auto-translate-target-id' => (string) (($this->getSubject() && null !== $this->getSubject()->getId()) ? $this->getSubject()->getId() : ''),
+                'data-auto-translate-target-field' => $fieldName,
+                'data-auto-translate-target-locale' => 'en',
             ],
         ];
+
+        if ('text' !== $fieldName) {
+            $options['attr']['data-auto-translate-source-suffix'] = sprintf('[%s]', $fieldName);
+            $options['attr']['data-auto-translate-target-lang'] = 'en';
+            $options['attr']['data-auto-translate-source-lang'] = 'ru';
+        }
+
+        return $options;
     }
 
     private function getLocalizedTextValue(string $fieldName): ?string
+    {
+        $localizedText = $this->getLocalizedTextEntity($fieldName);
+
+        return null === $localizedText ? null : $localizedText->getValue();
+    }
+
+    private function isLocalizedTextAiGenerated(string $fieldName): bool
+    {
+        $localizedText = $this->getLocalizedTextEntity($fieldName);
+
+        if (null === $localizedText) {
+            return false;
+        }
+
+        return $localizedText->isAiGenerated();
+    }
+
+    private function getLocalizedTextEntity(string $fieldName): ?LocalizedText
     {
         $subject = $this->getSubject();
         if (null === $subject || null === $subject->getId()) {
             return null;
         }
 
+        $targetId = (int) $subject->getId();
+        $cacheKey = sprintf('%s|%d|%s|en', LocalizedText::TARGET_INTERPRETATION, $targetId, $fieldName);
+        if (array_key_exists($cacheKey, $this->localizedTextEntityCache)) {
+            return $this->localizedTextEntityCache[$cacheKey];
+        }
+
         $entity = $this->getModelManager()->getEntityManager(LocalizedText::class);
         $localizedText = $entity->getRepository(LocalizedText::class)->findOneBy(
             [
                 'targetType' => LocalizedText::TARGET_INTERPRETATION,
-                'targetId' => (int) $subject->getId(),
+                'targetId' => $targetId,
                 'field' => $fieldName,
                 'locale' => 'en',
             ]
         );
+        $this->localizedTextEntityCache[$cacheKey] = $localizedText;
 
-        return null === $localizedText ? null : $localizedText->getValue();
+        return $localizedText;
     }
 
     private function storeLocalizedTexts(Interpretation $interpretation): void
@@ -283,6 +321,7 @@ final class InterpretationAdmin extends AbstractEntityAdmin
         $entity = $this->getModelManager()->getEntityManager(LocalizedText::class);
         $repository = $entity->getRepository(LocalizedText::class);
         $form = $this->getForm();
+        $aiFlags = $this->extractAiFlagsFromRequest();
 
         foreach (array_keys(self::TRANSLATABLE_FIELDS) as $fieldName) {
             $formFieldName = $this->getSubmittedTranslationFieldName($fieldName);
@@ -319,6 +358,9 @@ final class InterpretationAdmin extends AbstractEntityAdmin
             }
 
             $localizedText->setValue($trimmedValue);
+            $localizedText->setIsAiGenerated(
+                $this->resolveAiGeneratedFlag($aiFlags, $formFieldName, $localizedText->isAiGenerated())
+            );
         }
 
         $entity->flush();
@@ -327,5 +369,29 @@ final class InterpretationAdmin extends AbstractEntityAdmin
     private function getSubmittedTranslationFieldName(string $fieldName): string
     {
         return str_replace(['__', '.'], ['____', '__'], $this->getTranslationFieldName($fieldName));
+    }
+
+    private function extractAiFlagsFromRequest(): array
+    {
+        $request = $this->getRequest();
+        if (null === $request) {
+            return [];
+        }
+
+        $allData = $request->request->all();
+        if (!isset($allData['localized_ai_flags']) || !is_array($allData['localized_ai_flags'])) {
+            return [];
+        }
+
+        return $allData['localized_ai_flags'];
+    }
+
+    private function resolveAiGeneratedFlag(array $flags, string $formFieldName, bool $fallback): bool
+    {
+        if (!array_key_exists($formFieldName, $flags)) {
+            return $fallback;
+        }
+
+        return in_array((string) $flags[$formFieldName], ['1', 'true', 'on'], true);
     }
 }

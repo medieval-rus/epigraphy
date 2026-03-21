@@ -84,6 +84,13 @@ class LocalizedText
      */
     private $value;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_ai_generated", type="boolean", options={"default" : false})
+     */
+    private $isAiGenerated = false;
+
     public static function resolveTargetTypeFromEntity($entity): ?string
     {
         if ($entity instanceof Inscription) {
@@ -189,6 +196,18 @@ class LocalizedText
     public function setValue(string $value): self
     {
         $this->value = $value;
+        return $this;
+    }
+
+    public function isAiGenerated(): bool
+    {
+        return (bool) $this->isAiGenerated;
+    }
+
+    public function setIsAiGenerated(bool $isAiGenerated): self
+    {
+        $this->isAiGenerated = $isAiGenerated;
+
         return $this;
     }
 }
