@@ -46,12 +46,23 @@
             {{ self.format_text_row(translationContext, 'zeroRow.reconstruction', self.format_zero_row(inscription, 'reconstruction')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.normalization', self.format_zero_row(inscription, 'normalization')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.interpretationComment', self.format_zero_row(inscription, 'interpretationComment')) }}
-            {{ self.format_text_row(translationContext, 'zeroRow.translation', self.format_translation(inscription, 'ru')) }}
+            {% set baseTranslationRu = self.format_translation(inscription, 'ru', false)|trim %}
             {% if app.request.locale == 'en' %}
-                {% set automaticTranslation = self.format_translation(inscription, 'en', false)|trim %}
-                {% if automaticTranslation is not empty %}
-                    {{ self.format_text_row(translationContext, 'zeroRow.automaticTranslation', automaticTranslation) }}
+                {{ self.format_text_row(translationContext, 'zeroRow.translation', baseTranslationRu) }}
+                {% set automaticTranslationEnExists = localizedText(inscription.zeroRow, 'translation', null, 'en', false)|default('')|trim is not empty %}
+                {% if not automaticTranslationEnExists %}
+                    {% for interpretation in inscription.zeroRow.translationReferences %}
+                        {% if localizedText(interpretation, 'translation', interpretation.translation, 'en', false)|default('')|trim is not empty %}
+                            {% set automaticTranslationEnExists = true %}
+                        {% endif %}
+                    {% endfor %}
                 {% endif %}
+                {% if baseTranslationRu is not empty and automaticTranslationEnExists %}
+                    {% set automaticTranslationEn = self.format_translation(inscription, 'en', false)|trim %}
+                    {{ self.format_text_row(translationContext, 'zeroRow.automaticTranslation', automaticTranslationEn) }}
+                {% endif %}
+            {% else %}
+                {{ self.format_text_row(translationContext, 'zeroRow.translation', baseTranslationRu) }}
             {% endif %}
             {{ self.format_rssda_iframe_row(translationContext, inscription.rssdaRender) }}
             {{ self.format_text_row(translationContext, 'zeroRow.photos', self.format_zero_row_images(inscription, 'photos')) }}

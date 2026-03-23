@@ -260,11 +260,18 @@ function initializeTranslateAllAction()
             skipped: 0,
             errors: 0,
         };
+        const excludedFields = new Set(['text', 'reconstruction', 'transliteration', 'normalization']);
 
         const targets = $('[data-auto-translate-source-suffix]');
 
         for (let index = 0; index < targets.length; index++) {
             const targetElement = $(targets[index]);
+            const targetField = targetElement.attr('data-auto-translate-target-field');
+            if (targetField && excludedFields.has(targetField)) {
+                summary.skipped++;
+                continue;
+            }
+
             const sourceSuffix = targetElement.attr('data-auto-translate-source-suffix');
             if (!sourceSuffix) {
                 summary.skipped++;
