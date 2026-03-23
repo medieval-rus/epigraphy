@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class LocalizedTextService
 {
+    private const BASE_CONTENT_LOCALE = 'ru';
+
     private EntityManagerInterface $entityManager;
     private RequestStack $requestStack;
 
@@ -46,16 +48,16 @@ final class LocalizedTextService
 
         $request = $this->requestStack->getCurrentRequest();
         $normalizedLocale = $this->normalizeLocale($locale ?? (null === $request ? 'ru' : $request->getLocale()));
+
+        // For base content locale we prefer mapped entity fields to avoid stale
+        // values from historic ru records in localized_text.
+        if (self::BASE_CONTENT_LOCALE === $normalizedLocale) {
+            return $fallbackValue;
+        }
+
         $primaryValue = $this->findValue($targetType, (int) $targetId, $field, $normalizedLocale);
         if (null !== $primaryValue) {
             return $primaryValue;
-        }
-
-        if ($allowRuFallback && 'ru' !== $normalizedLocale) {
-            $ruValue = $this->findValue($targetType, (int) $targetId, $field, 'ru');
-            if (null !== $ruValue) {
-                return $ruValue;
-            }
         }
 
         return $fallbackValue;
