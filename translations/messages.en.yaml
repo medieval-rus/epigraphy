@@ -163,7 +163,7 @@ page:
   label:
     title: Old East Slavic Epigraphy
     left: Old East Slavic Epigraphy
-  middleLine: The site is developed with support from the Russian Science Foundation grant (project No. 19-18-00352) provided by HSE University.
+  middleLine: The site is developed with support from the Russian Science Foundation grant (project No. 25-18-00862) provided by HSE University.
   menu:
     index: Home
     aboutSite: About the project
@@ -172,7 +172,7 @@ page:
     dataBase: Database
     legend: Conventions
     settings: Settings
-  footer: © 2023, National Research University Higher School of Economics.
+  footer: © 2026, National Research University Higher School of Economics.
 
 type:
   bool:
