@@ -67,9 +67,21 @@ final class AppTwigExtension extends AbstractExtension
         return $this->translator->trans($context.'.'.$message, $parameters, $domain, $locale);
     }
 
-    public function localizedText($entity, string $field, ?string $fallbackValue = null, ?string $locale = null): ?string
+    public function localizedText(
+        $entity,
+        string $field,
+        ?string $fallbackValue = null,
+        ?string $locale = null,
+        bool $allowRuFallback = true
+    ): ?string
     {
-        $resolvedValue = $this->localizedTextService->resolveForEntity($entity, $field, $fallbackValue, $locale);
+        $resolvedValue = $this->localizedTextService->resolveForEntity(
+            $entity,
+            $field,
+            $fallbackValue,
+            $locale,
+            $allowRuFallback
+        );
         if (null === $resolvedValue) {
             return null;
         }
