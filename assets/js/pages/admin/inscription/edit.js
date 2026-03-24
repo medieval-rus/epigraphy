@@ -139,11 +139,6 @@ function initializeAutoTranslateButtons()
 {
     $('[data-auto-translate-source-suffix]').each((index, dom) => {
         const targetElement = $(dom);
-        const sourceSuffix = targetElement.attr('data-auto-translate-source-suffix');
-
-        if (!sourceSuffix) {
-            return;
-        }
 
         if (targetElement.data('auto-translate-bound') === true) {
             return;
@@ -183,51 +178,25 @@ function initializeAutoTranslateButtons()
         bindManualEditReset(targetElement, aiCheckbox);
 
         button.on('click', () => {
-            const sourceElement = findSourceElement(targetElement, sourceSuffix);
-            if (sourceElement.length === 0) {
-                status.text('Не найдено исходное поле для перевода.');
-                return;
-            }
-
-            const sourceText = readFieldValue(sourceElement);
-            if (!sourceText || sourceText.trim() === '') {
-                status.text('Исходный текст пустой.');
+            const targetMeta = getTranslationTargetMeta(targetElement);
+            if (null === targetMeta) {
+                status.text('Не удалось определить целевое поле для перевода.');
                 return;
             }
 
             button.prop('disabled', true);
             status.text('Переводим...');
 
-            fetch('/admin/translation/preview', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-                body: JSON.stringify({
-                    text: sourceText,
-                    sourceLang: sourceLang,
-                    targetLang: targetLang,
-                }),
-            })
-                .then((response) => response.json().then((body) => ({ok: response.ok, body: body})))
-                .then(({ok, body}) => {
-                    if (!ok || !body.translatedText) {
-                        const message = body && body.error ? body.error : 'Ошибка перевода.';
-                        throw new Error(message);
-                    }
-
-                    return writeTranslatedValue(targetElement, body.translatedText, aiCheckbox)
-                        .then(() => persistTranslatedField(targetElement, body.translatedText, true))
+            requestTranslatedText(targetMeta, sourceLang, targetLang)
+                .then((translatedText) => {
+                    return writeTranslatedValue(targetElement, translatedText, aiCheckbox)
+                        .then(() => persistTranslatedField(targetElement, translatedText, true))
                         .then(() => {
                             status.text('Перевод сохранен как AI-черновик.');
-                        })
-                        .catch((error) => {
-                            status.text((error && error.message) ? error.message : 'Ошибка сохранения перевода.');
                         });
                 })
                 .catch((error) => {
-                    status.text(error.message || 'Ошибка перевода.');
+                    status.text((error && error.message) ? error.message : 'Ошибка перевода.');
                 })
                 .finally(() => {
                     button.prop('disabled', false);
@@ -272,20 +241,8 @@ function initializeTranslateAllAction()
                 continue;
             }
 
-            const sourceSuffix = targetElement.attr('data-auto-translate-source-suffix');
-            if (!sourceSuffix) {
-                summary.skipped++;
-                continue;
-            }
-
-            const sourceElement = findSourceElement(targetElement, sourceSuffix);
-            if (sourceElement.length === 0) {
-                summary.skipped++;
-                continue;
-            }
-
-            const sourceText = readFieldValue(sourceElement);
-            if (!sourceText || sourceText.trim() === '') {
+            const targetMeta = getTranslationTargetMeta(targetElement);
+            if (null === targetMeta) {
                 summary.skipped++;
                 continue;
             }
@@ -295,7 +252,7 @@ function initializeTranslateAllAction()
             const aiCheckbox = targetElement.data('auto-translate-ai-checkbox');
 
             try {
-                const translatedText = await requestTranslatedText(sourceText, sourceLang, targetLang);
+                const translatedText = await requestTranslatedText(targetMeta, sourceLang, targetLang);
                 await writeTranslatedValue(targetElement, translatedText, aiCheckbox);
                 await persistTranslatedField(targetElement, translatedText, true);
                 summary.translated++;
@@ -319,93 +276,21 @@ function initializeTranslateAllAction()
     });
 }
 
-function findSourceElement(targetElement, sourceSuffix)
+function getTranslationTargetMeta(targetElement)
 {
-    const targetName = targetElement.attr('name') || '';
-    if (!targetName) {
-        return $();
+    const targetType = targetElement.attr('data-auto-translate-target-type') || '';
+    const targetField = targetElement.attr('data-auto-translate-target-field') || '';
+    const targetId = parseInt(targetElement.attr('data-auto-translate-target-id') || '', 10);
+
+    if (!targetType || !targetField || Number.isNaN(targetId) || targetId <= 0) {
+        return null;
     }
 
-    const sourceNames = [];
-    const replacedLastSegment = targetName.replace(/\[[^\]]+\]$/, sourceSuffix);
-    if (replacedLastSegment !== targetName) {
-        sourceNames.push(replacedLastSegment);
-    }
-
-    const localizedTokenPosition = targetName.indexOf('[localizedEn');
-    if (localizedTokenPosition > -1) {
-        sourceNames.push(targetName.substring(0, localizedTokenPosition) + sourceSuffix);
-    }
-
-    const formElement = targetElement.closest('form');
-    for (let index = 0; index < sourceNames.length; index++) {
-        const sourceName = sourceNames[index];
-        const matchedElement = formElement
-            .find('[name]')
-            .filter((itemIndex, domElement) => {
-                return $(domElement).attr('name') === sourceName;
-            })
-            .first();
-
-        if (matchedElement.length > 0) {
-            return matchedElement;
-        }
-    }
-
-    // Fallback for complex inline Sonata collection names:
-    // try to locate the source field by suffix inside current interpretation row first.
-    const interpretationRow = targetElement.closest('[data-sonata-collection-item], .sonata-collection-row');
-    const scopedMatch = findSourceElementBySuffix(interpretationRow, sourceSuffix);
-    if (scopedMatch.length > 0) {
-        return scopedMatch;
-    }
-
-    // Last fallback: search by suffix in the whole form.
-    const formWideMatch = findSourceElementBySuffix(formElement, sourceSuffix);
-    if (formWideMatch.length > 0) {
-        return formWideMatch;
-    }
-
-    return $();
-}
-
-function findSourceElementBySuffix(scopeElement, sourceSuffix)
-{
-    if (!scopeElement || scopeElement.length === 0 || !sourceSuffix) {
-        return $();
-    }
-
-    return scopeElement
-        .find('[name]')
-        .filter((itemIndex, domElement) => {
-            const name = $(domElement).attr('name') || '';
-            if (!name || name.indexOf('[localizedEn') !== -1) {
-                return false;
-            }
-
-            return name.endsWith(sourceSuffix);
-        })
-        .first();
-}
-
-function readFieldValue(element)
-{
-    const dom = element.get(0);
-    if (!dom) {
-        return '';
-    }
-
-    if (window.CKEDITOR && dom.id && window.CKEDITOR.instances[dom.id]) {
-        const editor = window.CKEDITOR.instances[dom.id];
-        if (editor.status === 'ready') {
-            const editorData = editor.getData();
-            if (editorData && editorData.trim() !== '') {
-                return editorData;
-            }
-        }
-    }
-
-    return element.val() || '';
+    return {
+        targetType: targetType,
+        targetId: targetId,
+        targetField: targetField,
+    };
 }
 
 function writeFieldValue(element, value)
@@ -538,7 +423,7 @@ function buildAiFlagFieldName(targetFieldName)
     return 'localized_ai_flags' + targetFieldName.substring(firstBracket);
 }
 
-function requestTranslatedText(text, sourceLang, targetLang)
+function requestTranslatedText(targetMeta, sourceLang, targetLang)
 {
     return fetch('/admin/translation/preview', {
         method: 'POST',
@@ -547,7 +432,9 @@ function requestTranslatedText(text, sourceLang, targetLang)
             'X-Requested-With': 'XMLHttpRequest',
         },
         body: JSON.stringify({
-            text: text,
+            targetType: targetMeta.targetType,
+            targetId: targetMeta.targetId,
+            field: targetMeta.targetField,
             sourceLang: sourceLang,
             targetLang: targetLang,
         }),

@@ -82,6 +82,15 @@ final class InscriptionAdmin extends AbstractEntityAdmin
         'historicalDate' => CKEditorType::class,
     ];
 
+    /** @var string[] */
+    private const TEXTCONFIG_ZERO_ROW_FIELDS = [
+        'text',
+        'transliteration',
+        'reconstruction',
+        'normalization',
+        'description',
+    ];
+
     protected $baseRouteName = 'epigraphy_inscription';
 
     protected $baseRoutePattern = 'epigraphy/inscription';
@@ -540,6 +549,12 @@ final class InscriptionAdmin extends AbstractEntityAdmin
 
         if (CKEditorType::class === $fields[$targetType][$fieldName]) {
             $options['autoload'] = false;
+            if (
+                LocalizedText::TARGET_ZERO_ROW === $targetType
+                && in_array($fieldName, self::TEXTCONFIG_ZERO_ROW_FIELDS, true)
+            ) {
+                $options['config_name'] = 'textconfig';
+            }
         }
 
         return $options;
