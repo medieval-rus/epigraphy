@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Persistence\Entity\Epigraphy\LocalizedText;
+use App\Services\Translation\TranslationSourceResolver;
 use App\Services\Translation\YandexCloudTranslateClient;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
@@ -17,7 +18,11 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class TranslationController extends AbstractController
 {
-    public function preview(Request $request, YandexCloudTranslateClient $translateClient): JsonResponse
+    public function preview(
+        Request $request,
+        YandexCloudTranslateClient $translateClient,
+        TranslationSourceResolver $translationSourceResolver
+    ): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -27,11 +32,45 @@ final class TranslationController extends AbstractController
         }
 
         $text = isset($payload['text']) && is_string($payload['text']) ? $payload['text'] : '';
+        $targetType = isset($payload['targetType']) && is_string($payload['targetType']) ? trim($payload['targetType']) : '';
+        $targetId = isset($payload['targetId']) ? (int) $payload['targetId'] : 0;
+        $field = isset($payload['field']) && is_string($payload['field']) ? trim($payload['field']) : '';
         $sourceLang = isset($payload['sourceLang']) && is_string($payload['sourceLang']) ? $payload['sourceLang'] : 'ru';
         $targetLang = isset($payload['targetLang']) && is_string($payload['targetLang']) ? $payload['targetLang'] : 'en';
 
+        $allowedFieldsByTargetType = $this->getAllowedFieldsByTargetType();
+
         if ('' === trim($text)) {
-            return new JsonResponse(['error' => 'Text is required.'], Response::HTTP_BAD_REQUEST);
+            if ('' === $targetType || $targetId <= 0 || '' === $field) {
+                return new JsonResponse(
+                    ['error' => 'Text or targetType/targetId/field are required.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            if (!array_key_exists($targetType, $allowedFieldsByTargetType)) {
+                return new JsonResponse(
+                    ['error' => 'Unsupported targetType.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            if (!in_array($field, $allowedFieldsByTargetType[$targetType], true)) {
+                return new JsonResponse(
+                    ['error' => 'Unsupported field for targetType.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            $resolvedText = $translationSourceResolver->resolve($targetType, $targetId, $field);
+            if (null === $resolvedText) {
+                return new JsonResponse(
+                    ['error' => 'Source text is empty.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            $text = $resolvedText;
         }
 
         try {
@@ -46,6 +85,7 @@ final class TranslationController extends AbstractController
         return new JsonResponse(
             [
                 'translatedText' => $translatedText,
+                'sourceText' => $text,
                 'sourceLang' => strtolower($sourceLang),
                 'targetLang' => strtolower($targetLang),
             ]
@@ -90,41 +130,7 @@ final class TranslationController extends AbstractController
             );
         }
 
-        $allowedFieldsByTargetType = [
-            LocalizedText::TARGET_INSCRIPTION => [
-                'dateExplanation',
-                'comment',
-            ],
-            LocalizedText::TARGET_ZERO_ROW => [
-                'origin',
-                'placeOnCarrier',
-                'interpretationComment',
-                'text',
-                'transliteration',
-                'reconstruction',
-                'normalization',
-                'translation',
-                'description',
-                'dateInText',
-                'nonStratigraphicalDate',
-                'historicalDate',
-            ],
-            LocalizedText::TARGET_INTERPRETATION => [
-                'comment',
-                'origin',
-                'placeOnCarrier',
-                'interpretationComment',
-                'text',
-                'transliteration',
-                'reconstruction',
-                'normalization',
-                'translation',
-                'description',
-                'dateInText',
-                'nonStratigraphicalDate',
-                'historicalDate',
-            ],
-        ];
+        $allowedFieldsByTargetType = $this->getAllowedFieldsByTargetType();
         if (!array_key_exists($targetType, $allowedFieldsByTargetType)) {
             return new JsonResponse(
                 ['error' => 'Unsupported targetType.'],
@@ -177,5 +183,47 @@ final class TranslationController extends AbstractController
         $entityManager->flush();
 
         return new JsonResponse(['stored' => true, 'removed' => false]);
+    }
+
+    /**
+     * @return array<string, string[]>
+     */
+    private function getAllowedFieldsByTargetType(): array
+    {
+        return [
+            LocalizedText::TARGET_INSCRIPTION => [
+                'dateExplanation',
+                'comment',
+            ],
+            LocalizedText::TARGET_ZERO_ROW => [
+                'origin',
+                'placeOnCarrier',
+                'interpretationComment',
+                'text',
+                'transliteration',
+                'reconstruction',
+                'normalization',
+                'translation',
+                'description',
+                'dateInText',
+                'nonStratigraphicalDate',
+                'historicalDate',
+            ],
+            LocalizedText::TARGET_INTERPRETATION => [
+                'comment',
+                'origin',
+                'placeOnCarrier',
+                'interpretationComment',
+                'text',
+                'transliteration',
+                'reconstruction',
+                'normalization',
+                'translation',
+                'description',
+                'dateInText',
+                'nonStratigraphicalDate',
+                'historicalDate',
+            ],
+        ];
     }
 }

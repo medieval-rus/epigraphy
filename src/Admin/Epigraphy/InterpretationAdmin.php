@@ -54,6 +54,15 @@ final class InterpretationAdmin extends AbstractEntityAdmin
         'historicalDate' => CKEditorType::class,
     ];
 
+    /** @var string[] */
+    private const TEXTCONFIG_FIELDS = [
+        'text',
+        'transliteration',
+        'reconstruction',
+        'normalization',
+        'description',
+    ];
+
     protected $baseRouteName = 'epigraphy_interpretation';
 
     protected $baseRoutePattern = 'epigraphy/interpretation';
@@ -262,6 +271,10 @@ final class InterpretationAdmin extends AbstractEntityAdmin
             $options['attr']['data-auto-translate-source-suffix'] = sprintf('[%s]', $fieldName);
             $options['attr']['data-auto-translate-target-lang'] = 'en';
             $options['attr']['data-auto-translate-source-lang'] = 'ru';
+        }
+
+        if (in_array($fieldName, self::TEXTCONFIG_FIELDS, true)) {
+            $options['config_name'] = 'textconfig';
         }
 
         return $options;
