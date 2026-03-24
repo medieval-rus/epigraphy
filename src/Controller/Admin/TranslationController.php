@@ -224,6 +224,10 @@ final class TranslationController extends AbstractController
                 'nonStratigraphicalDate',
                 'historicalDate',
             ],
+            LocalizedText::TARGET_POST => [
+                'title',
+                'body',
+            ],
         ];
     }
 }

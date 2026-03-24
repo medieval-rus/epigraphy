@@ -21,7 +21,7 @@
 
 {%- extends 'site/base.html.twig' -%}
 
-{% block title %}{{ post.title|striptags|raw }}{% endblock %}
+{% block title %}{{ localizedText(post, 'title', post.title)|striptags|raw }}{% endblock %}
 
 {%- block page_content -%}
 
@@ -34,8 +34,10 @@
 
     {% import _self as self %}
 
-    {% if post.body is not empty %}
-        <div>{{ post.body|raw }}</div>
+    {% set localizedBody = localizedText(post, 'body', post.body) %}
+
+    {% if localizedBody is not empty %}
+        <div>{{ localizedBody|raw }}</div>
     {% endif %}
 
     {% if is_granted('ROLE_ADMIN') and renderLinkToAdminPanel ?? true %}

@@ -217,6 +217,7 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
         $entityManager = $this->getLocalizedTextEntityManager();
         $repository = $entityManager->getRepository(LocalizedText::class);
         $form = $this->getForm();
+        $aiFlags = $this->extractLocalizedAiFlagsFromRequest();
 
         foreach ($fieldTypes as $fieldName => $fieldType) {
             $formFieldName = $this->getSubmittedLocalizedTextFieldNameForTarget($targetType, $fieldName);
@@ -254,7 +255,15 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
                 $entityManager->persist($localizedText);
             }
 
-            $localizedText->setValue($storedValue);
+            $localizedText
+                ->setValue($storedValue)
+                ->setIsAiGenerated(
+                    $this->resolveLocalizedAiGeneratedFlag(
+                        $aiFlags,
+                        $formFieldName,
+                        $localizedText->isAiGenerated()
+                    )
+                );
         }
 
         $entityManager->flush();
@@ -306,5 +315,29 @@ abstract class AbstractEntityAdmin extends AbstractAdmin
     private function getLocalizedTextEntityManager(): EntityManagerInterface
     {
         return $this->getModelManager()->getEntityManager(LocalizedText::class);
+    }
+
+    private function extractLocalizedAiFlagsFromRequest(): array
+    {
+        $request = $this->getRequest();
+        if (null === $request) {
+            return [];
+        }
+
+        $allData = $request->request->all();
+        if (!isset($allData['localized_ai_flags']) || !is_array($allData['localized_ai_flags'])) {
+            return [];
+        }
+
+        return $allData['localized_ai_flags'];
+    }
+
+    private function resolveLocalizedAiGeneratedFlag(array $flags, string $formFieldName, bool $fallback): bool
+    {
+        if (!array_key_exists($formFieldName, $flags)) {
+            return $fallback;
+        }
+
+        return in_array((string) $flags[$formFieldName], ['1', 'true', 'on'], true);
     }
 }
