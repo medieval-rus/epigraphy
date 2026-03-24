@@ -122,7 +122,7 @@ final class FullTextFilterParameter implements FilterParameterInterface, Express
             
             // Если хотя бы для одного слова нет документов, возвращаем пустой результат
             if (count($docIds) === 0) {
-                return null;
+                return '1 = 0';
             }
             
             $docIdsSets[] = $docIds;
@@ -144,7 +144,7 @@ final class FullTextFilterParameter implements FilterParameterInterface, Express
         $ids = array_values(array_unique($intersection));
 
         if (count($ids) === 0) {
-            return null;
+            return '1 = 0';
         }
 
         // Ограничиваем количество результатов

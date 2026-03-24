@@ -26,12 +26,23 @@ declare(strict_types=1);
 namespace App\Admin\Content;
 
 use App\Admin\AbstractEntityAdmin;
+use App\Persistence\Entity\Epigraphy\LocalizedText;
+use Doctrine\ORM\EntityManagerInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class PostAdmin extends AbstractEntityAdmin
 {
+    /** @var array<string, ?LocalizedText> */
+    private array $localizedTextEntityCache = [];
+
+    private const LOCALIZED_FIELDS = [
+        'title' => 'string',
+        'body' => 'string',
+    ];
+
     protected $baseRouteName = 'content_post';
 
     protected $baseRoutePattern = 'content/post';
@@ -49,8 +60,104 @@ final class PostAdmin extends AbstractEntityAdmin
         $formMapper
             ->with($this->getSectionLabel('common'))
                 ->add('title', CKEditorType::class, $this->createFormOptions('title', ['autoload' => true]))
+                ->add(
+                    $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_POST, 'title'),
+                    TextType::class,
+                    $this->createPostTranslationFieldOptions('title')
+                )
                 ->add('body', CKEditorType::class, $this->createFormOptions('body', ['autoload' => true]))
+                ->add(
+                    $this->getLocalizedTextFieldNameForTarget(LocalizedText::TARGET_POST, 'body'),
+                    CKEditorType::class,
+                    $this->createPostTranslationFieldOptions('body', ['autoload' => true])
+                )
             ->end()
         ;
+    }
+
+    public function postPersist($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_POST,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
+    }
+
+    public function postUpdate($object): void
+    {
+        $this->storeLocalizedTextFieldsForTarget(
+            LocalizedText::TARGET_POST,
+            null === $object ? null : $object->getId(),
+            self::LOCALIZED_FIELDS
+        );
+    }
+
+    private function createPostTranslationFieldOptions(string $fieldName, array $options = []): array
+    {
+        $targetId = null === $this->getSubject() ? null : $this->getSubject()->getId();
+
+        return $this->createLocalizedTextOptionsForTarget(
+            LocalizedText::TARGET_POST,
+            $targetId,
+            $fieldName,
+            array_merge(
+                [
+                    'attr' => [
+                        'data-auto-translate-ai-generated' => $this->isLocalizedTextAiGenerated($fieldName) ? '1' : '0',
+                        'data-auto-translate-target-type' => LocalizedText::TARGET_POST,
+                        'data-auto-translate-target-id' => (string) ($targetId ?? ''),
+                        'data-auto-translate-target-field' => $fieldName,
+                        'data-auto-translate-target-locale' => 'en',
+                        'data-auto-translate-source-suffix' => sprintf('[%s]', $fieldName),
+                        'data-auto-translate-target-lang' => 'en',
+                        'data-auto-translate-source-lang' => 'ru',
+                        'data-auto-translate-ai-label' => 'Переведено ИИ (черновик)',
+                    ],
+                ],
+                $options
+            )
+        );
+    }
+
+    private function isLocalizedTextAiGenerated(string $fieldName): bool
+    {
+        $localizedText = $this->getLocalizedTextEntity($fieldName);
+
+        if (null === $localizedText) {
+            return false;
+        }
+
+        return $localizedText->isAiGenerated();
+    }
+
+    private function getLocalizedTextEntity(string $fieldName): ?LocalizedText
+    {
+        $targetId = null === $this->getSubject() ? null : $this->getSubject()->getId();
+        if (null === $targetId) {
+            return null;
+        }
+
+        $cacheKey = sprintf('%d|%s', (int) $targetId, $fieldName);
+        if (array_key_exists($cacheKey, $this->localizedTextEntityCache)) {
+            return $this->localizedTextEntityCache[$cacheKey];
+        }
+
+        $localizedText = $this->getLocalizedTextEntityManager()->getRepository(LocalizedText::class)->findOneBy(
+            [
+                'targetType' => LocalizedText::TARGET_POST,
+                'targetId' => (int) $targetId,
+                'field' => $fieldName,
+                'locale' => 'en',
+            ]
+        );
+        $this->localizedTextEntityCache[$cacheKey] = $localizedText;
+
+        return $localizedText;
+    }
+
+    private function getLocalizedTextEntityManager(): EntityManagerInterface
+    {
+        return $this->getModelManager()->getEntityManager(LocalizedText::class);
     }
 }

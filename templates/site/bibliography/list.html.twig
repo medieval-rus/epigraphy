@@ -21,7 +21,7 @@
 
 {%- extends 'site/base.html.twig' -%}
 
-{%- block title -%}{{ post.title }}{%- endblock -%}
+{%- block title -%}{{ localizedText(post, 'title', post.title) }}{%- endblock -%}
 
 {%- block page_content -%}
 

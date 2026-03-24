@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Persistence\Entity\Epigraphy;
 
+use App\Persistence\Entity\Content\Post;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,6 +40,7 @@ class LocalizedText
     public const TARGET_RIVER = 'river';
     public const TARGET_RIVER_TYPE = 'river_type';
     public const TARGET_STORAGE_SITE = 'storage_site';
+    public const TARGET_POST = 'post';
 
     /**
      * @var int|null
@@ -134,6 +136,9 @@ class LocalizedText
         }
         if ($entity instanceof StorageSite) {
             return self::TARGET_STORAGE_SITE;
+        }
+        if ($entity instanceof Post) {
+            return self::TARGET_POST;
         }
 
         return null;

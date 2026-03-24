@@ -46,27 +46,87 @@ final class TntIndexController extends CRUDController
         $search->fuzziness = true;
 
         $indexer = $search->createIndex('/thumbs/fulltext.sql');
-        $indexer->query('SELECT inscription.id, inscription.comment, inscription.date_explanation, 
-        zero_row.place_on_carrier AS zr_poc, 
-        zero_row.text AS zr_text, zero_row.translation AS zr_translation,
-        zero_row.transliteration AS zr_trans, zero_row.description AS zr_desc, 
-        zero_row.date_in_text AS zr_dit, zero_row.non_stratigraphical_date AS zr_nsd, 
-        zero_row.reconstruction AS zr_rec, zero_row.normalization as zr_norm, 
-        zero_row.interpretation_comment as zr_ic, zero_row.origin AS zr_origin,
-        interpretation.comment AS int_comment, 
-        interpretation.place_on_carrier AS int_poc, 
-        interpretation.text AS int_text, interpretation.translation AS int_translation,
-        interpretation.transliteration AS int_trans, interpretation.description AS int_desc,
-        interpretation.date_in_text AS int_dit, interpretation.non_stratigraphical_date AS int_nsd, 
-        interpretation.reconstruction AS int_rec, interpretation.normalization as int_norm, 
-        interpretation.interpretation_comment as rec_ic, interpretation.origin AS rec_origin, 
-        carrier.find_circumstances, carrier.characteristics, carrier.individual_name,
-        carrier.stratigraphical_date, carrier.material_description,
-        carrier.carrier_history, carrier.storage_localization 
-        FROM inscription 
-        INNER JOIN carrier ON inscription.carrier_id = carrier.id 
-        INNER JOIN zero_row ON inscription.zero_row_id = zero_row.id 
-        INNER JOIN interpretation ON inscription.id = interpretation.inscription_id;');
+        $indexer->query(<<<SQL
+SELECT
+  inscription.id,
+    CONCAT_WS(' ',
+    inscription.comment,
+    inscription.date_explanation,
+    zero_row.place_on_carrier,
+    zero_row.text,
+    zero_row.translation,
+    zero_row.transliteration,
+    zero_row.description,
+    zero_row.date_in_text,
+    zero_row.non_stratigraphical_date,
+    zero_row.reconstruction,
+    zero_row.normalization,
+    zero_row.interpretation_comment,
+    zero_row.origin,
+    carrier.find_circumstances,
+    carrier.characteristics,
+    carrier.individual_name,
+    carrier.stratigraphical_date,
+    carrier.material_description,
+    carrier.carrier_history,
+    carrier.storage_localization,
+    interpretation_content.content,
+    localized_inscription.content,
+    localized_carrier.content,
+    localized_zero_row.content,
+    localized_interpretation.content
+  ) AS content
+FROM inscription
+LEFT JOIN carrier ON inscription.carrier_id = carrier.id
+LEFT JOIN zero_row ON inscription.zero_row_id = zero_row.id
+LEFT JOIN (
+    SELECT i.inscription_id,
+           GROUP_CONCAT(
+               CONCAT_WS(' ',
+                   i.comment,
+                   i.place_on_carrier,
+                   i.text,
+                   i.translation,
+                   i.transliteration,
+                   i.description,
+                   i.date_in_text,
+                   i.non_stratigraphical_date,
+                   i.reconstruction,
+                   i.normalization,
+                   i.interpretation_comment,
+                   i.origin
+               )
+               SEPARATOR ' '
+           ) AS content
+    FROM interpretation i
+    GROUP BY i.inscription_id
+) interpretation_content ON interpretation_content.inscription_id = inscription.id
+LEFT JOIN (
+    SELECT target_id, GROUP_CONCAT(value SEPARATOR ' ') AS content
+    FROM localized_text
+    WHERE target_type = 'inscription' AND locale = 'en'
+    GROUP BY target_id
+) localized_inscription ON localized_inscription.target_id = inscription.id
+LEFT JOIN (
+    SELECT target_id, GROUP_CONCAT(value SEPARATOR ' ') AS content
+    FROM localized_text
+    WHERE target_type = 'carrier' AND locale = 'en'
+    GROUP BY target_id
+) localized_carrier ON localized_carrier.target_id = carrier.id
+LEFT JOIN (
+    SELECT target_id, GROUP_CONCAT(value SEPARATOR ' ') AS content
+    FROM localized_text
+    WHERE target_type = 'zero_row' AND locale = 'en'
+    GROUP BY target_id
+) localized_zero_row ON localized_zero_row.target_id = zero_row.id
+LEFT JOIN (
+    SELECT i.inscription_id, GROUP_CONCAT(lt.value SEPARATOR ' ') AS content
+    FROM localized_text lt
+    INNER JOIN interpretation i ON i.id = lt.target_id
+    WHERE lt.target_type = 'interpretation' AND lt.locale = 'en'
+    GROUP BY i.inscription_id
+) localized_interpretation ON localized_interpretation.inscription_id = inscription.id
+SQL);
         $indexer->run();
 
         // $this->addFlash('sonata_flash_success', $this->trans('action.index.flash'));

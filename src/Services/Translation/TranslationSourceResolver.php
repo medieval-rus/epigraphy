@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Translation;
 
+use App\Persistence\Entity\Content\Post;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Entity\Epigraphy\Interpretation;
 use App\Persistence\Entity\Epigraphy\LocalizedText;
@@ -46,6 +47,13 @@ final class TranslationSourceResolver
                     return null;
                 }
                 return $this->normalize($this->resolveInterpretationField($entity, $field));
+
+            case LocalizedText::TARGET_POST:
+                $entity = $this->entityManager->getRepository(Post::class)->find($targetId);
+                if (!$entity instanceof Post) {
+                    return null;
+                }
+                return $this->normalize($this->resolvePostField($entity, $field));
 
             default:
                 return null;
@@ -125,6 +133,18 @@ final class TranslationSourceResolver
                 return $interpretation->getNonStratigraphicalDate();
             case 'historicalDate':
                 return $interpretation->getHistoricalDate();
+            default:
+                return null;
+        }
+    }
+
+    private function resolvePostField(Post $post, string $field): ?string
+    {
+        switch ($field) {
+            case 'title':
+                return $post->getTitle();
+            case 'body':
+                return $post->getBody();
             default:
                 return null;
         }
