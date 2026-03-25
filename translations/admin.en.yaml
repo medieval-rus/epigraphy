@@ -5,3 +5,20 @@ action:
 form:
   localizedText:
     aiGenerated: AI translated draft
+  inscription:
+    tab:
+      criticalApparatus:
+        label: Critical apparatus
+    section:
+      criticalApparatus:
+        label: EpiDoc XML
+    fields:
+      epidocXml: EpiDoc XML
+    help:
+      epidocXml: Leave this field empty to remove EpiDoc XML for this inscription.
+    editor:
+      epidocXml:
+        insertTemplateButton: Insert template
+        clearButton: Clear
+        confirmReplaceWithTemplate: Replace current content with the template?
+        confirmClear: Clear EpiDoc XML?

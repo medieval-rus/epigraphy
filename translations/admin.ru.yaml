@@ -332,11 +332,15 @@ form:
         label: Актуальная информация
       interpretations:
         label: Интерпретации
+      criticalApparatus:
+        label: Критический аппарат
     section:
       common:
         label: Общие сведения
       interpretations:
         label: Редактирование интерпретаций надписи
+      criticalApparatus:
+        label: EpiDoc XML
       zeroRowMaterialAspect:
         label: Материальный аспект
       zeroRowLinguisticAspect:
@@ -345,11 +349,20 @@ form:
         label: Датировка
       zeroRowMedia:
         label: Файлы
+    help:
+      epidocXml: Оставьте поле пустым, чтобы удалить EpiDoc XML для этой надписи.
+    editor:
+      epidocXml:
+        insertTemplateButton: Вставить шаблон
+        clearButton: Очистить
+        confirmReplaceWithTemplate: Заменить текущее содержимое шаблоном?
+        confirmClear: Очистить EpiDoc XML?
     fields:
       number: Номер
       conventionalDate: Датировка
       dateExplanation: Обоснование датировки
       rssdaRender: 3D модель
+      epidocXml: EpiDoc XML
       carrier: Носитель
       comment: Комментарий
       isShownOnSite: Показывать надпись на сайте

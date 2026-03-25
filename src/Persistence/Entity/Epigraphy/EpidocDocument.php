@@ -1,3 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
 /*
  * This file is part of «Epigraphy of Medieval Rus» database.
  *
@@ -19,31 +23,50 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-@import '~jquery-ui/themes/base/theme';
-@import '~jquery-ui/themes/base/draggable';
-@import '~simple-keyboard/build/css/index';
+namespace App\Persistence\Entity\Epigraphy;
 
-.virtual-keyboard-wrapper {
-  background-color: #ececec;
-  width: 600px;
-  padding: 20px;
-}
+use Doctrine\ORM\Mapping as ORM;
 
-.epidoc-draft-editor-group {
-  .epidoc-draft-editor-textarea {
-    border: 1px solid #d2d6de;
-    border-radius: 4px;
-    font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
-    font-size: 13px;
-    background-color: #fbfbfb;
-    resize: vertical;
-    min-height: 320px;
-  }
-}
+/**
+ * @ORM\Entity()
+ */
+class EpidocDocument
+{
+    /**
+     * @var int|null
+     *
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(name="id", type="integer")
+     */
+    private $id;
 
-.epidoc-draft-editor-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="xml", type="text", length=16777215)
+     */
+    private $xml = '';
+
+    public function __clone()
+    {
+        $this->id = null;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getXml(): string
+    {
+        return $this->xml;
+    }
+
+    public function setXml(string $xml): self
+    {
+        $this->xml = $xml;
+
+        return $this;
+    }
 }

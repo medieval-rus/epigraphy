@@ -40,6 +40,7 @@ use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\Form\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 final class InscriptionAdmin extends AbstractEntityAdmin
 {
@@ -445,6 +446,26 @@ final class InscriptionAdmin extends AbstractEntityAdmin
                                     ->orderBy('src.year', 'DESC');
                             }
                         ]
+                    )
+                ->end()
+            ->end()
+            ->tab($this->getTabLabel('criticalApparatus'))
+                ->with($this->getSectionLabel('criticalApparatus'))
+                    ->add(
+                        'epidocXml',
+                        TextareaType::class,
+                        $this->createFormOptions(
+                            'epidocXml',
+                            [
+                                'required' => false,
+                                'help' => 'form.inscription.help.epidocXml',
+                                'attr' => [
+                                    'data-epidoc-draft-editor' => 'true',
+                                    'spellcheck' => 'false',
+                                    'rows' => 24,
+                                ],
+                            ]
+                        )
                     )
                 ->end()
             ->end()
