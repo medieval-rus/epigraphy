@@ -68,6 +68,8 @@ menu:
       label: Разряды
     inscription:
       label: Надписи
+    autoTranslation:
+      label: Автоматический перевод
     interpretation:
       label: Интерпретации
     file:
@@ -563,6 +565,18 @@ action:
     flash: Элемент успешно клонирован.
   translateAllInscription:
     label: Перевести всю надпись
+  autoTranslation:
+    manage:
+      label: Открыть
+    page:
+      title: Автоматический перевод надписей
+      fromNumber: Номер надписи от
+      toNumber: Номер надписи до
+      fromId: ID надписи от
+      toId: ID надписи до
+      overwrite: Перезаписывать существующие переводы EN
+      start: Запустить перевод
+      cancel: Остановить текущий батч
   regenerateThumbnails:
     label: Сгенерировать превью
     flash: Превью успешно сгенерированы.

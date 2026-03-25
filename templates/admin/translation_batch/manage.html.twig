@@ -1,0 +1,295 @@
+{% extends '@SonataAdmin/standard_layout.html.twig' %}
+
+{% block sonata_admin_content %}
+    <style>
+        #translation-batch-progress-bar.translation-batch-progress-done {
+            background-color: #8a8a8a;
+            background-image: none;
+            color: #fff;
+        }
+    </style>
+
+    <div class="container-fluid">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h4 class="box-title">{{ 'action.autoTranslation.page.title'|trans({}, 'admin') }}</h4>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="translation-batch-from">{{ 'action.autoTranslation.page.fromId'|trans({}, 'admin') }}</label>
+                        <input
+                            id="translation-batch-from"
+                            type="number"
+                            min="1"
+                            step="1"
+                            class="form-control"
+                            value="1"
+                        />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="translation-batch-to">{{ 'action.autoTranslation.page.toId'|trans({}, 'admin') }}</label>
+                        <input
+                            id="translation-batch-to"
+                            type="number"
+                            min="1"
+                            step="1"
+                            class="form-control"
+                            value="2000"
+                        />
+                    </div>
+                    <div class="col-md-4" style="padding-top: 25px;">
+                        <div class="checkbox" style="margin: 0;">
+                            <label>
+                                <input id="translation-batch-overwrite" type="checkbox" />
+                                {{ 'action.autoTranslation.page.overwrite'|trans({}, 'admin') }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button id="translation-batch-start" type="button" class="btn btn-primary">
+                        {{ 'action.autoTranslation.page.start'|trans({}, 'admin') }}
+                    </button>
+                    <button id="translation-batch-cancel" type="button" class="btn btn-default">
+                        {{ 'action.autoTranslation.page.cancel'|trans({}, 'admin') }}
+                    </button>
+                </div>
+
+                <div class="progress" style="margin-top: 18px;">
+                    <div
+                        id="translation-batch-progress-bar"
+                        class="progress-bar progress-bar-striped active"
+                        role="progressbar"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        aria-valuenow="0"
+                        style="width: 0%;"
+                    >
+                        0%
+                    </div>
+                </div>
+
+                <pre
+                    id="translation-batch-summary"
+                    style="margin-top: 10px; min-height: 220px; white-space: pre-wrap; word-break: break-word;"
+                ></pre>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            const startButton = document.getElementById('translation-batch-start');
+            const cancelButton = document.getElementById('translation-batch-cancel');
+            const fromInput = document.getElementById('translation-batch-from');
+            const toInput = document.getElementById('translation-batch-to');
+            const overwriteInput = document.getElementById('translation-batch-overwrite');
+            const progressBar = document.getElementById('translation-batch-progress-bar');
+            const summary = document.getElementById('translation-batch-summary');
+
+            if (!startButton || !cancelButton || !fromInput || !toInput || !overwriteInput || !progressBar || !summary) {
+                return;
+            }
+
+            const config = {
+                urls: {
+                    start: {{ admin.generateUrl('start')|json_encode|raw }},
+                    status: {{ admin.generateUrl('status')|json_encode|raw }},
+                    tick: {{ admin.generateUrl('tick')|json_encode|raw }},
+                    cancel: {{ admin.generateUrl('cancel')|json_encode|raw }}
+                },
+                csrfToken: {{ csrfToken|json_encode|raw }},
+                initialStatus: {{ initialStatus|json_encode|raw }}
+            };
+
+            let pollTimer = null;
+            let loopRunning = false;
+
+            function clearPollTimer() {
+                if (pollTimer !== null) {
+                    window.clearTimeout(pollTimer);
+                    pollTimer = null;
+                }
+            }
+
+            function setButtonsDisabled(isRunning) {
+                startButton.disabled = isRunning;
+            }
+
+            function formatStatusLines(status) {
+                const lines = [
+                    'Статус: ' + (status.status || 'idle'),
+                    'Диапазон: ' + ((status.fromNumber || '-') + ' ... ' + (status.toNumber || '-')),
+                    'Перезапись EN: ' + (status.overwrite ? 'да' : 'нет'),
+                    '',
+                    'Прогресс (надписи): ' + status.processedInscriptions + ' / ' + status.totalInscriptions,
+                    'Прогресс (поля): ' + status.processedUnits + ' / ' + status.totalUnits,
+                    '',
+                    'Переведено: ' + status.translated,
+                    'Пропущено: ' + status.skipped,
+                    'Ошибок: ' + status.errors,
+                    '',
+                    'Нечисловых номеров (не используется в режиме по ID): ' + status.nonNumericInscriptions,
+                    'Текущая надпись: ' + (status.currentInscriptionNumber || '-')
+                ];
+
+                if (status.lastError) {
+                    lines.push('');
+                    lines.push('Последняя ошибка: ' + status.lastError);
+                }
+
+                return lines.join('\n');
+            }
+
+            function updateUi(status) {
+                const percent = Math.max(0, Math.min(100, Number(status.progressPercent || 0)));
+                const isComplete = percent >= 100 || ['done', 'failed', 'canceled'].includes(status.status || '');
+
+                progressBar.style.width = percent + '%';
+                progressBar.setAttribute('aria-valuenow', String(percent));
+                progressBar.textContent = percent + '%';
+
+                if (isComplete) {
+                    progressBar.classList.remove('progress-bar-striped', 'active');
+                    progressBar.classList.add('translation-batch-progress-done');
+                } else {
+                    progressBar.classList.add('progress-bar-striped', 'active');
+                    progressBar.classList.remove('translation-batch-progress-done');
+                }
+
+                summary.textContent = formatStatusLines(status);
+                setButtonsDisabled(status.status === 'running');
+            }
+
+            function makeJsonRequest(url, options) {
+                return fetch(url, options)
+                    .then((response) => response.json().then((body) => ({ ok: response.ok, body: body })))
+                    .then((result) => {
+                        if (!result.ok) {
+                            const message = result.body && result.body.error ? result.body.error : 'Request failed.';
+                            throw new Error(message);
+                        }
+
+                        return result.body;
+                    });
+            }
+
+            function scheduleStatusPoll(delayMs) {
+                clearPollTimer();
+                pollTimer = window.setTimeout(() => {
+                    makeJsonRequest(config.urls.status, {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                        .then((status) => {
+                            updateUi(status);
+                            if (status.status === 'running') {
+                                runProcessingLoop();
+                            }
+                        })
+                        .catch((error) => {
+                            summary.textContent = 'Ошибка получения статуса: ' + error.message;
+                        });
+                }, delayMs);
+            }
+
+            function runProcessingLoop() {
+                if (loopRunning) {
+                    return;
+                }
+
+                loopRunning = true;
+
+                const step = () => {
+                    makeJsonRequest(config.urls.tick, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-Token': config.csrfToken
+                        },
+                        body: JSON.stringify({
+                            limit: 20,
+                            _token: config.csrfToken
+                        })
+                    })
+                        .then((status) => {
+                            updateUi(status);
+                            if (status.status === 'running') {
+                                pollTimer = window.setTimeout(step, 600);
+                                return;
+                            }
+
+                            loopRunning = false;
+                        })
+                        .catch((error) => {
+                            summary.textContent = 'Ошибка обработки: ' + error.message;
+                            loopRunning = false;
+                        });
+                };
+
+                clearPollTimer();
+                step();
+            }
+
+            startButton.addEventListener('click', () => {
+                const fromNumber = parseInt(fromInput.value, 10);
+                const toNumber = parseInt(toInput.value, 10);
+                const overwrite = overwriteInput.checked;
+
+                makeJsonRequest(config.urls.start, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-Token': config.csrfToken
+                    },
+                    body: JSON.stringify({
+                        fromNumber: fromNumber,
+                        toNumber: toNumber,
+                        overwrite: overwrite ? '1' : '0',
+                        _token: config.csrfToken
+                    })
+                })
+                    .then((status) => {
+                        updateUi(status);
+                        if (status.status === 'running') {
+                            runProcessingLoop();
+                        }
+                    })
+                    .catch((error) => {
+                        summary.textContent = 'Ошибка запуска: ' + error.message;
+                    });
+            });
+
+            cancelButton.addEventListener('click', () => {
+                makeJsonRequest(config.urls.cancel, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-Token': config.csrfToken
+                    },
+                    body: JSON.stringify({
+                        _token: config.csrfToken
+                    })
+                })
+                    .then((status) => {
+                        updateUi(status);
+                    })
+                    .catch((error) => {
+                        summary.textContent = 'Ошибка остановки: ' + error.message;
+                    });
+            });
+
+            updateUi(config.initialStatus);
+            if (config.initialStatus && config.initialStatus.status === 'running') {
+                runProcessingLoop();
+            }
+        })();
+    </script>
+{% endblock %}
