@@ -4,8 +4,19 @@ import Keyboard from 'simple-keyboard';
 
 export function initializeFilters() {
     $('.vyfony-filterable-table-bundle-form-group select[multiple="multiple"]').select2({
-        language: $('html').prop('lang')
+        language: $('html').prop('lang'),
+        templateResult: formatHierarchicalOption,
     });
+}
+
+function formatHierarchicalOption(option) {
+    if (!option.element) {
+        return option.text;
+    }
+    if (option.element.dataset.parentId === '') {
+        return $('<span>').addClass('select2-category-root').text(option.text);
+    }
+    return $('<span>').addClass('select2-category-child').text(option.text);
 }
 
 export function enableVirtualKeyboards()

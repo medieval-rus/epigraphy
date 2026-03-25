@@ -32,6 +32,7 @@
 {% block page_content %}
 
     {% import _self as self %}
+    {% set hasEpidoc = epidocXml is not empty %}
 
     <table class="table table-bordered">
         <tbody>
@@ -41,28 +42,37 @@
             {{ self.format_text_row(translationContext, 'carrier.categories', inscription.carrier.categories|map(namedEntity => namedEntity.translatedName(app.request.locale))) }}
             {{ self.format_text_row(translationContext, 'carrier.discoverySite', inscription.carrier.discoverySite|map(site => localizedName(site, app.request.locale))) }}
             {{ self.format_carrier(translationContext, inscription) }}
-            {{ self.format_original_text_row(translationContext, 'zeroRow.text', inscription) }}
+            {% if hasEpidoc %}
+                {{ self.format_epidoc_text_row(translationContext, 'epidocText', epidocRendered|default(null), epidocRenderMode|default('legacy_js')) }}
+            {% else %}
+                {{ self.format_original_text_row(translationContext, 'zeroRow.text', inscription) }}
+            {% endif %}
             {{ self.format_text_row(translationContext, 'zeroRow.transliteration', self.format_zero_row(inscription, 'transliteration')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.reconstruction', self.format_zero_row(inscription, 'reconstruction')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.normalization', self.format_zero_row(inscription, 'normalization')) }}
             {{ self.format_text_row(translationContext, 'zeroRow.interpretationComment', self.format_zero_row(inscription, 'interpretationComment')) }}
-            {% set baseTranslationRu = self.format_translation(inscription, 'ru', false)|trim %}
-            {% if app.request.locale == 'en' %}
-                {{ self.format_text_row(translationContext, 'zeroRow.translation', baseTranslationRu) }}
-                {% set automaticTranslationEnExists = localizedText(inscription.zeroRow, 'translation', null, 'en', false)|default('')|trim is not empty %}
-                {% if not automaticTranslationEnExists %}
-                    {% for interpretation in inscription.zeroRow.translationReferences %}
-                        {% if localizedText(interpretation, 'translation', interpretation.translation, 'en', false)|default('')|trim is not empty %}
-                            {% set automaticTranslationEnExists = true %}
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-                {% if baseTranslationRu is not empty and automaticTranslationEnExists %}
-                    {% set automaticTranslationEn = self.format_translation(inscription, 'en', false)|trim %}
-                    {{ self.format_text_row(translationContext, 'zeroRow.automaticTranslation', automaticTranslationEn) }}
-                {% endif %}
+            {% if hasEpidoc %}
+                {{ self.format_epidoc_apparatus_row(translationContext, 'epidocCriticalApparatus') }}
+                {{ self.format_epidoc_translations_row(translationContext, 'epidocTranslations') }}
             {% else %}
-                {{ self.format_text_row(translationContext, 'zeroRow.translation', baseTranslationRu) }}
+                {% set baseTranslationRu = self.format_translation(inscription, 'ru', false)|trim %}
+                {% if app.request.locale == 'en' %}
+                    {{ self.format_text_row(translationContext, 'zeroRow.translation', baseTranslationRu) }}
+                    {% set automaticTranslationEnExists = localizedText(inscription.zeroRow, 'translation', null, 'en', false)|default('')|trim is not empty %}
+                    {% if not automaticTranslationEnExists %}
+                        {% for interpretation in inscription.zeroRow.translationReferences %}
+                            {% if localizedText(interpretation, 'translation', interpretation.translation, 'en', false)|default('')|trim is not empty %}
+                                {% set automaticTranslationEnExists = true %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    {% if baseTranslationRu is not empty and automaticTranslationEnExists %}
+                        {% set automaticTranslationEn = self.format_translation(inscription, 'en', false)|trim %}
+                        {{ self.format_text_row(translationContext, 'zeroRow.automaticTranslation', automaticTranslationEn) }}
+                    {% endif %}
+                {% else %}
+                    {{ self.format_text_row(translationContext, 'zeroRow.translation', baseTranslationRu) }}
+                {% endif %}
             {% endif %}
             {{ self.format_rssda_iframe_row(translationContext, inscription.rssdaRender) }}
             {{ self.format_text_row(translationContext, 'zeroRow.photos', self.format_zero_row_images(inscription, 'photos')) }}
@@ -79,11 +89,6 @@
             {{ self.format_text_row(translationContext, 'dateExplanation', localizedText(inscription, 'dateExplanation', inscription.dateExplanation)) }}
             {{ self.format_text_row(translationContext, 'comment', localizedText(inscription, 'comment', inscription.comment)) }}
             {{ self.format_literature(translationContext, inscription) }}
-            {% if epidocXml is not empty %}
-                {{ self.format_epidoc_text_row(translationContext, 'epidocText', epidocRendered|default(null), epidocRenderMode|default('legacy_js')) }}
-                {{ self.format_epidoc_apparatus_row(translationContext, 'epidocCriticalApparatus') }}
-                {{ self.format_epidoc_translations_row(translationContext, 'epidocTranslations') }}
-            {% endif %}
         </tbody>
     </table>
     {% if is_granted('ROLE_ADMIN') %}

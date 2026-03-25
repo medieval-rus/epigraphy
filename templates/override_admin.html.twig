@@ -5,6 +5,12 @@
     <script type="text/javascript">
         const bibliography = {{ admin.bibliography }};
         window.EOMR_TRANSLATION_STORE_CSRF_TOKEN = {{ csrf_token('admin_translation_store')|json_encode|raw }};
+        window.EOMR_EPIDOC_DRAFT_EDITOR_I18N = {
+            insertTemplateButtonLabel: {{ 'form.inscription.editor.epidocXml.insertTemplateButton'|trans({}, 'admin')|json_encode|raw }},
+            clearButtonLabel: {{ 'form.inscription.editor.epidocXml.clearButton'|trans({}, 'admin')|json_encode|raw }},
+            confirmReplaceWithTemplateMessage: {{ 'form.inscription.editor.epidocXml.confirmReplaceWithTemplate'|trans({}, 'admin')|json_encode|raw }},
+            confirmClearMessage: {{ 'form.inscription.editor.epidocXml.confirmClear'|trans({}, 'admin')|json_encode|raw }}
+        };
     </script>
     {% endautoescape %}
     {{ parent () }}

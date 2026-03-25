@@ -101,6 +101,17 @@ class Inscription implements StringifiableEntityInterface
     private $isPartOfCorpus;
 
     /**
+     * @var EpidocDocument|null
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="App\Persistence\Entity\Epigraphy\EpidocDocument",
+     *     cascade={"persist", "remove"}
+     * )
+     * @ORM\JoinColumn(name="epidoc_document_id", referencedColumnName="id", nullable=true, onDelete="SET NULL", unique=true)
+     */
+    private $epidocDocument;
+
+    /**
      * @var ZeroRow|null
      *
      * @ORM\OneToOne(
@@ -154,6 +165,10 @@ class Inscription implements StringifiableEntityInterface
             $this->interpretations->add($clonedInterpretation);
 
             $clonesById[$oldInterpretation->getId()] = $clonedInterpretation;
+        }
+
+        if (null !== $this->epidocDocument) {
+            $this->epidocDocument = clone $this->epidocDocument;
         }
 
         $oldZeroRow = $this->zeroRow;
@@ -286,6 +301,45 @@ class Inscription implements StringifiableEntityInterface
     public function setIsPartOfCorpus(bool $isPartOfCorpus): self
     {
         $this->isPartOfCorpus = $isPartOfCorpus;
+
+        return $this;
+    }
+
+    public function getEpidocDocument(): ?EpidocDocument
+    {
+        return $this->epidocDocument;
+    }
+
+    public function setEpidocDocument(?EpidocDocument $epidocDocument): self
+    {
+        $this->epidocDocument = $epidocDocument;
+
+        return $this;
+    }
+
+    public function getEpidocXml(): ?string
+    {
+        if (null === $this->epidocDocument) {
+            return null;
+        }
+
+        return $this->epidocDocument->getXml();
+    }
+
+    public function setEpidocXml(?string $epidocXml): self
+    {
+        $trimmedXml = null === $epidocXml ? null : trim($epidocXml);
+        if (null === $trimmedXml || '' === $trimmedXml) {
+            $this->epidocDocument = null;
+
+            return $this;
+        }
+
+        if (null === $this->epidocDocument) {
+            $this->epidocDocument = new EpidocDocument();
+        }
+
+        $this->epidocDocument->setXml($trimmedXml);
 
         return $this;
     }

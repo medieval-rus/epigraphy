@@ -1,7 +1,41 @@
+menu:
+  paragraphs:
+    autoTranslation:
+      label: Automatic translation
+
 action:
   translateAllInscription:
     label: Translate entire inscription
+  autoTranslation:
+    manage:
+      label: Open
+    page:
+      title: Batch inscription translation
+      fromNumber: Inscription number from
+      toNumber: Inscription number to
+      fromId: Inscription ID from
+      toId: Inscription ID to
+      overwrite: Overwrite existing EN translations
+      start: Start translation
+      cancel: Stop current batch
 
 form:
   localizedText:
     aiGenerated: AI translated draft
+  inscription:
+    tab:
+      criticalApparatus:
+        label: Critical apparatus
+    section:
+      criticalApparatus:
+        label: EpiDoc XML
+    fields:
+      epidocXml: EpiDoc XML
+    help:
+      epidocXml: Leave this field empty to remove EpiDoc XML for this inscription.
+    editor:
+      epidocXml:
+        insertTemplateButton: Insert template
+        clearButton: Clear
+        confirmReplaceWithTemplate: Replace current content with the template?
+        confirmClear: Clear EpiDoc XML?

@@ -28,7 +28,128 @@ $(() => {
     forwardChangesFromZeroRowToInterpretation();
     initializeAutoTranslateButtons();
     initializeTranslateAllAction();
+    initializeEpidocDraftEditor();
 });
+
+function initializeEpidocDraftEditor()
+{
+    const draftTextarea = $('textarea[data-epidoc-draft-editor="true"]').first();
+    if (draftTextarea.length === 0) {
+        return;
+    }
+
+    const dom = draftTextarea.get(0);
+    if (!dom) {
+        return;
+    }
+
+    const editor = createTextareaDraftEditor(dom);
+
+    const i18n = getEpidocDraftEditorI18n();
+    const editorContainer = $('<div class="epidoc-draft-editor-toolbar"></div>');
+    const insertTemplateButton = $('<button type="button" class="btn btn-default btn-sm"></button>').text(i18n.insertTemplateButtonLabel);
+    const clearButton = $('<button type="button" class="btn btn-link btn-sm"></button>').text(i18n.clearButtonLabel);
+
+    insertTemplateButton.on('click', () => {
+        if (editor.getValue().trim() !== '' && !window.confirm(i18n.confirmReplaceWithTemplateMessage)) {
+            return;
+        }
+
+        editor.setValue(getEpidocDraftTemplate());
+        editor.focus();
+    });
+
+    clearButton.on('click', () => {
+        if (!window.confirm(i18n.confirmClearMessage)) {
+            return;
+        }
+
+        editor.setValue('');
+        editor.focus();
+    });
+
+    editorContainer.append(insertTemplateButton, clearButton);
+    draftTextarea.parent().prepend(editorContainer);
+    draftTextarea.closest('.form-group').addClass('epidoc-draft-editor-group');
+
+}
+
+function getEpidocDraftEditorI18n()
+{
+    const defaults = {
+        insertTemplateButtonLabel: 'Insert template',
+        clearButtonLabel: 'Clear',
+        confirmReplaceWithTemplateMessage: 'Replace current content with the template?',
+        confirmClearMessage: 'Clear EpiDoc XML?',
+    };
+
+    const fromWindow = window.EOMR_EPIDOC_DRAFT_EDITOR_I18N;
+    if (!fromWindow || typeof fromWindow !== 'object') {
+        return defaults;
+    }
+
+    return {
+        insertTemplateButtonLabel: typeof fromWindow.insertTemplateButtonLabel === 'string'
+            ? fromWindow.insertTemplateButtonLabel
+            : defaults.insertTemplateButtonLabel,
+        clearButtonLabel: typeof fromWindow.clearButtonLabel === 'string'
+            ? fromWindow.clearButtonLabel
+            : defaults.clearButtonLabel,
+        confirmReplaceWithTemplateMessage: typeof fromWindow.confirmReplaceWithTemplateMessage === 'string'
+            ? fromWindow.confirmReplaceWithTemplateMessage
+            : defaults.confirmReplaceWithTemplateMessage,
+        confirmClearMessage: typeof fromWindow.confirmClearMessage === 'string'
+            ? fromWindow.confirmClearMessage
+            : defaults.confirmClearMessage,
+    };
+}
+
+function createTextareaDraftEditor(dom)
+{
+    const textarea = $(dom);
+
+    textarea.addClass('epidoc-draft-editor-textarea');
+    textarea.css('height', '520px');
+
+    return {
+        getValue() {
+            return textarea.val() || '';
+        },
+        setValue(value) {
+            textarea.val(value);
+        },
+        focus() {
+            textarea.trigger('focus');
+        },
+    };
+}
+
+function getEpidocDraftTemplate()
+{
+    return `<TEI xml:space="preserve" xml:lang="orv" xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+    <fileDesc>
+        <titleStmt>
+        <title>EpiDoc</title>
+      </titleStmt>
+      <publicationStmt/>
+      <sourceDesc>
+        <p>Укажите источник</p>
+      </sourceDesc>
+    </fileDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <div type="edition" xml:lang="orv-Cyrl">
+        <ab>Текст надписи</ab>
+      </div>
+      <div type="translation" xml:lang="ru">
+        <p>Перевод</p>
+      </div>
+    </body>
+  </text>
+</TEI>`;
+}
 
 function createCheckboxes() {
 

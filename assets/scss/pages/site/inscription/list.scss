@@ -606,6 +606,26 @@ html[lang="en"] {
   }
 }
 
+// Select2 dropdown is rendered in <body>, so all category styles must be at the top level.
+.select2-category-root {
+  display: block;
+  font-weight: bold;
+  color: #1a1a1a;
+  border-top: 1px solid #d0d0d0;
+  padding-top: 4px;
+  margin-top: 2px;
+}
+
+.select2-category-child {
+  color: #5a6a7a;
+}
+
+.select2-results__option:first-child .select2-category-root {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
 // Additional specific override for the checkbox by ID
 #conventional-date-exact-match {
   -webkit-appearance: none !important;

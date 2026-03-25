@@ -128,38 +128,11 @@ final class InscriptionController extends AbstractController
 
         $epidocXml = null;
         $epidocRendered = null;
-        $projectDir = (string) $this->getParameter('kernel.project_dir');
-        $epidocDir = $projectDir . '/assets/epidoc';
-        $candidateNames = [];
-
-        $inscriptionNumber = $inscription->getNumber();
-        if ($inscriptionNumber !== null) {
-            $inscriptionNumber = trim($inscriptionNumber);
-            if ($inscriptionNumber !== '') {
-                $candidateNames[] = $inscriptionNumber;
-            }
-        }
-
-        $inscriptionId = $inscription->getId();
-        if ($inscriptionId !== null) {
-            $candidateNames[] = (string) $inscriptionId;
-        }
-
-        $candidateNames = array_values(array_unique($candidateNames));
-        foreach ($candidateNames as $candidateName) {
-            if (str_contains($candidateName, '/') || str_contains($candidateName, '\\') || str_contains($candidateName, '..')) {
-                continue;
-            }
-
-            $epidocPath = $epidocDir . '/' . $candidateName . '.xml';
-            if (!is_file($epidocPath) || !is_readable($epidocPath)) {
-                continue;
-            }
-
-            $fileContent = file_get_contents($epidocPath);
-            if ($fileContent !== false) {
-                $epidocXml = $fileContent;
-                break;
+        $epidocFromDb = $inscription->getEpidocXml();
+        if (null !== $epidocFromDb) {
+            $trimmedEpidocXml = trim($epidocFromDb);
+            if ($trimmedEpidocXml !== '') {
+                $epidocXml = $trimmedEpidocXml;
             }
         }
 
