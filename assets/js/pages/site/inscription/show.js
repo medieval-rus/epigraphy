@@ -373,7 +373,8 @@ function getGapMetadataFromElement(gapElement) {
         return {
             quantity: null,
             unit: '',
-            extent: ''
+            extent: '',
+            reason: ''
         };
     }
 
@@ -383,7 +384,8 @@ function getGapMetadataFromElement(gapElement) {
     return {
         quantity: Number.isInteger(quantity) && quantity > 0 ? quantity : null,
         unit: (gapElement.getAttribute('unit') || '').trim().toLowerCase(),
-        extent: (gapElement.getAttribute('extent') || '').trim().toLowerCase()
+        extent: (gapElement.getAttribute('extent') || '').trim().toLowerCase(),
+        reason: (gapElement.getAttribute('reason') || '').trim().toLowerCase()
     };
 }
 
@@ -392,7 +394,8 @@ function getGapMetadataFromDataset(gapNode) {
         return {
             quantity: null,
             unit: '',
-            extent: ''
+            extent: '',
+            reason: ''
         };
     }
 
@@ -402,19 +405,26 @@ function getGapMetadataFromDataset(gapNode) {
     return {
         quantity: Number.isInteger(quantity) && quantity > 0 ? quantity : null,
         unit: (gapNode.dataset.gapUnit || '').trim().toLowerCase(),
-        extent: (gapNode.dataset.gapExtent || '').trim().toLowerCase()
+        extent: (gapNode.dataset.gapExtent || '').trim().toLowerCase(),
+        reason: (gapNode.dataset.gapReason || '').trim().toLowerCase()
     };
 }
 
 function getGapDisplayText(system, gapMeta = {}) {
     const quantity = Number.isInteger(gapMeta.quantity) && gapMeta.quantity > 0 ? gapMeta.quantity : null;
     const unit = (gapMeta.unit || '').toLowerCase();
+    const extent = (gapMeta.extent || '').toLowerCase();
+    const reason = (gapMeta.reason || '').toLowerCase();
 
     if (quantity !== null && unit === 'character') {
         if (system === 'zaliznyak') {
             return '-'.repeat(quantity);
         }
         return '*'.repeat(quantity);
+    }
+
+    if (system !== 'zaliznyak' && reason === 'lost' && extent === 'unknown') {
+        return '[---]';
     }
 
     return system === 'zaliznyak' ? '...' : '***';
@@ -1010,7 +1020,7 @@ function renderEditionContent(node, system = 'leiden') {
                 case 'gap':
                     const gapMeta = getGapMetadataFromElement(child);
                     const gapMarker = getGapDisplayText(system, gapMeta);
-                    result += `<span class="epidoc-gap" title="${escapeHtml(getGapTitle(gapMeta))}" data-gap-quantity="${gapMeta.quantity ?? ''}" data-gap-unit="${escapeHtml(gapMeta.unit)}" data-gap-extent="${escapeHtml(gapMeta.extent)}">${gapMarker}</span>`;
+                    result += `<span class="epidoc-gap" title="${escapeHtml(getGapTitle(gapMeta))}" data-gap-quantity="${gapMeta.quantity ?? ''}" data-gap-unit="${escapeHtml(gapMeta.unit)}" data-gap-extent="${escapeHtml(gapMeta.extent)}" data-gap-reason="${escapeHtml(gapMeta.reason)}">${gapMarker}</span>`;
                     break;
                     
                 case 'unclear':
