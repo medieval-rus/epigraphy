@@ -920,7 +920,7 @@ function renderEditionContent(node, system = 'leiden') {
         const child = node.childNodes[index];
         if (child.nodeType === Node.TEXT_NODE) {
             // Normalize whitespace and avoid extra spaces near inline <app> inside words.
-            let text = child.textContent.replace(/\s+/g, ' ');
+            let text = normalizeInWordBreakMarkers(child.textContent.replace(/\s+/g, ' '), system);
             if (!text.trim()) {
                 const prevElementForGap = getSiblingElement(node.childNodes, index, -1);
                 const nextElementForGap = getSiblingElement(node.childNodes, index, 1);
@@ -934,6 +934,11 @@ function renderEditionContent(node, system = 'leiden') {
                     && !/\s$/.test(result)) {
                     result += ' ';
                 }
+                if (prevElementForGap && prevElementForGap.localName === 'app'
+                    && !/[\r\n]/.test(child.textContent || '')
+                    && !/\s$/.test(result)) {
+                    result += ' ';
+                }
                 continue;
             }
             const prevElement = getSiblingElement(node.childNodes, index, -1);
@@ -943,7 +948,7 @@ function renderEditionContent(node, system = 'leiden') {
 
             if (prevElement && prevElement.localName === 'app') {
                 text = text.replace(/^\s+/, '');
-                if (hadLeadingWhitespace && !startsWithLowercaseLetter(text)) {
+                if (hadLeadingWhitespace) {
                     text = ` ${text}`;
                 }
             }
@@ -1009,8 +1014,8 @@ function renderEditionContent(node, system = 'leiden') {
                     
                 case 'lb':
                     result = result.replace(/\s+$/, '');
-                    if (system === 'zaliznyak' && isInWordLineBreak(child)) {
-                        result += '⸗';
+                    if (isInWordLineBreak(child)) {
+                        result += getInWordLineBreakMarker(system);
                     }
                     if (!result.endsWith('<br />')) {
                         result += '<br />';
@@ -1057,10 +1062,6 @@ function getSiblingElement(childNodes, startIndex, direction) {
         index += direction;
     }
     return null;
-}
-
-function startsWithLowercaseLetter(text) {
-    return /^\p{Ll}/u.test(text);
 }
 
 function normalizeEditionHtml(html) {
@@ -1177,7 +1178,7 @@ function buildWitnessReadingText(node, system, witnessResp) {
 
     for (const child of node.childNodes) {
         if (child.nodeType === Node.TEXT_NODE) {
-            result += child.textContent.replace(/\s+/g, ' ');
+            result += normalizeInWordBreakMarkers(child.textContent.replace(/\s+/g, ' '), system);
             continue;
         }
 
@@ -1228,8 +1229,8 @@ function buildWitnessReadingText(node, system, witnessResp) {
 
         if (tagName === 'lb') {
             result = result.replace(/\s+$/, '');
-            if (system === 'zaliznyak' && isInWordLineBreak(child)) {
-                result += '⸗';
+            if (isInWordLineBreak(child)) {
+                result += getInWordLineBreakMarker(system);
             }
             result += '\n';
             continue;
@@ -1329,7 +1330,7 @@ function getPlainText(node, system = 'leiden') {
     
     for (const child of node.childNodes) {
         if (child.nodeType === Node.TEXT_NODE) {
-            result += child.textContent.replace(/\s+/g, ' ');
+            result += normalizeInWordBreakMarkers(child.textContent.replace(/\s+/g, ' '), system);
         } else if (child.nodeType === Node.ELEMENT_NODE) {
             const tagName = child.localName;
             
@@ -1357,8 +1358,8 @@ function getPlainText(node, system = 'leiden') {
                 result += getGapDisplayText(system, getGapMetadataFromElement(child));
             } else if (tagName === 'lb') {
                 result = result.replace(/\s+$/, '');
-                if (system === 'zaliznyak' && isInWordLineBreak(child)) {
-                    result += '⸗';
+                if (isInWordLineBreak(child)) {
+                    result += getInWordLineBreakMarker(system);
                 }
                 result += '\n';
             } else {
@@ -1388,6 +1389,14 @@ function isInWordLineBreak(node) {
     }
 
     return node.getAttribute('break') === 'no' || node.getAttribute('type') === 'inWord';
+}
+
+function getInWordLineBreakMarker(system) {
+    return system === 'zaliznyak' ? '⸗' : '-';
+}
+
+function normalizeInWordBreakMarkers(text, system) {
+    return system === 'zaliznyak' ? text : text.replace(/⸗/g, '-');
 }
 
 /**
