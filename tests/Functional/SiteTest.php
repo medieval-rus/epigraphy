@@ -28,6 +28,10 @@ final class SiteTest extends WebTestCase
         try {
             $client->request('GET', 'https://epigraphica.ru'.$path);
             self::assertResponseStatusCodeSame($status);
+            if ($status === 200 && str_contains($path, 'conventionalDateExactMatch=1')) {
+                self::assertCount(1, $client->getCrawler()->filter('input[name="conventionalDateExactMatch"]'));
+                self::assertSelectorExists('input[name="conventionalDateExactMatch"][checked]');
+            }
         } finally {
             if ($database->isTransactionActive()) { $database->rollBack(); }
         }
@@ -56,6 +60,11 @@ final class SiteTest extends WebTestCase
             'translation text' => ['/epigraphy/inscription/longlist?translation='.rawurlencode('рабу'), 200],
             'inscription text' => ['/epigraphy/inscription/longlist?text='.rawurlencode('рабу'), 200],
             'combined translation and text' => ['/epigraphy/inscription/longlist?translation='.rawurlencode('рабу').'&text='.rawurlencode('рабу'), 200],
+            'valid date range' => ['/epigraphy/inscription/longlist?conventionalDateInitialYear=1100&conventionalDateFinalYear=1200', 200],
+            'exact date range' => ['/epigraphy/inscription/longlist?conventionalDateInitialYear=1100&conventionalDateFinalYear=1200&conventionalDateExactMatch=1', 200],
+            'browser date form' => ['/epigraphy/inscription/longlist?city=&number-in-source=&translation=&text=&conventionalDateExactMatch=1&conventionalDateInitialYear=949&conventionalDateFinalYear=1109&fulltext=&sortBy=id&sortOrder=desc&page=1&requestId=', 200],
+            'unknown filter rejected' => ['/epigraphy/inscription/longlist?unexpectedFilter=1', 400],
+            'malformed date checkbox rejected' => ['/epigraphy/inscription/longlist?conventionalDateInitialYear=949&conventionalDateFinalYear=1109&conventionalDateExactMatch[]=1', 400],
             'unsafe sort field' => ['/epigraphy/inscription/longlist?sortBy='.rawurlencode('id DESC, (SELECT 1)'), 400],
             'unsafe sort order' => ['/epigraphy/inscription/longlist?sortOrder='.rawurlencode('desc, (SELECT 1)'), 400],
             'negative page' => ['/epigraphy/inscription/longlist?page=-1', 400],

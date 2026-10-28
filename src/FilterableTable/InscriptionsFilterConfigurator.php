@@ -43,6 +43,7 @@ use App\FilterableTable\Filter\Parameter\WritingMethodFilterParameter;
 use App\FilterableTable\Filter\Parameter\FullTextFilterParameter;
 use App\FilterableTable\Filter\Parameter\ConventionalDateInitialYearFilterParameter;
 use App\FilterableTable\Filter\Parameter\ConventionalDateFinalYearFilterParameter;
+use App\FilterableTable\Filter\Parameter\ConventionalDateExactMatchFilterParameter;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Services\Epigraphy\ActualValue\Formatter\ActualValueFormatterInterface;
 use App\Services\Epigraphy\Stringifier\ValueStringifierInterface;
@@ -198,6 +199,7 @@ final class InscriptionsFilterConfigurator extends AbstractFilterConfigurator
             $this->textFilterParameter,
             $this->conventionalDateInitialYearFilterParameter,
             $this->conventionalDateFinalYearFilterParameter,
+            new ConventionalDateExactMatchFilterParameter(),
         ];
     }
 

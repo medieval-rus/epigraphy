@@ -147,7 +147,7 @@
                                                     </div>
                                                     <div class="col-4">
                                                         <div class="form-check date-exact-match-checkbox">
-                                                            <input type="checkbox" class="form-check-input" id="conventional-date-exact-match" name="conventionalDateExactMatch" value="1">
+                                                            {{ form_widget(filterForm.conventionalDateExactMatch, {'id': 'conventional-date-exact-match', 'attr': {'class': 'form-check-input'}}) }}
                                                             <label class="form-check-label" for="conventional-date-exact-match">
                                                                 {{ 'controller.inscription.list.filter.dateSlider.exactMatch'|trans }}
                                                             </label>
