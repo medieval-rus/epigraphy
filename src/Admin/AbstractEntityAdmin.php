@@ -33,17 +33,28 @@ use Doctrine\ORM\EntityRepository;
 
 abstract class AbstractEntityAdmin extends AbstractAdmin
 {
+    private ?string $bibliography = null;
+
     protected function configure(): void
     {
         $entityKey = $this->getEntityKey();
-        $em = $this->getModelManager()->getEntityManager('App\Persistence\Entity\Bibliography\BibliographicRecord');
-        $queryBuilder = $em->createQueryBuilder();
-        $queryBuilder->select('b.shortName')->from('App\Persistence\Entity\Bibliography\BibliographicRecord', 'b');
-        $this->bibliography = json_encode($queryBuilder->getQuery()->execute());
 
         $this->classnameLabel = $entityKey;
         $this->setLabel('menu.paragraphs.'.$entityKey.'.label');
         $this->setTranslationDomain('admin');
+    }
+
+    /** Loaded by Twig only when a form actually needs bibliography suggestions. */
+    public function getBibliography(): string
+    {
+        if (null === $this->bibliography) {
+            $em = $this->getModelManager()->getEntityManager('App\Persistence\Entity\Bibliography\BibliographicRecord');
+            $queryBuilder = $em->createQueryBuilder();
+            $queryBuilder->select('b.shortName')->from('App\Persistence\Entity\Bibliography\BibliographicRecord', 'b');
+            $this->bibliography = json_encode($queryBuilder->getQuery()->execute()) ?: '[]';
+        }
+
+        return $this->bibliography;
     }
 
     protected function getEntityKey(): string

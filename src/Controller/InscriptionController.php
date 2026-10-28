@@ -28,6 +28,7 @@ namespace App\Controller;
 use App\FilterableTable\InscriptionsFilterConfigurator;
 use App\Persistence\Entity\Epigraphy\Inscription;
 use App\Persistence\Repository\Content\PostRepository;
+use App\Persistence\Repository\Epigraphy\InscriptionRepository;
 use App\Services\Epidoc\Xslt\EpidocRenderModeResolver;
 use App\Services\Epidoc\Xslt\EpidocXsltRenderResult;
 use App\Services\Epidoc\Xslt\EpidocXsltRenderer;
@@ -116,13 +117,16 @@ final class InscriptionController extends AbstractController
      * @Route("/show/{id}", name="inscription__show", methods={"GET"})
      */
     public function show(
-        Inscription $inscription,
+        string $id,
+        InscriptionRepository $inscriptionRepository,
         EpidocRenderModeResolver $epidocRenderModeResolver,
         EpidocXsltRenderer $epidocXsltRenderer,
         LoggerInterface $logger
     ): Response
     {
-        if (!$inscription->getIsShownOnSite() && !$this->isGranted('ROLE_ADMIN')) {
+        $parsedId = filter_var($id, FILTER_VALIDATE_INT);
+        $inscription = false !== $parsedId ? $inscriptionRepository->find($parsedId) : null;
+        if (!$inscription instanceof Inscription || (!$inscription->getIsShownOnSite() && !$this->isGranted('ROLE_ADMIN'))) {
             throw $this->createNotFoundException();
         }
 

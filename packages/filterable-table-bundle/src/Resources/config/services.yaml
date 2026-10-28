@@ -1,0 +1,61 @@
+services:
+  vyfony_filterable_table.cache:
+    class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+
+  vyfony_filterable_table.data_collection.data_collector:
+    class: Vyfony\Bundle\FilterableTableBundle\DataCollection\DataCollector
+    arguments:
+      - '@doctrine'
+      - '@vyfony_filterable_table.cache'
+      - ~
+      - ~
+
+  Vyfony\Bundle\FilterableTableBundle\DataCollection\DataCollectorInterface: '@vyfony_filterable_table.data_collection.data_collector'
+
+  vyfony_filterable_table.form.data:
+    class: Vyfony\Bundle\FilterableTableBundle\Form\Data\FormData
+    arguments:
+      - '@request_stack'
+      - '@Vyfony\Bundle\FilterableTableBundle\Form\Transformer\QueryParametersTransformerInterface'
+
+  Vyfony\Bundle\FilterableTableBundle\Form\Data\FormDataInterface: '@vyfony_filterable_table.form.data'
+
+  vyfony_filterable_table.table:
+    class: Vyfony\Bundle\FilterableTableBundle\Table\Table
+    arguments:
+      - '@Vyfony\Bundle\FilterableTableBundle\DataCollection\DataCollectorInterface'
+      - '@form.factory'
+      - '@Vyfony\Bundle\FilterableTableBundle\Form\Data\FormDataInterface'
+      - ~
+      - ~
+      - ~
+
+  Vyfony\Bundle\FilterableTableBundle\Table\TableInterface: '@vyfony_filterable_table.table'
+
+  vyfony_filterable_table.table_interface: '@Vyfony\Bundle\FilterableTableBundle\Table\TableInterface'
+
+  vyfony_filterable_table.form.transformer.query_parameters_transformer:
+    class: Vyfony\Bundle\FilterableTableBundle\Form\Transformer\QueryParametersTransformer
+
+  Vyfony\Bundle\FilterableTableBundle\Form\Transformer\QueryParametersTransformerInterface: '@vyfony_filterable_table.form.transformer.query_parameters_transformer'
+
+  vyfony_filterable_table.form.type.filterable_table_type:
+    class: Vyfony\Bundle\FilterableTableBundle\Form\Type\FilterableTableType
+    arguments:
+      - ~
+      - ~
+    tags: ['form.type']
+
+  vyfony_filterable_table.persistence.query_builder.alias.alias_factory:
+    class: Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactory
+
+  Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Alias\AliasFactoryInterface:
+    alias: vyfony_filterable_table.persistence.query_builder.alias.alias_factory
+    public: true
+
+  vyfony_filterable_table.persistence.query_builder.parameter.parameter_factory:
+    class: Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Parameter\ParameterFactory
+
+  Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Parameter\ParameterFactoryInterface:
+    alias: vyfony_filterable_table.persistence.query_builder.parameter.parameter_factory
+    public: true

@@ -1,0 +1,45 @@
+{
+    "name": "medieval-rus/filterable-table-bundle",
+    "type": "symfony-bundle",
+    "description": "Maintained local fork of VyfonyFilterableTableBundle for PHP 8.4 projects",
+    "keywords": [
+        "filter",
+        "table",
+        "filterable-table",
+        "symfony-bundle"
+    ],
+    "homepage": "https://github.com/vyfony/filterable-table-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anton Dyshkant",
+            "email": "vyshkant@gmail.com",
+            "homepage": "https://vyshkant.github.io"
+        }
+    ],
+    "require": {
+        "php": "^8.4",
+        "doctrine/common": "^2.0|^3.0",
+        "doctrine/orm": "^2.20",
+        "psr/simple-cache": "^1.0 || ^2.0 || ^3.0",
+        "symfony/cache": "^5.4",
+        "symfony/config": "^5.4",
+        "symfony/dependency-injection": "^5.4",
+        "symfony/doctrine-bridge": "^5.4",
+        "symfony/form": "^5.4",
+        "symfony/http-foundation": "^5.4",
+        "symfony/http-kernel": "^5.4",
+        "symfony/options-resolver": "^5.4",
+        "symfony/routing": "^5.4",
+        "symfony/yaml": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vyfony\\Bundle\\FilterableTableBundle\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "version": "1.0.0"
+}

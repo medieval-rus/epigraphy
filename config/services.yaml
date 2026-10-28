@@ -19,6 +19,7 @@
 
 
 parameters:
+  env(TNT_INDEX_PATH): '%kernel.project_dir%/var/search/fulltext.sqlite'
   locale: 'ru'
   locales: ['ru', 'en']
   favorite_inscriptions_count: 6
@@ -29,6 +30,7 @@ services:
     autoconfigure: true
     bind:
       $projectDir: '%kernel.project_dir%'
+      $fullTextIndexPath: '%env(resolve:TNT_INDEX_PATH)%'
       $osfEndpoint: '%env(OSF_ENDPOINT)%'
       $osfAccessToken: '%env(OSF_ACCESS_TOKEN)%'
       $osfFolders:

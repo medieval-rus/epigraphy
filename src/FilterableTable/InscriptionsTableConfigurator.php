@@ -168,6 +168,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setIsRaw(true)
                 ->setName('interpretation-description')
+                ->setIsSortable(false)
                 ->setValueExtractor(function (Inscription $inscription): string {
                     return $this->valueStringifier->stringify($inscription, 'description') ?? '-';
                 })
@@ -175,6 +176,7 @@ final class InscriptionsTableConfigurator extends AbstractTableConfigurator
             (new ColumnMetadata())
                 ->setIsRaw(true)
                 ->setName('interpretation-text')
+                ->setIsSortable(false)
                 ->setValueExtractor(function (Inscription $inscription): string {
                     return $this->valueStringifier->stringify(
                         $inscription,

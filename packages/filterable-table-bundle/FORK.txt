@@ -1,0 +1,4 @@
+Local maintained fork of https://github.com/vyfony/filterable-table-bundle, upstream v0.6.4.
+Original namespace and MIT licence retained.
+Changes: PHP 8.4 compatibility, checked sorting, validated pagination/cache references.
+Use Composer path repository, options.symlink=false; do not edit vendor copies.

@@ -27,35 +27,19 @@ final class EpidocStylesheetsStageOneTest extends TestCase
 
     public function testUpstreamMetadataMatchesCurrentSubmoduleRevision(): void
     {
-        $metadataPath = $this->projectRoot . '/tools/epidoc-stylesheets.upstream.md';
-        $headPath = $this->projectRoot . '/tools/epidoc-stylesheets/.git';
-
+        $metadataPath = $this->projectRoot . '/tools/epidoc-stylesheets.upstream.json';
         self::assertFileExists($metadataPath);
-        self::assertFileExists($headPath);
-
-        $metadata = file_get_contents($metadataPath);
-        self::assertIsString($metadata);
-
-        $gitHeadPointer = trim((string) file_get_contents($headPath));
-        self::assertStringStartsWith('gitdir: ', $gitHeadPointer);
-
-        $gitDirPath = trim(substr($gitHeadPointer, strlen('gitdir: ')));
-        if (!str_starts_with($gitDirPath, '/')) {
-            $gitDirPath = realpath($this->projectRoot . '/tools/epidoc-stylesheets/' . $gitDirPath) ?: '';
+        $metadata = json_decode((string) file_get_contents($metadataPath), true, 512, JSON_THROW_ON_ERROR);
+        self::assertMatchesRegularExpression('/^[0-9a-f]{40}$/', $metadata['commit']);
+        foreach ($metadata['entrypoints'] as $name => $hash) {
+            self::assertSame($hash, hash_file('sha256', $this->projectRoot . '/tools/epidoc-stylesheets/' . $name));
         }
-
-        self::assertNotSame('', $gitDirPath, 'Failed to resolve submodule gitdir path.');
-
-        $headRef = trim((string) file_get_contents($gitDirPath . '/HEAD'));
-        self::assertStringStartsWith('ref: ', $headRef);
-
-        $refPath = $gitDirPath . '/' . trim(substr($headRef, strlen('ref: ')));
-        self::assertFileExists($refPath);
-
-        $currentCommit = trim((string) file_get_contents($refPath));
-        self::assertMatchesRegularExpression('/^[0-9a-f]{40}$/', $currentCommit);
-
-        self::assertStringContainsString($currentCommit, $metadata);
+        if (file_exists($this->projectRoot . '/tools/epidoc-stylesheets/.git')) {
+            $process = new \Symfony\Component\Process\Process([
+                'git', '-C', $this->projectRoot . '/tools/epidoc-stylesheets', 'rev-parse', 'HEAD',
+            ]);
+            $process->mustRun();
+            self::assertSame($metadata['commit'], trim($process->getOutput()));
+        }
     }
 }
-

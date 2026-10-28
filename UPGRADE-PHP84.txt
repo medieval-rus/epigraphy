@@ -1,0 +1,63 @@
+Эпиграфика: подготовка приложения к PHP 8.4
+База: production /var/www/epigrafika.ru/deploy/91, Git c6d43243.
+
+Цель — восстановить epigraphica.ru и epigrafika.ru на установленном PHP 8.4.27.
+Приложение требует PHP ^8.4, расширения Imagick, MySQL/PDO, SQLite/PDO, mbstring,
+XML и zip. На production остаются отдельные env и БД эпиграфики.
+
+Symfony 5.3 -> 5.4 LTS, Doctrine ORM 2.20 / DBAL 3, обновлены Sonata, Twig,
+CKEditorBundle и средства тестирования. Удалены неиспользуемые MakerBundle и
+SensioFrameworkExtraBundle; карточка надписи явно загружает сущность по ID из
+репозитория и возвращает 404 для неизвестного/некорректного ID.
+
+Локальный MIT-пакет packages/filterable-table-bundle (та же проверенная основа,
+что у gramoty.ru) ограничивает сортировку допустимыми полями и ASC/DESC,
+отклоняет неверные страницы и некорректные/зацикленные ссылки поиска.
+Неподдерживаемые столбцы составных значений не предлагают сортировку в интерфейсе.
+
+Поисковый SQLite-индекс вынесен из public/thumbs в отдельный путь TNT_INDEX_PATH.
+По умолчанию: var/search/fulltext.sqlite. На сервере следует использовать
+/var/lib/epigraphy-php84/search/fulltext.sqlite с правом записи только PHP-worker.
+При подготовке релиза скопировать существующий /var/www/epigrafika.ru/thumbs/fulltext.sql
+в этот путь (проверив PRAGMA quick_check). Автоматическая переиндексация и миграции БД
+при сборке/публикации не выполняются. Перестроение из админки читает ту же БД
+и пишет тот же приватный путь через FullTextSearchFactory.
+Закрыть /thumbs/fulltext.sql и другие SQL/SQLite-файлы на nginx.
+
+Список подсказок библиографии загружается лениво, только при обращении шаблона
+к admin.bibliography, а не для каждой службы Sonata при загрузке маршрутов.
+Это позволяет собирать и прогревать кэш без доступа TeamCity к production-БД.
+
+EpiDoc Stylesheets — Git submodule, фиксированный commit
+398633bf06dc3bba89cc35f3d3550033076b421c. Для checkout включить подмодули.
+Версия и контрольные суммы точек входа: tools/epidoc-stylesheets.upstream.json.
+Saxon JAR входит в Git; текущий production использует EPIDOC_RENDER_MODE=legacy_js.
+Не включать новые режимы XSLT одновременно с миграцией PHP без отдельной проверки.
+
+Сборка:
+- composer install из lock, --no-dev --no-scripts --no-plugins;
+- composer dump-autoload --optimize --no-dev --no-scripts с разрешённым runtime plugin;
+- composer check-platform-reqs --no-dev (без ignore-platform-reqs);
+- готовые public/build из рабочего Linux-релиза, исходники JS/CSS не менялись;
+- assets:install для актуальных ресурсов Sonata/FOS;
+- lint:container / cache:clear с фиктивной БД, затем убрать var/cache и env из архива.
+Ключи OSF, Translate и пароли брать только из production env при подготовке кандидата.
+
+Проверки на Mac: PHP 8.4.12 CLI + Imagick 3.8.1; серверный PHP проверен как 8.4.27.
+Изолированный MySQL 8.0.43, TCP отключён. Восстановлены epigraphy_php84_local и
+отдельная epigraphy_php84_local_test из ранее проверенного дампа от 23 октября.
+Функциональные тесты используют только локальную БД и READ ONLY транзакции.
+Проверены публичные страницы, карточка надписи, библиография, полнотекстовый поиск,
+пять API корпуса; устранены предупреждения статистики при отсутствующем ключе interpretation,
+404 для неверных ID и 400 для опасных параметров сортировки. Проверены обычная
+сортировка/пагинация и создание/чтение индекса независимо от рабочего каталога.
+Вход под реальным администратором, сохранение и OSF-загрузки не проверялись.
+Проверка JavaScript в браузере, большой размер загрузок и фактический Linux FPM
+проверяются на закрытом серверном кандидате перед публикацией.
+
+Схема БД и SQL-миграции не менялись. Старый шаг TeamCity Run migrations отключить.
+Оригинальный production-код, env, БД и gramoty.ru при локальной подготовке не меняются.
+Frontend остаётся прежним, включая CKEditor 4; его переход на поддерживаемую
+редакцию — отдельная задача. Успешный Composer audit относится к PHP-пакетам.
+Doctrine annotations/cache и security-guard остаются legacy/abandoned зависимостями.
+В тестах остаются предупреждения устаревших API сторонних пакетов; ошибок тестов нет.

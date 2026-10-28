@@ -1,0 +1,82 @@
+{% use "form_div_layout.html.twig" %}
+
+{%- block form_widget_simple -%}
+    {%- set type = type|default('text') -%}
+    {%- if type == 'range' or type == 'color' -%}
+        {# Attribute "required" is not supported #}
+        {%- set required = false -%}
+    {%- endif -%}
+    {%- if 'text' == type -%}
+        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
+    {%- endif -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{%- endblock form_widget_simple -%}
+
+{% block radio_widget -%}
+    <div class="custom-control custom-radio">
+        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' custom-control-input')|trim}) %}
+        <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        {{- block('checkbox_and_radion_label') -}}
+    </div>
+{%- endblock radio_widget %}
+
+{% block radio_label -%}
+{%- endblock radio_label %}
+
+{%- block checkbox_widget -%}
+    <div class="custom-control custom-checkbox">
+        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' custom-control-input')|trim}) %}
+        <input type="checkbox" {{ block('widget_attributes') }} {% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        {{- block('checkbox_and_radion_label') -}}
+    </div>
+{%- endblock checkbox_widget -%}
+
+{% block checkbox_label -%}
+{% endblock checkbox_label %}
+
+{% block checkbox_and_radion_label -%}
+    {%- set label_attr = label_attr|merge({for: id, class: (label_attr.class|default('') ~ ' custom-control-label')|trim}) -%}
+
+    {%- if required -%}
+        {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) -%}
+    {%- endif -%}
+
+    {%- if label is not same as(false) and label is empty -%}
+        {%- if label_format is not empty -%}
+            {%- set label = label_format|replace({'%name%': name, '%id%': id}) -%}
+        {%- else -%}
+            {%- set label = name|humanize -%}
+        {%- endif -%}
+    {%- endif -%}
+
+    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+    {% if label is not same as(false) -%}
+        {{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}
+    {%- endif %}
+    </label>
+{%- endblock checkbox_and_radion_label %}
+
+{% block form_row -%}
+    <div class="form-group vyfony-filterable-table-bundle-form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+        {{- form_label(form) -}}
+        {{- form_widget(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{%- endblock form_row %}
+
+{% block button_row -%}
+    <div class="form-group form-group vyfony-filterable-table-bundle-button-form-group">
+        {{- form_widget(form) -}}
+    </div>
+{%- endblock button_row %}
+
+{%- block button_attributes -%}
+    id="{{ id }}"{% if disabled %} disabled="disabled"{% endif -%}
+    {{ block('attributes') }}
+{%- endblock button_attributes -%}
+
+{%- block choice_widget_collapsed -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' custom-select')|trim}) -%}
+
+    {{ parent() }}
+{%- endblock choice_widget_collapsed -%}

@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/EpiDoc/Stylesheets.git",
+  "commit": "398633bf06dc3bba89cc35f3d3550033076b421c",
+  "entrypoints": {
+    "start-edition.xsl": "9dbf3dda725b665774ef14ddfbdd22095da57499d6cd09204100f213ea266452",
+    "start-txt.xsl": "a2ad477f70323a7f80ada326e7ec6d58408ff34e91184ec819e0fde8c3527425",
+    "LICENSE.txt": "03a5007af51b3e2d49d874e14e1056ea456eb64e78ef2ef4fdbc7ec75fccec95"
+  }
+}

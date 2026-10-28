@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sonata\AdminBundle\Controller\CRUDController;
 
-use TeamTNT\TNTSearch\TNTSearch;
+use App\Services\Search\FullTextSearchFactory;
 
 
 final class TntIndexController extends CRUDController
@@ -38,14 +38,9 @@ final class TntIndexController extends CRUDController
     /**
      * Public function for building a TNTSearch index.
      */
-    public function indexAction(): Response
+    public function indexAction(FullTextSearchFactory $searchFactory): Response
     {
-        $search = new TNTSearch;
-        $config = $this->loadTNTConfig();
-        $search->loadConfig($config);
-        $search->fuzziness = true;
-
-        $indexer = $search->createIndex('/thumbs/fulltext.sql');
+        $indexer = $searchFactory->createIndexer();
         $indexer->query(<<<SQL
 SELECT
   inscription.id,
@@ -134,20 +129,4 @@ SQL);
         return $this->redirectToRoute('sonata_admin_dashboard');
     }
 
-    private function loadTNTConfig(): array {
-        $db_url = $_ENV['DATABASE_URL'];
-        $db_parameters = parse_url($db_url);
-
-        $config = [
-            'driver' => $db_parameters["scheme"],
-            'host' => $db_parameters["host"],
-            'database' => str_replace('/', '', $db_parameters["path"]),
-            'username' => $db_parameters["user"],
-            'password' => $db_parameters["pass"],
-            'storage' => './',
-            'stemmer' => \TeamTNT\TNTSearch\Stemmer\RussianStemmer::class,
-            'charset' => 'utf8'
-        ];
-        return $config;
-    }
 }

@@ -30,7 +30,7 @@
     {{ self.render_post_body(post) }}
 {%- endblock -%}
 
-{% macro render_post_body(post, renderLinkToAdminPanel) %}
+{% macro render_post_body(post, renderLinkToAdminPanel = true) %}
 
     {% import _self as self %}
 

@@ -172,7 +172,7 @@ final class CorpusDataProvider implements CorpusDataProviderInterface
                                 $zeroRowText = current(
                                     array_filter(
                                         $textsOfInscription,
-                                        fn (array $textData): bool => null === $textData['interpretation']
+                                        fn (array $textData): bool => null === ($textData['interpretation'] ?? null)
                                     )
                                 );
 

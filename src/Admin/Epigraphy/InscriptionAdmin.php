@@ -475,7 +475,7 @@ final class InscriptionAdmin extends AbstractEntityAdmin
     /**
      * @param string $action
      */
-    protected function configureTabMenu(ItemInterface $menu, $action, AdminInterface $childAdmin = null): void
+    protected function configureTabMenu(ItemInterface $menu, $action, ?AdminInterface $childAdmin = null): void
     {
         if ('edit' === $action || null !== $childAdmin) {
             $admin = $this->isChild() ? $this->getParent() : $this;
