@@ -6,6 +6,7 @@ namespace App\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
 
 final class SiteTest extends WebTestCase
 {
@@ -69,5 +70,32 @@ final class SiteTest extends WebTestCase
             'unsafe sort order' => ['/epigraphy/inscription/longlist?sortOrder='.rawurlencode('desc, (SELECT 1)'), 400],
             'negative page' => ['/epigraphy/inscription/longlist?page=-1', 400],
         ];
+    }
+
+    #[DataProvider('dateCheckboxLocales')]
+    public function testDateCheckboxHasOneTranslatedLabel(string $locale, string $label): void
+    {
+        $client = static::createClient(['environment' => 'test']);
+        $client->getCookieJar()->set(new Cookie('_locale', $locale, null, '/', 'epigraphica.ru'));
+        $database = static::getContainer()->get('doctrine')->getConnection();
+        self::assertSame('epigraphy_php84_local_test', $database->getDatabase());
+        $database->executeStatement('SET SESSION TRANSACTION READ ONLY');
+        $database->beginTransaction();
+        try {
+            $client->request('GET', 'https://epigraphica.ru/epigraphy/inscription/longlist?conventionalDateInitialYear=949&conventionalDateFinalYear=1109&conventionalDateExactMatch=1');
+            self::assertResponseIsSuccessful();
+            $crawler = $client->getCrawler();
+            self::assertCount(1, $crawler->filter('input[name="conventionalDateExactMatch"]'));
+            $labels = $crawler->filter('label[for="conventional-date-exact-match"]');
+            self::assertCount(1, $labels);
+            self::assertSame($label, $labels->text());
+        } finally {
+            if ($database->isTransactionActive()) { $database->rollBack(); }
+        }
+    }
+
+    public static function dateCheckboxLocales(): array
+    {
+        return ['Russian' => ['ru', 'Строгое вхождение'], 'English' => ['en', 'Exact match']];
     }
 }

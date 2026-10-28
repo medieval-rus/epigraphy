@@ -23,6 +23,10 @@ final class ConventionalDateExactMatchFilterParameter implements FilterParameter
 
     public function getOptions(EntityManager $entityManager): array
     {
-        return ['required' => false, 'false_values' => [null, '', '0']];
+        return [
+            'required' => false,
+            'false_values' => [null, '', '0'],
+            'label' => 'controller.inscription.list.filter.dateSlider.exactMatch',
+        ];
     }
 }

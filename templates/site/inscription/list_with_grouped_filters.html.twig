@@ -146,11 +146,8 @@
                                                         <input type="number" class="form-control" id="conventional-date-final-input" value="{{ app.request.query.get('conventionalDateFinalYear') }}" placeholder="{{ 'controller.inscription.list.filter.dateSlider.toPlaceholder'|trans }}">
                                                     </div>
                                                     <div class="col-4">
-                                                        <div class="form-check date-exact-match-checkbox">
+                                                        <div class="date-exact-match-checkbox">
                                                             {{ form_widget(filterForm.conventionalDateExactMatch, {'id': 'conventional-date-exact-match', 'attr': {'class': 'form-check-input'}}) }}
-                                                            <label class="form-check-label" for="conventional-date-exact-match">
-                                                                {{ 'controller.inscription.list.filter.dateSlider.exactMatch'|trans }}
-                                                            </label>
                                                         </div>
                                                     </div>
                                                 </div>
