@@ -17,6 +17,7 @@ use Vyfony\Bundle\FilterableTableBundle\DataCollection\DataCollector;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\FilterConfiguratorInterface;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Sorting\CustomSortConfiguration;
 use Vyfony\Bundle\FilterableTableBundle\Filter\Configurator\Sorting\DbSortConfiguration;
+use Vyfony\Bundle\FilterableTableBundle\Persistence\QueryBuilder\Parameter\ParameterFactory;
 
 final class FilterableTableTest extends TestCase
 {
@@ -62,6 +63,19 @@ final class FilterableTableTest extends TestCase
         self::assertSame(['Alpha', 'Beta'], array_map(static fn ($record) => $record->title, iterator_to_array($result->getData(), false)));
         $second = $this->collect(['sortBy' => 'title', 'sortOrder' => 'asc', 'page' => '2']);
         self::assertSame(['Zulu'], array_map(static fn ($record) => $record->title, iterator_to_array($second->getData(), false)));
+    }
+
+    public function testGeneratedParameterCanBeParsedAndBoundByDoctrine(): void
+    {
+        $parameter = (new ParameterFactory())->createParameter();
+        $query = $this->manager->createQueryBuilder()
+            ->select('record')
+            ->from(SortRecord::class, 'record')
+            ->where('record.title = '.$parameter)
+            ->setParameter($parameter, 'Alpha')
+            ->getQuery();
+
+        self::assertSame('Alpha', $query->getSingleResult()->title);
     }
 
     #[DataProvider('invalidInputs')]

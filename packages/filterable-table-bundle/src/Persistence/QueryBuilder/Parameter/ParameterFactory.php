@@ -17,7 +17,7 @@ final class ParameterFactory implements ParameterFactoryInterface
 {
     public function createParameter(): string
     {
-        return $this->createNamedParameter(uniqid());
+        return $this->createNamedParameter('parameter');
     }
 
     public function createNamedParameter(string $parameterName): string

@@ -88,7 +88,7 @@ final class TranslationFilterParameter implements FilterParameterInterface, Expr
         ;
 
         $queryBuilder->setParameter(
-            $parameterName = $this->parameterFactory->createParameter($entityAlias.'_translation', 0),
+            $parameterName = $this->parameterFactory->createNamedParameter($entityAlias.'_translation'),
             '%'.mb_strtolower($filterValue).'%'
         );
 
